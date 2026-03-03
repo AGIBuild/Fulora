@@ -72,3 +72,42 @@ fulora add service IAnalyticsService --import
 | `--import` | Generate `[JsImport]` instead of `[JsExport]` |
 | `--bridge-project` | Bridge project path (auto-detected) |
 | `--web-dir` | Web project `src/` directory (auto-detected) |
+
+### `fulora add plugin <package>`
+
+Install a Fulora bridge plugin NuGet package into the current project.
+
+```bash
+fulora add plugin Agibuild.Fulora.Plugin.Database
+fulora add plugin Agibuild.Fulora.Plugin.HttpClient --version 1.0.0
+```
+
+| Option | Description |
+|---|---|
+| `--version` | Specific package version (default: latest) |
+
+### `fulora search <query>`
+
+Search NuGet.org for Fulora bridge plugins (packages tagged `fulora-plugin`).
+
+```bash
+fulora search database
+fulora search http --take 20
+```
+
+| Option | Description |
+|---|---|
+| `--take` | Maximum results to return (default: 10) |
+
+### `fulora list plugins`
+
+List all installed Fulora plugin packages in the current project.
+
+```bash
+fulora list plugins
+fulora list plugins --project ./MyApp.Desktop/MyApp.Desktop.csproj
+```
+
+| Option | Description |
+|---|---|
+| `--project` | Project file to inspect (auto-detected) |

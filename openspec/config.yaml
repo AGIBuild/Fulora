@@ -8,10 +8,11 @@ context: |
   Tech stack: C# / .NET 10, Avalonia UI, System.Text.Json, Roslyn Source Generators
   Platforms: Windows (WebView2), macOS/iOS (WKWebView), Android (WebView), Linux (WebKitGTK)
   Architecture: Contract-driven with MockAdapter for testing; facet-based adapter extensibility
-  Tests: xUnit, 525 CT + 80 IT, 96%+ line coverage
-  CI: GitHub Actions (macOS + Windows + Linux), NuGet release via Nuke build
+  Tests: xUnit, 1500+ CT + 200+ IT, 97%+ line coverage
+  CI: GitHub Actions (macOS + Windows + Linux), NuGet + npm release via Nuke build + tag-driven pipeline
 
-  Current phase: Phase 3 — Polish & General Availability
+  Current phase: Phase 11 completed — Ecosystem & Developer Experience
+  Next phase: Phase 12 — Enterprise & Advanced Scenarios (Planned)
   Key goals: G1 (Type-Safe Bridge), G2 (SPA Hosting), G3 (Secure by Default), G4 (Testability)
 
   Conventions:

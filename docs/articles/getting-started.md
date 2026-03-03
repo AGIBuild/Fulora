@@ -2,13 +2,16 @@
 
 Build your first **framework-ready** hybrid app with Avalonia + web UI.
 
-This guide follows the current product direction (Roadmap Phase 5: Framework Positioning Foundation):
+This guide follows the current product direction (through Phase 11: Ecosystem & Developer Experience):
 
 - typed bridge contracts
 - typed capability gateway
 - policy-first runtime behavior
 - automation-friendly diagnostics
 - web-first template architecture
+- official bridge plugins (database, http, file system, notifications, auth)
+- OpenTelemetry observability
+- VS Code bridge extension
 
 ## Prerequisites
 
@@ -154,8 +157,10 @@ WebView.EnableSpaHosting(new SpaHostingOptions
 
 ## Next Steps
 
-- [Architecture](architecture.md) — Runtime topology and Phase 5 invariants
+- [Architecture](architecture.md) — Runtime topology and design invariants
 - [Bridge Guide](bridge-guide.md) — Advanced bridge patterns
 - [SPA Hosting](spa-hosting.md) — Detailed hosting configuration
+- [Plugin Authoring Guide](../plugin-authoring-guide.md) — Create and consume bridge plugins
+- [CLI Reference](../cli.md) — `fulora new`, `dev`, `generate`, `search`, `add plugin`
 - [Demo walkthrough](../demo/index.md) — End-to-end sample experience
 - [Roadmap](../../openspec/ROADMAP.md) — Product direction and milestones

@@ -32,16 +32,28 @@ Use this page as the entry point based on what you want to do next.
 - **Cross-Platform**: Windows (WebView2), macOS/iOS (WKWebView), Android (WebView), Linux (WebKitGTK)
 - **Testable**: `MockBridgeService` for unit testing without a real browser
 - **Secure**: Origin-based policy, rate limiting, protocol versioning
+- **Plugin Ecosystem**: Official plugins for Database (SQLite), HTTP Client, File System, Notifications, Auth Token
+- **OpenTelemetry**: Bridge call spans and metrics export to any OTLP backend
+- **IDE Tooling**: VS Code extension with live bridge call visualization
+- **Bridge Profiler**: Per-service/method P50/P95/P99 latency statistics
+- **Web Worker Bridge**: Type-safe bridge calls from Web Workers via MessagePort relay
+- **HMR Preservation**: Bridge state preserved across hot module replacement reloads
+- **Enhanced Diagnostics**: Rich error codes with actionable hints for bridge call failures
 
 ## Current Product Objective
 
-Current roadmap focus is **Phase 10: Production Operations & Ecosystem Maturity**:
+**Phase 11 (Ecosystem & Developer Experience)** is complete. The framework now includes:
 
-- Auto-update framework with policy-governed check/download/apply lifecycle
-- DI integration for all post-1.0 services (config, telemetry, message bus, auto-update)
-- OpenTelemetry provider package for bridge call observability
-- NativeAOT publish validation and CI enforcement
-- GTK/Linux promotion from preview to production-ready
+- 5 official bridge plugins (Database, HTTP Client, File System, Notifications, Auth Token)
+- Plugin registry discovery via `fulora search/add/list` CLI commands
+- OpenTelemetry provider package (`Agibuild.Fulora.Telemetry.OpenTelemetry`)
+- VS Code bridge extension with WebSocket debug protocol
+- Bridge call profiler with statistical aggregation
+- Web Worker bridge support
+- Full-featured showcase Todo app and interactive playground
+- Tag-driven release automation pipeline for NuGet + npm
+
+**Next**: Phase 12 — Enterprise & Advanced Scenarios (Planned)
 
 ## Roadmap Snapshot
 
@@ -54,6 +66,6 @@ Current roadmap focus is **Phase 10: Production Operations & Ecosystem Maturity*
 | Phase 7 | Release Orchestration | ✅ Done |
 | Phase 8 | Bridge V2 & Platform Parity | ✅ Done |
 | Phase 9 | GA Release (1.0.0) | ✅ Done |
-| Phase 10 | Production Operations & Ecosystem | 🚧 Active |
-| Phase 11 | Cross-Framework & Plugin Ecosystem | Planned |
-| Phase 12 | Advanced Runtime & Performance | Planned |
+| Phase 10 | Production Operations & Ecosystem | ✅ Done |
+| Phase 11 | Ecosystem & Developer Experience | ✅ Done |
+| Phase 12 | Enterprise & Advanced Scenarios | Planned |

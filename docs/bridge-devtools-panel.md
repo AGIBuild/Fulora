@@ -77,6 +77,14 @@ RuntimeBridgeService
 | `bufferCapacity`     | 500     | Max events in the ring buffer            |
 | Payload truncation   | 4 KB    | Large params/result fields are truncated |
 
+## Related Tools
+
+| Tool | Description |
+|---|---|
+| **BridgeCallProfiler** | Statistical aggregation of bridge call latency (P50/P95/P99), error rates per service/method. See `CompositeBridgeTracer` to combine with DevTools panel. |
+| **OpenTelemetry Tracer** | Export bridge call spans and metrics to OTLP backends via `Agibuild.Fulora.Telemetry.OpenTelemetry`. |
+| **VS Code Extension** | `agibuild-fulora` VS Code extension with live bridge call visualization in the IDE sidebar, connected via WebSocket debug protocol (`BridgeDebugServer`). |
+
 ## Production safety
 
 The panel adds no overhead when not wired in. `NullBridgeTracer` (the default) short-circuits all tracing paths. Do not ship the overlay in release builds.

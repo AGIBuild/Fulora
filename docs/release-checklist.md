@@ -58,15 +58,61 @@ The `Release` workflow (`.github/workflows/release.yml`) triggers automatically:
 ### 4. Post-publish verification
 
 ```bash
-# Verify NuGet
+# Verify core NuGet packages
 dotnet package search Agibuild.Fulora.Avalonia --exact-match
 
-# Verify npm
+# Verify plugin NuGet packages
+dotnet package search Agibuild.Fulora.Plugin.Database --exact-match
+dotnet package search Agibuild.Fulora.Plugin.HttpClient --exact-match
+dotnet package search Agibuild.Fulora.Plugin.FileSystem --exact-match
+dotnet package search Agibuild.Fulora.Plugin.Notifications --exact-match
+dotnet package search Agibuild.Fulora.Plugin.AuthToken --exact-match
+
+# Verify OpenTelemetry package
+dotnet package search Agibuild.Fulora.Telemetry.OpenTelemetry --exact-match
+
+# Verify npm packages
 npm info @agibuild/bridge
+npm info @agibuild/bridge-plugin-database
+npm info @agibuild/bridge-plugin-http-client
+npm info @agibuild/bridge-plugin-file-system
+npm info @agibuild/bridge-plugin-notifications
+npm info @agibuild/bridge-plugin-auth-token
 
 # Verify GitHub Release
 gh release view v1.0.0
 ```
+
+## Published Packages
+
+### NuGet Packages
+
+| Package | Description |
+|---|---|
+| `Agibuild.Fulora.Core` | Core contracts and interfaces |
+| `Agibuild.Fulora.Runtime` | Runtime implementation |
+| `Agibuild.Fulora.Avalonia` | Avalonia WebView control |
+| `Agibuild.Fulora.Bridge.Generator` | Roslyn source generator |
+| `Agibuild.Fulora.DependencyInjection` | DI integration (`AddFulora()`) |
+| `Agibuild.Fulora.Telemetry.OpenTelemetry` | OpenTelemetry bridge tracer + telemetry provider |
+| `Agibuild.Fulora.Plugin.LocalStorage` | Key-value local storage plugin |
+| `Agibuild.Fulora.Plugin.Database` | SQLite database plugin |
+| `Agibuild.Fulora.Plugin.HttpClient` | Host-routed HTTP client plugin |
+| `Agibuild.Fulora.Plugin.FileSystem` | Sandboxed file system plugin |
+| `Agibuild.Fulora.Plugin.Notifications` | System notifications plugin |
+| `Agibuild.Fulora.Plugin.AuthToken` | Secure token storage plugin |
+
+### npm Packages
+
+| Package | Description |
+|---|---|
+| `@agibuild/bridge` | Bridge client, HMR preservation, Web Worker relay |
+| `@agibuild/bridge-plugin-local-storage` | LocalStorage typed client |
+| `@agibuild/bridge-plugin-database` | Database typed client |
+| `@agibuild/bridge-plugin-http-client` | HTTP client typed client |
+| `@agibuild/bridge-plugin-file-system` | File system typed client |
+| `@agibuild/bridge-plugin-notifications` | Notifications typed client |
+| `@agibuild/bridge-plugin-auth-token` | Auth token typed client |
 
 ## Troubleshooting
 

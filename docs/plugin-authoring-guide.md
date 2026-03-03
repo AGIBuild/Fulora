@@ -182,6 +182,26 @@ const keys = await storage.getKeys();
 | Plugin class name | `{Name}Plugin : IBridgePlugin` |
 | Service name (RPC) | Derived from interface name minus `I` prefix |
 
+## Official Plugins
+
+Fulora ships with the following official plugins, each available as a NuGet + npm package pair:
+
+| Plugin | NuGet Package | npm Package | Description |
+|---|---|---|---|
+| **LocalStorage** | `Agibuild.Fulora.Plugin.LocalStorage` | `@agibuild/bridge-plugin-local-storage` | Key-value local persistence |
+| **Database** | `Agibuild.Fulora.Plugin.Database` | `@agibuild/bridge-plugin-database` | SQLite embedded database (query, execute, transactions) |
+| **HTTP Client** | `Agibuild.Fulora.Plugin.HttpClient` | `@agibuild/bridge-plugin-http-client` | Host-routed HTTP with base URL, headers, interceptors |
+| **File System** | `Agibuild.Fulora.Plugin.FileSystem` | `@agibuild/bridge-plugin-file-system` | Sandboxed file read/write/list/delete operations |
+| **Notifications** | `Agibuild.Fulora.Plugin.Notifications` | `@agibuild/bridge-plugin-notifications` | Cross-platform system notifications (toast/banner) |
+| **Auth Token** | `Agibuild.Fulora.Plugin.AuthToken` | `@agibuild/bridge-plugin-auth-token` | Platform-secure token storage (Keychain/CredMgr/Keystore) |
+
+Use the CLI to discover and install plugins:
+
+```bash
+fulora search database
+fulora add plugin Agibuild.Fulora.Plugin.Database
+```
+
 ## Testing
 
 - **Unit tests**: Test the service implementation independently

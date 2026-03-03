@@ -91,7 +91,7 @@ These are prerequisites that we have already delivered:
 | **F4** | Rich feature set: cookies, commands, screenshots, PDF, zoom, find, preload, context menu, downloads, permissions, web resource interception | ✅ Done |
 | **F5** | Adapter lifecycle events and typed platform handles | ✅ Done |
 | **F6** | JSON-RPC 2.0 bidirectional RPC over WebMessage bridge | ✅ Done |
-| **F7** | 1113 unit tests + 180 integration tests, 95%+ line coverage | ✅ Done |
+| **F7** | 1500+ unit tests + 200+ integration tests, 97%+ line coverage | ✅ Done |
 | **F8** | WebDialog and WebAuthBroker | ✅ Done |
 
 ### 3.3 Experience Goals (Differentiators)

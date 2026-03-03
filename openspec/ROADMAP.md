@@ -8,8 +8,8 @@
 ## Phase Overview
 
 ```
-Phase 0 (✅ Done)        Phase 1 (✅ Done)       Phase 2 (✅ Core Done)  Phase 3 (✅ Done)      Phase 4 (✅ Done)      Phase 5 (✅ Completed)        Phase 6 (✅ Completed)         Phase 7 (✅ Completed)       Phase 8 (✅ Completed)                Phase 9 (✅ Completed)             Phase 10 (🚧 Active)
-Foundation               Type-Safe Bridge       SPA Hosting            Polish & GA            Application Shell       Framework Positioning Foundation Governance Productization        Release Orchestration      Bridge V2 & Platform Parity          GA Release Readiness               Production Operations & Ecosystem
+Phase 0 (✅ Done)        Phase 1 (✅ Done)       Phase 2 (✅ Core Done)  Phase 3 (✅ Done)      Phase 4 (✅ Done)      Phase 5 (✅ Completed)        Phase 6 (✅ Completed)         Phase 7 (✅ Completed)       Phase 8 (✅ Completed)                Phase 9 (✅ Completed)             Phase 10 (✅ Completed)             Phase 11 (✅ Completed)
+Foundation               Type-Safe Bridge       SPA Hosting            Polish & GA            Application Shell       Framework Positioning Foundation Governance Productization        Release Orchestration      Bridge V2 & Platform Parity          GA Release Readiness               Production Operations & Ecosystem  Ecosystem & Developer Experience
 ─────────────────────    ────────────────────   ────────────────────   ────────────────────   ────────────────────    ───────────────────────────────── ─────────────────────────────── ─────────────────────────   ─────────────────────────────────   ─────────────────────────
 • Cross-platform         • Source Generator     • Custom protocol      • Project template      • Shell policy kit      • Typed capability gateway                                                                 • Bridge diagnostics safety net     • API surface freeze
   adapters (5 platforms)   for C# → JS proxy      file serving        • API docs site           (new window/download/ • Policy-first execution model                                                                • Cancellation + streaming parity   • npm bridge publication
@@ -654,7 +654,7 @@ dotnet new agibuild-hybrid -n MyApp --frontend react
 
 ---
 
-## Phase 11: Ecosystem & Developer Experience (🚧 Active)
+## Phase 11: Ecosystem & Developer Experience (✅ Completed)
 
 **Goal**: Transform Fulora from "feature-complete framework" to "thriving ecosystem" by establishing plugin discoverability, a rich official plugin suite, IDE-level developer tooling, and advanced runtime capabilities.
 
@@ -664,21 +664,21 @@ dotnet new agibuild-hybrid -n MyApp --frontend react
 
 | Milestone | Focus | Outcome | Status |
 |---|---|---|---|
-| **M11.1 Plugin Registry & Discovery** | NuGet tag convention, `fulora search/add/list` CLI | Discoverable plugin ecosystem via existing registries | 🚧 Active |
-| **M11.2 OpenTelemetry Provider Package** | `Agibuild.Fulora.Telemetry.OpenTelemetry` standalone NuGet | Bridge call spans + metrics export to OTLP backends | Pending |
-| **M11.3 VS Code Bridge Extension** | `agibuild-fulora` VS Code extension + debug protocol | Live bridge call visualization in IDE sidebar | Pending |
-| **M11.4 Official Plugin: Database** | `Agibuild.Fulora.Plugin.Database` (SQLite) | Structured local data storage from JS via bridge | Pending |
-| **M11.5 Official Plugin: HTTP Client** | `Agibuild.Fulora.Plugin.HttpClient` | Host-routed HTTP with interceptors and auth injection | Pending |
-| **M11.6 Official Plugin: File System** | `Agibuild.Fulora.Plugin.FileSystem` | Sandboxed file system access from JS | Pending |
-| **M11.7 Official Plugin: Notifications** | `Agibuild.Fulora.Plugin.Notifications` | Cross-platform system notifications via bridge | Pending |
-| **M11.8 Official Plugin: Auth Token** | `Agibuild.Fulora.Plugin.AuthToken` | Platform-secure token storage (Keychain/CredMgr/Keystore) | Pending |
-| **M11.9 Bridge Call Profiler** | `BridgeCallProfiler` with statistical aggregation | Per-service/method latency percentiles and error rates | Pending |
-| **M11.10 Web Worker Bridge** | `WorkerBridgeClient` via MessagePort relay | Bridge calls from Web Workers with type safety | Pending |
-| **M11.11 Showcase Todo App** | Full-featured reference app using all plugins | Real-world complexity demonstration and reference architecture | Pending |
-| **M11.12 Interactive Playground** | Web-based bridge interface playground | Zero-setup experimentation for evaluators | Pending |
-| **M11.13 Enhanced Error Diagnostics** | Rich bridge error codes with actionable hints | Reduced debugging friction for bridge call failures | Pending |
-| **M11.14 HMR Bridge Preservation** | Bridge state preservation across hot reloads | Seamless dev loop without manual state re-trigger | Pending |
-| **M11.15 Release Automation Pipeline** | Tag-driven multi-package NuGet + npm publish | Sustainable delivery as plugin count grows | Pending |
+| **M11.1 Plugin Registry & Discovery** | NuGet tag convention, `fulora search/add/list` CLI | Discoverable plugin ecosystem via existing registries | ✅ Done |
+| **M11.2 OpenTelemetry Provider Package** | `Agibuild.Fulora.Telemetry.OpenTelemetry` standalone NuGet | Bridge call spans + metrics export to OTLP backends | ✅ Done |
+| **M11.3 VS Code Bridge Extension** | `agibuild-fulora` VS Code extension + debug protocol | Live bridge call visualization in IDE sidebar | ✅ Done |
+| **M11.4 Official Plugin: Database** | `Agibuild.Fulora.Plugin.Database` (SQLite) | Structured local data storage from JS via bridge | ✅ Done |
+| **M11.5 Official Plugin: HTTP Client** | `Agibuild.Fulora.Plugin.HttpClient` | Host-routed HTTP with interceptors and auth injection | ✅ Done |
+| **M11.6 Official Plugin: File System** | `Agibuild.Fulora.Plugin.FileSystem` | Sandboxed file system access from JS | ✅ Done |
+| **M11.7 Official Plugin: Notifications** | `Agibuild.Fulora.Plugin.Notifications` | Cross-platform system notifications via bridge | ✅ Done |
+| **M11.8 Official Plugin: Auth Token** | `Agibuild.Fulora.Plugin.AuthToken` | Platform-secure token storage (Keychain/CredMgr/Keystore) | ✅ Done |
+| **M11.9 Bridge Call Profiler** | `BridgeCallProfiler` with statistical aggregation | Per-service/method latency percentiles and error rates | ✅ Done |
+| **M11.10 Web Worker Bridge** | `WorkerBridgeClient` via MessagePort relay | Bridge calls from Web Workers with type safety | ✅ Done |
+| **M11.11 Showcase Todo App** | Full-featured reference app using all plugins | Real-world complexity demonstration and reference architecture | ✅ Done |
+| **M11.12 Interactive Playground** | Web-based bridge interface playground | Zero-setup experimentation for evaluators | ✅ Done |
+| **M11.13 Enhanced Error Diagnostics** | Rich bridge error codes with actionable hints | Reduced debugging friction for bridge call failures | ✅ Done |
+| **M11.14 HMR Bridge Preservation** | Bridge state preservation across hot reloads | Seamless dev loop without manual state re-trigger | ✅ Done |
+| **M11.15 Release Automation Pipeline** | Tag-driven multi-package NuGet + npm publish | Sustainable delivery as plugin count grows | ✅ Done |
 
 ### Deliverables by Tier
 
@@ -717,16 +717,34 @@ dotnet new agibuild-hybrid -n MyApp --frontend react
 | 11.14 | HMR bridge preservation | @agibuild/bridge | Medium |
 | 11.15 | Release automation pipeline | All packages | Medium |
 
+### OpenSpec Archive Evidence
+
+- `2026-03-03-bridge-call-profiler` (M11.9)
+- `2026-03-03-opentelemetry-provider-package` (M11.2)
+- `2026-03-03-enhanced-error-diagnostics` (M11.13)
+- `2026-03-03-plugin-registry-discovery` (M11.1)
+- `2026-03-03-official-plugin-database` (M11.4)
+- `2026-03-03-official-plugin-http-client` (M11.5)
+- `2026-03-03-official-plugin-file-system` (M11.6)
+- `2026-03-03-official-plugin-notifications` (M11.7)
+- `2026-03-03-official-plugin-auth-token` (M11.8)
+- `2026-03-03-hot-reload-bridge-preservation` (M11.14)
+- `2026-03-03-web-worker-bridge` (M11.10)
+- `2026-03-03-vscode-bridge-extension` (M11.3)
+- `2026-03-03-release-automation-pipeline` (M11.15)
+- `2026-03-03-showcase-todo-app` (M11.11)
+- `2026-03-03-interactive-playground` (M11.12)
+
 ### Phase 11 Exit Criteria
 
-- `fulora search` returns results from NuGet.org for packages tagged `fulora-plugin`.
-- At least 5 official plugins published with NuGet + npm pairs (database, http, fs, notifications, auth).
-- VS Code extension visualizes live bridge calls from a running Fulora app.
-- OpenTelemetry provider produces valid OTLP spans and metrics for bridge calls.
-- Bridge call profiler provides per-method P50/P95/P99 latency statistics.
-- Web Worker bridge calls have same type safety as main-thread bridge calls.
-- Showcase app demonstrates real-world usage of all official plugins together.
-- Tag-driven release pipeline publishes all NuGet and npm packages automatically.
+- ✅ `fulora search` returns results from NuGet.org for packages tagged `fulora-plugin`.
+- ✅ At least 5 official plugins published with NuGet + npm pairs (database, http, fs, notifications, auth).
+- ✅ VS Code extension visualizes live bridge calls from a running Fulora app.
+- ✅ OpenTelemetry provider produces valid OTLP spans and metrics for bridge calls.
+- ✅ Bridge call profiler provides per-method P50/P95/P99 latency statistics.
+- ✅ Web Worker bridge calls have same type safety as main-thread bridge calls.
+- ✅ Showcase app demonstrates real-world usage of all official plugins together.
+- ✅ Tag-driven release pipeline publishes all NuGet and npm packages automatically.
 
 ---
 
@@ -755,7 +773,7 @@ dotnet new agibuild-hybrid -n MyApp --frontend react
 ## Dependencies & Prerequisites
 
 ```
-Phase 0-9 (✅ Done) ──► Phase 10 (✅ Done) ──► Phase 11 (🚧 Active) ──► Phase 12 (Planned)
+Phase 0-9 (✅ Done) ──► Phase 10 (✅ Done) ──► Phase 11 (✅ Done) ──► Phase 12 (Planned)
                                                       │
                             ┌─────────────────────────┼─────────────────────────┐
                             │                         │                         │
