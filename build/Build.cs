@@ -151,6 +151,12 @@ partial class BuildTask : NukeBuild
     AbsolutePath TestingProject =>
         TestsDirectory / "Agibuild.Fulora.Testing" / "Agibuild.Fulora.Testing.csproj";
 
+    AbsolutePath CliProject =>
+        SrcDirectory / "Agibuild.Fulora.Cli" / "Agibuild.Fulora.Cli.csproj";
+
+    AbsolutePath PluginLocalStorageProject =>
+        RootDirectory / "plugins" / "Agibuild.Fulora.Plugin.LocalStorage" / "Agibuild.Fulora.Plugin.LocalStorage.csproj";
+
     AbsolutePath TemplatePackProject =>
         RootDirectory / "templates" / "Agibuild.Fulora.Templates.csproj";
 

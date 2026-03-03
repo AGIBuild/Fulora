@@ -9,7 +9,6 @@
     <!-- .NET tool packaging -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fulora</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
 
     <!-- NuGet metadata -->
     <PackageId>Agibuild.Fulora.Cli</PackageId>

@@ -50,7 +50,7 @@ partial class BuildTask
                 return settings;
             });
 
-            // ── Sub-packages (Core, Adapters.Abstractions, Runtime, Bridge.Generator, Testing) ──
+            // ── Sub-packages ──
             var subPackageProjects = new[]
             {
                 CoreProject,
@@ -58,6 +58,8 @@ partial class BuildTask
                 RuntimeProject,
                 BridgeGeneratorProject,
                 TestingProject,
+                CliProject,
+                PluginLocalStorageProject,
             };
 
             foreach (var project in subPackageProjects)
@@ -245,7 +247,7 @@ partial class BuildTask
         });
 
     Target Publish => _ => _
-        .Description("Pushes all NuGet packages (main library, sub-packages, and templates) to the configured source.")
+        .Description("Pushes all NuGet packages (main library, sub-packages, CLI tool, plugins, and templates) to the configured source.")
         .DependsOn(Pack, PackTemplate)
         .Requires(() => NuGetApiKey)
         .Executes(() =>

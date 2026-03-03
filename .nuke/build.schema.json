@@ -148,7 +148,7 @@
         },
         "BranchCoverageThreshold": {
           "type": "integer",
-          "description": "Minimum branch coverage percentage (0-100). Default: 84",
+          "description": "Minimum branch coverage percentage (0-100). Default: 95",
           "format": "int32"
         },
         "Configuration": {
@@ -157,7 +157,7 @@
         },
         "CoverageThreshold": {
           "type": "integer",
-          "description": "Minimum line coverage percentage (0-100). Default: 90",
+          "description": "Minimum line coverage percentage (0-100). Default: 96",
           "format": "int32"
         },
         "iOSSimulator": {
