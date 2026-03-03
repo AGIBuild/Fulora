@@ -6,10 +6,10 @@
     <RootNamespace>AvaloniAngular.Bridge</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Core" Version="1.0.1-preview" />
+    <PackageReference Include="Agibuild.Fulora.Core" Version="1.0.3-preview" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" Version="1.0.1-preview"
+    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" Version="1.0.3-preview"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
   </ItemGroup>
