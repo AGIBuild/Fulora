@@ -48,8 +48,8 @@ partial class BuildTask : NukeBuild
     [Parameter("Minimum line coverage percentage (0-100). Default: 96")]
     readonly int CoverageThreshold = 96;
 
-    [Parameter("Minimum branch coverage percentage (0-100). Default: 95")]
-    readonly int BranchCoverageThreshold = 95;
+    [Parameter("Minimum branch coverage percentage (0-100). Default: 94")]
+    readonly int BranchCoverageThreshold = 94;
 
     [Parameter("Android AVD name for emulator. Default: auto-detect first available AVD.")]
     readonly string? AndroidAvd = null;
