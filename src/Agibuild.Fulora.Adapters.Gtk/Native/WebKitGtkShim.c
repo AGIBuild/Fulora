@@ -108,6 +108,10 @@ struct ag_gtk_callbacks
     ag_gtk_permission_cb on_permission;
     ag_gtk_scheme_request_cb on_scheme_request;
     ag_gtk_context_menu_cb on_context_menu;
+    ag_gtk_drag_entered_cb on_drag_entered;
+    ag_gtk_drag_updated_cb on_drag_updated;
+    ag_gtk_drag_exited_cb on_drag_exited;
+    ag_gtk_drop_performed_cb on_drop_performed;
 };
 
 /* ========== Cookie operation callbacks ========== */
