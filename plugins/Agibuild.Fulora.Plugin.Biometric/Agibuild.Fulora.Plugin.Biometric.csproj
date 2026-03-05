@@ -3,6 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>Agibuild.Fulora.Plugin.Biometric</RootNamespace>
 
     <IsPackable>true</IsPackable>
@@ -18,4 +19,19 @@
     <ProjectReference Include="..\..\src\Agibuild.Fulora.Bridge.Generator\Agibuild.Fulora.Bridge.Generator.csproj"
                       OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Native/BiometricShim.m" />
+  </ItemGroup>
+
+  <Target Name="BuildBiometricShim" BeforeTargets="Build"
+          Condition="$([MSBuild]::IsOSPlatform('osx'))">
+    <PropertyGroup>
+      <_BiometricShimOutDir>$(TargetDir)runtimes/osx/native/</_BiometricShimOutDir>
+      <_BiometricShimOutPath>$(_BiometricShimOutDir)libAgibuildBiometric.dylib</_BiometricShimOutPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(_BiometricShimOutDir)" />
+    <Exec Command="xcrun clang -fobjc-arc -dynamiclib &quot;$(MSBuildProjectDirectory)/Native/BiometricShim.m&quot; -o &quot;$(_BiometricShimOutPath)&quot; -framework Foundation -framework LocalAuthentication -arch arm64 -arch x86_64" />
+    <Exec Command="codesign -s - -f &quot;$(_BiometricShimOutPath)&quot;" />
+  </Target>
 </Project>

@@ -39,4 +39,29 @@
     <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>
 
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\Agibuild.Fulora.Adapters.MacOS.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\Agibuild.Fulora.Adapters.Gtk.csproj" />
+  </ItemGroup>
+
+  <Target Name="CopyMacOSNativeShim" AfterTargets="Build"
+          Condition="$([MSBuild]::IsOSPlatform('osx'))">
+    <ItemGroup>
+      <_MacShim Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutDir)runtimes/osx/native/" />
+    <Copy SourceFiles="@(_MacShim)" DestinationFolder="$(OutDir)runtimes/osx/native/" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyLinuxNativeShim" AfterTargets="Build"
+          Condition="$([MSBuild]::IsOSPlatform('linux'))">
+    <ItemGroup>
+      <_GtkShim Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutDir)runtimes/linux-x64/native/" />
+    <Copy SourceFiles="@(_GtkShim)" DestinationFolder="$(OutDir)runtimes/linux-x64/native/" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>
