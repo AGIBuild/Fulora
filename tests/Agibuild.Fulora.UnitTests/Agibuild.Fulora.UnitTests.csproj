@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\plugins\Agibuild.Fulora.Plugin.FileSystem\Agibuild.Fulora.Plugin.FileSystem.csproj" />
     <ProjectReference Include="..\..\plugins\Agibuild.Fulora.Plugin.Notifications\Agibuild.Fulora.Plugin.Notifications.csproj" />
     <ProjectReference Include="..\..\plugins\Agibuild.Fulora.Plugin.AuthToken\Agibuild.Fulora.Plugin.AuthToken.csproj" />
+    <ProjectReference Include="..\..\plugins\Agibuild.Fulora.Plugin.Biometric\Agibuild.Fulora.Plugin.Biometric.csproj" />
     <ProjectReference Include="..\..\src\Agibuild.Fulora.Cli\Agibuild.Fulora.Cli.csproj" />
   </ItemGroup>
 
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="9.6.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />

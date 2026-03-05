@@ -92,14 +92,21 @@ internal sealed class WebViewRpcService : IWebViewRpcService
 
     // ==================== Enumerator support ====================
 
+    internal static readonly TimeSpan EnumeratorInactivityTimeout = TimeSpan.FromSeconds(30);
+
     internal void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose)
     {
-        _activeEnumerators[token] = new ActiveEnumerator(moveNext, dispose);
+        var enumerator = new ActiveEnumerator(moveNext, dispose);
+        _activeEnumerators[token] = enumerator;
+        enumerator.StartInactivityTimer(EnumeratorInactivityTimeout, () => DisposeEnumerator(token));
+
         _handlers[$"$/enumerator/next/{token}"] = async (JsonElement? args) =>
         {
-            if (_activeEnumerators.TryGetValue(token, out var enumerator))
+            if (_activeEnumerators.TryGetValue(token, out var e))
             {
-                var (value, finished) = await enumerator.MoveNext();
+                e.ResetInactivityTimer(EnumeratorInactivityTimeout, () => DisposeEnumerator(token));
+
+                var (value, finished) = await e.MoveNext();
                 if (finished)
                 {
                     await DisposeEnumerator(token);
@@ -114,10 +121,11 @@ internal sealed class WebViewRpcService : IWebViewRpcService
     {
         if (_activeEnumerators.TryRemove(token, out var enumerator))
         {
+            enumerator.Dispose();
             _handlers.TryRemove($"$/enumerator/next/{token}", out _);
             try
             {
-                await enumerator.Dispose();
+                await enumerator.DisposeAsync();
             }
             catch (Exception ex)
             {
@@ -818,9 +826,33 @@ internal sealed class WebViewRpcService : IWebViewRpcService
         public RpcError? Error { get; set; }
     }
 
-    internal sealed record ActiveEnumerator(
-        Func<Task<(object? Value, bool Finished)>> MoveNext,
-        Func<Task> Dispose);
+    internal sealed class ActiveEnumerator(
+        Func<Task<(object? Value, bool Finished)>> moveNext,
+        Func<Task> dispose) : IDisposable
+    {
+        private CancellationTokenSource? _inactivityCts;
+
+        public Func<Task<(object? Value, bool Finished)>> MoveNext { get; } = moveNext;
+        public Func<Task> DisposeAsync { get; } = dispose;
+
+        public void StartInactivityTimer(TimeSpan timeout, Func<Task> onTimeout)
+        {
+            _inactivityCts?.Dispose();
+            _inactivityCts = new CancellationTokenSource(timeout);
+            _inactivityCts.Token.Register(() => _ = onTimeout(), useSynchronizationContext: false);
+        }
+
+        public void ResetInactivityTimer(TimeSpan timeout, Func<Task> onTimeout)
+        {
+            StartInactivityTimer(timeout, onTimeout);
+        }
+
+        public void Dispose()
+        {
+            _inactivityCts?.Dispose();
+            _inactivityCts = null;
+        }
+    }
 
     internal sealed class EnumeratorNextResult
     {

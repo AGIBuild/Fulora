@@ -52,6 +52,13 @@ public class WebView : NativeControlHost, IWebView
     public static readonly StyledProperty<double> ZoomFactorProperty =
         AvaloniaProperty.Register<WebView, double>(nameof(ZoomFactor), defaultValue: 1.0);
 
+    /// <summary>
+    /// Styled property backing <see cref="OverlayContent"/>.
+    /// When set, creates a companion overlay for rendering Avalonia controls above the WebView.
+    /// </summary>
+    public static readonly StyledProperty<object?> OverlayContentProperty =
+        AvaloniaProperty.Register<WebView, object?>(nameof(OverlayContent));
+
     // ---------------------------------------------------------------------------
     //  Internal state
     // ---------------------------------------------------------------------------
@@ -63,6 +70,7 @@ public class WebView : NativeControlHost, IWebView
     private EventHandler<ContextMenuRequestedEventArgs>? _contextMenuRequestedHandlers;
     private Window? _hostWindow;
     private EventHandler<WindowClosingEventArgs>? _hostWindowClosingHandler;
+    private WebViewOverlayHost? _overlayHost;
 
     // ---------------------------------------------------------------------------
     //  Constructor
@@ -72,6 +80,7 @@ public class WebView : NativeControlHost, IWebView
     {
         SourceProperty.Changed.AddClassHandler<WebView>((wv, e) => wv.OnSourceChanged(e));
         ZoomFactorProperty.Changed.AddClassHandler<WebView>((wv, e) => wv.OnZoomFactorChanged(e));
+        OverlayContentProperty.Changed.AddClassHandler<WebView>((wv, e) => wv.OnOverlayContentChanged(e));
     }
 
     // ---------------------------------------------------------------------------
@@ -143,6 +152,17 @@ public class WebView : NativeControlHost, IWebView
     {
         get => GetValue(ZoomFactorProperty);
         set => SetValue(ZoomFactorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the overlay content for rendering Avalonia controls above the WebView.
+    /// When set, a companion overlay host is created; when cleared, it is disposed.
+    /// Bindable via <see cref="OverlayContentProperty"/>.
+    /// </summary>
+    public object? OverlayContent
+    {
+        get => GetValue(OverlayContentProperty);
+        set => SetValue(OverlayContentProperty, value);
     }
 
     /// <inheritdoc />
@@ -568,6 +588,9 @@ public class WebView : NativeControlHost, IWebView
         UnhookHostWindowClosing();
         UnsubscribeCoreEvents();
 
+        _overlayHost?.Dispose();
+        _overlayHost = null;
+
         if (_coreAttached)
         {
             _core?.Detach();
@@ -603,6 +626,22 @@ public class WebView : NativeControlHost, IWebView
         if (e.NewValue is double newZoom)
         {
             _ = _core.SetZoomFactorAsync(newZoom);
+        }
+    }
+
+    private void OnOverlayContentChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        var newContent = e.NewValue;
+
+        if (newContent is not null)
+        {
+            _overlayHost ??= new WebViewOverlayHost(this);
+            _overlayHost.Content = newContent;
+        }
+        else
+        {
+            _overlayHost?.Dispose();
+            _overlayHost = null;
         }
     }
 
@@ -742,6 +781,9 @@ public class WebView : NativeControlHost, IWebView
     {
         UnhookHostWindowClosing();
         UnsubscribeCoreEvents();
+
+        _overlayHost?.Dispose();
+        _overlayHost = null;
 
         if (_coreAttached)
         {

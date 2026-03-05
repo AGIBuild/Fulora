@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Agibuild.Fulora.Plugin.Biometric</RootNamespace>
+
+    <IsPackable>true</IsPackable>
+    <PackageId>Agibuild.Fulora.Plugin.Biometric</PackageId>
+    <Description>Biometric authentication bridge plugin for Agibuild Fulora — availability check and authentication with Touch ID, Face ID, fingerprint, or Windows Hello, registered in one call with UsePlugin.</Description>
+    <PackageTags>fulora;bridge;plugin;biometric;touchid;faceid;fingerprint;windows-hello;fulora-plugin</PackageTags>
+    <Authors>AGIBuild</Authors>
+    <License>MIT</License>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Agibuild.Fulora.Core\Agibuild.Fulora.Core.csproj" />
+    <ProjectReference Include="..\..\src\Agibuild.Fulora.Bridge.Generator\Agibuild.Fulora.Bridge.Generator.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+  </ItemGroup>
+</Project>

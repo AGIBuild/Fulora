@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.2.11415.280
@@ -62,6 +62,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agibuild.Fulora.Plugin.Notifications", "plugins\Agibuild.Fulora.Plugin.Notifications\Agibuild.Fulora.Plugin.Notifications.csproj", "{CFE2B7D2-7F3A-4EF2-B7D0-DF5BC6A3032B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agibuild.Fulora.Plugin.AuthToken", "plugins\Agibuild.Fulora.Plugin.AuthToken\Agibuild.Fulora.Plugin.AuthToken.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agibuild.Fulora.Plugin.Biometric", "plugins\Agibuild.Fulora.Plugin.Biometric\Agibuild.Fulora.Plugin.Biometric.csproj", "{545AD54D-003B-4363-9C51-5280DD827050}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -389,6 +391,18 @@ Global
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|x64.Build.0 = Release|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|x86.ActiveCfg = Release|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|x86.Build.0 = Release|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Debug|x64.Build.0 = Debug|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Debug|x86.Build.0 = Debug|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Release|x64.ActiveCfg = Release|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Release|x64.Build.0 = Release|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Release|x86.ActiveCfg = Release|Any CPU
+		{545AD54D-003B-4363-9C51-5280DD827050}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -413,6 +427,7 @@ Global
 		{70941CF0-7248-4F82-9072-5ED521F4ACF6} = {07D57EEB-2F50-60C4-C011-FE4FA775C9A8}
 		{CFE2B7D2-7F3A-4EF2-B7D0-DF5BC6A3032B} = {07D57EEB-2F50-60C4-C011-FE4FA775C9A8}
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {07D57EEB-2F50-60C4-C011-FE4FA775C9A8}
+		{545AD54D-003B-4363-9C51-5280DD827050} = {07D57EEB-2F50-60C4-C011-FE4FA775C9A8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C362CE2E-275A-4392-B5A1-CA3A6612BDBF}

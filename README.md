@@ -223,6 +223,14 @@ Sample project: [`samples/avalonia-react/`](samples/avalonia-react/)
 Deep dive:
 - [Demo walkthrough](docs/demo/index.md)
 
+## Demo: AI Chat (Streaming)
+
+Sample project: [`samples/avalonia-ai-chat/`](samples/avalonia-ai-chat/)
+
+Demonstrates `IAsyncEnumerable<T>` streaming via the bridge with `Microsoft.Extensions.AI`. Features real-time token rendering, cancellation via `AbortController`, and echo-mode fallback.
+
+Deep dive: [AI Integration Guide](docs/ai-integration-guide.md)
+
 ---
 
 ## Capability Snapshot

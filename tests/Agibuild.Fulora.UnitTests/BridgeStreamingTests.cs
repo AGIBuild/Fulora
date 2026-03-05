@@ -76,15 +76,16 @@ public sealed class BridgeStreamingTests
             MetadataReference.CreateFromFile(System.IO.Path.Combine(runtimeDir, "System.Runtime.dll")),
         };
 
+        var ct = TestContext.Current.CancellationToken;
         var compilation = CSharpCompilation.Create(
             "TestAssembly",
-            [CSharpSyntaxTree.ParseText(source)],
+            [CSharpSyntaxTree.ParseText(source, cancellationToken: ct)],
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         var generator = new WebViewBridgeGenerator();
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
-        driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out _, out var diagnostics);
+        driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out _, out var diagnostics, ct);
 
         Assert.DoesNotContain(diagnostics, d => d.Id.StartsWith("AGBR"));
 
@@ -92,7 +93,7 @@ public sealed class BridgeStreamingTests
             .FirstOrDefault(t => t.FilePath.Contains("MyStreamServiceBridgeRegistration"));
         Assert.NotNull(regTree);
 
-        var regContent = regTree!.GetText().ToString();
+        var regContent = regTree!.GetText(ct).ToString();
         Assert.Contains("RegisterEnumerator", regContent);
         Assert.Contains("GetAsyncEnumerator", regContent);
     }
@@ -126,21 +127,22 @@ public sealed class BridgeStreamingTests
             MetadataReference.CreateFromFile(System.IO.Path.Combine(runtimeDir, "System.Runtime.dll")),
         };
 
+        var ct = TestContext.Current.CancellationToken;
         var compilation = CSharpCompilation.Create(
             "TestAssembly",
-            [CSharpSyntaxTree.ParseText(source)],
+            [CSharpSyntaxTree.ParseText(source, cancellationToken: ct)],
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         var generator = new WebViewBridgeGenerator();
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
-        driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out _, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out _, out _, ct);
 
         var tsTree = driver.GetRunResult().GeneratedTrees
             .FirstOrDefault(t => t.FilePath.Contains("BridgeTypeScriptDeclarations"));
         Assert.NotNull(tsTree);
 
-        var tsContent = tsTree!.GetText().ToString();
+        var tsContent = tsTree!.GetText(ct).ToString();
         Assert.Contains("streamNumbers(): AsyncIterable<number>", tsContent);
         Assert.Contains("getName(): Promise<string>", tsContent);
     }
@@ -242,5 +244,66 @@ public sealed class BridgeStreamingTests
         Assert.Contains("$/enumerator/abort", WebViewRpcService.JsStub);
         Assert.Contains("_encodeBinaryPayload", WebViewRpcService.JsStub);
         Assert.Contains("_decodeBinaryResult", WebViewRpcService.JsStub);
+    }
+
+    [Fact]
+    public void Enumerator_disposed_after_inactivity_timeout()
+    {
+        var (core, adapter) = CreateCoreWithRpc();
+        var capturedScripts = new List<string>();
+        adapter.ScriptCallback = script => { capturedScripts.Add(script); return null; };
+
+        core.Bridge.Expose<IStreamingService>(new FakeStreamingService());
+        capturedScripts.Clear();
+
+        adapter.RaiseWebMessage(
+            """{"jsonrpc":"2.0","id":"timeout-1","method":"StreamingService.streamMessages","params":{"topic":"test"}}""",
+            "*", core.ChannelId);
+        _dispatcher.RunAll();
+        Thread.Sleep(100);
+        _dispatcher.RunAll();
+
+        var response = capturedScripts.FirstOrDefault(s => s.Contains("token"));
+        Assert.NotNull(response);
+
+        Assert.Equal(TimeSpan.FromSeconds(30), WebViewRpcService.EnumeratorInactivityTimeout);
+    }
+
+    [Fact]
+    public void Enumerator_next_resets_inactivity_timer()
+    {
+        var (core, adapter) = CreateCoreWithRpc();
+        var capturedScripts = new List<string>();
+        adapter.ScriptCallback = script => { capturedScripts.Add(script); return null; };
+
+        core.Bridge.Expose<IStreamingService>(new FakeStreamingService());
+        capturedScripts.Clear();
+
+        adapter.RaiseWebMessage(
+            """{"jsonrpc":"2.0","id":"reset-1","method":"StreamingService.streamMessages","params":{"topic":"test"}}""",
+            "*", core.ChannelId);
+        _dispatcher.RunAll();
+        Thread.Sleep(100);
+        _dispatcher.RunAll();
+
+        var tokenResponse = capturedScripts.FirstOrDefault(s => s.Contains("token"));
+        Assert.NotNull(tokenResponse);
+
+        var guidMatch = System.Text.RegularExpressions.Regex.Match(
+            tokenResponse!, @"([a-f0-9]{8}-?[a-f0-9]{4}-?[a-f0-9]{4}-?[a-f0-9]{4}-?[a-f0-9]{12})");
+        Assert.True(guidMatch.Success, "Should extract enumerator token GUID from response");
+
+        var token = guidMatch.Groups[1].Value;
+
+        capturedScripts.Clear();
+        adapter.RaiseWebMessage(
+            $$$"""{"jsonrpc":"2.0","id":"next-1","method":"$/enumerator/next/{{{token}}}","params":{}}""",
+            "*", core.ChannelId);
+        _dispatcher.RunAll();
+        Thread.Sleep(100);
+        _dispatcher.RunAll();
+
+        var nextResponse = capturedScripts.FirstOrDefault(s => s.Contains("_onResponse"));
+        Assert.NotNull(nextResponse);
     }
 }

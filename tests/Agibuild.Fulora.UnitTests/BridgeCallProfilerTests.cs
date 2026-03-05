@@ -158,6 +158,25 @@ public class BridgeCallProfilerTests
     }
 
     [Fact]
+    public void OnServiceExposed_and_OnServiceRemoved_without_inner_do_not_throw()
+    {
+        var profiler = new BridgeCallProfiler();
+        profiler.OnServiceExposed("Svc", 3, true);
+        profiler.OnServiceRemoved("Svc");
+    }
+
+    [Fact]
+    public void OnServiceExposed_and_OnServiceRemoved_delegate_to_inner()
+    {
+        var inner = new RecordingTracer();
+        var profiler = new BridgeCallProfiler(inner);
+        profiler.OnServiceExposed("Svc", 3, true);
+        profiler.OnServiceRemoved("Svc");
+        Assert.Contains(inner.Events, e => e == "Exposed:Svc:3");
+        Assert.Contains(inner.Events, e => e == "Removed:Svc");
+    }
+
+    [Fact]
     public void Percentiles_ComputedCorrectly()
     {
         var profiler = new BridgeCallProfiler();

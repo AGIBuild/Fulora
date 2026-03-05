@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace>AvaloniAiChat.Desktop</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.0.0-preview1" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview1" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview1" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="9.6.0" />
+    <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Avalonia\Agibuild.Fulora.Avalonia.csproj" />
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Runtime\Agibuild.Fulora.Runtime.csproj" />
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Windows\Agibuild.Fulora.Adapters.Windows.csproj" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AvaloniAiChat.Bridge\AvaloniAiChat.Bridge.csproj" />
+  </ItemGroup>
+
+  <!-- Release: build React app and embed as resources -->
+  <Target Name="BuildWebApp" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="npm run build" WorkingDirectory="../AvaloniAiChat.Web" />
+  </Target>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <EmbeddedResource Include="..\AvaloniAiChat.Web\dist\**\*" LinkBase="wwwroot" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
+  </ItemGroup>
+
+</Project>

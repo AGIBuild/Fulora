@@ -48,7 +48,7 @@ public class CompositeBridgeTracerTests
     }
 
     [Fact]
-    public void CompositeBridgeTracer_IsolatesExceptions()
+    public void CompositeBridgeTracer_IsolatesExceptions_AllMethods()
     {
         var good = new RecordingTracer();
         var bad = new ThrowingTracer();
@@ -56,9 +56,19 @@ public class CompositeBridgeTracerTests
 
         composite.OnExportCallStart("Svc", "Method", null);
         composite.OnExportCallEnd("Svc", "Method", 42, null);
+        composite.OnExportCallError("Svc", "Method", 1, new Exception("test"));
+        composite.OnImportCallStart("Svc", "Other", null);
+        composite.OnImportCallEnd("Svc", "Other", 10);
+        composite.OnServiceExposed("Svc", 2, true);
+        composite.OnServiceRemoved("Svc");
 
         Assert.Contains(good.Events, e => e == "ExportStart:Svc.Method");
         Assert.Contains(good.Events, e => e == "ExportEnd:Svc.Method:42ms");
+        Assert.Contains(good.Events, e => e == "ExportError:Svc.Method");
+        Assert.Contains(good.Events, e => e == "ImportStart:Svc.Other");
+        Assert.Contains(good.Events, e => e == "ImportEnd:Svc.Other:10ms");
+        Assert.Contains(good.Events, e => e.StartsWith("Exposed:Svc:"));
+        Assert.Contains(good.Events, e => e == "Removed:Svc");
     }
 
     [Fact]
@@ -118,10 +128,19 @@ public class CompositeBridgeTracerTests
         public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
             => throw new InvalidOperationException("test throw");
 
-        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error) { }
-        public void OnImportCallStart(string serviceName, string methodName, string? paramsJson) { }
-        public void OnImportCallEnd(string serviceName, string methodName, long elapsedMs) { }
-        public void OnServiceExposed(string serviceName, int methodCount, bool isSourceGenerated) { }
-        public void OnServiceRemoved(string serviceName) { }
+        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+            => throw new InvalidOperationException("test throw");
+
+        public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
+            => throw new InvalidOperationException("test throw");
+
+        public void OnImportCallEnd(string serviceName, string methodName, long elapsedMs)
+            => throw new InvalidOperationException("test throw");
+
+        public void OnServiceExposed(string serviceName, int methodCount, bool isSourceGenerated)
+            => throw new InvalidOperationException("test throw");
+
+        public void OnServiceRemoved(string serviceName)
+            => throw new InvalidOperationException("test throw");
     }
 }

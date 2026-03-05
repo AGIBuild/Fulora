@@ -177,3 +177,15 @@ internal interface IWebViewAdapter
     event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
     event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
 }
+
+/// <summary>
+/// Optional interface for adapters that support native ↔ web drag-and-drop.
+/// Runtime checks for this via <c>adapter as IDragDropAdapter</c>.
+/// </summary>
+internal interface IDragDropAdapter
+{
+    event EventHandler<DragEventArgs>? DragEntered;
+    event EventHandler<DragEventArgs>? DragOver;
+    event EventHandler<EventArgs>? DragLeft;
+    event EventHandler<DropEventArgs>? DropCompleted;
+}

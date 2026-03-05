@@ -345,6 +345,9 @@ internal class MockWebViewAdapter : IWebViewAdapter
 
     /// <summary>Creates a mock that supports context menu interception.</summary>
     public static MockWebViewAdapterWithContextMenu CreateWithContextMenu() => new();
+
+    /// <summary>Creates a mock that supports drag-and-drop events.</summary>
+    public static MockWebViewAdapterWithDragDrop CreateWithDragDrop() => new();
 }
 
 /// <summary>Mock adapter that also implements <see cref="IWebViewAdapterOptions"/> for environment options testing.</summary>
@@ -628,4 +631,25 @@ internal sealed class MockWebViewAdapterWithContextMenu : MockWebViewAdapter, IC
     {
         ContextMenuRequested?.Invoke(this, args);
     }
+}
+
+/// <summary>Mock adapter that also implements <see cref="IDragDropAdapter"/> for drag-and-drop testing.</summary>
+internal sealed class MockWebViewAdapterWithDragDrop : MockWebViewAdapter, IDragDropAdapter
+{
+    public event EventHandler<DragEventArgs>? DragEntered;
+    public event EventHandler<DragEventArgs>? DragOver;
+    public event EventHandler<EventArgs>? DragLeft;
+    public event EventHandler<DropEventArgs>? DropCompleted;
+
+    /// <summary>Simulates a drag entered event.</summary>
+    public void RaiseDragEntered(DragEventArgs args) => DragEntered?.Invoke(this, args);
+
+    /// <summary>Simulates a drag over event.</summary>
+    public void RaiseDragOver(DragEventArgs args) => DragOver?.Invoke(this, args);
+
+    /// <summary>Simulates a drag left event.</summary>
+    public void RaiseDragLeft() => DragLeft?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>Simulates a drop completed event.</summary>
+    public void RaiseDropCompleted(DropEventArgs args) => DropCompleted?.Invoke(this, args);
 }
