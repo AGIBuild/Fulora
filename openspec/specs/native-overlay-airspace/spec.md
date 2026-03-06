@@ -2,7 +2,7 @@
 
 Define requirements for native Avalonia controls rendered above WebView content via companion overlay window. Ensures cross-platform overlay positioning, input routing, and lifecycle management.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: WebView.OverlayContent renders Avalonia controls above WebView
 

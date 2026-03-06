@@ -1,4 +1,8 @@
-## MODIFIED Requirements
+## Purpose
+
+Define the core IWebViewRpcService interface contract for bidirectional JS-C# RPC communication, including handler registration, invocation, and JS stub idempotency.
+
+## Requirements
 
 ### Requirement: IWebViewRpcService interface in Core
 The Core assembly SHALL define `IWebViewRpcService`:

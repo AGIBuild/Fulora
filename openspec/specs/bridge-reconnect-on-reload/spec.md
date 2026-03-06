@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define requirements for automatic bridge reconnection after page navigation or reload, ensuring the JS-C# bridge remains functional without requiring an application restart.
+
+## Requirements
 
 ### Requirement: Bridge JS stubs are re-injected after successful navigation
 When the WebMessage bridge is enabled and a navigation completes successfully (including page reload), the system SHALL re-inject the base RPC JS stub (`WebViewRpcService.JsStub`) and all currently-exposed service JS stubs so that the frontend can reconnect to the bridge without requiring an application restart.

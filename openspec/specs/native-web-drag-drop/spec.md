@@ -2,7 +2,7 @@
 
 Define requirements for cross-boundary drag-and-drop between native Avalonia/OS content and WebView web content. Covers adapter interface, platform implementations, bridge service, and JS helpers.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: IDragDropAdapter defines cross-boundary drag events
 

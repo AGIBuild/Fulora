@@ -2,7 +2,7 @@
 
 Define requirements for the hybrid E2E testing library. Ensures developers can write xUnit tests that launch a Fulora app, interact with WebView content, assert on bridge calls, and run in CI.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: FuloraTestApp launches a headless Avalonia app with WebView
 

@@ -2,7 +2,7 @@
 
 Define requirements for the `fulora package` CLI command, `VelopackAutoUpdateProvider`, and the end-to-end app distribution workflow.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: fulora package produces platform installers
 

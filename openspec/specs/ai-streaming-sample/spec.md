@@ -2,7 +2,7 @@
 
 Define requirements for the AI streaming sample app and the enumerator inactivity timeout fix. Ensures the sample demonstrates real-world LLM streaming patterns and the bridge handles abandoned enumerators gracefully.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: IAiChatService exposes streaming completion via IAsyncEnumerable
 

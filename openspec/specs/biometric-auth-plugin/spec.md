@@ -2,7 +2,7 @@
 
 Define requirements for the biometric authentication plugin. Ensures cross-platform biometric verification is available via the bridge with graceful degradation.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: IBiometricService exposes availability check and authentication
 
