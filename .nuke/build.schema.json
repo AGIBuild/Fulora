@@ -39,6 +39,7 @@
         "DistributionReadinessGovernance",
         "E2ETests",
         "IntegrationTests",
+        "MutationTest",
         "NpmPublish",
         "NugetPackageTest",
         "OpenSpecStrictGovernance",

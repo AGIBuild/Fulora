@@ -10,7 +10,7 @@ namespace Agibuild.Fulora.Adapters.iOS;
 [SupportedOSPlatform("ios")]
 internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleProvider, ICookieAdapter, IWebViewAdapterOptions,
     ICustomSchemeAdapter, IDownloadAdapter, IPermissionAdapter, ICommandAdapter, IScreenshotAdapter, IPrintAdapter,
-    IFindInPageAdapter, IZoomAdapter, IPreloadScriptAdapter, IContextMenuAdapter, IDevToolsAdapter
+    IFindInPageAdapter, IZoomAdapter, IPreloadScriptAdapter, IContextMenuAdapter, IDevToolsAdapter, IDragDropAdapter
 {
     private static bool DiagnosticsEnabled
         => string.Equals(Environment.GetEnvironmentVariable("AGIBUILD_WEBVIEW_DIAG"), "1", StringComparison.Ordinal);
@@ -32,6 +32,10 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
     private NativeMethods.DownloadCb? _downloadCb;
     private NativeMethods.PermissionCb? _permissionCb;
     private NativeMethods.SchemeRequestCb? _schemeRequestCb;
+    private NativeMethods.DragEnteredCb? _dragEnteredCb;
+    private NativeMethods.DragUpdatedCb? _dragUpdatedCb;
+    private NativeMethods.DragExitedCb? _dragExitedCb;
+    private NativeMethods.DropPerformedCb? _dropPerformedCb;
 
     // Pinned buffers for scheme responses
     private byte[]? _schemeResponseData;
@@ -66,6 +70,12 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
     public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested;
     public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested;
     public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
+
+    // IDragDropAdapter events
+    public event EventHandler<DragEventArgs>? DragEntered;
+    public event EventHandler<DragEventArgs>? DragOver;
+    public event EventHandler<EventArgs>? DragLeft;
+    public event EventHandler<DropEventArgs>? DropCompleted;
 
     private IReadOnlyList<CustomSchemeRegistration>? _customSchemes;
 
@@ -113,6 +123,10 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
             _permissionCb = PermissionTrampoline;
             _schemeRequestCb = SchemeRequestTrampoline;
         }
+        _dragEnteredCb = DragEnteredTrampoline;
+        _dragUpdatedCb = DragUpdatedTrampoline;
+        _dragExitedCb = DragExitedTrampoline;
+        _dropPerformedCb = DropPerformedTrampoline;
 
         _callbacks = new NativeMethods.AgWkCallbacks
         {
@@ -123,6 +137,10 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
             on_download = Marshal.GetFunctionPointerForDelegate(_downloadCb),
             on_permission = Marshal.GetFunctionPointerForDelegate(_permissionCb),
             on_scheme_request = Marshal.GetFunctionPointerForDelegate(_schemeRequestCb),
+            on_drag_entered = Marshal.GetFunctionPointerForDelegate(_dragEnteredCb),
+            on_drag_updated = Marshal.GetFunctionPointerForDelegate(_dragUpdatedCb),
+            on_drag_exited = Marshal.GetFunctionPointerForDelegate(_dragExitedCb),
+            on_drop_performed = Marshal.GetFunctionPointerForDelegate(_dropPerformedCb),
         };
 
         _native = NativeMethods.Create(ref _callbacks, GCHandle.ToIntPtr(_selfHandle));
@@ -587,6 +605,88 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
             outResponseData, outResponseLength, outMimeTypeUtf8, outStatusCode);
     }
 
+    // ==================== IDragDropAdapter trampolines ====================
+
+    [MonoPInvokeCallback(typeof(NativeMethods.DragEnteredCb))]
+    private static void DragEnteredTrampoline(IntPtr userData, IntPtr filesJsonUtf8, IntPtr textUtf8, IntPtr htmlUtf8, IntPtr uriUtf8, double x, double y)
+    {
+        var self = NativeMethods.FromUserData(userData);
+        if (self is null) return;
+        var payload = ParseDragPayload(filesJsonUtf8, textUtf8, htmlUtf8, uriUtf8);
+        self.DragEntered?.Invoke(self, new DragEventArgs
+        {
+            Payload = payload,
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = x, Y = y
+        });
+    }
+
+    [MonoPInvokeCallback(typeof(NativeMethods.DragUpdatedCb))]
+    private static void DragUpdatedTrampoline(IntPtr userData, double x, double y)
+    {
+        var self = NativeMethods.FromUserData(userData);
+        if (self is null) return;
+        self.DragOver?.Invoke(self, new DragEventArgs
+        {
+            Payload = new DragDropPayload(),
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = x, Y = y
+        });
+    }
+
+    [MonoPInvokeCallback(typeof(NativeMethods.DragExitedCb))]
+    private static void DragExitedTrampoline(IntPtr userData)
+    {
+        var self = NativeMethods.FromUserData(userData);
+        self?.DragLeft?.Invoke(self, EventArgs.Empty);
+    }
+
+    [MonoPInvokeCallback(typeof(NativeMethods.DropPerformedCb))]
+    private static void DropPerformedTrampoline(IntPtr userData, IntPtr filesJsonUtf8, IntPtr textUtf8, IntPtr htmlUtf8, IntPtr uriUtf8, double x, double y)
+    {
+        var self = NativeMethods.FromUserData(userData);
+        if (self is null) return;
+        var payload = ParseDragPayload(filesJsonUtf8, textUtf8, htmlUtf8, uriUtf8);
+        self.DropCompleted?.Invoke(self, new DropEventArgs
+        {
+            Payload = payload,
+            Effect = DragDropEffects.Copy,
+            X = x, Y = y
+        });
+    }
+
+    private static DragDropPayload ParseDragPayload(IntPtr filesJsonUtf8, IntPtr textUtf8, IntPtr htmlUtf8, IntPtr uriUtf8)
+    {
+        var payload = new DragDropPayload
+        {
+            Text = NativeMethods.PtrToStringNullable(textUtf8),
+            Html = NativeMethods.PtrToStringNullable(htmlUtf8),
+            Uri = NativeMethods.PtrToStringNullable(uriUtf8)
+        };
+
+        var filesJson = NativeMethods.PtrToStringNullable(filesJsonUtf8);
+        if (!string.IsNullOrEmpty(filesJson) && filesJson != "[]")
+        {
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(filesJson);
+                var files = new List<FileDropInfo>();
+                foreach (var elem in doc.RootElement.EnumerateArray())
+                {
+                    var path = elem.GetProperty("path").GetString() ?? "";
+                    long? size = elem.TryGetProperty("size", out var sizeProp) && sizeProp.ValueKind == System.Text.Json.JsonValueKind.Number
+                        ? sizeProp.GetInt64() : null;
+                    files.Add(new FileDropInfo(path, null, size));
+                }
+                payload = payload with { Files = files };
+            }
+            catch { /* malformed JSON — ignore */ }
+        }
+        return payload;
+    }
+
     [MonoPInvokeCallback(typeof(NativeMethods.CookiesGetCb))]
     private static void CookiesGetTrampoline(IntPtr context, IntPtr jsonUtf8)
     {
@@ -919,6 +1019,18 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
             IntPtr* outMimeTypeUtf8,
             int* outStatusCode);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void DragEnteredCb(IntPtr userData, IntPtr filesJsonUtf8, IntPtr textUtf8, IntPtr htmlUtf8, IntPtr uriUtf8, double x, double y);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void DragUpdatedCb(IntPtr userData, double x, double y);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void DragExitedCb(IntPtr userData);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void DropPerformedCb(IntPtr userData, IntPtr filesJsonUtf8, IntPtr textUtf8, IntPtr htmlUtf8, IntPtr uriUtf8, double x, double y);
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct AgWkCallbacks
         {
@@ -929,6 +1041,10 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
             public IntPtr on_download;
             public IntPtr on_permission;
             public IntPtr on_scheme_request;
+            public IntPtr on_drag_entered;
+            public IntPtr on_drag_updated;
+            public IntPtr on_drag_exited;
+            public IntPtr on_drop_performed;
         }
 
         // Cookie management

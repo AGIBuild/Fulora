@@ -746,6 +746,7 @@ internal sealed class AndroidWebViewAdapter : IWebViewAdapter, INativeWebViewHan
         {
             // Inject WebMessage bridge script on each page load.
             InjectBridgeScript(view);
+            InjectPreloadScripts(view);
 
             if (!_hasActiveNavigation) return;
 
@@ -964,6 +965,16 @@ internal sealed class AndroidWebViewAdapter : IWebViewAdapter, INativeWebViewHan
             """;
 
         view.EvaluateJavascript(bridgeScript, null);
+    }
+
+    private void InjectPreloadScripts(AWebView? view)
+    {
+        if (view is null || _preloadScripts.Count == 0) return;
+
+        foreach (var script in _preloadScripts.Values)
+        {
+            view.EvaluateJavascript(script, null);
+        }
     }
 
     private static Exception MapErrorCode(ClientError errorCode, string message, Guid navigationId, Uri requestUri)

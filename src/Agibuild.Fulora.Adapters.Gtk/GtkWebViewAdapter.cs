@@ -8,10 +8,7 @@ namespace Agibuild.Fulora.Adapters.Gtk;
 
 internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleProvider, ICookieAdapter, IWebViewAdapterOptions,
     ICustomSchemeAdapter, IDownloadAdapter, IPermissionAdapter, ICommandAdapter, IScreenshotAdapter,
-    IDragDropAdapter,
-    // PLATFORM LIMITATION: IPrintAdapter is not implemented. WebKitGTK lacks a PDF export API.
-    // webkit_web_view_get_snapshot returns a Cairo raster surface, not PDF.
-    // webkit_print_operation_run_dialog requires a display and cannot produce headless PDF output.
+    IDragDropAdapter, IPrintAdapter,
     IFindInPageAdapter, IZoomAdapter, IPreloadScriptAdapter, IContextMenuAdapter, IDevToolsAdapter
 {
     private static bool DiagnosticsEnabled
@@ -1195,6 +1192,12 @@ internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
         internal static extern void CaptureScreenshot(IntPtr handle, ScreenshotCb callback, IntPtr context);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void PdfCb(IntPtr context, IntPtr pdfData, uint pdfLen);
+
+        [DllImport(LibraryName, EntryPoint = "ag_gtk_print_to_pdf", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void PrintToPdf(IntPtr handle, PdfCb callback, IntPtr context);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void FindCb(IntPtr context, int activeMatchIndex, int totalMatches);
 
         [DllImport(LibraryName, EntryPoint = "ag_gtk_find_text", CallingConvention = CallingConvention.Cdecl)]
@@ -1265,6 +1268,37 @@ internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
 
         var buffer = new byte[pngLen];
         Marshal.Copy(pngData, buffer, 0, (int)pngLen);
+        tcs.TrySetResult(buffer);
+    }
+
+    // ==================== IPrintAdapter ====================
+
+    public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options)
+    {
+        ThrowIfNotAttached();
+        var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var handle = GCHandle.Alloc(tcs);
+
+        NativeMethods.PrintToPdf(_native, PdfCompleteCallback, GCHandle.ToIntPtr(handle));
+        return tcs.Task;
+    }
+
+    private static readonly NativeMethods.PdfCb PdfCompleteCallback = OnPdfComplete;
+
+    private static void OnPdfComplete(IntPtr context, IntPtr pdfData, uint pdfLen)
+    {
+        var gcHandle = GCHandle.FromIntPtr(context);
+        var tcs = (TaskCompletionSource<byte[]>)gcHandle.Target!;
+        gcHandle.Free();
+
+        if (pdfData == IntPtr.Zero || pdfLen == 0)
+        {
+            tcs.TrySetException(new InvalidOperationException("PDF printing failed or is not supported on this platform."));
+            return;
+        }
+
+        var buffer = new byte[pdfLen];
+        Marshal.Copy(pdfData, buffer, 0, (int)pdfLen);
         tcs.TrySetResult(buffer);
     }
 

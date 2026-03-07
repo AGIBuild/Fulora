@@ -63,6 +63,30 @@ typedef bool (*ag_wk_scheme_request_cb)(
     const char** out_mime_type_utf8,
     int* out_status_code);
 
+// Drag-drop callbacks (iOS 11+ UIDropInteraction).
+typedef void (*ag_wk_drag_entered_cb)(
+    void* user_data,
+    const char* files_json_utf8,
+    const char* text_utf8,
+    const char* html_utf8,
+    const char* uri_utf8,
+    double x, double y);
+
+typedef void (*ag_wk_drag_updated_cb)(
+    void* user_data,
+    double x, double y);
+
+typedef void (*ag_wk_drag_exited_cb)(
+    void* user_data);
+
+typedef void (*ag_wk_drop_performed_cb)(
+    void* user_data,
+    const char* files_json_utf8,
+    const char* text_utf8,
+    const char* html_utf8,
+    const char* uri_utf8,
+    double x, double y);
+
 struct ag_wk_callbacks
 {
     ag_wk_policy_request_cb on_policy_request;
@@ -72,6 +96,10 @@ struct ag_wk_callbacks
     ag_wk_download_cb on_download;
     ag_wk_permission_cb on_permission;
     ag_wk_scheme_request_cb on_scheme_request;
+    ag_wk_drag_entered_cb on_drag_entered;
+    ag_wk_drag_updated_cb on_drag_updated;
+    ag_wk_drag_exited_cb on_drag_exited;
+    ag_wk_drop_performed_cb on_drop_performed;
 };
 
 typedef void* ag_wk_handle;
@@ -174,6 +202,10 @@ struct shim_state;
 @property(nonatomic, assign) shim_state* state;
 @end
 
+@interface ShimDropDelegate : NSObject <UIDropInteractionDelegate>
+@property(nonatomic, assign) shim_state* state;
+@end
+
 struct shim_state
 {
     ag_wk_callbacks callbacks {};
@@ -187,6 +219,7 @@ struct shim_state
     __strong ShimNavigationDelegate* nav_delegate { nil };
     __strong ShimMessageHandler* msg_handler { nil };
     __strong ShimUIDelegate* ui_delegate { nil };
+    __strong ShimDropDelegate* drop_delegate { nil };
 
     std::atomic<uint64_t> next_request_id { 1 };
     __strong NSMutableDictionary<NSNumber*, policy_decision_block>* pending_policy { nil };
@@ -618,6 +651,15 @@ bool ag_wk_attach(ag_wk_handle handle, void* uiview_ptr)
             s->ui_delegate = [[ShimUIDelegate alloc] init];
             s->ui_delegate.state = s;
             s->web_view.UIDelegate = s->ui_delegate;
+
+            // Add UIDropInteraction for drag-and-drop support (iOS 11+).
+            if (s->callbacks.on_drag_entered || s->callbacks.on_drop_performed)
+            {
+                s->drop_delegate = [[ShimDropDelegate alloc] init];
+                s->drop_delegate.state = s;
+                UIDropInteraction* dropInteraction = [[UIDropInteraction alloc] initWithDelegate:s->drop_delegate];
+                [s->web_view addInteraction:dropInteraction];
+            }
 
             [parent addSubview:s->web_view];
             ok = true;
@@ -1274,3 +1316,124 @@ void ag_wk_remove_all_user_scripts(ag_wk_handle handle)
 }
 
 } // extern "C"
+
+// ======================== UIDropInteractionDelegate ========================
+
+static NSString* extractFilesJsonFromSession(id<UIDropSession> session)
+{
+    __block NSMutableArray* filesArray = [NSMutableArray array];
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    __block NSUInteger pending = 0;
+
+    for (UIDragItem* item in session.items)
+    {
+        if ([item.itemProvider hasItemConformingToTypeIdentifier:@"public.file-url"])
+        {
+            pending++;
+            [item.itemProvider loadItemForTypeIdentifier:@"public.file-url" options:nil completionHandler:^(NSURL* url, NSError* error) {
+                if (url && !error)
+                {
+                    NSNumber* fileSize = nil;
+                    [url getResourceValue:&fileSize forKey:NSURLFileSizeKey error:nil];
+                    NSDictionary* fileInfo = @{
+                        @"path": url.path ?: @"",
+                        @"size": fileSize ?: @0
+                    };
+                    @synchronized(filesArray) {
+                        [filesArray addObject:fileInfo];
+                    }
+                }
+                dispatch_semaphore_signal(sema);
+            }];
+        }
+    }
+
+    for (NSUInteger i = 0; i < pending; i++)
+    {
+        dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC));
+    }
+
+    if (filesArray.count == 0) return nil;
+
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:filesArray options:0 error:nil];
+    if (!jsonData) return nil;
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
+static NSString* extractTextFromSession(id<UIDropSession> session)
+{
+    if (![session hasItemsConformingToTypeIdentifiers:@[@"public.utf8-plain-text"]]) return nil;
+
+    __block NSString* result = nil;
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+
+    for (UIDragItem* item in session.items)
+    {
+        if ([item.itemProvider hasItemConformingToTypeIdentifier:@"public.utf8-plain-text"])
+        {
+            [item.itemProvider loadItemForTypeIdentifier:@"public.utf8-plain-text" options:nil completionHandler:^(NSString* text, NSError* error) {
+                if (text && !error) result = text;
+                dispatch_semaphore_signal(sema);
+            }];
+            dispatch_semaphore_wait(sema, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC));
+            break;
+        }
+    }
+    return result;
+}
+
+@implementation ShimDropDelegate
+
+- (BOOL)dropInteraction:(UIDropInteraction *)interaction canHandleSession:(id<UIDropSession>)session
+{
+    return [session hasItemsConformingToTypeIdentifiers:@[
+        @"public.file-url",
+        @"public.utf8-plain-text",
+        @"public.url"
+    ]];
+}
+
+- (UIDropProposal *)dropInteraction:(UIDropInteraction *)interaction sessionDidUpdate:(id<UIDropSession>)session
+{
+    if (_state && _state->callbacks.on_drag_updated && !_state->detached.load())
+    {
+        CGPoint pt = [session locationInView:interaction.view];
+        _state->callbacks.on_drag_updated(_state->user_data, pt.x, pt.y);
+    }
+    return [[UIDropProposal alloc] initWithDropOperation:UIDropOperationCopy];
+}
+
+- (void)dropInteraction:(UIDropInteraction *)interaction sessionDidEnter:(id<UIDropSession>)session
+{
+    if (!_state || !_state->callbacks.on_drag_entered || _state->detached.load()) return;
+
+    CGPoint pt = [session locationInView:interaction.view];
+    _state->callbacks.on_drag_entered(
+        _state->user_data,
+        NULL, NULL, NULL, NULL,
+        pt.x, pt.y);
+}
+
+- (void)dropInteraction:(UIDropInteraction *)interaction sessionDidExit:(id<UIDropSession>)session
+{
+    if (!_state || !_state->callbacks.on_drag_exited || _state->detached.load()) return;
+    _state->callbacks.on_drag_exited(_state->user_data);
+}
+
+- (void)dropInteraction:(UIDropInteraction *)interaction performDrop:(id<UIDropSession>)session
+{
+    if (!_state || !_state->callbacks.on_drop_performed || _state->detached.load()) return;
+
+    CGPoint pt = [session locationInView:interaction.view];
+    NSString* filesJson = extractFilesJsonFromSession(session);
+    NSString* text = extractTextFromSession(session);
+
+    _state->callbacks.on_drop_performed(
+        _state->user_data,
+        filesJson ? filesJson.UTF8String : NULL,
+        text ? text.UTF8String : NULL,
+        NULL, NULL,
+        pt.x, pt.y);
+}
+
+@end

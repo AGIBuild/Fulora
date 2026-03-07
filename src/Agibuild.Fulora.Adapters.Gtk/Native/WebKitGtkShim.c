@@ -1413,17 +1413,51 @@ typedef void (*ag_gtk_pdf_cb)(void* context, const void* pdf_data, uint32_t pdf_
 typedef struct {
     ag_gtk_pdf_cb callback;
     void* context;
+    char* temp_path;
 } pdf_ctx;
 
-static void on_print_finished(WebKitPrintOperation* operation, gpointer user_data)
+static void on_pdf_print_finished(WebKitPrintOperation* operation, gpointer user_data)
 {
     (void)operation;
     pdf_ctx* ctx = (pdf_ctx*)user_data;
-    /* WebKitPrintOperation doesn't give us the bytes directly.
-       For headless PDF, we use webkit_web_view_save which gives HTML.
-       GTK's webkit doesn't have a direct createPDF API like WebKit2.
-       We'll report unsupported for now and let the runtime throw. */
+    if (!ctx) return;
+
+    if (ctx->temp_path)
+    {
+        gchar* contents = NULL;
+        gsize length = 0;
+        if (g_file_get_contents(ctx->temp_path, &contents, &length, NULL) && contents)
+        {
+            ctx->callback(ctx->context, contents, (uint32_t)length);
+            g_free(contents);
+        }
+        else
+        {
+            ctx->callback(ctx->context, NULL, 0);
+        }
+        g_unlink(ctx->temp_path);
+        free(ctx->temp_path);
+    }
+    else
+    {
+        ctx->callback(ctx->context, NULL, 0);
+    }
+    free(ctx);
+}
+
+static void on_pdf_print_failed(WebKitPrintOperation* operation, GError* error, gpointer user_data)
+{
+    (void)operation;
+    (void)error;
+    pdf_ctx* ctx = (pdf_ctx*)user_data;
+    if (!ctx) return;
+
     ctx->callback(ctx->context, NULL, 0);
+    if (ctx->temp_path)
+    {
+        g_unlink(ctx->temp_path);
+        free(ctx->temp_path);
+    }
     free(ctx);
 }
 
@@ -1441,9 +1475,51 @@ void ag_gtk_print_to_pdf(ag_gtk_handle handle, ag_gtk_pdf_cb callback, void* con
         return;
     }
 
-    /* GTK WebKitGTK doesn't provide a direct PDF export API.
-       Report as unsupported to let the runtime throw NotSupportedException. */
-    callback(context, NULL, 0);
+    pdf_ctx* ctx = (pdf_ctx*)calloc(1, sizeof(pdf_ctx));
+    ctx->callback = callback;
+    ctx->context = context;
+
+    /* Generate a unique temp file path for the PDF output. */
+    char temp_template[] = "/tmp/fulora_print_XXXXXX";
+    int fd = mkstemp(temp_template);
+    if (fd < 0)
+    {
+        callback(context, NULL, 0);
+        free(ctx);
+        return;
+    }
+    close(fd);
+    /* Rename with .pdf extension for GTK print settings. */
+    char pdf_path[256];
+    snprintf(pdf_path, sizeof(pdf_path), "%s.pdf", temp_template);
+    rename(temp_template, pdf_path);
+    ctx->temp_path = strdup(pdf_path);
+
+    WebKitPrintOperation* print_op = webkit_print_operation_new(s->web_view);
+
+    GtkPrintSettings* settings = gtk_print_settings_new();
+    gtk_print_settings_set_printer(settings, "Print to File");
+    gtk_print_settings_set(settings, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT, "pdf");
+
+    gchar* file_uri = g_filename_to_uri(ctx->temp_path, NULL, NULL);
+    if (file_uri)
+    {
+        gtk_print_settings_set(settings, GTK_PRINT_SETTINGS_OUTPUT_URI, file_uri);
+        g_free(file_uri);
+    }
+    webkit_print_operation_set_print_settings(print_op, settings);
+
+    GtkPageSetup* page_setup = gtk_page_setup_new();
+    gtk_page_setup_set_paper_size(page_setup, gtk_paper_size_new(GTK_PAPER_NAME_A4));
+    webkit_print_operation_set_page_setup(print_op, page_setup);
+
+    g_signal_connect(print_op, "finished", G_CALLBACK(on_pdf_print_finished), ctx);
+    g_signal_connect(print_op, "failed", G_CALLBACK(on_pdf_print_failed), ctx);
+
+    webkit_print_operation_print(print_op);
+
+    g_object_unref(settings);
+    g_object_unref(page_setup);
 }
 
 /* ========== Zoom ========== */
