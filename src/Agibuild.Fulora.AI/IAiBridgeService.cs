@@ -23,6 +23,9 @@ public interface IAiBridgeService
 
     /// <summary>Retrieves a stored blob as Base64.</summary>
     Task<string?> FetchBlob(string blobId);
+
+    /// <summary>Streams chat completion tokens as they are generated.</summary>
+    IAsyncEnumerable<string> StreamCompletion(AiChatRequest request, CancellationToken cancellationToken = default);
 }
 
 /// <summary>Chat completion request from JS.</summary>

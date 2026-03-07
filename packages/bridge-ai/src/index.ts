@@ -36,6 +36,7 @@ export interface IAiBridgeService {
     name?: string;
   }): Promise<string>;
   FetchBlob(params: { blobId: string }): Promise<string | null>;
+  StreamCompletion(params: AiChatRequest): AsyncIterable<string>;
 }
 
 // ── Helper class ──
@@ -105,6 +106,24 @@ export class AiBridgeClient {
       mimeType,
       name,
     });
+  }
+
+  /** Stream chat completion tokens as they are generated. */
+  async *streamCompletion(
+    message: string,
+    options?: {
+      systemPrompt?: string;
+      provider?: string;
+      modelId?: string;
+    }
+  ): AsyncIterable<string> {
+    const iterable = this.service.StreamCompletion({
+      message,
+      systemPrompt: options?.systemPrompt,
+      provider: options?.provider,
+      modelId: options?.modelId,
+    });
+    yield* iterable;
   }
 
   /** Fetch a blob by ID as a Uint8Array. */

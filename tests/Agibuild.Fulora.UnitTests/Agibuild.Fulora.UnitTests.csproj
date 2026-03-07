@@ -27,6 +27,8 @@
     <ProjectReference Include="..\..\plugins\Agibuild.Fulora.Plugin.Biometric\Agibuild.Fulora.Plugin.Biometric.csproj" />
     <ProjectReference Include="..\..\src\Agibuild.Fulora.Cli\Agibuild.Fulora.Cli.csproj" />
     <ProjectReference Include="..\..\src\Agibuild.Fulora.AI\Agibuild.Fulora.AI.csproj" />
+    <ProjectReference Include="..\..\src\Agibuild.Fulora.AI.Ollama\Agibuild.Fulora.AI.Ollama.csproj" />
+    <ProjectReference Include="..\..\src\Agibuild.Fulora.AI.OpenAI\Agibuild.Fulora.AI.OpenAI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

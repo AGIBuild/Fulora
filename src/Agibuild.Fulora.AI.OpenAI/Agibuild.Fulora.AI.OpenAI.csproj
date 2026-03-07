@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Agibuild.Fulora.AI.OpenAI</RootNamespace>
+
+    <IsPackable>true</IsPackable>
+    <PackageId>Agibuild.Fulora.AI.OpenAI</PackageId>
+    <Description>OpenAI provider integration for Agibuild.Fulora.AI — cloud AI coverage via Microsoft.Extensions.AI.OpenAI.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Agibuild.Fulora.AI\Agibuild.Fulora.AI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.3.0" />
+  </ItemGroup>
+</Project>

@@ -1,8 +1,11 @@
 using System.Diagnostics;
 using Agibuild.Fulora;
+using Agibuild.Fulora.AI;
+using Agibuild.Fulora.AI.Ollama;
 using Avalonia.Controls;
 using AvaloniAiChat.Bridge.Services;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniAiChat.Desktop;
 
@@ -44,8 +47,19 @@ public partial class MainWindow : Window
                 return;
             }
 
-            var (chatClient, backendName) = CreateChatClient();
-            var chatService = new AiChatService(chatClient, backendName);
+            var (backendName, configureProvider) = DetectProvider();
+
+            var services = new ServiceCollection();
+            services.AddFuloraAi(ai =>
+            {
+                configureProvider(ai);
+                ai.AddResilience();
+                ai.AddMetering();
+            });
+            var sp = services.BuildServiceProvider();
+
+            var registry = sp.GetRequiredService<IAiProviderRegistry>();
+            var chatService = new AiChatService(registry.GetChatClient(), backendName);
             WebView.Bridge.Expose<IAiChatService>(chatService);
 
             WebView.DropCompleted += (_, e) =>
@@ -57,12 +71,11 @@ public partial class MainWindow : Window
         };
     }
 
-    private static (IChatClient Client, string Name) CreateChatClient()
+    private static (string BackendName, Action<FuloraAiBuilder> Configure) DetectProvider()
     {
         var endpoint = new Uri(Environment.GetEnvironmentVariable("AI__ENDPOINT") ?? "http://localhost:11434");
         var model = Environment.GetEnvironmentVariable("AI__MODEL");
 
-        // Auto-detect: if Ollama is running, use it; otherwise fall back to Echo.
         if (model is null)
         {
             try
@@ -77,8 +90,12 @@ public partial class MainWindow : Window
         }
 
         if (model is not null)
-            return (new OllamaChatClient(endpoint, model), $"Ollama ({model})");
+        {
+            var capturedModel = model;
+            var capturedEndpoint = endpoint;
+            return ($"Ollama ({model})", ai => ai.AddOllama("default", capturedEndpoint, capturedModel));
+        }
 
-        return (new EchoChatClient(), "Echo (demo mode)");
+        return ("Echo (demo mode)", ai => ai.AddChatClient("default", new EchoChatClient()));
     }
 }

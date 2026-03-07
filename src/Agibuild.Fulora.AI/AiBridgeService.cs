@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Extensions.AI;
 
@@ -68,6 +69,24 @@ public sealed class AiBridgeService : IAiBridgeService
         var payload = _payloadStore.Fetch(blobId);
         if (payload is null) return Task.FromResult<string?>(null);
         return Task.FromResult<string?>(Convert.ToBase64String(payload.Data));
+    }
+
+    public async IAsyncEnumerable<string> StreamCompletion(
+        AiChatRequest request,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var client = _providers.GetChatClient(request.Provider);
+        var messages = BuildMessages(request.SystemPrompt, request.Message);
+
+        var options = request.ModelId is not null ? new ChatOptions { ModelId = request.ModelId } : null;
+
+        await foreach (var update in client.GetStreamingResponseAsync(messages, options, cancellationToken))
+        {
+            if (update.Text is { Length: > 0 } text)
+            {
+                yield return text;
+            }
+        }
     }
 
     private static List<ChatMessage> BuildMessages(string? systemPrompt, string userMessage)

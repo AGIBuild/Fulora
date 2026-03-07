@@ -14,8 +14,8 @@
     <PackageReference Include="Avalonia" Version="12.0.0-preview1" />
     <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview1" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview1" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.6.0" />
-    <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.7.0-preview.1.25356.2" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="10.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AvaloniAiChat.Bridge\AvaloniAiChat.Bridge.csproj" />
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.AI\Agibuild.Fulora.AI.csproj" />
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.AI.Ollama\Agibuild.Fulora.AI.Ollama.csproj" />
   </ItemGroup>
 
   <!-- Release: build React app and embed as resources -->
