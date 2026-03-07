@@ -64,4 +64,20 @@ internal static class BridgeDiagnostics
         category: Category,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor AiToolWithoutJsExport = new(
+        id: "AGBR009",
+        title: "[AiTool] requires [JsExport]",
+        messageFormat: "Interface '{0}' has [AiTool] but is missing [JsExport]. AI tool schema generation requires [JsExport] to expose the method via the bridge.",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor AiToolMissingXmlDoc = new(
+        id: "AGBR010",
+        title: "[AiTool] method missing XML documentation",
+        messageFormat: "Method '{0}' on interface '{1}' has [AiTool] but no XML <summary>. AI providers use the description to understand tool functionality.",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
 }

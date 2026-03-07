@@ -1,0 +1,46 @@
+{
+  "name": "@agibuild/bridge-ai",
+  "version": "0.1.0",
+  "description": "AI bridge client for Agibuild.Fulora — typed helpers for calling AI services from JavaScript.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "@agibuild/bridge": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@agibuild/bridge": "^1.1.0",
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AGIBuild/Agibuild.Fulora.git",
+    "directory": "packages/bridge-ai"
+  },
+  "homepage": "https://github.com/AGIBuild/Agibuild.Fulora#readme",
+  "author": "AGIBuild",
+  "keywords": [
+    "ai",
+    "bridge",
+    "avalonia",
+    "fulora",
+    "llm",
+    "chat",
+    "structured-output"
+  ],
+  "license": "MIT"
+}

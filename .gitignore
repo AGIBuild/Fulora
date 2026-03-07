@@ -217,6 +217,10 @@ packages/bridge-plugin-biometric/node_modules/
 !packages/bridge-plugin-drag-drop/**
 packages/bridge-plugin-drag-drop/dist/
 packages/bridge-plugin-drag-drop/node_modules/
+!packages/bridge-ai/
+!packages/bridge-ai/**
+packages/bridge-ai/dist/
+packages/bridge-ai/node_modules/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/[Pp]ackages/repositories.config
 # NuGet v3's project.json files produces more ignorable files
