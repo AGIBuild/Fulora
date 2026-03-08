@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies JSON Schema generation from C# types via source generator and typed completion APIs (`CompleteAsync<T>`, `CompleteStreamingAsync<T>`) for structured AI outputs.
+
+## Requirements
 
 ### Requirement: JSON Schema generation from C# types
 The source generator SHALL emit a JSON Schema string constant for C# types used as AI structured output targets.

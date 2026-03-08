@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies the Ollama provider NuGet package (`Agibuild.Fulora.AI.Ollama`) and its integration with the Fulora AI provider registry, including middleware support.
+
+## Requirements
 
 ### Requirement: Ollama provider NuGet package
 

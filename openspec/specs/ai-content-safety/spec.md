@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies content filtering for AI input and output via a composable `IAiContentFilter` pipeline, supporting block, transform, and allow actions for both single and streaming responses.
+
+## Requirements
 
 ### Requirement: Content filter pipeline
 The system SHALL provide an `IAiContentFilter` interface with `FilterInputAsync` and `FilterOutputAsync` methods, composable as an ordered pipeline via DI.

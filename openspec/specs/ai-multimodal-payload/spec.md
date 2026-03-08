@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies binary upload/download scheme handlers (`app://ai/upload`, `app://ai/blob`) and MIME type support for AI multimodal content such as images and audio.
+
+## Requirements
 
 ### Requirement: Chunked binary upload via scheme handler
 The system SHALL provide an `app://ai/upload/{id}` scheme endpoint that accepts binary data from JS via `fetch()` POST and delivers it as a `Stream` to C#.

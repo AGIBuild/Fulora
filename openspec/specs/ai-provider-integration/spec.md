@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies DI registration, default provider resolution, bridge exposure of AI chat to JavaScript, and middleware pipeline composition for AI provider integration.
+
+## Requirements
 
 ### Requirement: AI provider DI registration
 The system SHALL provide `AddFuloraAi()` extension method on `IServiceCollection` that accepts a builder delegate for configuring AI providers.

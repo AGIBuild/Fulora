@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies the `[AiTool]` attribute and source generator for OpenAI-compatible function tool schemas, plus `IAiToolRegistry` for tool discovery and invocation.
+
+## Requirements
 
 ### Requirement: AiTool attribute
 The system SHALL provide an `[AiTool]` attribute applicable to `[JsExport]` interfaces and individual methods, signaling the source generator to emit AI function tool schemas.

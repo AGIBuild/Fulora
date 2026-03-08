@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies retry with exponential backoff, call timeout, circuit breaker, and rate limiting for AI provider calls to handle transient failures and protect against cascading failures.
+
+## Requirements
 
 ### Requirement: Retry with exponential backoff
 The system SHALL retry failed AI provider calls with configurable exponential backoff.

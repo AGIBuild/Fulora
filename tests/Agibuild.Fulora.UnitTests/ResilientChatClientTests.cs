@@ -86,10 +86,10 @@ public sealed class ResilientChatClientTests
 
         var client = new ResilientChatClient(inner, opts);
 
-        await client.GetResponseAsync([new ChatMessage(ChatRole.User, "1")]);
+        await client.GetResponseAsync([new ChatMessage(ChatRole.User, "1")], cancellationToken: TestContext.Current.CancellationToken);
 
         await Assert.ThrowsAsync<RateLimiterRejectedException>(
-            () => client.GetResponseAsync([new ChatMessage(ChatRole.User, "2")]));
+            () => client.GetResponseAsync([new ChatMessage(ChatRole.User, "2")], cancellationToken: TestContext.Current.CancellationToken));
     }
 
     [Fact]

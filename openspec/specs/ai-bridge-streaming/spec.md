@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies streaming chat completion support on the AI bridge service, exposing real-time token streaming to JavaScript via `IAsyncEnumerable<string>` and TypeScript `AsyncIterable<string>`.
+
+## Requirements
 
 ### Requirement: Streaming chat completion on AI bridge service
 

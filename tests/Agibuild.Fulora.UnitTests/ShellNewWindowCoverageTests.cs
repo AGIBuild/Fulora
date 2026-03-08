@@ -167,7 +167,7 @@ public sealed partial class ShellExperienceBranchCoverageTests
         var windowId = shell.GetManagedWindowIds()[0];
         shell.Dispose();
 
-        Assert.False(await shell.CloseManagedWindowAsync(windowId));
+        Assert.False(await shell.CloseManagedWindowAsync(windowId, cancellationToken: TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -176,7 +176,7 @@ public sealed partial class ShellExperienceBranchCoverageTests
         using var webView = new FullWebView();
         using var shell = new WebViewShellExperience(webView, new WebViewShellExperienceOptions());
 
-        Assert.False(await shell.CloseManagedWindowAsync(Guid.NewGuid()));
+        Assert.False(await shell.CloseManagedWindowAsync(Guid.NewGuid(), cancellationToken: TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -228,7 +228,7 @@ public sealed partial class ShellExperienceBranchCoverageTests
         DispatcherTestPump.WaitUntil(dispatcher, () => shell.ManagedWindowCount == 1);
 
         var windowId = shell.GetManagedWindowIds()[0];
-        var closed = await shell.CloseManagedWindowAsync(windowId, timeout: TimeSpan.FromMilliseconds(10));
+        var closed = await shell.CloseManagedWindowAsync(windowId, timeout: TimeSpan.FromMilliseconds(10), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.False(closed);
         Assert.NotNull(error);
@@ -256,7 +256,7 @@ public sealed partial class ShellExperienceBranchCoverageTests
         DispatcherTestPump.WaitUntil(dispatcher, () => shell.ManagedWindowCount == 1);
 
         var windowId = shell.GetManagedWindowIds()[0];
-        var closed = await shell.CloseManagedWindowAsync(windowId);
+        var closed = await shell.CloseManagedWindowAsync(windowId, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.False(closed);
         Assert.NotNull(error);

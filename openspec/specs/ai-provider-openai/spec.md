@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies the OpenAI provider NuGet package (`Agibuild.Fulora.AI.OpenAI`) and its integration with the Fulora AI provider registry, including middleware support.
+
+## Requirements
 
 ### Requirement: OpenAI provider NuGet package
 

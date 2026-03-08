@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Specifies token usage tracking, cost estimation, budget enforcement, and telemetry export for AI provider calls via metering middleware.
+
+## Requirements
 
 ### Requirement: Per-call token tracking
 The system SHALL extract and record token usage (prompt tokens, completion tokens, total tokens) from every AI provider response.
