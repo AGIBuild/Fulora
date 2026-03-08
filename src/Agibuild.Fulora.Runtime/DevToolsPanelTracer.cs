@@ -12,6 +12,9 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
 
     private const int MaxPayloadLength = 4096;
 
+    /// <summary>
+    /// Initializes a new instance wrapping the given collector and optional inner tracer.
+    /// </summary>
     public DevToolsPanelTracer(BridgeEventCollector collector, IBridgeTracer? inner = null)
     {
         _collector = collector ?? throw new ArgumentNullException(nameof(collector));
@@ -21,6 +24,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
     /// <summary>The underlying event collector.</summary>
     public IBridgeEventCollector Collector => _collector;
 
+    /// <inheritdoc />
     public void OnExportCallStart(string serviceName, string methodName, string? paramsJson)
     {
         _collector.Add(new BridgeDevToolsEvent
@@ -36,6 +40,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
         _inner?.OnExportCallStart(serviceName, methodName, paramsJson);
     }
 
+    /// <inheritdoc />
     public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
     {
         _collector.Add(new BridgeDevToolsEvent
@@ -51,6 +56,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
         _inner?.OnExportCallEnd(serviceName, methodName, elapsedMs, resultType);
     }
 
+    /// <inheritdoc />
     public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
     {
         _collector.Add(new BridgeDevToolsEvent
@@ -66,6 +72,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
         _inner?.OnExportCallError(serviceName, methodName, elapsedMs, error);
     }
 
+    /// <inheritdoc />
     public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
     {
         _collector.Add(new BridgeDevToolsEvent
@@ -81,6 +88,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
         _inner?.OnImportCallStart(serviceName, methodName, paramsJson);
     }
 
+    /// <inheritdoc />
     public void OnImportCallEnd(string serviceName, string methodName, long elapsedMs)
     {
         _collector.Add(new BridgeDevToolsEvent
@@ -95,6 +103,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
         _inner?.OnImportCallEnd(serviceName, methodName, elapsedMs);
     }
 
+    /// <inheritdoc />
     public void OnServiceExposed(string serviceName, int methodCount, bool isSourceGenerated)
     {
         _collector.Add(new BridgeDevToolsEvent
@@ -108,6 +117,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
         _inner?.OnServiceExposed(serviceName, methodCount, isSourceGenerated);
     }
 
+    /// <inheritdoc />
     public void OnServiceRemoved(string serviceName)
     {
         _collector.Add(new BridgeDevToolsEvent

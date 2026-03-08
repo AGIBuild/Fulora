@@ -12,7 +12,7 @@ public sealed class StructuredOutputTests
     {
         var json = """{"name":"Alice","age":30}""";
         var inner = new SequentialChatClient([json]);
-        var result = await inner.CompleteAsync<PersonDto>([new ChatMessage(ChatRole.User, "test")]);
+        var result = await inner.CompleteAsync<PersonDto>([new ChatMessage(ChatRole.User, "test")], cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("Alice", result.Name);
         Assert.Equal(30, result.Age);
@@ -29,7 +29,8 @@ public sealed class StructuredOutputTests
         var inner = new SequentialChatClient(responses);
         var result = await inner.CompleteAsync<PersonDto>(
             [new ChatMessage(ChatRole.User, "test")],
-            maxRetries: 3);
+            maxRetries: 3,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("Bob", result.Name);
     }
@@ -42,7 +43,8 @@ public sealed class StructuredOutputTests
         var ex = await Assert.ThrowsAsync<AiStructuredOutputException>(
             () => inner.CompleteAsync<PersonDto>(
                 [new ChatMessage(ChatRole.User, "test")],
-                maxRetries: 3));
+                maxRetries: 3,
+                cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.NotNull(ex.RawResponse);
         Assert.NotNull(ex.ValidationError);
@@ -57,7 +59,8 @@ public sealed class StructuredOutputTests
         var ex = await Assert.ThrowsAsync<AiStructuredOutputException>(
             () => inner.CompleteAsync<PersonDto>(
                 [new ChatMessage(ChatRole.User, "test")],
-                maxRetries: 1));
+                maxRetries: 1,
+                cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Contains("empty", ex.ValidationError, StringComparison.OrdinalIgnoreCase);
     }
@@ -70,7 +73,8 @@ public sealed class StructuredOutputTests
         var ex = await Assert.ThrowsAsync<AiStructuredOutputException>(
             () => inner.CompleteAsync<PersonDto>(
                 [new ChatMessage(ChatRole.User, "test")],
-                maxRetries: 0));
+                maxRetries: 0,
+                cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Contains("null", ex.ValidationError, StringComparison.OrdinalIgnoreCase);
     }

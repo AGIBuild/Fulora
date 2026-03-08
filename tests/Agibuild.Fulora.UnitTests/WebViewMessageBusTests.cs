@@ -117,7 +117,7 @@ public class WebViewMessageBusTests
             bus.Publish("shared-topic", $"payload{i}", $"wv{i}");
         })).ToArray();
 
-        Task.WaitAll(tasks);
+        Task.WaitAll(tasks, TestContext.Current.CancellationToken);
 
         Assert.Equal(50, received.Count);
     }
@@ -162,7 +162,7 @@ public class WebViewMessageBusTests
         var bus = new WebViewMessageBus();
         using var resp = bus.Respond("rpc", m => Task.FromResult<string?>(m.PayloadJson + "-ok"));
 
-        var result = await bus.RequestAsync("rpc", "hello");
+        var result = await bus.RequestAsync("rpc", "hello", null, TestContext.Current.CancellationToken);
 
         Assert.Equal("hello-ok", result);
     }
@@ -197,8 +197,8 @@ public class WebViewMessageBusTests
         using var respA = bus.Respond("topicA", m => Task.FromResult<string?>("A"));
         using var respB = bus.Respond("topicB", m => Task.FromResult<string?>("B"));
 
-        var resultA = await bus.RequestAsync("topicA");
-        var resultB = await bus.RequestAsync("topicB");
+        var resultA = await bus.RequestAsync("topicA", null, null, TestContext.Current.CancellationToken);
+        var resultB = await bus.RequestAsync("topicB", null, null, TestContext.Current.CancellationToken);
 
         Assert.Equal("A", resultA);
         Assert.Equal("B", resultB);
@@ -208,8 +208,8 @@ public class WebViewMessageBusTests
     public async Task RequestAsync_throws_on_null_or_whitespace_topic()
     {
         var bus = new WebViewMessageBus();
-        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await bus.RequestAsync(null!));
-        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await bus.RequestAsync(""));
-        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await bus.RequestAsync("   "));
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await bus.RequestAsync(null!, null, null, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await bus.RequestAsync("", null, null, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await bus.RequestAsync("   ", null, null, TestContext.Current.CancellationToken));
     }
 }

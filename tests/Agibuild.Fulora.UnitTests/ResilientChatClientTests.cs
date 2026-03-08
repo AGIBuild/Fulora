@@ -31,7 +31,7 @@ public sealed class ResilientChatClientTests
         });
 
         var client = new ResilientChatClient(inner, DefaultOptions);
-        var result = await client.GetResponseAsync([new ChatMessage(ChatRole.User, "hi")]);
+        var result = await client.GetResponseAsync([new ChatMessage(ChatRole.User, "hi")], cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, callCount);
         Assert.Contains("ok", result.Text);
@@ -50,7 +50,7 @@ public sealed class ResilientChatClientTests
         var client = new ResilientChatClient(inner, DefaultOptions);
 
         await Assert.ThrowsAsync<HttpRequestException>(
-            () => client.GetResponseAsync([new ChatMessage(ChatRole.User, "hi")]));
+            () => client.GetResponseAsync([new ChatMessage(ChatRole.User, "hi")], cancellationToken: TestContext.Current.CancellationToken));
         Assert.Equal(1, callCount);
     }
 
@@ -70,7 +70,7 @@ public sealed class ResilientChatClientTests
         var client = new ResilientChatClient(inner, opts);
 
         await Assert.ThrowsAsync<TimeoutRejectedException>(
-            () => client.GetResponseAsync([new ChatMessage(ChatRole.User, "hi")]));
+            () => client.GetResponseAsync([new ChatMessage(ChatRole.User, "hi")], cancellationToken: TestContext.Current.CancellationToken));
     }
 
     [Fact]
