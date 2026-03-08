@@ -162,6 +162,17 @@ public sealed class AiBridgeMutationKillerTests
         Assert.Equal(2, providers.Length);
     }
 
+    [Fact]
+    public async Task ListProviders_single_provider_returns_array_with_one()
+    {
+        var (bridge, _) = CreateBridge();
+        var providers = await bridge.ListProviders();
+
+        Assert.NotNull(providers);
+        Assert.Single(providers);
+        Assert.Equal("default", providers[0]);
+    }
+
     #endregion
 
     #region UploadBlob / FetchBlob
@@ -174,6 +185,19 @@ public sealed class AiBridgeMutationKillerTests
         var blobId = await bridge.UploadBlob(data, "application/octet-stream", "test.bin");
         Assert.NotNull(blobId);
         Assert.NotEmpty(blobId);
+    }
+
+    [Fact]
+    public async Task UploadBlob_returned_id_is_fetchable()
+    {
+        var (bridge, _) = CreateBridge();
+        var originalBytes = new byte[] { 10, 20, 30 };
+        var blobId = await bridge.UploadBlob(Convert.ToBase64String(originalBytes), "image/png", "img.png");
+
+        Assert.NotNull(blobId);
+        var fetched = await bridge.FetchBlob(blobId);
+        Assert.NotNull(fetched);
+        Assert.Equal(originalBytes, Convert.FromBase64String(fetched!));
     }
 
     [Fact]
@@ -322,6 +346,17 @@ public sealed class AiBridgeMutationKillerTests
     #region Conversation: CreateConversation
 
     [Fact]
+    public async Task CreateConversation_returns_non_null_non_empty_id()
+    {
+        var (bridge, _) = CreateBridge();
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+
+        Assert.NotNull(convId);
+        Assert.NotEmpty(convId);
+        Assert.Equal(12, convId.Length);
+    }
+
+    [Fact]
     public async Task CreateConversation_passes_system_prompt_to_manager()
     {
         var (bridge, _) = CreateBridge();
@@ -433,6 +468,138 @@ public sealed class AiBridgeMutationKillerTests
         Assert.Null(mock.CapturedOptions);
     }
 
+    [Fact]
+    public async Task SendMessage_UseTools_true_passes_tool_options()
+    {
+        var mock = new CapturingMock(new ChatResponse(new ChatMessage(ChatRole.Assistant, "ok")));
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var registry = sp.GetRequiredService<IAiToolRegistry>();
+        registry.Register(new TestTools());
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await bridge.SendMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = true
+        });
+
+        Assert.NotNull(mock.CapturedOptions);
+        Assert.NotNull(mock.CapturedOptions!.Tools);
+        Assert.NotEmpty(mock.CapturedOptions.Tools!);
+    }
+
+    [Fact]
+    public async Task SendMessage_UseTools_true_with_modelId_passes_model_in_tool_options()
+    {
+        var mock = new CapturingMock(new ChatResponse(new ChatMessage(ChatRole.Assistant, "ok")));
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await bridge.SendMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = true,
+            ModelId = "gpt-4"
+        });
+
+        Assert.NotNull(mock.CapturedOptions);
+        Assert.Equal("gpt-4", mock.CapturedOptions!.ModelId);
+    }
+
+    [Fact]
+    public async Task SendMessage_UseTools_true_invokes_function_calls()
+    {
+        var callCount = 0;
+        var mock = new FunctionCallCountingMock(() =>
+        {
+            callCount++;
+            if (callCount == 1)
+            {
+                return new ChatResponse([
+                    new ChatMessage(ChatRole.Assistant, [
+                        new Microsoft.Extensions.AI.FunctionCallContent("call-1", "Add",
+                            new Dictionary<string, object?> { ["a"] = 1, ["b"] = 2 })
+                    ])
+                ]);
+            }
+            return new ChatResponse(new ChatMessage(ChatRole.Assistant, "result: 3"));
+        });
+
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var registry = sp.GetRequiredService<IAiToolRegistry>();
+        registry.Register(new TestTools());
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        var result = await bridge.SendMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "what is 1+2?",
+            UseTools = true
+        });
+
+        Assert.True(callCount >= 2, $"Expected at least 2 calls (function invocation), got {callCount}");
+        Assert.Equal("result: 3", result.Text);
+    }
+
+    [Fact]
+    public async Task SendMessage_UseTools_false_does_not_invoke_functions()
+    {
+        var callCount = 0;
+        var mock = new FunctionCallCountingMock(() =>
+        {
+            callCount++;
+            return new ChatResponse(new ChatMessage(ChatRole.Assistant, "plain response"));
+        });
+
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var registry = sp.GetRequiredService<IAiToolRegistry>();
+        registry.Register(new TestTools());
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await bridge.SendMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = false
+        });
+
+        Assert.Equal(1, callCount);
+    }
+
     #endregion
 
     #region Conversation: StreamMessage
@@ -494,6 +661,166 @@ public sealed class AiBridgeMutationKillerTests
 
         var history = await bridge.GetHistory(convId);
         Assert.Equal("ab", history.Messages[1].Text);
+    }
+
+    [Fact]
+    public async Task StreamMessage_UseTools_true_passes_tool_options()
+    {
+        var updates = new[] { new ChatResponseUpdate(ChatRole.Assistant, "ok") };
+        var mock = new StreamingCapturingMock(updates);
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var registry = sp.GetRequiredService<IAiToolRegistry>();
+        registry.Register(new TestTools());
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await foreach (var _ in bridge.StreamMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = true
+        }))
+        { }
+
+        Assert.NotNull(mock.CapturedOptions);
+        Assert.NotNull(mock.CapturedOptions!.Tools);
+        Assert.NotEmpty(mock.CapturedOptions.Tools!);
+    }
+
+    [Fact]
+    public async Task StreamMessage_UseTools_false_passes_null_options()
+    {
+        var updates = new[] { new ChatResponseUpdate(ChatRole.Assistant, "ok") };
+        var mock = new StreamingCapturingMock(updates);
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await foreach (var _ in bridge.StreamMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = false
+        }))
+        { }
+
+        Assert.Null(mock.CapturedOptions);
+    }
+
+    [Fact]
+    public async Task StreamMessage_UseTools_true_with_modelId_passes_model_in_options()
+    {
+        var updates = new[] { new ChatResponseUpdate(ChatRole.Assistant, "ok") };
+        var mock = new StreamingCapturingMock(updates);
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await foreach (var _ in bridge.StreamMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = true,
+            ModelId = "model-x"
+        }))
+        { }
+
+        Assert.NotNull(mock.CapturedOptions);
+        Assert.Equal("model-x", mock.CapturedOptions!.ModelId);
+    }
+
+    [Fact]
+    public async Task StreamMessage_UseTools_true_invokes_function_calls()
+    {
+        var callCount = 0;
+        var mock = new FunctionCallCountingMock(() =>
+        {
+            callCount++;
+            if (callCount == 1)
+            {
+                return new ChatResponse([
+                    new ChatMessage(ChatRole.Assistant, [
+                        new Microsoft.Extensions.AI.FunctionCallContent("call-1", "Add",
+                            new Dictionary<string, object?> { ["a"] = 5, ["b"] = 3 })
+                    ])
+                ]);
+            }
+            return new ChatResponse(new ChatMessage(ChatRole.Assistant, "8"));
+        });
+
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var registry = sp.GetRequiredService<IAiToolRegistry>();
+        registry.Register(new TestTools());
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        var tokens = new List<string>();
+        await foreach (var t in bridge.StreamMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "5+3?",
+            UseTools = true
+        }))
+            tokens.Add(t);
+
+        Assert.True(callCount >= 2, $"Expected at least 2 calls (function invocation), got {callCount}");
+    }
+
+    [Fact]
+    public async Task StreamMessage_UseTools_false_does_not_invoke_functions()
+    {
+        var callCount = 0;
+        var streamUpdates = new[] { new ChatResponseUpdate(ChatRole.Assistant, "plain") };
+        var mock = new StreamingCountingMock(streamUpdates, () => callCount++);
+
+        var services = new ServiceCollection();
+        services.AddFuloraAi(ai =>
+        {
+            ai.AddChatClient("default", mock);
+            ai.AddToolCalling();
+            ai.AddConversation();
+        });
+        using var sp = services.BuildServiceProvider();
+        var bridge = sp.GetRequiredService<IAiBridgeService>();
+
+        var convId = await bridge.CreateConversation(new AiConversationCreateRequest());
+        await foreach (var _ in bridge.StreamMessage(new AiConversationMessageRequest
+        {
+            ConversationId = convId,
+            Message = "test",
+            UseTools = false
+        }))
+        { }
+
+        Assert.Equal(1, callCount);
     }
 
     #endregion
@@ -661,6 +988,67 @@ public sealed class AiBridgeMutationKillerTests
         {
             CapturedMessages.AddRange(messages);
             CapturedOptions = options;
+            foreach (var u in _updates)
+            {
+                yield return u;
+                await Task.Yield();
+            }
+        }
+
+        public object? GetService(Type t, object? k = null) => null;
+    }
+
+    private sealed class FunctionCallCountingMock : IChatClient
+    {
+        private readonly Func<ChatResponse> _responseFactory;
+
+        public FunctionCallCountingMock(Func<ChatResponse> responseFactory)
+            => _responseFactory = responseFactory;
+
+        public void Dispose() { }
+
+        public Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken ct = default)
+            => Task.FromResult(_responseFactory());
+
+        public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
+            IEnumerable<ChatMessage> messages, ChatOptions? options = null,
+            [EnumeratorCancellation] CancellationToken ct = default)
+        {
+            var response = _responseFactory();
+            foreach (var msg in response.Messages)
+            {
+                var update = new ChatResponseUpdate { Role = msg.Role };
+                foreach (var content in msg.Contents)
+                    update.Contents.Add(content);
+                yield return update;
+                await Task.Yield();
+            }
+        }
+
+        public object? GetService(Type t, object? k = null) => null;
+    }
+
+    private sealed class StreamingCountingMock : IChatClient
+    {
+        private readonly ChatResponseUpdate[] _updates;
+        private readonly Action _onStreamCall;
+
+        public StreamingCountingMock(ChatResponseUpdate[] updates, Action onStreamCall)
+        {
+            _updates = updates;
+            _onStreamCall = onStreamCall;
+        }
+
+        public void Dispose() { }
+
+        public Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> m, ChatOptions? o = null, CancellationToken ct = default)
+            => Task.FromResult(new ChatResponse(new ChatMessage(ChatRole.Assistant, "default")));
+
+        public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
+            IEnumerable<ChatMessage> messages, ChatOptions? options = null,
+            [EnumeratorCancellation] CancellationToken ct = default)
+        {
+            _onStreamCall();
             foreach (var u in _updates)
             {
                 yield return u;

@@ -21,6 +21,14 @@ Every functional code change MUST include corresponding test updates:
 - All existing and new tests MUST pass before considering the change complete.
 - Run tests after implementation; do not defer testing to a later step.
 
+## Mutation Testing Scope
+
+Mutation testing (Stryker.NET) applies only to **core business projects**:
+
+- `Agibuild.Fulora.AI.XXXX` provider projects (e.g. `Agibuild.Fulora.AI.Ollama`, `Agibuild.Fulora.AI.OpenAI`) are **NOT** core business — they are thin integration wrappers and do **not** require mutation testing coverage.
+- Core projects that **do** require mutation testing: `Agibuild.Fulora.AI`, `Agibuild.Fulora.Runtime`, and other modules containing primary business logic.
+- Stryker config files should use `mutate` filters to target only core source files.
+
 ## Design Philosophy
 
 Favor **long-term value** over short-term speed:

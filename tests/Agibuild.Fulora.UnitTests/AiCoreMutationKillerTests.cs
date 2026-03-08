@@ -113,6 +113,123 @@ public sealed class AiCoreMutationKillerTests
 
     #endregion
 
+    #region AiProviderRegistry - EmbeddingGenerator
+
+    [Fact]
+    public void Registry_first_registered_embedding_becomes_default()
+    {
+        var registry = new AiProviderRegistry();
+        var genA = new DummyEmbeddingGenerator("A");
+        var genB = new DummyEmbeddingGenerator("B");
+
+        registry.RegisterEmbeddingGenerator("first", genA);
+        registry.RegisterEmbeddingGenerator("second", genB);
+
+        var resolved = registry.GetEmbeddingGenerator();
+        Assert.Same(genA, resolved);
+    }
+
+    [Fact]
+    public void Registry_named_embedding_lookup_returns_exact()
+    {
+        var registry = new AiProviderRegistry();
+        var genA = new DummyEmbeddingGenerator("A");
+        var genB = new DummyEmbeddingGenerator("B");
+
+        registry.RegisterEmbeddingGenerator("embA", genA);
+        registry.RegisterEmbeddingGenerator("embB", genB);
+
+        Assert.Same(genB, registry.GetEmbeddingGenerator("embB"));
+        Assert.Same(genA, registry.GetEmbeddingGenerator("embA"));
+    }
+
+    [Fact]
+    public void Registry_embedding_case_insensitive()
+    {
+        var registry = new AiProviderRegistry();
+        var gen = new DummyEmbeddingGenerator("X");
+        registry.RegisterEmbeddingGenerator("MyEmbed", gen);
+
+        Assert.Same(gen, registry.GetEmbeddingGenerator("myembed"));
+        Assert.Same(gen, registry.GetEmbeddingGenerator("MYEMBED"));
+    }
+
+    [Fact]
+    public void Registry_embedding_unknown_name_throws()
+    {
+        var registry = new AiProviderRegistry();
+        registry.RegisterEmbeddingGenerator("known", new DummyEmbeddingGenerator("K"));
+
+        var ex = Assert.Throws<InvalidOperationException>(() => registry.GetEmbeddingGenerator("unknown"));
+        Assert.Contains("unknown", ex.Message);
+        Assert.Contains("known", ex.Message);
+    }
+
+    [Fact]
+    public void Registry_no_embedding_providers_throws_on_default()
+    {
+        var registry = new AiProviderRegistry();
+        Assert.Throws<InvalidOperationException>(() => registry.GetEmbeddingGenerator());
+    }
+
+    [Fact]
+    public void Registry_RegisterEmbeddingGenerator_null_name_throws()
+    {
+        var registry = new AiProviderRegistry();
+        Assert.Throws<ArgumentException>(() => registry.RegisterEmbeddingGenerator("", new DummyEmbeddingGenerator("X")));
+        Assert.Throws<ArgumentException>(() => registry.RegisterEmbeddingGenerator("  ", new DummyEmbeddingGenerator("X")));
+    }
+
+    [Fact]
+    public void Registry_RegisterEmbeddingGenerator_null_generator_throws()
+    {
+        var registry = new AiProviderRegistry();
+        Assert.Throws<ArgumentNullException>(() => registry.RegisterEmbeddingGenerator("name", null!));
+    }
+
+    [Fact]
+    public void Registry_EmbeddingGeneratorNames_returns_all()
+    {
+        var registry = new AiProviderRegistry();
+        registry.RegisterEmbeddingGenerator("alpha", new DummyEmbeddingGenerator("A"));
+        registry.RegisterEmbeddingGenerator("beta", new DummyEmbeddingGenerator("B"));
+
+        var names = registry.EmbeddingGeneratorNames;
+        Assert.Equal(2, names.Count);
+        Assert.Contains("alpha", names);
+        Assert.Contains("beta", names);
+    }
+
+    [Fact]
+    public void Registry_embedding_coalesce_assignment_preserves_first_default()
+    {
+        var registry = new AiProviderRegistry();
+        var genA = new DummyEmbeddingGenerator("A");
+        var genB = new DummyEmbeddingGenerator("B");
+
+        registry.RegisterEmbeddingGenerator("first", genA);
+        registry.RegisterEmbeddingGenerator("second", genB);
+
+        // Default should still be "first", not overwritten by "second"
+        Assert.Same(genA, registry.GetEmbeddingGenerator());
+        Assert.Same(genB, registry.GetEmbeddingGenerator("second"));
+    }
+
+    [Fact]
+    public void Registry_embedding_overwrite_same_name_uses_latest()
+    {
+        var registry = new AiProviderRegistry();
+        var genOld = new DummyEmbeddingGenerator("old");
+        var genNew = new DummyEmbeddingGenerator("new");
+
+        registry.RegisterEmbeddingGenerator("name", genOld);
+        registry.RegisterEmbeddingGenerator("name", genNew);
+
+        Assert.Same(genNew, registry.GetEmbeddingGenerator("name"));
+    }
+
+    #endregion
+
     #region AiPayloadRouter
 
     [Fact]
@@ -460,6 +577,16 @@ public sealed class AiCoreMutationKillerTests
         public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(IEnumerable<ChatMessage> m, ChatOptions? o = null, CancellationToken ct = default)
             => AsyncEnumerable.Empty<ChatResponseUpdate>();
         public object? GetService(Type t, object? k = null) => null;
+    }
+
+    private sealed class DummyEmbeddingGenerator(string id) : IEmbeddingGenerator<string, Embedding<float>>
+    {
+        public string Id => id;
+        public void Dispose() { }
+        public Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(IEnumerable<string> values, EmbeddingGenerationOptions? options = null, CancellationToken ct = default)
+            => Task.FromResult(new GeneratedEmbeddings<Embedding<float>>());
+        public object? GetService(Type t, object? k = null) => null;
+        public EmbeddingGeneratorMetadata Metadata => new(Id);
     }
 
     private sealed class ToolProvider

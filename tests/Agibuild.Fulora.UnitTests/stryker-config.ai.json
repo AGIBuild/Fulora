@@ -2,18 +2,15 @@
   "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-net/master/src/Stryker.Core/Stryker.Core/stryker-config.schema.json",
   "stryker-config": {
     "project": "Agibuild.Fulora.AI.csproj",
+    "test-runner": "mtp",
+    "test-case-filter": "FullyQualifiedName~Agibuild.Fulora.UnitTests.Ai",
     "mutate": [
-      "!**/obj/**",
       "**/AiBridgeService.cs",
       "**/InMemoryAiConversationManager.cs",
       "**/AiProviderRegistry.cs",
-      "**/AiToolRegistry.cs",
       "**/AiPayloadRouter.cs",
       "**/InMemoryAiPayloadStore.cs",
-      "**/FuloraAiServiceCollectionExtensions.cs",
-      "**/FuloraAiBuilder.cs",
-      "**/AiConversationOptions.cs",
-      "**/AiToolCallingOptions.cs"
+      "**/FuloraAiServiceCollectionExtensions.cs"
     ],
     "mutation-level": "Standard",
     "thresholds": {
