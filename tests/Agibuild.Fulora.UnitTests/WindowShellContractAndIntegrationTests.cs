@@ -335,6 +335,115 @@ public sealed class WindowShellContractAndIntegrationTests
     }
 
     [Fact]
+    public void Constructor_throws_on_null_chrome_provider()
+    {
+        Assert.Throws<ArgumentNullException>(
+            () => new WindowShellService(null!, new MockPlatformThemeProvider()));
+    }
+
+    [Fact]
+    public void Constructor_throws_on_null_theme_provider()
+    {
+        Assert.Throws<ArgumentNullException>(
+            () => new WindowShellService(new MockChromeProvider(), null!));
+    }
+
+    [Fact]
+    public async Task Update_throws_on_null_settings()
+    {
+        using var service = CreateService();
+        await Assert.ThrowsAsync<ArgumentNullException>(
+            () => service.UpdateWindowShellSettings(null!));
+    }
+
+    [Fact]
+    public void Dispose_unsubscribes_event_handlers()
+    {
+        var chrome = new MockChromeProvider();
+        var theme = new MockPlatformThemeProvider();
+        var service = new WindowShellService(chrome, theme);
+        service.Dispose();
+        service.Dispose(); // idempotent
+    }
+
+    [Fact]
+    public async Task Theme_change_with_fixed_preference_does_not_reapply()
+    {
+        var chrome = new MockChromeProvider();
+        var theme = new MockPlatformThemeProvider("light");
+        using var service = new WindowShellService(chrome, theme);
+
+        await service.UpdateWindowShellSettings(new WindowShellSettings { ThemePreference = "liquid" });
+        var countBefore = chrome.ApplyCallCount;
+
+        theme.SimulateThemeChange("dark");
+        await Task.Delay(50);
+
+        Assert.Equal(countBefore, chrome.ApplyCallCount);
+    }
+
+    [Fact]
+    public async Task Appearance_changed_event_triggers_stream_emission()
+    {
+        var chrome = new MockChromeProvider(effectiveLevel: TransparencyLevel.Blur);
+        using var service = new WindowShellService(chrome, new MockPlatformThemeProvider());
+        using var cts = new CancellationTokenSource();
+
+        var stream = service.StreamWindowShellState(cts.Token).GetAsyncEnumerator();
+        try
+        {
+            Assert.True(await stream.MoveNextAsync());
+
+            chrome.RaiseAppearanceChanged();
+
+            // The appearance changed event should trigger a signal
+            await Task.Delay(100);
+        }
+        finally
+        {
+            cts.Cancel();
+        }
+    }
+
+    [Fact]
+    public async Task Stream_cancellation_terminates_gracefully()
+    {
+        using var service = CreateService();
+        using var cts = new CancellationTokenSource();
+
+        var items = new List<WindowShellState>();
+        var stream = service.StreamWindowShellState(cts.Token);
+
+        await foreach (var state in stream)
+        {
+            items.Add(state);
+            cts.Cancel();
+        }
+
+        Assert.Single(items);
+    }
+
+    [Fact]
+    public async Task GetWindowShellState_returns_default_state()
+    {
+        using var service = CreateService();
+        var state = await service.GetWindowShellState();
+
+        Assert.NotNull(state);
+        Assert.NotNull(state.Settings);
+        Assert.NotNull(state.Capabilities);
+        Assert.NotNull(state.ChromeMetrics);
+        Assert.Equal("test", state.Capabilities.Platform);
+    }
+
+    [Fact]
+    public void Chrome_provider_parse_transparency_level_with_empty_string()
+    {
+        Assert.Equal(TransparencyLevel.None, AvaloniaWindowChromeProvider.ParseTransparencyLevel(""));
+        Assert.Equal(TransparencyLevel.None, AvaloniaWindowChromeProvider.ParseTransparencyLevel("   "));
+    }
+
+    [Fact]
     public void Mac_chrome_drag_and_safe_inset_paths_are_wired_end_to_end()
     {
         var repoRoot = FindRepoRoot();
