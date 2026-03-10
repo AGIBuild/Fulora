@@ -389,19 +389,17 @@ public sealed class WindowShellContractAndIntegrationTests
         using var service = new WindowShellService(chrome, new MockPlatformThemeProvider());
         using var cts = new CancellationTokenSource();
 
-        var stream = service.StreamWindowShellState(cts.Token).GetAsyncEnumerator();
+        var stream = service.StreamWindowShellState(cts.Token).GetAsyncEnumerator(cts.Token);
         try
         {
             Assert.True(await stream.MoveNextAsync());
-
             chrome.RaiseAppearanceChanged();
-
-            // The appearance changed event should trigger a signal
-            await Task.Delay(100);
+            await Task.Delay(50);
         }
         finally
         {
             cts.Cancel();
+            await stream.DisposeAsync();
         }
     }
 
