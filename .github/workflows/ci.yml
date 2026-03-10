@@ -42,6 +42,10 @@ jobs:
       - name: Restore .NET tools
         run: dotnet tool restore
 
+      - name: Build bridge package
+        run: npm install && npm run build
+        working-directory: packages/bridge
+
       - name: Install web app dependencies
         run: npm install
         working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web
@@ -99,6 +103,10 @@ jobs:
       - name: Restore .NET tools
         run: dotnet tool restore
 
+      - name: Build bridge package
+        run: npm install && npm run build
+        working-directory: packages/bridge
+
       - name: Install web app dependencies
         run: npm install
         working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web
@@ -152,6 +160,10 @@ jobs:
 
       - name: Restore .NET tools
         run: dotnet tool restore
+
+      - name: Build bridge package
+        run: npm install && npm run build
+        working-directory: packages/bridge
 
       - name: Install web app dependencies
         run: npm install
