@@ -79,14 +79,12 @@ public partial class MainWindow : Window
             });
             var themeProvider = new AvaloniaThemeProvider();
             var shellService = new WindowShellService(chromeProvider, themeProvider);
-            var appearanceService = new AppearanceService(shellService);
 
             WebView.Bridge.Expose<IAiChatService>(chatService);
-            WebView.Bridge.Expose<IAppearanceService>(appearanceService);
             WebView.Bridge.Expose<IWindowShellService>(shellService);
             Closed += (_, _) =>
             {
-                appearanceService.Dispose();
+                shellService.Dispose();
                 chromeProvider.Dispose();
                 themeProvider.Dispose();
             };

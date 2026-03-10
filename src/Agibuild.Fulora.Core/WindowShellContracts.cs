@@ -70,9 +70,13 @@ public sealed class WindowShellCapabilities
 /// </summary>
 public sealed class WindowSafeInsets
 {
+    /// <summary>Top safe inset (device-independent pixels).</summary>
     public double Top { get; init; }
+    /// <summary>Right safe inset (device-independent pixels).</summary>
     public double Right { get; init; }
+    /// <summary>Bottom safe inset (device-independent pixels).</summary>
     public double Bottom { get; init; }
+    /// <summary>Left safe inset (device-independent pixels).</summary>
     public double Left { get; init; }
 }
 

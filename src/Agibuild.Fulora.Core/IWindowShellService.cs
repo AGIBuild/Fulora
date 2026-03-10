@@ -11,7 +11,12 @@ namespace Agibuild.Fulora;
 [JsExport]
 public interface IWindowShellService
 {
+    /// <summary>Return the current shell-window state snapshot.</summary>
     Task<WindowShellState> GetWindowShellState();
+
+    /// <summary>Apply new settings and return the resulting state.</summary>
     Task<WindowShellState> UpdateWindowShellSettings(WindowShellSettings settings);
+
+    /// <summary>Stream state updates with signature-based deduplication.</summary>
     IAsyncEnumerable<WindowShellState> StreamWindowShellState(CancellationToken cancellationToken = default);
 }
