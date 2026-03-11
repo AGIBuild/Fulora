@@ -132,8 +132,8 @@ partial class BuildTask
                     workingDirectory: projectDir);
 
                 // ── Step 8: Validate framework-specific web scaffolds (react + vue) ──
-                await ValidateFrameworkWebBuildAsync(tempRoot, framework: "react", appName: "SmokeAppReact", webProjectSuffix: "Web.Vite.React");
-                await ValidateFrameworkWebBuildAsync(tempRoot, framework: "vue", appName: "SmokeAppVue", webProjectSuffix: "Web.Vite.Vue");
+                await ValidateFrameworkWebBuildAsync(tempRoot, framework: "react", appName: "SmokeAppReact", webProjectSuffix: "Web");
+                await ValidateFrameworkWebBuildAsync(tempRoot, framework: "vue", appName: "SmokeAppVue", webProjectSuffix: "Web");
 
                 Serilog.Log.Information("Template E2E test PASSED.");
             }

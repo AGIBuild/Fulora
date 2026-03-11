@@ -4,8 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BridgeTypeScriptOutputDir Condition="Exists('$(MSBuildProjectDirectory)\..\HybridApp.Web.Vite.React\src\bridge')">$(MSBuildProjectDirectory)\..\HybridApp.Web.Vite.React\src\bridge\generated</BridgeTypeScriptOutputDir>
-    <BridgeTypeScriptOutputDir Condition="'$(BridgeTypeScriptOutputDir)' == '' and Exists('$(MSBuildProjectDirectory)\..\HybridApp.Web.Vite.Vue\src\bridge')">$(MSBuildProjectDirectory)\..\HybridApp.Web.Vite.Vue\src\bridge\generated</BridgeTypeScriptOutputDir>
+    <BridgeTypeScriptOutputDir Condition="Exists('$(MSBuildProjectDirectory)\..\HybridApp.Web\src\bridge')">$(MSBuildProjectDirectory)\..\HybridApp.Web\src\bridge\generated</BridgeTypeScriptOutputDir>
     <BridgeTypeScriptOutputDir Condition="'$(BridgeTypeScriptOutputDir)' == ''">$(MSBuildProjectDirectory)\..\HybridApp.Web\src\bridge\generated</BridgeTypeScriptOutputDir>
   </PropertyGroup>
 

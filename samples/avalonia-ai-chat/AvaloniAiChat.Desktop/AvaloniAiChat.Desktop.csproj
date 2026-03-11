@@ -30,12 +30,10 @@
     <ProjectReference Include="..\AvaloniAiChat.Bridge\AvaloniAiChat.Bridge.csproj" />
     <ProjectReference Include="..\..\..\src\Agibuild.Fulora.AI\Agibuild.Fulora.AI.csproj" />
     <ProjectReference Include="..\..\..\src\Agibuild.Fulora.AI.Ollama\Agibuild.Fulora.AI.Ollama.csproj" />
+    <ProjectReference Include="..\AvaloniAiChat.Web\AvaloniAiChat.Web.csproj"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
-
-  <!-- Release: build React app and embed as resources -->
-  <Target Name="BuildWebApp" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="npm run build" WorkingDirectory="../AvaloniAiChat.Web" />
-  </Target>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <EmbeddedResource Include="..\AvaloniAiChat.Web\dist\**\*" LinkBase="wwwroot" />

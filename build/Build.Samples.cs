@@ -31,7 +31,15 @@ partial class BuildTask
         await EnsureNpmAvailableAsync(webDirectory);
 
         var nodeModules = webDirectory / "node_modules";
+        var installStamp = nodeModules / ".install-stamp";
         var bridgeRuntimeEntry = nodeModules / "@agibuild" / "bridge" / "dist" / "index.js";
+
+        if (File.Exists(installStamp) && File.Exists(bridgeRuntimeEntry))
+        {
+            Serilog.Log.Information("npm dependencies already installed (stamp file present) in {Dir}.", webDirectory);
+            return;
+        }
+
         if (!Directory.Exists(nodeModules))
         {
             Serilog.Log.Information("node_modules not found in {Dir}, running npm install...", webDirectory);

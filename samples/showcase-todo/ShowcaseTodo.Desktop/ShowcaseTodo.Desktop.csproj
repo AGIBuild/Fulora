@@ -20,11 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShowcaseTodo.Bridge\ShowcaseTodo.Bridge.csproj" />
+    <ProjectReference Include="..\ShowcaseTodo.Web\ShowcaseTodo.Web.csproj"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
-
-  <Target Name="BuildWebApp" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="npm run build" WorkingDirectory="../ShowcaseTodo.Web" />
-  </Target>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <EmbeddedResource Include="..\ShowcaseTodo.Web\dist\**\*" LinkBase="wwwroot" />

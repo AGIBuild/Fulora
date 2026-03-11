@@ -8,24 +8,34 @@ Production-grade sample demonstrating **Agibuild.Fulora** with a React frontend 
 - [Node.js 20+](https://nodejs.org/) with npm
 - macOS, Windows, or Linux
 
-## Quick Start (Development Mode)
+## Quick Start (Unified Build)
+
+The solution includes a `AvaloniReact.Web` project that integrates npm lifecycle into MSBuild. A single `dotnet build` handles both C# compilation and frontend dependency installation.
+
+```bash
+cd samples/avalonia-react
+
+# Build the entire solution (C# + npm install for the web frontend)
+dotnet build
+```
+
+### Development Mode (HMR)
 
 Development mode uses Vite dev server with hot module replacement — changes to React code reflect instantly.
 
 ```bash
-# 1. Install frontend dependencies
+# 1. Start Vite dev server (keep this running)
 cd samples/avalonia-react/AvaloniReact.Web
-npm install
-
-# 2. Start Vite dev server (keep this running)
 npm run dev
 
-# 3. In a new terminal, start the Avalonia desktop app
+# 2. In a new terminal, start the Avalonia desktop app
 cd samples/avalonia-react
 dotnet run --project AvaloniReact.Desktop
 ```
 
 The desktop app opens with a WebView pointing to `http://localhost:5173`. Edit any `.tsx` file and see changes instantly via HMR.
+
+> **Tip**: `dotnet build` automatically runs `npm ci` if needed, so you can skip manual `npm install`.
 
 ## Production Mode
 
@@ -35,11 +45,9 @@ Production mode embeds the React build output into the .NET assembly — no Node
 cd samples/avalonia-react
 
 # Build and run in Release mode
-# (MSBuild automatically runs `npm run build` and embeds dist/ as resources)
+# (MSBuild automatically runs `npm run build` via Web.csproj and embeds dist/ as resources)
 dotnet run --project AvaloniReact.Desktop -c Release
 ```
-
-> **Note**: The first Release build requires `npm install` to have been run in `AvaloniReact.Web/`.
 
 ## Running Tests
 

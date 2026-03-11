@@ -20,9 +20,22 @@
     <ProjectReference Include="..\HybridApp.Bridge\HybridApp.Bridge.csproj" />
   </ItemGroup>
 
-  <!-- Embed web frontend as resources -->
+  <!--#if (framework != 'vanilla') -->
+  <ItemGroup>
+    <ProjectReference Include="..\HybridApp.Web\HybridApp.Web.csproj"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <EmbeddedResource Include="..\HybridApp.Web\dist\**\*" LinkBase="wwwroot" />
+  </ItemGroup>
+  <!--#endif -->
+
+  <!--#if (framework == 'vanilla') -->
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" LinkBase="wwwroot" />
   </ItemGroup>
+  <!--#endif -->
 
 </Project>

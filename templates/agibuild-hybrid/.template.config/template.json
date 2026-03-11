@@ -39,11 +39,19 @@
       "modifiers": [
         {
           "condition": "(framework == 'react')",
-          "exclude": ["HybridApp.Web.Vanilla/**", "HybridApp.Web.Vite.Vue/**"]
+          "exclude": ["HybridApp.Web.Vanilla/**", "HybridApp.Web.Vite.Vue/**"],
+          "rename": {
+            "HybridApp.Web.Vite.React/": "HybridApp.Web/",
+            "HybridApp.Web.Vite.React.csproj": "HybridApp.Web.csproj"
+          }
         },
         {
           "condition": "(framework == 'vue')",
-          "exclude": ["HybridApp.Web.Vanilla/**", "HybridApp.Web.Vite.React/**"]
+          "exclude": ["HybridApp.Web.Vanilla/**", "HybridApp.Web.Vite.React/**"],
+          "rename": {
+            "HybridApp.Web.Vite.Vue/": "HybridApp.Web/",
+            "HybridApp.Web.Vite.Vue.csproj": "HybridApp.Web.csproj"
+          }
         },
         {
           "condition": "(framework == 'vanilla')",

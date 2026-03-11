@@ -22,12 +22,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AvaloniVue.Bridge\AvaloniVue.Bridge.csproj" />
+    <ProjectReference Include="..\AvaloniVue.Web\AvaloniVue.Web.csproj"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
-
-  <!-- Release: build Vue app and embed as resources -->
-  <Target Name="BuildWebApp" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="npm run build" WorkingDirectory="../AvaloniVue.Web" />
-  </Target>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <EmbeddedResource Include="..\AvaloniVue.Web\dist\**\*" LinkBase="wwwroot" />
