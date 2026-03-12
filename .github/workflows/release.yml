@@ -28,6 +28,11 @@ jobs:
         with:
           fetch-depth: 0  # MinVer needs full git history to calculate version
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -39,6 +44,14 @@ jobs:
 
       - name: Restore .NET tools
         run: dotnet tool restore
+
+      - name: Build bridge package
+        run: npm install && npm run build
+        working-directory: packages/bridge
+
+      - name: Install web app dependencies
+        run: npm install
+        working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web
 
       - name: Extract version from tag
         id: version
