@@ -385,8 +385,23 @@ describe("withErrorNormalization", () => {
   });
 
   it("calls global error hook before rethrowing", async () => {
-    const hookErrors: BridgeError[] = [];
-    const mw = withErrorNormalization({ onError: (e) => hookErrors.push(e) });
+    const hookContexts: Array<{
+      error: BridgeError;
+      serviceName: string;
+      methodName: string;
+      elapsedMs: number;
+      rawError: unknown;
+    }> = [];
+    const mw = withErrorNormalization({
+      onError: (ctx) =>
+        hookContexts.push({
+          error: ctx.error,
+          serviceName: ctx.serviceName,
+          methodName: ctx.methodName,
+          elapsedMs: ctx.elapsedMs,
+          rawError: ctx.rawError,
+        }),
+    });
     await assert.rejects(
       () => executeMiddlewareChain(
         [mw],
@@ -398,14 +413,20 @@ describe("withErrorNormalization", () => {
         return true;
       }
     );
-    assert.equal(hookErrors.length, 1);
-    assert.equal(hookErrors[0].code, -32603);
-    assert.equal(hookErrors[0].message, "Internal");
+    assert.equal(hookContexts.length, 1);
+    assert.equal(hookContexts[0].error.code, -32603);
+    assert.equal(hookContexts[0].error.message, "Internal");
+    assert.equal(hookContexts[0].serviceName, "S");
+    assert.equal(hookContexts[0].methodName, "m");
+    assert.ok(hookContexts[0].elapsedMs >= 0);
+    assert.deepEqual(hookContexts[0].rawError, { code: -32603, message: "Internal" });
   });
 
   it("global error hook fires for already-wrapped BridgeError", async () => {
-    const hookErrors: BridgeError[] = [];
-    const mw = withErrorNormalization({ onError: (e) => hookErrors.push(e) });
+    const hookContexts: Array<{ error: BridgeError; rawError: unknown }> = [];
+    const mw = withErrorNormalization({
+      onError: (ctx) => hookContexts.push({ error: ctx.error, rawError: ctx.rawError }),
+    });
     const original = new BridgeError("wrapped", -1);
     await assert.rejects(
       () => executeMiddlewareChain(
@@ -414,7 +435,8 @@ describe("withErrorNormalization", () => {
         async () => { throw original; }
       ),
     );
-    assert.equal(hookErrors.length, 1);
-    assert.equal(hookErrors[0], original);
+    assert.equal(hookContexts.length, 1);
+    assert.equal(hookContexts[0].error, original);
+    assert.equal(hookContexts[0].rawError, original);
   });
 });

@@ -8,28 +8,22 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>AvaloniAiChat.Desktop</RootNamespace>
+    <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\..\artifacts\packages</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview1" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="10.3.0" />
+    <PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
+    <PackageReference Include="Agibuild.Fulora.Avalonia" Version="*-*" />
+    <PackageReference Include="Agibuild.Fulora.AI" Version="*-*" />
+    <PackageReference Include="Agibuild.Fulora.AI.Ollama" Version="*-*" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="10.4.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Avalonia\Agibuild.Fulora.Avalonia.csproj" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Runtime\Agibuild.Fulora.Runtime.csproj" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Windows\Agibuild.Fulora.Adapters.Windows.csproj" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\Agibuild.Fulora.Adapters.MacOS.csproj" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\Agibuild.Fulora.Adapters.Gtk.csproj" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AvaloniAiChat.Bridge\AvaloniAiChat.Bridge.csproj" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.AI\Agibuild.Fulora.AI.csproj" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.AI.Ollama\Agibuild.Fulora.AI.Ollama.csproj" />
     <ProjectReference Include="..\AvaloniAiChat.Web\AvaloniAiChat.Web.csproj"
                       ReferenceOutputAssembly="false"
                       SkipGetTargetFrameworkProperties="true" />
@@ -42,23 +36,5 @@
   <ItemGroup>
     <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>
-
-  <Target Name="CopyMacOSNativeShim" AfterTargets="Build"
-          Condition="$([MSBuild]::IsOSPlatform('osx'))">
-    <ItemGroup>
-      <_MacShim Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" />
-    </ItemGroup>
-    <MakeDir Directories="$(OutDir)runtimes/osx/native/" />
-    <Copy SourceFiles="@(_MacShim)" DestinationFolder="$(OutDir)runtimes/osx/native/" SkipUnchangedFiles="true" />
-  </Target>
-
-  <Target Name="CopyLinuxNativeShim" AfterTargets="Build"
-          Condition="$([MSBuild]::IsOSPlatform('linux'))">
-    <ItemGroup>
-      <_GtkShim Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" />
-    </ItemGroup>
-    <MakeDir Directories="$(OutDir)runtimes/linux-x64/native/" />
-    <Copy SourceFiles="@(_GtkShim)" DestinationFolder="$(OutDir)runtimes/linux-x64/native/" SkipUnchangedFiles="true" />
-  </Target>
 
 </Project>

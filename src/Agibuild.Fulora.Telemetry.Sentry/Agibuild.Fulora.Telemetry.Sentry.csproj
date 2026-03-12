@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Agibuild.Fulora.DependencyInjection\Agibuild.Fulora.DependencyInjection.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Sentry" Version="5.6.0" />
+    <PackageReference Include="Sentry" Version="6.2.0-alpha.0" />
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>
 </Project>

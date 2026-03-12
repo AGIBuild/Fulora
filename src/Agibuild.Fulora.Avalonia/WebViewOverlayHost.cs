@@ -134,12 +134,12 @@ public sealed class WebViewOverlayHost : IDisposable
             return;
         }
 
-        var parentWindow = _owner.GetVisualRoot() as Window;
+        var parentWindow = TopLevel.GetTopLevel(_owner) as Window;
         if (parentWindow is null) return;
 
         _overlayWindow = new Window
         {
-            SystemDecorations = SystemDecorations.None,
+            WindowDecorations = WindowDecorations.None,
             Background = Brushes.Transparent,
             TransparencyLevelHint = [WindowTransparencyLevel.Transparent],
             ShowInTaskbar = false,
@@ -171,7 +171,7 @@ public sealed class WebViewOverlayHost : IDisposable
 
         try
         {
-            var topLevel = _owner.GetVisualRoot() as TopLevel;
+            var topLevel = TopLevel.GetTopLevel(_owner);
             if (topLevel is not null)
             {
                 var localOrigin = _owner.TranslatePoint(new Point(0, 0), topLevel);

@@ -24,7 +24,7 @@ internal static class TypeScriptClientEmitter
         if (exports.Count == 0)
             return sb.ToString();
 
-        EmitTypeImports(sb, ir.Dtos);
+        EmitTypeImports(sb, ir);
         sb.AppendLine("const rpc = () => window.agWebView.rpc;");
         sb.AppendLine();
 
@@ -37,13 +37,63 @@ internal static class TypeScriptClientEmitter
         return sb.ToString();
     }
 
-    private static void EmitTypeImports(StringBuilder sb, System.Collections.Immutable.ImmutableArray<BridgeDtoModel> dtos)
+    private static void EmitTypeImports(StringBuilder sb, BridgeContractModel ir)
     {
-        if (dtos.Length == 0) return;
+        var exportedServices = ir.Services
+            .Where(s => s.Direction == BridgeDirection.Export)
+            .ToArray();
 
-        var names = dtos.Select(d => d.Name).OrderBy(n => n);
+        var declaredDtoNames = new HashSet<string>(
+            ir.Dtos.Select(d => d.Name),
+            System.StringComparer.Ordinal);
+
+        if (declaredDtoNames.Count == 0 || exportedServices.Length == 0)
+            return;
+
+        var referencedDtoNames = new HashSet<string>(System.StringComparer.Ordinal);
+        foreach (var service in exportedServices)
+        {
+            foreach (var method in service.Methods)
+            {
+                foreach (var parameter in method.Parameters)
+                {
+                    if (!parameter.IsCancellationToken)
+                        CollectReferencedDtoNames(parameter.TypeRef, declaredDtoNames, referencedDtoNames);
+                }
+
+                CollectReferencedDtoNames(method.InnerReturnTypeRef, declaredDtoNames, referencedDtoNames);
+                CollectReferencedDtoNames(method.AsyncEnumerableInnerTypeRef, declaredDtoNames, referencedDtoNames);
+            }
+
+        }
+
+        if (referencedDtoNames.Count == 0)
+            return;
+
+        var names = referencedDtoNames.OrderBy(n => n);
         sb.AppendLine($"import type {{ {string.Join(", ", names)} }} from './bridge.d';");
         sb.AppendLine();
+    }
+
+    private static void CollectReferencedDtoNames(
+        BridgeTypeRef? typeRef,
+        ISet<string> declaredDtoNames,
+        ISet<string> referencedDtoNames)
+    {
+        if (typeRef is null)
+            return;
+
+        if ((typeRef.Kind is BridgeTypeKind.Dto or BridgeTypeKind.Enum)
+            && declaredDtoNames.Contains(typeRef.Name))
+        {
+            referencedDtoNames.Add(typeRef.Name);
+        }
+
+        if (typeRef.ElementType is not null)
+            CollectReferencedDtoNames(typeRef.ElementType, declaredDtoNames, referencedDtoNames);
+
+        foreach (var argument in typeRef.TypeArguments)
+            CollectReferencedDtoNames(argument, declaredDtoNames, referencedDtoNames);
     }
 
     private static void EmitServiceProxy(StringBuilder sb, BridgeInterfaceModel service)
@@ -138,11 +188,15 @@ internal static class TypeScriptClientEmitter
         BridgeMethodModel method,
         List<BridgeParameterModel> regularParams)
     {
+        var innerTs = method.AsyncEnumerableInnerTypeRef is null
+            ? "unknown"
+            : TypeScriptEmitter.TypeRefToTypeScript(method.AsyncEnumerableInnerTypeRef);
+
         var paramsArg = regularParams.Count > 0
             ? "{ " + string.Join(", ", regularParams.Select(p => p.CamelCaseName)) + " }"
             : "undefined";
 
-        sb.AppendLine($"    return rpc()._createAsyncIterable('{method.RpcMethodName}', {paramsArg});");
+        sb.AppendLine($"    return rpc()._createAsyncIterable('{method.RpcMethodName}', {paramsArg}) as AsyncIterable<{innerTs}>;");
     }
 
     private static string GetReturnCast(BridgeMethodModel method)

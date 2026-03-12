@@ -1,8 +1,6 @@
 ## Purpose
 Define dependency-injection integration contracts for WebView adapter factory registration.
-
 ## Requirements
-
 ### Requirement: Dependency injection project
 The solution SHALL include a project named `Agibuild.Fulora.DependencyInjection` targeting `net10.0`.
 The project SHALL reference `Agibuild.Fulora.Core` and `Agibuild.Fulora.Adapters.Abstractions`.
@@ -23,7 +21,9 @@ The DI integration SHALL ensure each WebView instance can obtain a fresh adapter
 - **THEN** the factory delegate can be resolved from the service provider and used to create an `IWebViewAdapter`
 
 ### Requirement: AddFulora one-liner registration
-The DI project SHALL provide an `AddFulora()` extension method that registers all framework services.
+The DI project SHALL provide an `AddFulora()` extension method that registers all framework services and SHALL define a first-class DI/plugin path for bridge service exposure as the recommended default integration model.
+
+`AddFulora()` SHALL preserve explicit service ownership boundaries while enabling deterministic bridge exposure from DI-managed registrations without reflection-first assembly scanning.
 
 #### Scenario: AddFulora registers core services
 - **WHEN** a consumer calls `services.AddFulora()`
@@ -37,3 +37,8 @@ The DI project SHALL provide an `AddFulora()` extension method that registers al
 #### Scenario: AddFulora does not override existing telemetry
 - **WHEN** a custom `ITelemetryProvider` is registered before `AddFulora()`
 - **THEN** `AddFulora()` SHALL NOT replace it with the default no-op provider
+
+#### Scenario: DI-managed bridge exposure is deterministic
+- **WHEN** bridge services are registered via plugin descriptors and resolved from service provider scope
+- **THEN** bridge exposure order and lifecycle ownership SHALL be deterministic and repeatable across runs
+

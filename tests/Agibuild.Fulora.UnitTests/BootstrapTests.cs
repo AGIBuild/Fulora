@@ -1,6 +1,7 @@
 using Agibuild.Fulora;
 using Agibuild.Fulora.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -93,6 +94,37 @@ public class BootstrapTests
 
         Assert.True(bridgeConfigured);
         Assert.Equal(new Uri("http://localhost:5173"), uriAtConfigureTime);
+    }
+
+    [Fact]
+    public async Task BootstrapSpaAsync_preserves_calling_synchronization_context_for_bridge_setup()
+    {
+        var originalContext = SynchronizationContext.Current;
+        var markerContext = new InlineTrackingSynchronizationContext();
+        try
+        {
+            SynchronizationContext.SetSynchronizationContext(markerContext);
+
+            var webView = new TrackingWebView
+            {
+                NavigateCompletesAsynchronously = true,
+                BridgeAccessValidator = () => ReferenceEquals(SynchronizationContext.Current, markerContext)
+            };
+
+            var bridgeConfigured = false;
+            await webView.BootstrapSpaAsync(new SpaBootstrapOptions
+            {
+                DevServerUrl = "http://localhost:5173",
+                ConfigureBridge = (_, _) => bridgeConfigured = true
+            }, TestContext.Current.CancellationToken);
+
+            Assert.True(bridgeConfigured);
+            Assert.True(markerContext.PostCount > 0);
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(originalContext);
+        }
     }
 
     [Fact]
@@ -228,6 +260,226 @@ public class BootstrapTests
         Assert.Equal(["di", "explicit"], order);
     }
 
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_uses_wrapped_bootstrap_options()
+    {
+        var webView = new TrackingWebView();
+
+        await webView.BootstrapSpaProfileAsync(
+            new SpaBootstrapProfileOptions
+            {
+                BootstrapOptions = new SpaBootstrapOptions
+                {
+                    DevServerUrl = "http://localhost:5173"
+                }
+            },
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(new Uri("http://localhost:5173"), webView.LastNavigatedUri);
+    }
+
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_uses_embedded_hosting_when_dev_server_not_configured()
+    {
+        var webView = new TrackingWebView();
+
+        await webView.BootstrapSpaProfileAsync(
+            new SpaBootstrapProfileOptions
+            {
+                BootstrapOptions = new SpaBootstrapOptions
+                {
+                    EmbeddedResourcePrefix = "wwwroot",
+                    ResourceAssembly = typeof(BootstrapTests).Assembly,
+                    FallbackDocument = "index.html"
+                }
+            },
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(new Uri("app://localhost/index.html"), webView.LastNavigatedUri);
+        Assert.Equal(1, webView.EnableSpaHostingCallCount);
+    }
+
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_applies_extensions_after_baseline_configuration()
+    {
+        var webView = new TrackingWebView();
+        var order = new List<string>();
+
+        await webView.BootstrapSpaProfileAsync(
+            new SpaBootstrapProfileOptions
+            {
+                ExceptionScope = new SpaBootstrapProfileExceptionScope { ScopeId = "scope-1" },
+                BootstrapOptions = new SpaBootstrapOptions
+                {
+                    DevServerUrl = "http://localhost:5173",
+                    ConfigureBridge = (_, _) => order.Add("baseline")
+                },
+                Extensions =
+                [
+                    new SpaBootstrapProfileExtension
+                    {
+                        Id = "ext-1",
+                        Configure = (_, _, scope) => order.Add($"ext-1:{scope?.ScopeId}")
+                    },
+                    new SpaBootstrapProfileExtension
+                    {
+                        Id = "ext-2",
+                        Configure = (_, _, scope) => order.Add($"ext-2:{scope?.ScopeId}")
+                    }
+                ]
+            },
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(["baseline", "ext-1:scope-1", "ext-2:scope-1"], order);
+    }
+
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_DI_overload_composes_di_baseline_and_extensions()
+    {
+        var webView = new TrackingWebView();
+        var order = new List<string>();
+        var services = new ServiceCollection();
+        services.AddFulora().ConfigureBridge((_, _) => order.Add("di"));
+        var sp = services.BuildServiceProvider();
+
+        await webView.BootstrapSpaProfileAsync(
+            new SpaBootstrapProfileOptions
+            {
+                BootstrapOptions = new SpaBootstrapOptions
+                {
+                    DevServerUrl = "http://localhost:5173",
+                    ConfigureBridge = (_, _) => order.Add("baseline")
+                },
+                Extensions =
+                [
+                    new SpaBootstrapProfileExtension
+                    {
+                        Id = "ext-1",
+                        Configure = (_, _, _) => order.Add("ext-1")
+                    }
+                ]
+            },
+            sp,
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(["di", "baseline", "ext-1"], order);
+    }
+
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_DI_overload_keeps_order_stable_across_repeated_runs()
+    {
+        var runs = new List<string[]>();
+
+        for (var i = 0; i < 3; i++)
+        {
+            var webView = new TrackingWebView();
+            var order = new List<string>();
+            var services = new ServiceCollection();
+            services.AddFulora().ConfigureBridge((_, _) => order.Add("di"));
+            var sp = services.BuildServiceProvider();
+
+            await webView.BootstrapSpaProfileAsync(
+                new SpaBootstrapProfileOptions
+                {
+                    BootstrapOptions = new SpaBootstrapOptions
+                    {
+                        DevServerUrl = "http://localhost:5173",
+                        ConfigureBridge = (_, _) => order.Add("baseline")
+                    },
+                    Extensions =
+                    [
+                        new SpaBootstrapProfileExtension
+                        {
+                            Id = "ext-1",
+                            Configure = (_, _, _) => order.Add("ext-1")
+                        }
+                    ]
+                },
+                sp,
+                TestContext.Current.CancellationToken);
+
+            runs.Add([.. order]);
+        }
+
+        Assert.All(runs, run => Assert.Equal(["di", "baseline", "ext-1"], run));
+    }
+
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_runs_profile_teardowns_exactly_once_on_dispose()
+    {
+        var webView = new TrackingWebView();
+        var order = new List<string>();
+
+        await webView.BootstrapSpaProfileAsync(
+            new SpaBootstrapProfileOptions
+            {
+                ExceptionScope = new SpaBootstrapProfileExceptionScope { ScopeId = "scope-1" },
+                BootstrapOptions = new SpaBootstrapOptions
+                {
+                    DevServerUrl = "http://localhost:5173"
+                },
+                Teardowns =
+                [
+                    new SpaBootstrapProfileTeardown
+                    {
+                        Id = "td-1",
+                        Execute = (_, scope) => order.Add($"td-1:{scope?.ScopeId}")
+                    },
+                    new SpaBootstrapProfileTeardown
+                    {
+                        Id = "td-2",
+                        Execute = (_, scope) => order.Add($"td-2:{scope?.ScopeId}")
+                    }
+                ]
+            },
+            TestContext.Current.CancellationToken);
+
+        webView.Dispose();
+        webView.Dispose();
+
+        Assert.Equal(["td-1:scope-1", "td-2:scope-1"], order);
+    }
+
+    [Fact]
+    public async Task BootstrapSpaProfileAsync_DI_overload_runs_profile_teardown_once_with_service_provider()
+    {
+        var webView = new TrackingWebView();
+        var capture = new List<string>();
+        var marker = new object();
+        var services = new ServiceCollection();
+        services.AddSingleton(marker);
+        services.AddFulora();
+        var sp = services.BuildServiceProvider();
+
+        await webView.BootstrapSpaProfileAsync(
+            new SpaBootstrapProfileOptions
+            {
+                BootstrapOptions = new SpaBootstrapOptions
+                {
+                    DevServerUrl = "http://localhost:5173"
+                },
+                Teardowns =
+                [
+                    new SpaBootstrapProfileTeardown
+                    {
+                        Id = "td-1",
+                        Execute = (provider, _) =>
+                        {
+                            var resolved = provider?.GetService(typeof(object));
+                            capture.Add(ReferenceEquals(resolved, marker) ? "resolved" : "missing");
+                        }
+                    }
+                ]
+            },
+            sp,
+            TestContext.Current.CancellationToken);
+
+        webView.Dispose();
+        webView.Dispose();
+
+        Assert.Equal(["resolved"], capture);
+    }
+
     // ==================== Test doubles ====================
 
     private sealed class TrackingWebView : ISpaHostingWebView
@@ -238,6 +490,8 @@ public class BootstrapTests
         public SpaHostingOptions? LastSpaHostingOptions { get; private set; }
         public int EnableSpaHostingCallCount { get; private set; }
         public bool NavigateThrows { get; set; }
+        public bool NavigateCompletesAsynchronously { get; set; }
+        public Func<bool>? BridgeAccessValidator { get; set; }
 
         public Uri Source { get; set; } = new("about:blank");
         public bool CanGoBack => false;
@@ -247,7 +501,17 @@ public class BootstrapTests
 
         public IWebViewRpcService? Rpc => null;
         public IBridgeTracer? BridgeTracer { get; set; }
-        public IBridgeService Bridge { get; } = new StubBridgeService();
+        private readonly IBridgeService _bridge = new StubBridgeService();
+        public IBridgeService Bridge
+        {
+            get
+            {
+                if (BridgeAccessValidator is not null && !BridgeAccessValidator())
+                    throw new InvalidOperationException("Bridge accessed outside expected synchronization context.");
+
+                return _bridge;
+            }
+        }
 
         public void EnableSpaHosting(SpaHostingOptions options)
         {
@@ -259,8 +523,18 @@ public class BootstrapTests
         {
             if (NavigateThrows)
                 throw new WebViewNavigationException("Test navigation failure", Guid.Empty, uri);
+
+            if (NavigateCompletesAsynchronously)
+                return CompleteNavigationAsync(uri);
+
             LastNavigatedUri = uri;
             return Task.CompletedTask;
+        }
+
+        private async Task CompleteNavigationAsync(Uri uri)
+        {
+            await Task.Delay(1);
+            LastNavigatedUri = uri;
         }
 
         public Task NavigateToStringAsync(string html)
@@ -310,10 +584,18 @@ public class BootstrapTests
         public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested { add { } remove { } }
         public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested { add { } remove { } }
         public event EventHandler<AdapterCreatedEventArgs>? AdapterCreated { add { } remove { } }
-        public event EventHandler? AdapterDestroyed { add { } remove { } }
+        public event EventHandler? AdapterDestroyed;
         public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested { add { } remove { } }
 
-        public void Dispose() { }
+        private bool _disposed;
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            AdapterDestroyed?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private sealed class StubBridgeService : IBridgeService
@@ -327,6 +609,29 @@ public class BootstrapTests
     {
         public object? GetService(Type serviceType) => null;
     }
+
+    private sealed class InlineTrackingSynchronizationContext : SynchronizationContext
+    {
+        private int _postCount;
+        public int PostCount => _postCount;
+
+        public override void Post(SendOrPostCallback d, object? state)
+        {
+            Interlocked.Increment(ref _postCount);
+
+            var previous = Current;
+            SetSynchronizationContext(this);
+            try
+            {
+                d(state);
+            }
+            finally
+            {
+                SetSynchronizationContext(previous);
+            }
+        }
+    }
+
 }
 
 /// <summary>

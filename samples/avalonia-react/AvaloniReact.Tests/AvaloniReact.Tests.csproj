@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <RootNamespace>AvaloniReact.Tests</RootNamespace>
+    <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\..\artifacts\packages</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Core\Agibuild.Fulora.Core.csproj" />
+    <PackageReference Include="Agibuild.Fulora.Core" Version="*-*" />
   </ItemGroup>
 
   <ItemGroup>

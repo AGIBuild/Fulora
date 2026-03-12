@@ -14,10 +14,8 @@
 
   <ItemGroup>
     <!-- Keep package restore graph, but avoid WebView2 build target auto-injection (which brings WPF/WinForms references). -->
-    <PackageReference Include="Microsoft.Web.WebView2"
-                      Version="1.0.3719.77"
-                      GeneratePathProperty="true"
-                      ExcludeAssets="compile;build;buildTransitive" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3848-prerelease" GeneratePathProperty="true" ExcludeAssets="compile;build;buildTransitive" />
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>
 
   <ItemGroup>

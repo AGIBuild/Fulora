@@ -40,4 +40,6 @@ public static class GovernanceInvariantIds
     public const string AdoptionReadinessSchema = "GOV-032";
     public const string AdoptionReadinessPolicy = "GOV-033";
     public const string ReleaseEvidenceReadinessSections = "GOV-034";
+    public const string BridgeSingleEntryAppLayerPolicy = "GOV-035";
+    public const string SampleTemplatePackageReferencePolicy = "GOV-036";
 }

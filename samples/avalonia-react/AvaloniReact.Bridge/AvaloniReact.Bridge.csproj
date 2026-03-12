@@ -5,10 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>AvaloniReact.Bridge</RootNamespace>
+    <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\..\artifacts\packages</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Core\Agibuild.Fulora.Core.csproj" />
+    <PackageReference Include="Agibuild.Fulora.Core" Version="*-*" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -17,10 +18,8 @@
 
   <!-- Source generator for typed bridge (AOT-safe proxies; falls back to reflection when absent) -->
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Bridge.Generator\Agibuild.Fulora.Bridge.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" Version="*-*" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
-  <Import Project="..\..\..\src\Agibuild.Fulora.Bridge.Generator\build\Agibuild.Fulora.Bridge.Generator.targets" />
   <ItemGroup>
     <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>

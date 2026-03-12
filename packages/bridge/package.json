@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./profile": {
+      "types": "./dist/profile.d.ts",
+      "import": "./dist/profile.js"
     }
   },
   "files": [
@@ -17,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "node --experimental-strip-types --no-warnings --test src/middleware.test.ts && node --experimental-strip-types --no-warnings --test src/integration.test.ts && node --experimental-strip-types --no-warnings --test src/hmr.test.ts && node --experimental-strip-types --no-warnings --test src/worker.test.ts",
+    "test": "node --experimental-strip-types --no-warnings --test src/middleware.test.ts && node --experimental-strip-types --no-warnings --test src/integration.test.ts && node --experimental-strip-types --no-warnings --test src/hmr.test.ts && node --experimental-strip-types --no-warnings --test src/worker.test.ts && npm run build && node --no-warnings --test test/profile.test.mjs && node --no-warnings --test test/ready.test.mjs",
     "prepare": "npm run build"
   },
   "repository": {

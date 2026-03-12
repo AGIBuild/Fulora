@@ -17,10 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.0-preview1" />
+    <PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.0-preview2" />
     <!-- *-* = always resolve the latest version (including prerelease) from configured sources.
          The nuget.config in this directory points to ../../artifacts/packages/ as a local feed. -->
     <PackageReference Include="Agibuild.Fulora.Avalonia" Version="$(AgibuildPackageVersion)" />
@@ -29,7 +29,7 @@
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
     <!-- Avalonia.Diagnostics not yet available for 12.x; re-enable when published
-    <PackageReference Include="Avalonia.Diagnostics" Version="12.0.0-preview1">
+    <PackageReference Include="Avalonia.Diagnostics" Version="12.0.0-preview2">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>

@@ -8,20 +8,17 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>MinimalHybrid.Desktop</RootNamespace>
+    <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\..\artifacts\packages</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview1" />
+    <PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
+    <PackageReference Include="Agibuild.Fulora.Avalonia" Version="*-*" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Avalonia\Agibuild.Fulora.Avalonia.csproj" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Runtime\Agibuild.Fulora.Runtime.csproj" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Windows\Agibuild.Fulora.Adapters.Windows.csproj" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\Agibuild.Fulora.Adapters.MacOS.csproj" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\Agibuild.Fulora.Adapters.Gtk.csproj" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
     <ProjectReference Include="..\MinimalHybrid.Bridge\MinimalHybrid.Bridge.csproj" />
   </ItemGroup>
 
@@ -29,23 +26,5 @@
   <ItemGroup>
     <EmbeddedResource Include="..\wwwroot\**\*" LinkBase="wwwroot" />
   </ItemGroup>
-
-  <Target Name="CopyMacOSNativeShim" AfterTargets="Build"
-          Condition="$([MSBuild]::IsOSPlatform('osx'))">
-    <ItemGroup>
-      <_MacShim Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" />
-    </ItemGroup>
-    <MakeDir Directories="$(OutDir)runtimes/osx/native/" />
-    <Copy SourceFiles="@(_MacShim)" DestinationFolder="$(OutDir)runtimes/osx/native/" SkipUnchangedFiles="true" />
-  </Target>
-
-  <Target Name="CopyLinuxNativeShim" AfterTargets="Build"
-          Condition="$([MSBuild]::IsOSPlatform('linux'))">
-    <ItemGroup>
-      <_GtkShim Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" />
-    </ItemGroup>
-    <MakeDir Directories="$(OutDir)runtimes/linux-x64/native/" />
-    <Copy SourceFiles="@(_GtkShim)" DestinationFolder="$(OutDir)runtimes/linux-x64/native/" SkipUnchangedFiles="true" />
-  </Target>
 
 </Project>

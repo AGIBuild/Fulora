@@ -3,13 +3,11 @@
  * Configures cross-cutting concerns (logging, error normalization) before any service calls.
  */
 
-import { createBridgeClient, withLogging, withErrorNormalization } from '@agibuild/bridge';
+import { createBridgeProfile } from '@agibuild/bridge/profile';
 
-export const bridge = createBridgeClient();
+export const bridgeProfile = createBridgeProfile({
+  enableLogging: import.meta.env.DEV,
+  logging: { maxParamLength: 100 },
+});
 
-// Development-mode middleware: log all bridge calls + normalize RPC errors
-if (import.meta.env.DEV) {
-  bridge.use(withLogging({ maxParamLength: 100 }));
-}
-
-bridge.use(withErrorNormalization());
+export const bridge = bridgeProfile.bridge;

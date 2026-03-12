@@ -109,9 +109,11 @@ internal static class TypeScriptEmitter
         }
         allTs.AppendLine("      };");
         allTs.AppendLine("      rpc: {");
-        allTs.AppendLine("        invoke(method: string, params?: unknown): Promise<unknown>;");
+        allTs.AppendLine("        invoke(method: string, params?: unknown, signal?: AbortSignal): Promise<unknown>;");
         allTs.AppendLine("        handle(method: string, handler: (params: unknown) => unknown | Promise<unknown>): void;");
         allTs.AppendLine("        batch(calls: Array<{ method: string; params?: unknown }>): Promise<unknown[]>;");
+        allTs.AppendLine("        _createAsyncIterable(method: string, params?: unknown): AsyncIterable<unknown>;");
+        allTs.AppendLine("        _decodeBinaryResult?(result: unknown): unknown;");
         allTs.AppendLine("      };");
         allTs.AppendLine("    };");
         allTs.AppendLine("  }");

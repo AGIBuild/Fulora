@@ -1,36 +1,11 @@
 import { useState, useEffect } from 'react';
-import { createBridgeClient } from '@agibuild/bridge';
-
-const bridge = createBridgeClient();
-
-interface TodoItem {
-  id: number;
-  title: string;
-  completed: boolean;
-  createdAt: string;
-}
-
-const todoService = bridge.getService<{
-  getAll: () => Promise<TodoItem[]>;
-  create: (params: { title: string }) => Promise<TodoItem>;
-  update: (params: { id: number; title?: string; completed?: boolean }) => Promise<TodoItem>;
-  delete: (params: { id: number }) => Promise<void>;
-}>('TodoService');
+import { useBridgeReady } from './hooks/useBridge';
+import { todoService, type TodoItem } from './bridge/services';
 
 export function App() {
-  const [ready, setReady] = useState(false);
+  const ready = useBridgeReady(5000);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [input, setInput] = useState('');
-
-  useEffect(() => {
-    let cancelled = false;
-    bridge.ready({ timeoutMs: 5000 }).then(() => {
-      if (!cancelled) setReady(true);
-    }).catch(() => {
-      if (!cancelled) setReady(false);
-    });
-    return () => { cancelled = true; };
-  }, []);
 
   useEffect(() => {
     if (!ready) return;
@@ -42,7 +17,7 @@ export function App() {
     if (!title) return;
     setInput('');
     try {
-      const item = await todoService.create({ title });
+      const item = await todoService.create(title);
       setTodos((prev) => [...prev, item]);
     } catch {
       // ignore
@@ -51,7 +26,7 @@ export function App() {
 
   const toggleTodo = async (id: number, completed: boolean) => {
     try {
-      const updated = await todoService.update({ id, completed });
+      const updated = await todoService.update(id, undefined, completed);
       setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
     } catch {
       // ignore
@@ -60,7 +35,7 @@ export function App() {
 
   const deleteTodo = async (id: number) => {
     try {
-      await todoService.delete({ id });
+      await todoService.delete(id);
       setTodos((prev) => prev.filter((t) => t.id !== id));
     } catch {
       // ignore

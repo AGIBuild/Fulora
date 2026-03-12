@@ -11,5 +11,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "env.d.ts", "bridge.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.vue", "env.d.ts", "src/bridge/generated/bridge.d.ts"]
 }

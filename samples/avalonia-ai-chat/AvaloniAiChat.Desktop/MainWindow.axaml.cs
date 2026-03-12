@@ -51,12 +51,6 @@ public partial class MainWindow : Window
             var themeProvider = new AvaloniaThemeProvider();
             var shellService = new WindowShellService(chromeProvider, themeProvider);
 
-            Closed += (_, _) =>
-            {
-                chromeProvider.Dispose();
-                themeProvider.Dispose();
-            };
-
             WebView.DropCompleted += (_, e) =>
             {
                 var file = e.Payload.Files?.FirstOrDefault();
@@ -64,21 +58,55 @@ public partial class MainWindow : Window
                     chatService.SetDroppedFile(file.Path);
             };
 
-            await WebView.BootstrapSpaAsync(new SpaBootstrapOptions
+            await WebView.BootstrapSpaProfileAsync(new SpaBootstrapProfileOptions
             {
-#if DEBUG
-                DevServerUrl = "http://localhost:5175",
-#else
-                EmbeddedResourcePrefix = "wwwroot",
-                ResourceAssembly = typeof(MainWindow).Assembly,
-#endif
-                ConfigureBridge = (bridge, _) =>
+                BootstrapOptions = new SpaBootstrapOptions
                 {
-                    bridge.Expose<IAiChatService>(chatService);
-                    bridge.Expose<IWindowShellService>(shellService);
+    #if DEBUG
+                    DevServerUrl = "http://localhost:5175",
+    #else
+                    EmbeddedResourcePrefix = "wwwroot",
+                    ResourceAssembly = typeof(MainWindow).Assembly,
+    #endif
                 },
+                Extensions =
+                [
+                    new SpaBootstrapProfileExtension
+                    {
+                        Id = "ai-chat-services",
+                        Configure = (bridge, _, _) =>
+                        {
+                            bridge.Expose<IAiChatService>(chatService);
+                            bridge.Expose<IWindowShellBridgeService>(new WindowShellBridgeServiceAdapter(shellService));
+                        }
+                    }
+                ],
+                Teardowns =
+                [
+                    new SpaBootstrapProfileTeardown
+                    {
+                        Id = "window-chrome-provider-dispose",
+                        Execute = (_, _) => chromeProvider.Dispose()
+                    },
+                    new SpaBootstrapProfileTeardown
+                    {
+                        Id = "theme-provider-dispose",
+                        Execute = (_, _) => themeProvider.Dispose()
+                    }
+                ]
             });
         };
+    }
+
+    private sealed class WindowShellBridgeServiceAdapter(IWindowShellService inner) : IWindowShellBridgeService
+    {
+        public Task<WindowShellState> GetWindowShellState() => inner.GetWindowShellState();
+
+        public Task<WindowShellState> UpdateWindowShellSettings(WindowShellSettings settings)
+            => inner.UpdateWindowShellSettings(settings);
+
+        public IAsyncEnumerable<WindowShellState> StreamWindowShellState(CancellationToken cancellationToken = default)
+            => inner.StreamWindowShellState(cancellationToken);
     }
 
     private static AiRuntime ResolveRuntime()

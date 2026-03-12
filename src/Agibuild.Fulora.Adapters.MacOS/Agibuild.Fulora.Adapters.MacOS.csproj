@@ -22,6 +22,10 @@
     <Compile Remove="MacOSWebViewAdapter.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
+  </ItemGroup>
+
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('osx'))">
     <AgWkShimLibName>libAgibuildWebViewWk.dylib</AgWkShimLibName>
   </PropertyGroup>

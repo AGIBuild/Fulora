@@ -8,16 +8,14 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>AvaloniVue.Desktop</RootNamespace>
+    <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\..\artifacts\packages</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Avalonia" Version="1.0.3-preview" />
+    <PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
+    <PackageReference Include="Agibuild.Fulora.Avalonia" Version="*-*" />
   </ItemGroup>
 
   <ItemGroup>

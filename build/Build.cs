@@ -104,6 +104,7 @@ partial class BuildTask : NukeBuild
     AbsolutePath OpenSpecStrictGovernanceReportFile => TestResultsDirectory / "openspec-strict-governance.log";
     AbsolutePath DependencyGovernanceReportFile => TestResultsDirectory / "dependency-governance-report.json";
     AbsolutePath TypeScriptGovernanceReportFile => TestResultsDirectory / "typescript-governance-report.json";
+    AbsolutePath SampleTemplatePackageReferenceGovernanceReportFile => TestResultsDirectory / "sample-template-package-reference-governance-report.json";
     AbsolutePath RuntimeCriticalPathGovernanceReportFile => TestResultsDirectory / "runtime-critical-path-governance-report.json";
     AbsolutePath CloseoutSnapshotFile => TestResultsDirectory / "closeout-snapshot.json";
     AbsolutePath BridgeDistributionGovernanceReportFile => TestResultsDirectory / "bridge-distribution-governance-report.json";
@@ -255,9 +256,9 @@ partial class BuildTask : NukeBuild
 
     Target Ci => _ => _
         .Description("Full CI pipeline: compile → coverage → lane automation → pack → validate.")
-        .DependsOn(Coverage, AutomationLaneReport, RuntimeCriticalPathExecutionGovernanceCi, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, AdoptionReadinessGovernanceCi, ValidatePackage);
+        .DependsOn(Coverage, AutomationLaneReport, RuntimeCriticalPathExecutionGovernanceCi, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, SampleTemplatePackageReferenceGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, AdoptionReadinessGovernanceCi, ValidatePackage);
 
     Target CiPublish => _ => _
         .Description("Full release pipeline: compile → coverage → lane automation → package smoke → publish.")
-        .DependsOn(Coverage, AutomationLaneReport, NugetPackageTest, RuntimeCriticalPathExecutionGovernanceCiPublish, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, BridgeDistributionGovernance, DistributionReadinessGovernance, AdoptionReadinessGovernanceCiPublish, ReleaseOrchestrationGovernance, PackTemplate, Publish);
+        .DependsOn(Coverage, AutomationLaneReport, NugetPackageTest, RuntimeCriticalPathExecutionGovernanceCiPublish, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, SampleTemplatePackageReferenceGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, BridgeDistributionGovernance, DistributionReadinessGovernance, AdoptionReadinessGovernanceCiPublish, ReleaseOrchestrationGovernance, PackTemplate, Publish);
 }

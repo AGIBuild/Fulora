@@ -1,8 +1,8 @@
-import { createBridgeClient, withLogging, withErrorNormalization } from "@agibuild/bridge";
+import { createBridgeProfile } from "@agibuild/bridge/profile";
 
-export const bridge = createBridgeClient();
+export const bridgeProfile = createBridgeProfile({
+  enableLogging: import.meta.env.DEV,
+  logging: { maxParamLength: 200 },
+});
 
-if (import.meta.env.DEV) {
-  bridge.use(withLogging({ maxParamLength: 200 }));
-}
-bridge.use(withErrorNormalization());
+export const bridge = bridgeProfile.bridge;

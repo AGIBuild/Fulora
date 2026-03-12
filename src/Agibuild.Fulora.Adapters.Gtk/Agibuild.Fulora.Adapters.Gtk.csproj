@@ -17,6 +17,10 @@
     <None Include="Native/WebKitGtkShim.c" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
+  </ItemGroup>
+
   <!--
     Build the native WebKitGTK shim on Linux.
     Requires: libwebkit2gtk-4.1-dev, pkg-config

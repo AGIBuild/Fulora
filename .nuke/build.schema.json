@@ -54,6 +54,7 @@
         "RuntimeAutomation",
         "RuntimeCriticalPathExecutionGovernanceCi",
         "RuntimeCriticalPathExecutionGovernanceCiPublish",
+        "SampleTemplatePackageReferenceGovernance",
         "Start",
         "StartAiChatApp",
         "StartAndroid",

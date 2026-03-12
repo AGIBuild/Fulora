@@ -13,6 +13,23 @@ public static class WebViewBootstrapExtensions
         "<h2>Navigation failed</h2><p>{0}</p></body></html>";
 
     /// <summary>
+    /// Bootstraps WebView using profile options that wrap baseline <see cref="SpaBootstrapOptions"/>
+    /// and explicit extension hooks.
+    /// </summary>
+    public static Task BootstrapSpaProfileAsync(
+        this IWebView webView,
+        SpaBootstrapProfileOptions profileOptions,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(webView);
+        ArgumentNullException.ThrowIfNull(profileOptions);
+
+        var merged = BuildProfileBootstrapOptions(profileOptions, profileOptions.BootstrapOptions.ServiceProvider);
+        RegisterProfileTeardown(webView, profileOptions, merged.ServiceProvider);
+        return webView.BootstrapSpaAsync(merged, cancellationToken);
+    }
+
+    /// <summary>
     /// Bootstraps the WebView with SPA navigation and bridge service registration in one deterministic call.
     /// <para>
     /// When <see cref="SpaBootstrapOptions.DevServerUrl"/> is set, navigates directly to the dev server.
@@ -36,19 +53,73 @@ public static class WebViewBootstrapExtensions
 
         try
         {
-            await webView.NavigateAsync(targetUri).ConfigureAwait(false);
+            await webView.NavigateAsync(targetUri);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             var errorHtml = options.ErrorPageFactory?.Invoke(ex)
                 ?? string.Format(DefaultErrorHtml, System.Net.WebUtility.HtmlEncode(ex.Message));
-            await webView.NavigateToStringAsync(errorHtml).ConfigureAwait(false);
+            await webView.NavigateToStringAsync(errorHtml);
             return;
         }
 
         options.ConfigureBridge?.Invoke(webView.Bridge, options.ServiceProvider);
 
-        await webView.InvokeScriptAsync(ReadyEventScript).ConfigureAwait(false);
+        await webView.InvokeScriptAsync(ReadyEventScript);
+    }
+
+    internal static SpaBootstrapOptions BuildProfileBootstrapOptions(
+        SpaBootstrapProfileOptions profileOptions,
+        IServiceProvider? serviceProviderOverride = null)
+    {
+        ArgumentNullException.ThrowIfNull(profileOptions);
+        ArgumentNullException.ThrowIfNull(profileOptions.BootstrapOptions);
+
+        var baseline = profileOptions.BootstrapOptions;
+        return new SpaBootstrapOptions
+        {
+            DevServerUrl = baseline.DevServerUrl,
+            EmbeddedResourcePrefix = baseline.EmbeddedResourcePrefix,
+            ResourceAssembly = baseline.ResourceAssembly,
+            Scheme = baseline.Scheme,
+            FallbackDocument = baseline.FallbackDocument,
+            ServiceProvider = serviceProviderOverride ?? baseline.ServiceProvider,
+            ErrorPageFactory = baseline.ErrorPageFactory,
+            ConfigureBridge = (bridge, sp) =>
+            {
+                baseline.ConfigureBridge?.Invoke(bridge, sp);
+
+                foreach (var extension in profileOptions.Extensions)
+                {
+                    extension.Configure(bridge, sp, profileOptions.ExceptionScope);
+                }
+            }
+        };
+    }
+
+    internal static void RegisterProfileTeardown(
+        IWebView webView,
+        SpaBootstrapProfileOptions profileOptions,
+        IServiceProvider? serviceProvider)
+    {
+        if (profileOptions.Teardowns.Count == 0)
+            return;
+
+        var executionState = 0;
+        EventHandler? teardownHandler = null;
+        teardownHandler = (_, _) =>
+        {
+            if (Interlocked.Exchange(ref executionState, 1) != 0)
+                return;
+
+            if (teardownHandler is not null)
+                webView.AdapterDestroyed -= teardownHandler;
+
+            foreach (var teardown in profileOptions.Teardowns)
+                teardown.Execute(serviceProvider, profileOptions.ExceptionScope);
+        };
+
+        webView.AdapterDestroyed += teardownHandler;
     }
 
     private static Uri ResolveTargetUri(SpaBootstrapOptions options)

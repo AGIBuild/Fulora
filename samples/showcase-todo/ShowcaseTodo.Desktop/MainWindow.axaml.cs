@@ -15,34 +15,37 @@ public partial class MainWindow : Window
 
         Loaded += async (_, _) =>
         {
-            try
+            await WebView.BootstrapSpaProfileAsync(new SpaBootstrapProfileOptions
             {
-#if DEBUG
-                await WebView.NavigateAsync(new Uri("http://localhost:5176"));
-#else
-                WebView.EnableSpaHosting(new SpaHostingOptions
+                BootstrapOptions = new SpaBootstrapOptions
                 {
+#if DEBUG
+                    DevServerUrl = "http://localhost:5176",
+#else
                     EmbeddedResourcePrefix = "wwwroot",
                     ResourceAssembly = typeof(MainWindow).Assembly,
-                });
-                await WebView.NavigateAsync(new Uri("app://localhost/index.html"));
 #endif
-            }
-            catch (WebViewNavigationException ex)
-            {
-                Debug.WriteLine($"Navigation failed: {ex.Message}");
-                await WebView.NavigateToStringAsync(
-                    "<html><body style='font-family:system-ui;padding:2em;color:#333'>" +
-                    "<h2>Navigation failed</h2>" +
-                    $"<p>{ex.Message}</p>" +
+                    ErrorPageFactory = ex =>
+                    {
+                        Debug.WriteLine($"Navigation failed: {ex.Message}");
+                        return "<html><body style='font-family:system-ui;padding:2em;color:#333'>" +
+                               "<h2>Navigation failed</h2>" +
+                               $"<p>{ex.Message}</p>" +
 #if DEBUG
-                    "<p>Run the Vite dev server: <code>cd ShowcaseTodo.Web && npm run dev</code></p>" +
+                               "<p>Run the Vite dev server: <code>cd ShowcaseTodo.Web && npm run dev</code></p>" +
 #endif
-                    "</body></html>");
-                return;
-            }
-
-            WebView.Bridge.Expose<ITodoService>(new TodoService());
+                               "</body></html>";
+                    }
+                },
+                Extensions =
+                [
+                    new SpaBootstrapProfileExtension
+                    {
+                        Id = "todo-sample-services",
+                        Configure = (bridge, _, _) => bridge.Expose<ITodoService>(new TodoService())
+                    }
+                ]
+            });
         };
     }
 }

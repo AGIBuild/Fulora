@@ -4,45 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Showcase Todo</title>
-    <script type="module" crossorigin src="/assets/index-I-QnlZew.js"></script>
+    <script type="module" crossorigin src="/assets/index-YJExzdul.js"></script>
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      (function () {
-        if (typeof window !== 'undefined' && !window.agWebView?.rpc) {
-          const items = [];
-          let nextId = 1;
-          window.agWebView = {
-            rpc: {
-              invoke: function (method, params) {
-                if (method === 'TodoService.getAll') {
-                  return Promise.resolve(items.slice());
-                }
-                if (method === 'TodoService.create') {
-                  const title = params?.title ?? '';
-                  const item = { id: nextId++, title, completed: false, createdAt: new Date().toISOString() };
-                  items.push(item);
-                  return Promise.resolve(item);
-                }
-                if (method === 'TodoService.update') {
-                  const idx = items.findIndex((i) => i.id === params?.id);
-                  if (idx < 0) return Promise.reject(new Error('Not found'));
-                  if (params?.title != null) items[idx].title = params.title;
-                  if (params?.completed != null) items[idx].completed = params.completed;
-                  return Promise.resolve(items[idx]);
-                }
-                if (method === 'TodoService.delete') {
-                  const idx = items.findIndex((i) => i.id === params?.id);
-                  if (idx >= 0) items.splice(idx, 1);
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('Unknown method: ' + method));
-              }
-            }
-          };
-        }
-      })();
-    </script>
   </body>
 </html>

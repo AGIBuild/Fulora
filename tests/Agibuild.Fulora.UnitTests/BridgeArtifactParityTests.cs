@@ -97,7 +97,7 @@ public sealed class BridgeArtifactParityTests
         Assert.Contains("stream(): AsyncIterable<number>;", declarations);
 
         Assert.Contains("return rpc().invoke('DocService.load', { query }, options && options.signal)", client);
-        Assert.Contains("return rpc()._createAsyncIterable('DocService.stream', undefined);", client);
+        Assert.Contains("return rpc()._createAsyncIterable('DocService.stream', undefined) as AsyncIterable<number>;", client);
 
         Assert.Contains("bridge['docService']", mock);
         Assert.Contains("load: (..._args: unknown[]) => Promise.resolve", mock);

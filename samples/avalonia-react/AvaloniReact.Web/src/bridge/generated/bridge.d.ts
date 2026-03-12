@@ -222,9 +222,11 @@ declare global {
         trayMenuDemoService: TrayMenuDemoService;
       };
       rpc: {
-        invoke(method: string, params?: unknown): Promise<unknown>;
+        invoke(method: string, params?: unknown, signal?: AbortSignal): Promise<unknown>;
         handle(method: string, handler: (params: unknown) => unknown | Promise<unknown>): void;
         batch(calls: Array<{ method: string; params?: unknown }>): Promise<unknown[]>;
+        _createAsyncIterable(method: string, params?: unknown): AsyncIterable<unknown>;
+        _decodeBinaryResult?(result: unknown): unknown;
       };
     };
   }

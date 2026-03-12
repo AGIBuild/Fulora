@@ -13,6 +13,10 @@
     <None Include="index.html" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
+  </ItemGroup>
+
   <Target Name="NpmInstall"
           BeforeTargets="Build"
           Inputs="package.json"

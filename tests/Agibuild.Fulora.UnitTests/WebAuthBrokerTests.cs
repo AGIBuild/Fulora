@@ -1,5 +1,6 @@
 using Agibuild.Fulora;
 using Agibuild.Fulora.Testing;
+using System.Threading;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -154,6 +155,38 @@ public sealed class WebAuthBrokerTests
         Assert.Throws<ArgumentNullException>(() => new WebAuthBroker(null!));
     }
 
+    [Fact]
+    public async Task AuthenticateAsync_keeps_captured_sync_context_for_dialog_cleanup()
+    {
+        var originalContext = SynchronizationContext.Current;
+        var markerContext = new InlineTrackingSynchronizationContext();
+        try
+        {
+            SynchronizationContext.SetSynchronizationContext(markerContext);
+
+            var callbackUri = new Uri("myapp://auth/callback?code=ctx");
+            var dialog = new ContextAwareAuthDialog(markerContext, callbackUri);
+            var broker = new WebAuthBroker(new SingleDialogFactory(dialog));
+            var owner = new DummyTopLevelWindow();
+            var options = new AuthOptions
+            {
+                AuthorizeUri = new Uri("https://auth.example.com/authorize"),
+                CallbackUri = new Uri("myapp://auth/callback"),
+            };
+
+            var result = await broker.AuthenticateAsync(owner, options);
+
+            Assert.Equal(WebAuthStatus.Success, result.Status);
+            Assert.Equal(callbackUri, result.CallbackUri);
+            Assert.True(dialog.CleanupExecutedOnExpectedContext);
+            Assert.True(markerContext.PostCount > 0);
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(originalContext);
+        }
+    }
+
     // ---- Test helpers ----
 
     private sealed class DummyTopLevelWindow : ITopLevelWindow
@@ -192,5 +225,122 @@ public sealed class WebAuthBrokerTests
             OnDialogCreated?.Invoke(dialog, adapter);
             return dialog;
         }
+    }
+
+    private sealed class SingleDialogFactory(IWebDialog dialog) : IWebDialogFactory
+    {
+        public IWebDialog Create(IWebViewEnvironmentOptions? options = null) => dialog;
+    }
+
+    private sealed class ContextAwareAuthDialog : IWebDialog
+    {
+        private readonly SynchronizationContext _expectedContext;
+        private readonly Uri _callbackUri;
+        private readonly IBridgeService _bridge = new StubBridgeService();
+
+        public ContextAwareAuthDialog(SynchronizationContext expectedContext, Uri callbackUri)
+        {
+            _expectedContext = expectedContext;
+            _callbackUri = callbackUri;
+        }
+
+        public bool CleanupExecutedOnExpectedContext { get; private set; }
+
+        public string? Title { get; set; }
+        public bool CanUserResize { get; set; }
+        public Uri Source { get; set; } = new("about:blank");
+        public bool CanGoBack => false;
+        public bool CanGoForward => false;
+        public bool IsLoading => false;
+        public Guid ChannelId { get; } = Guid.NewGuid();
+        public IWebViewRpcService? Rpc => null;
+        public IBridgeTracer? BridgeTracer { get; set; }
+        public IBridgeService Bridge => _bridge;
+
+        public void Show() { }
+        public bool Show(INativeHandle owner) => true;
+
+        public Task NavigateAsync(Uri uri)
+        {
+            _ = Task.Run(() =>
+            {
+                NavigationStarted?.Invoke(this, new NavigationStartingEventArgs(_callbackUri));
+            });
+            return Task.CompletedTask;
+        }
+
+        public Task NavigateToStringAsync(string html) => Task.CompletedTask;
+        public Task NavigateToStringAsync(string html, Uri? baseUrl) => Task.CompletedTask;
+        public Task<string?> InvokeScriptAsync(string script) => Task.FromResult<string?>(null);
+        public Task<bool> GoBackAsync() => Task.FromResult(false);
+        public Task<bool> GoForwardAsync() => Task.FromResult(false);
+        public Task<bool> RefreshAsync() => Task.FromResult(false);
+        public Task<bool> StopAsync() => Task.FromResult(false);
+        public ICookieManager? TryGetCookieManager() => null;
+        public ICommandManager? TryGetCommandManager() => null;
+        public Task<INativeHandle?> TryGetWebViewHandleAsync() => Task.FromResult<INativeHandle?>(null);
+        public Task OpenDevToolsAsync() => Task.CompletedTask;
+        public Task CloseDevToolsAsync() => Task.CompletedTask;
+        public Task<bool> IsDevToolsOpenAsync() => Task.FromResult(false);
+        public Task<byte[]> CaptureScreenshotAsync() => Task.FromResult(Array.Empty<byte>());
+        public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null) => Task.FromResult(Array.Empty<byte>());
+        public Task<double> GetZoomFactorAsync() => Task.FromResult(1.0);
+        public Task SetZoomFactorAsync(double zoomFactor) => Task.CompletedTask;
+        public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null)
+            => Task.FromResult(new FindInPageResult());
+        public Task StopFindInPageAsync(bool clearHighlights = true) => Task.CompletedTask;
+        public Task<string> AddPreloadScriptAsync(string javaScript) => Task.FromResult("script-id");
+        public Task RemovePreloadScriptAsync(string scriptId) => Task.CompletedTask;
+
+        public void Close()
+        {
+            CleanupExecutedOnExpectedContext = ReferenceEquals(SynchronizationContext.Current, _expectedContext);
+        }
+
+        public bool Resize(int width, int height) => true;
+        public bool Move(int x, int y) => true;
+        public void Dispose() { }
+
+        public event EventHandler? Closing;
+        public event EventHandler<NavigationStartingEventArgs>? NavigationStarted;
+        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
+        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested;
+        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
+        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
+        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
+        public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested;
+        public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested;
+        public event EventHandler<AdapterCreatedEventArgs>? AdapterCreated;
+        public event EventHandler? AdapterDestroyed;
+        public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested;
+    }
+
+    private sealed class InlineTrackingSynchronizationContext : SynchronizationContext
+    {
+        private int _postCount;
+        public int PostCount => _postCount;
+
+        public override void Post(SendOrPostCallback d, object? state)
+        {
+            Interlocked.Increment(ref _postCount);
+
+            var previous = Current;
+            SetSynchronizationContext(this);
+            try
+            {
+                d(state);
+            }
+            finally
+            {
+                SetSynchronizationContext(previous);
+            }
+        }
+    }
+
+    private sealed class StubBridgeService : IBridgeService
+    {
+        public void Expose<T>(T implementation, BridgeOptions? options = null) where T : class { }
+        public T GetProxy<T>() where T : class => throw new NotSupportedException();
+        public void Remove<T>() where T : class { }
     }
 }

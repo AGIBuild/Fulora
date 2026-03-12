@@ -21,15 +21,25 @@ public partial class MainWindow : Window
                 new KeyGesture(Key.D, KeyModifiers.Control | KeyModifiers.Shift));
 #endif
 
-            await WebView.BootstrapSpaAsync(new SpaBootstrapOptions
+            await WebView.BootstrapSpaProfileAsync(new SpaBootstrapProfileOptions
             {
-                EmbeddedResourcePrefix = "wwwroot",
-                ResourceAssembly = typeof(MainWindow).Assembly,
-                ConfigureBridge = (bridge, _) =>
+                BootstrapOptions = new SpaBootstrapOptions
                 {
-                    bridge.Expose<IGreeterService>(new GreeterServiceImpl());
-                    RegisterShellPresetBridgeServices();
-                }
+                    EmbeddedResourcePrefix = "wwwroot",
+                    ResourceAssembly = typeof(MainWindow).Assembly
+                },
+                Extensions =
+                [
+                    new SpaBootstrapProfileExtension
+                    {
+                        Id = "template-greeter-service",
+                        Configure = (bridge, _, _) =>
+                        {
+                            bridge.Expose<IGreeterService>(new GreeterServiceImpl());
+                            RegisterShellPresetBridgeServices();
+                        }
+                    }
+                ]
             });
         };
 

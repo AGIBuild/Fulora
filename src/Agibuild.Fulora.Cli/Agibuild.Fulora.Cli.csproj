@@ -17,7 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta5.25306.1" />
+    <PackageReference Include="System.CommandLine" Version="3.0.0-preview.2.26159.112" />
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>
 
   <ItemGroup>

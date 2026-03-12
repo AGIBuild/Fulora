@@ -1,5 +1,5 @@
 import { ref, onMounted } from 'vue';
-import { bridgeClient } from '@agibuild/bridge';
+import { bridgeProfile } from '@/bridge/client';
 
 /** Returns a reactive ref that becomes true once the Agibuild WebView Bridge is ready. */
 export function useBridgeReady() {
@@ -7,7 +7,7 @@ export function useBridgeReady() {
 
   onMounted(async () => {
     try {
-      await bridgeClient.ready({ timeoutMs: 10_000, pollIntervalMs: 50 });
+      await bridgeProfile.ready({ timeoutMs: 10_000 });
       ready.value = true;
     } catch {
       ready.value = false;

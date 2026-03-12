@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ready } from '@agibuild/bridge';
+import { bridgeProfile } from '../bridge/client';
 
 /** Returns true once the Agibuild WebView Bridge is ready (sticky handshake). */
 export function useBridgeReady(): boolean {
@@ -8,7 +8,7 @@ export function useBridgeReady(): boolean {
   useEffect(() => {
     let cancelled = false;
 
-    ready({ timeoutMs: 10_000, pollIntervalMs: 50 })
+    bridgeProfile.ready({ timeoutMs: 10_000 })
       .then(() => { if (!cancelled) setReady(true); })
       .catch(() => { if (!cancelled) setReady(false); });
 

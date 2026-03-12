@@ -8,6 +8,23 @@ namespace Agibuild.Fulora.DependencyInjection;
 public static class WebViewBootstrapDiExtensions
 {
     /// <summary>
+    /// Bootstraps WebView using profile options and DI-registered bridge configuration actions.
+    /// </summary>
+    public static Task BootstrapSpaProfileAsync(
+        this IWebView webView,
+        SpaBootstrapProfileOptions profileOptions,
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(profileOptions);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
+        var merged = WebViewBootstrapExtensions.BuildProfileBootstrapOptions(profileOptions, serviceProvider);
+        WebViewBootstrapExtensions.RegisterProfileTeardown(webView, profileOptions, serviceProvider);
+        return webView.BootstrapSpaAsync(merged, serviceProvider, cancellationToken);
+    }
+
+    /// <summary>
     /// Bootstraps the WebView using DI-registered bridge configuration actions.
     /// Resolves all <see cref="BridgeConfigurationAction"/> instances from
     /// <see cref="SpaBootstrapOptions.ServiceProvider"/> and composes them with any explicit

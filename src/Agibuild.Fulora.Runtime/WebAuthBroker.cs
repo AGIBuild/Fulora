@@ -73,7 +73,7 @@ public sealed class WebAuthBroker : IWebAuthBroker
             // ObjectDisposedException — treat this as UserCancel.
             try
             {
-                await dialog.NavigateAsync(options.AuthorizeUri).ConfigureAwait(false);
+                await dialog.NavigateAsync(options.AuthorizeUri);
             }
             catch (ObjectDisposedException)
             {
@@ -97,7 +97,7 @@ public sealed class WebAuthBroker : IWebAuthBroker
                 });
             }
 
-            return await tcs.Task.ConfigureAwait(false);
+            return await tcs.Task;
         }
         finally
         {

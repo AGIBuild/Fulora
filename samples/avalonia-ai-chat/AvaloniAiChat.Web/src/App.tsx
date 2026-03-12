@@ -1,15 +1,7 @@
 import { useState, useRef, useEffect, useCallback, type CSSProperties } from 'react';
-
-declare global {
-  interface Window {
-    agWebView?: {
-      rpc?: {
-        invoke: (method: string, params?: unknown, signal?: AbortSignal) => Promise<unknown>;
-        _createAsyncIterable: (method: string, params?: unknown) => AsyncIterable<unknown>;
-      };
-    };
-  }
-}
+import { useBridgeReady } from './hooks/useBridge';
+import { aiChatService, windowShellBridgeService } from './bridge/services';
+import type { AiModelState, WindowShellState, WindowShellSettings } from './bridge/services';
 
 interface Message {
   id: string;
@@ -21,74 +13,14 @@ type ThemeMode = 'liquid' | 'classic';
 type ThemePreference = 'system' | 'liquid' | 'classic';
 type SettingsTab = 'appearance' | 'model' | 'diagnostics';
 
-interface AppearanceSettings {
-  themePreference: ThemePreference;
-  enableTransparency: boolean;
-  glassOpacityPercent: number;
-}
-
-interface AppearanceCapabilities {
-  platform: string;
-  supportsTransparency: boolean;
-  isTransparencyEnabled: boolean;
-  isTransparencyEffective: boolean;
-  effectiveTransparencyLevel: string;
-  validationMessage: string;
-  appliedOpacityPercent: number;
-}
-
-interface WindowSafeInsets {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-interface WindowChromeMetrics {
-  titleBarHeight: number;
-  dragRegionHeight: number;
-  safeInsets: WindowSafeInsets;
-}
-
-interface AppearanceState {
-  settings: AppearanceSettings;
-  effectiveThemeMode: ThemeMode;
-  capabilities: AppearanceCapabilities;
-  chromeMetrics: WindowChromeMetrics;
-}
-
-interface AiModelState {
-  endpoint: string;
-  requiredModel: string;
-  isModelAvailable: boolean;
-  isDownloading: boolean;
-  isOllamaInstalled: boolean;
-  isOllamaRunning: boolean;
-  nextStep: string;
-  installUrl: string;
-  startCommand: string;
-  downloadStage: string;
-  downloadProgressPercent: number;
-  statusMessage: string;
-}
+type AppearanceSettings = WindowShellSettings;
+type AppearanceState = WindowShellState;
 
 const defaultAppearanceSettings: AppearanceSettings = {
   themePreference: 'system',
   enableTransparency: true,
   glassOpacityPercent: 78,
 };
-
-function useBridgeReady(): boolean {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const check = () => {
-      if (window.agWebView?.rpc) { setReady(true); return; }
-      requestAnimationFrame(check);
-    };
-    check();
-  }, []);
-  return ready;
-}
 
 // ── Icon components ───────────────────────────────────────────────────────────
 
@@ -229,7 +161,7 @@ export function App() {
   const abortRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const activeThemeMode: ThemeMode = appearance?.effectiveThemeMode ?? 'liquid';
+  const activeThemeMode: ThemeMode = (appearance?.effectiveThemeMode as ThemeMode | undefined) ?? 'liquid';
   const isLiquid = activeThemeMode === 'liquid';
 
   const appliedAppearance = appearance?.settings ?? defaultAppearanceSettings;
@@ -279,9 +211,7 @@ export function App() {
     if (!bridgeReady) return;
     const epoch = appearanceEpochRef.current;
     try {
-      const state = await window.agWebView!.rpc!.invoke(
-        'WindowShellService.getWindowShellState', {}
-      ) as AppearanceState;
+      const state = await windowShellBridgeService.getWindowShellState();
       if (appearanceEpochRef.current === epoch) {
         setAppearance(state);
         setAppearanceError(null);
@@ -296,9 +226,7 @@ export function App() {
   const loadModelState = useCallback(async () => {
     if (!bridgeReady) return;
     try {
-      const state = await window.agWebView!.rpc!.invoke(
-        'AiChatService.getModelState', {}
-      ) as AiModelState;
+      const state = await aiChatService.getModelState();
       setModelState(state);
       setNeedsModelSetup(!state.isModelAvailable);
       setModelError(null);
@@ -313,9 +241,7 @@ export function App() {
   useEffect(() => {
     if (!bridgeReady) return;
     let disposed = false;
-    const stream = window.agWebView!.rpc!._createAsyncIterable(
-      'AiChatService.streamModelState', {}
-    ) as AsyncIterable<AiModelState>;
+    const stream = aiChatService.streamModelState();
 
     void (async () => {
       try {
@@ -336,9 +262,7 @@ export function App() {
   useEffect(() => {
     if (!bridgeReady) return;
     let disposed = false;
-    const stream = window.agWebView!.rpc!._createAsyncIterable(
-      'WindowShellService.streamWindowShellState', {}
-    ) as AsyncIterable<AppearanceState>;
+    const stream = windowShellBridgeService.streamWindowShellState();
 
     void (async () => {
       try {
@@ -357,8 +281,8 @@ export function App() {
 
   useEffect(() => {
     if (!bridgeReady) return;
-    window.agWebView!.rpc!.invoke('AiChatService.getBackendInfo', {})
-      .then((info) => setBackendInfo(info as string))
+    aiChatService.getBackendInfo()
+      .then((info: string) => setBackendInfo(info))
       .catch(() => {});
   }, [bridgeReady]);
 
@@ -369,9 +293,7 @@ export function App() {
   useEffect(() => {
     if (!bridgeReady) return;
     let disposed = false;
-    const stream = window.agWebView!.rpc!._createAsyncIterable(
-      'AiChatService.streamDroppedFiles', {}
-    ) as AsyncIterable<{ fileName: string; content: string }>;
+    const stream = aiChatService.streamDroppedFiles();
 
     void (async () => {
       try {
@@ -410,9 +332,7 @@ export function App() {
     abortRef.current = controller;
 
     try {
-      const iterable = window.agWebView!.rpc!._createAsyncIterable(
-        'AiChatService.streamCompletion', { prompt: userMsg.content }
-      ) as AsyncIterable<string>;
+      const iterable = aiChatService.streamCompletion(userMsg.content, { signal: controller.signal });
 
       for await (const token of iterable) {
         if (controller.signal.aborted) break;
@@ -465,9 +385,7 @@ export function App() {
     setSavingAppearance(true);
     appearanceEpochRef.current++;
     try {
-      const updated = await window.agWebView!.rpc!.invoke(
-        'WindowShellService.updateWindowShellSettings', { settings: draftAppearance }
-      ) as AppearanceState;
+      const updated = await windowShellBridgeService.updateWindowShellSettings(draftAppearance);
       setAppearance(updated);
       setAppearanceError(null);
       setSettingsOpen(false);
@@ -482,9 +400,7 @@ export function App() {
     if (!bridgeReady) return;
     setDownloadingModel(true);
     try {
-      const state = await window.agWebView!.rpc!.invoke(
-        'AiChatService.downloadRequiredModel', {}
-      ) as AiModelState;
+      const state = await aiChatService.downloadRequiredModel();
       setModelState(state);
       setNeedsModelSetup(!state.isModelAvailable);
       setModelError(null);

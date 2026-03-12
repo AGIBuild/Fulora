@@ -22,6 +22,8 @@ partial class BuildTask
     const string AdoptionReadinessSchemaInvariantId = "GOV-032";
     const string AdoptionReadinessPolicyInvariantId = "GOV-033";
     const string ReleaseEvidenceReadinessSectionsInvariantId = "GOV-034";
+    const string BridgeSingleEntryAppLayerPolicyInvariantId = "GOV-035";
+    const string SampleTemplatePackageReferencePolicyInvariantId = "GOV-036";
 
     private sealed record TransitionGateParityRule(string Group, string CiDependency, string CiPublishDependency);
 
@@ -162,6 +164,22 @@ partial class BuildTask
 
             var failures = new List<string>();
             var checks = new List<object>();
+            var semanticDiagnostics = new List<object>();
+            const string strictScope = "official-maintained-app-layer::strict-no-exception";
+
+            void AddSemanticViolation(string artifactPath, string expected, string actual)
+            {
+                semanticDiagnostics.Add(new
+                {
+                    invariantId = BridgeSingleEntryAppLayerPolicyInvariantId,
+                    artifactPath,
+                    expected,
+                    actual,
+                    scope = strictScope,
+                    decision = "deny"
+                });
+                failures.Add($"[{BridgeSingleEntryAppLayerPolicyInvariantId}] {artifactPath}: expected {expected}; actual {actual} (scope={strictScope}).");
+            }
 
             var targetsPath = RootDirectory / "src" / "Agibuild.Fulora.Bridge.Generator" / "build" / "Agibuild.Fulora.Bridge.Generator.targets";
             if (!File.Exists(targetsPath))
@@ -220,10 +238,102 @@ partial class BuildTask
                     failures.Add("Vue sample tsconfig must include generated bridge.d.ts.");
             }
 
+            var governedFiles = new[]
+            {
+                "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/client.ts",
+                "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/hooks/useBridge.ts",
+                "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/services.ts",
+                "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/client.ts",
+                "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/composables/useBridge.ts",
+                "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/services.ts",
+                "samples/avalonia-react/AvaloniReact.Web/src/bridge/client.ts",
+                "samples/avalonia-react/AvaloniReact.Web/src/hooks/useBridge.ts",
+                "samples/avalonia-react/AvaloniReact.Web/src/bridge/services.ts",
+                "samples/avalonia-vue/AvaloniVue.Web/src/bridge/client.ts",
+                "samples/avalonia-vue/AvaloniVue.Web/src/composables/useBridge.ts",
+                "samples/avalonia-vue/AvaloniVue.Web/src/bridge/services.ts",
+                "samples/showcase-todo/ShowcaseTodo.Web/src/bridge/client.ts",
+                "samples/showcase-todo/ShowcaseTodo.Web/src/hooks/useBridge.ts",
+                "samples/showcase-todo/ShowcaseTodo.Web/src/bridge/services.ts",
+                "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/bridge/client.ts",
+                "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/hooks/useBridge.ts",
+                "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/bridge/services.ts",
+                "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/App.tsx",
+                "templates/agibuild-hybrid/HybridApp.Desktop/MainWindow.axaml.cs",
+                "samples/avalonia-react/AvaloniReact.Desktop/MainWindow.axaml.cs",
+                "samples/avalonia-vue/AvaloniVue.Desktop/MainWindow.axaml.cs",
+                "samples/showcase-todo/ShowcaseTodo.Desktop/MainWindow.axaml.cs",
+                "samples/avalonia-ai-chat/AvaloniAiChat.Desktop/MainWindow.axaml.cs"
+            };
+
+            var prohibitedMarkers = new[]
+            {
+                "window.agWebView",
+                ".rpc.invoke(",
+                "bridgeClient.getService",
+                "createBridgeClient(",
+                "EnableSpaHosting(",
+                "BootstrapSpaAsync(",
+                "WebView.NavigateAsync("
+            };
+
+            foreach (var relativePath in governedFiles)
+            {
+                var absolutePath = RootDirectory / relativePath.Replace('/', Path.DirectorySeparatorChar);
+                if (!File.Exists(absolutePath))
+                {
+                    AddSemanticViolation(relativePath, "file exists", "file missing");
+                    continue;
+                }
+
+                var source = File.ReadAllText(absolutePath);
+                checks.Add(new
+                {
+                    file = relativePath,
+                    scope = strictScope,
+                    mode = "official-sample-template-strict"
+                });
+
+                foreach (var marker in prohibitedMarkers)
+                {
+                    if (source.Contains(marker, StringComparison.Ordinal))
+                    {
+                        AddSemanticViolation(
+                            relativePath,
+                            $"marker absent '{marker}' (scope={strictScope}, decision=deny)",
+                            $"marker present '{marker}' (scope={strictScope}, decision=deny)");
+                    }
+                }
+
+                if (relativePath.EndsWith("/bridge/client.ts", StringComparison.Ordinal))
+                {
+                    if (!source.Contains("@agibuild/bridge/profile", StringComparison.Ordinal))
+                        AddSemanticViolation(relativePath, "import from '@agibuild/bridge/profile'", "profile import missing");
+                    if (!source.Contains("createBridgeProfile", StringComparison.Ordinal))
+                        AddSemanticViolation(relativePath, "use createBridgeProfile", "createBridgeProfile missing");
+                }
+                else if (relativePath.EndsWith("/bridge/services.ts", StringComparison.Ordinal))
+                {
+                    if (!source.Contains("generated/bridge.client", StringComparison.Ordinal))
+                        AddSemanticViolation(relativePath, "re-export generated bridge client contracts", "generated contract import missing");
+                }
+                else if (relativePath.EndsWith("useBridge.ts", StringComparison.Ordinal))
+                {
+                    if (!source.Contains("bridgeProfile.ready", StringComparison.Ordinal))
+                        AddSemanticViolation(relativePath, "use bridgeProfile.ready for readiness", "bridgeProfile.ready missing");
+                }
+                else if (relativePath.EndsWith("MainWindow.axaml.cs", StringComparison.Ordinal))
+                {
+                    if (!source.Contains("BootstrapSpaProfileAsync", StringComparison.Ordinal))
+                        AddSemanticViolation(relativePath, "use BootstrapSpaProfileAsync host entrypoint", "profile bootstrap missing");
+                }
+            }
+
             var reportPayload = new
             {
                 generatedAtUtc = DateTime.UtcNow,
                 checks,
+                semanticDiagnostics,
                 failureCount = failures.Count,
                 failures
             };
@@ -233,6 +343,119 @@ partial class BuildTask
 
             if (failures.Count > 0)
                 Assert.Fail("TypeScript declaration governance failed:\n" + string.Join('\n', failures));
+        });
+
+    Target SampleTemplatePackageReferenceGovernance => _ => _
+        .Description("Enforces package-only Agibuild.Fulora references in sample/template projects.")
+        .Executes(() =>
+        {
+            TestResultsDirectory.CreateDirectory();
+
+            var failures = new List<string>();
+            var checks = new List<object>();
+            var sourceProjectReferencePattern = new Regex(
+                @"<(ProjectReference|Import)\b[^>]*(Include|Project)\s*=\s*""(?<path>[^""]*src[\\/]+Agibuild\.Fulora[^""]*)""[^>]*>",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            var conditionalProjectReferencePattern = new Regex(
+                @"<ProjectReference\b[^>]*\bCondition\s*=",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            var packageReferenceWithVersionAttributePattern = new Regex(
+                @"<PackageReference\b[^>]*Include=""(?<id>Agibuild\.Fulora(?:\.[^""]+)?)""[^>]*Version=""(?<version>[^""]+)""[^>]*/?>",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            var packageReferenceElementPattern = new Regex(
+                @"<PackageReference\b[^>]*Include=""(?<id>Agibuild\.Fulora(?:\.[^""]+)?)""[^>]*>(?<body>[\s\S]*?)</PackageReference>",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            var versionElementPattern = new Regex(
+                @"<Version>\s*(?<version>[^<]+)\s*</Version>",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
+            var governedRoots = new[]
+            {
+                RootDirectory / "samples",
+                RootDirectory / "templates"
+            };
+            var projectFiles = governedRoots
+                .Where(root => Directory.Exists(root))
+                .SelectMany(root => Directory.GetFiles(root, "*.csproj", SearchOption.AllDirectories))
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+
+            foreach (var projectFile in projectFiles)
+            {
+                var relativePath = Path.GetRelativePath(RootDirectory, projectFile).Replace(Path.DirectorySeparatorChar, '/');
+                var source = File.ReadAllText(projectFile);
+                var sourceReferenceViolations = new List<string>();
+                var conditionalReferenceViolations = new List<string>();
+                var packageVersionViolations = new List<string>();
+
+                foreach (Match match in sourceProjectReferencePattern.Matches(source))
+                {
+                    var path = match.Groups["path"].Value;
+                    sourceReferenceViolations.Add(path);
+                    failures.Add(
+                        $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: source project/import reference is prohibited in samples/templates; found '{path}'.");
+                }
+
+                foreach (Match _ in conditionalProjectReferencePattern.Matches(source))
+                {
+                    conditionalReferenceViolations.Add("ProjectReference with Condition attribute");
+                    failures.Add(
+                        $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: conditional ProjectReference is prohibited in samples/templates.");
+                }
+
+                foreach (Match match in packageReferenceWithVersionAttributePattern.Matches(source))
+                {
+                    var packageId = match.Groups["id"].Value;
+                    var version = match.Groups["version"].Value.Trim();
+                    if (string.Equals(version, "*-*", StringComparison.Ordinal))
+                        continue;
+
+                    packageVersionViolations.Add($"{packageId}={version}");
+                    failures.Add(
+                        $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: package '{packageId}' must use version '*-*'; actual '{version}'.");
+                }
+
+                foreach (Match match in packageReferenceElementPattern.Matches(source))
+                {
+                    var packageId = match.Groups["id"].Value;
+                    var body = match.Groups["body"].Value;
+                    var versionMatch = versionElementPattern.Match(body);
+                    if (!versionMatch.Success)
+                        continue;
+
+                    var version = versionMatch.Groups["version"].Value.Trim();
+                    if (string.Equals(version, "*-*", StringComparison.Ordinal))
+                        continue;
+
+                    packageVersionViolations.Add($"{packageId}={version}");
+                    failures.Add(
+                        $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: package '{packageId}' must use version '*-*'; actual '{version}'.");
+                }
+
+                checks.Add(new
+                {
+                    file = relativePath,
+                    sourceReferenceViolationCount = sourceReferenceViolations.Count,
+                    conditionalReferenceViolationCount = conditionalReferenceViolations.Count,
+                    packageVersionViolationCount = packageVersionViolations.Count
+                });
+            }
+
+            var reportPayload = new
+            {
+                generatedAtUtc = DateTime.UtcNow,
+                invariantId = SampleTemplatePackageReferencePolicyInvariantId,
+                governedRoots = new[] { "samples", "templates" },
+                checks,
+                failureCount = failures.Count,
+                failures
+            };
+
+            WriteJsonReport(SampleTemplatePackageReferenceGovernanceReportFile, reportPayload);
+            Serilog.Log.Information("Sample/template package-reference governance report written to {Path}", SampleTemplatePackageReferenceGovernanceReportFile);
+
+            if (failures.Count > 0)
+                Assert.Fail("Sample/template package-reference governance failed:\n" + string.Join('\n', failures));
         });
 
     Target OpenSpecStrictGovernance => _ => _
@@ -1296,6 +1519,7 @@ partial class BuildTask
                     automationLaneReportExists = File.Exists(AutomationLaneReportFile),
                     dependencyGovernanceReportExists = File.Exists(DependencyGovernanceReportFile),
                     typeScriptGovernanceReportExists = File.Exists(TypeScriptGovernanceReportFile),
+                    sampleTemplatePackageReferenceGovernanceReportExists = File.Exists(SampleTemplatePackageReferenceGovernanceReportFile),
                     runtimeCriticalPathGovernanceReportExists = File.Exists(RuntimeCriticalPathGovernanceReportFile)
                 },
                 closeoutArchives
@@ -1315,6 +1539,7 @@ partial class BuildTask
             DependencyVulnerabilityGovernance,
             TypeScriptDeclarationGovernance,
             OpenSpecStrictGovernance,
+            SampleTemplatePackageReferenceGovernance,
             BridgeDistributionGovernance,
             DistributionReadinessGovernance,
             AdoptionReadinessGovernanceCiPublish,
@@ -1333,6 +1558,7 @@ partial class BuildTask
                 new { Category = "governance", InvariantId = ReleaseOrchestrationDecisionInvariantId, RelativePath = "artifacts/test-results/transition-gate-governance-report.json", FullPath = TransitionGateGovernanceReportFile.ToString() },
                 new { Category = "governance", InvariantId = ReleaseOrchestrationDecisionInvariantId, RelativePath = "artifacts/test-results/dependency-governance-report.json", FullPath = DependencyGovernanceReportFile.ToString() },
                 new { Category = "governance", InvariantId = ReleaseOrchestrationDecisionInvariantId, RelativePath = "artifacts/test-results/typescript-governance-report.json", FullPath = TypeScriptGovernanceReportFile.ToString() },
+                new { Category = "governance", InvariantId = SampleTemplatePackageReferencePolicyInvariantId, RelativePath = "artifacts/test-results/sample-template-package-reference-governance-report.json", FullPath = SampleTemplatePackageReferenceGovernanceReportFile.ToString() },
                 new { Category = "governance", InvariantId = ReleaseOrchestrationDecisionInvariantId, RelativePath = "artifacts/test-results/runtime-critical-path-governance-report.json", FullPath = RuntimeCriticalPathGovernanceReportFile.ToString() },
                 new { Category = "governance", InvariantId = ReleaseOrchestrationDecisionInvariantId, RelativePath = "artifacts/test-results/bridge-distribution-governance-report.json", FullPath = BridgeDistributionGovernanceReportFile.ToString() },
                 new { Category = "governance", InvariantId = DistributionReadinessSchemaInvariantId, RelativePath = "artifacts/test-results/distribution-readiness-governance-report.json", FullPath = DistributionReadinessGovernanceReportFile.ToString() },

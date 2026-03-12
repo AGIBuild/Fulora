@@ -19,4 +19,8 @@
                       OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
     <None Include="fulora-plugin.json" Pack="true" PackagePath="fulora-plugin.json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
+  </ItemGroup>
 </Project>

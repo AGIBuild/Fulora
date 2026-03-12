@@ -8,6 +8,16 @@ export interface BridgeCallContext {
   properties: Map<string, unknown>;
 }
 
+export interface BridgeErrorNormalizationContext {
+  readonly error: BridgeError;
+  readonly serviceName: string;
+  readonly methodName: string;
+  readonly params: Record<string, unknown> | undefined;
+  readonly startedAt: number;
+  readonly elapsedMs: number;
+  readonly rawError: unknown;
+}
+
 export type BridgeMiddleware = (
   context: BridgeCallContext,
   next: () => Promise<unknown>
@@ -165,7 +175,7 @@ export function withRetry(options: RetryOptions): BridgeMiddleware {
 }
 
 export interface ErrorNormalizationOptions {
-  onError?: (error: BridgeError) => void;
+  onError?: (context: BridgeErrorNormalizationContext) => void;
 }
 
 export function withErrorNormalization(options?: ErrorNormalizationOptions): BridgeMiddleware {
@@ -174,7 +184,15 @@ export function withErrorNormalization(options?: ErrorNormalizationOptions): Bri
       return await next();
     } catch (err) {
       if (err instanceof BridgeError) {
-        options?.onError?.(err);
+        options?.onError?.({
+          error: err,
+          serviceName: context.serviceName,
+          methodName: context.methodName,
+          params: context.params,
+          startedAt: context.startedAt,
+          elapsedMs: Date.now() - context.startedAt,
+          rawError: err,
+        });
         throw err;
       }
       if (isRpcError(err)) {
@@ -183,7 +201,15 @@ export function withErrorNormalization(options?: ErrorNormalizationOptions): Bri
           err.code ?? -1,
           err.data
         );
-        options?.onError?.(bridgeError);
+        options?.onError?.({
+          error: bridgeError,
+          serviceName: context.serviceName,
+          methodName: context.methodName,
+          params: context.params,
+          startedAt: context.startedAt,
+          elapsedMs: Date.now() - context.startedAt,
+          rawError: err,
+        });
         throw bridgeError;
       }
       throw err;

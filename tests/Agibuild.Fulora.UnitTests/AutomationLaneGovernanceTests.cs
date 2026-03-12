@@ -116,6 +116,7 @@ public sealed class AutomationLaneGovernanceTests
         {
             "ContractAutomation", "RuntimeAutomation", "AutomationLaneReport",
             "WarningGovernance", "WarningGovernanceSyntheticCheck",
+            "SampleTemplatePackageReferenceGovernance",
             "ReleaseCloseoutSnapshot", "DistributionReadinessGovernance",
             "AdoptionReadinessGovernanceCi", "AdoptionReadinessGovernanceCiPublish",
             "ReleaseOrchestrationGovernance"
@@ -127,6 +128,7 @@ public sealed class AutomationLaneGovernanceTests
         {
             "automation-lane-report.json", "warning-governance-report.json",
             "warning-governance.baseline.json", "nuget-smoke-retry-telemetry.json",
+            "sample-template-package-reference-governance-report.json",
             "closeout-snapshot.json", "distribution-readiness-governance-report.json",
             "adoption-readiness-governance-report.json", "release-orchestration-decision-report.json"
         };
@@ -432,9 +434,10 @@ public sealed class AutomationLaneGovernanceTests
         {
             var reactClient = File.ReadAllText(reactClientPath);
             Assert.True(
+                reactClient.Contains("createBridgeProfile", StringComparison.Ordinal) ||
                 reactClient.Contains("withLogging", StringComparison.Ordinal) ||
                 reactClient.Contains("withErrorNormalization", StringComparison.Ordinal),
-                $"[{TemplateMetadataSchema}] React bridge client should configure middleware when custom client entrypoint exists.");
+                $"[{TemplateMetadataSchema}] React bridge client should configure middleware through profile or explicit middleware wiring.");
         }
     }
 
@@ -615,6 +618,7 @@ public sealed class AutomationLaneGovernanceTests
         var requiredTargets = new[]
         {
             "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "SampleTemplatePackageReferenceGovernance",
             "TypeScriptDeclarationGovernance", "ReleaseCloseoutSnapshot",
             "ContinuousTransitionGateGovernance", "DistributionReadinessGovernance",
             "AdoptionReadinessGovernanceCi", "AdoptionReadinessGovernanceCiPublish",
@@ -627,12 +631,14 @@ public sealed class AutomationLaneGovernanceTests
         AssertInvocationExists(combinedSource, "RunProcessCheckedAsync", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "dependency-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "typescript-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
+        AssertStringLiteralExists(combinedSource, "sample-template-package-reference-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "closeout-snapshot.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "transition-gate-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
 
         var ciDependencies = new[]
         {
             "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "SampleTemplatePackageReferenceGovernance",
             "TypeScriptDeclarationGovernance", "ReleaseCloseoutSnapshot",
             "RuntimeCriticalPathExecutionGovernanceCi", "ContinuousTransitionGateGovernance",
             "AdoptionReadinessGovernanceCi"
@@ -642,6 +648,7 @@ public sealed class AutomationLaneGovernanceTests
         var ciPublishDependencies = new[]
         {
             "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "SampleTemplatePackageReferenceGovernance",
             "TypeScriptDeclarationGovernance", "ReleaseCloseoutSnapshot",
             "RuntimeCriticalPathExecutionGovernanceCiPublish", "ContinuousTransitionGateGovernance",
             "DistributionReadinessGovernance", "AdoptionReadinessGovernanceCiPublish",
@@ -884,32 +891,58 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Dx_assets_for_bridge_package_and_vue_sample_are_present_and_typed()
+    public void Dx_assets_for_bridge_package_and_official_samples_use_profile_and_generated_contracts()
     {
         var repoRoot = FindRepoRoot();
 
         var requiredFiles = new[]
         {
             "packages/bridge/package.json", "packages/bridge/src/index.ts",
+            "packages/bridge/src/profile.ts",
+            "templates/agibuild-hybrid/HybridApp.Desktop/MainWindow.axaml.cs",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/client.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/services.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/hooks/useBridge.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/client.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/services.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/composables/useBridge.ts",
             "samples/avalonia-react/AvaloniReact.Web/package.json",
             "samples/avalonia-react/AvaloniReact.Web/src/bridge/services.ts",
             "samples/avalonia-react/AvaloniReact.Web/src/hooks/useBridge.ts",
             "samples/avalonia-vue/AvaloniVue.Web/src/main.ts",
             "samples/avalonia-vue/AvaloniVue.Web/package.json",
             "samples/avalonia-vue/AvaloniVue.Web/src/bridge/services.ts",
-            "samples/avalonia-vue/AvaloniVue.Web/tsconfig.json"
+            "samples/avalonia-vue/AvaloniVue.Web/src/bridge/client.ts",
+            "samples/avalonia-vue/AvaloniVue.Web/tsconfig.json",
+            "samples/showcase-todo/ShowcaseTodo.Web/src/bridge/services.ts",
+            "samples/showcase-todo/ShowcaseTodo.Web/src/bridge/client.ts",
+            "samples/showcase-todo/ShowcaseTodo.Web/src/hooks/useBridge.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/bridge/services.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/bridge/client.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/hooks/useBridge.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/App.tsx"
         };
         foreach (var relPath in requiredFiles)
             AssertFileExists(Path.Combine(repoRoot, relPath.Replace('/', Path.DirectorySeparatorChar)), BridgeDxAssets);
 
         var bridgePackage = File.ReadAllText(Path.Combine(repoRoot, "packages", "bridge", "package.json"));
         var bridgeEntry = File.ReadAllText(Path.Combine(repoRoot, "packages", "bridge", "src", "index.ts"));
+        var bridgeProfileEntry = File.ReadAllText(Path.Combine(repoRoot, "packages", "bridge", "src", "profile.ts"));
+        var templateDesktopMainWindow = File.ReadAllText(Path.Combine(repoRoot, "templates", "agibuild-hybrid", "HybridApp.Desktop", "MainWindow.axaml.cs"));
+        var templateReactClient = File.ReadAllText(Path.Combine(repoRoot, "templates", "agibuild-hybrid", "HybridApp.Web.Vite.React", "src", "bridge", "client.ts"));
+        var templateVueClient = File.ReadAllText(Path.Combine(repoRoot, "templates", "agibuild-hybrid", "HybridApp.Web.Vite.Vue", "src", "bridge", "client.ts"));
         var reactPackage = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-react", "AvaloniReact.Web", "package.json"));
         var reactBridge = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-react", "AvaloniReact.Web", "src", "bridge", "services.ts"));
         var reactBridgeHook = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-react", "AvaloniReact.Web", "src", "hooks", "useBridge.ts"));
         var vuePackage = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-vue", "AvaloniVue.Web", "package.json"));
         var vueBridge = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-vue", "AvaloniVue.Web", "src", "bridge", "services.ts"));
+        var vueClient = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-vue", "AvaloniVue.Web", "src", "bridge", "client.ts"));
         var vueTsConfig = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-vue", "AvaloniVue.Web", "tsconfig.json"));
+        var todoBridge = File.ReadAllText(Path.Combine(repoRoot, "samples", "showcase-todo", "ShowcaseTodo.Web", "src", "bridge", "services.ts"));
+        var todoClient = File.ReadAllText(Path.Combine(repoRoot, "samples", "showcase-todo", "ShowcaseTodo.Web", "src", "bridge", "client.ts"));
+        var aiChatBridge = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-ai-chat", "AvaloniAiChat.Web", "src", "bridge", "services.ts"));
+        var aiChatClient = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-ai-chat", "AvaloniAiChat.Web", "src", "bridge", "client.ts"));
+        var aiChatApp = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-ai-chat", "AvaloniAiChat.Web", "src", "App.tsx"));
         var vueLayout = File.ReadAllText(Path.Combine(repoRoot, "samples", "avalonia-vue", "AvaloniVue.Web", "src", "components", "AppLayout.vue"));
 
         AssertSourceContains(bridgePackage, "\"@agibuild/bridge\"", BridgeDxAssets, "packages/bridge/package.json");
@@ -917,13 +950,175 @@ public sealed class AutomationLaneGovernanceTests
         AssertSourceContains(bridgeEntry, "createBridgeClient", BridgeDxAssets, "packages/bridge/src/index.ts");
         AssertSourceContains(bridgeEntry, "bridgeClient", BridgeDxAssets, "packages/bridge/src/index.ts");
         AssertSourceContains(bridgeEntry, "getService", BridgeDxAssets, "packages/bridge/src/index.ts");
+        AssertSourceContains(bridgeProfileEntry, "createBridgeProfile", BridgeDxAssets, "packages/bridge/src/profile.ts");
+        AssertSourceContains(bridgeProfileEntry, "withErrorNormalization", BridgeDxAssets, "packages/bridge/src/profile.ts");
+        AssertSourceContains(templateDesktopMainWindow, "BootstrapSpaProfileAsync", BridgeDxAssets, "templates/agibuild-hybrid/HybridApp.Desktop/MainWindow.axaml.cs");
+        AssertSourceContains(templateReactClient, "@agibuild/bridge/profile", BridgeDxAssets, "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/client.ts");
+        AssertSourceContains(templateVueClient, "@agibuild/bridge/profile", BridgeDxAssets, "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/client.ts");
         AssertSourceContains(reactPackage, "\"@agibuild/bridge\"", BridgeDxAssets, "samples/avalonia-react/.../package.json");
         AssertSourceContains(reactBridge, "from './generated/bridge.client'", BridgeDxAssets, "samples/avalonia-react/.../services.ts");
-        AssertSourceContains(reactBridgeHook, "ready", BridgeDxAssets, "samples/avalonia-react/.../useBridge.ts");
+        AssertSourceContains(reactBridgeHook, "bridgeProfile.ready", BridgeDxAssets, "samples/avalonia-react/.../useBridge.ts");
         AssertSourceContains(vueLayout, "getAppInfo", BridgeDxAssets, "samples/avalonia-vue/.../AppLayout.vue");
         AssertSourceContains(vuePackage, "\"@agibuild/bridge\"", BridgeDxAssets, "samples/avalonia-vue/.../package.json");
-        AssertSourceContains(vueBridge, "bridgeClient.getService", BridgeDxAssets, "samples/avalonia-vue/.../services.ts");
-        AssertSourceContains(vueTsConfig, "bridge.d.ts", BridgeDxAssets, "samples/avalonia-vue/.../tsconfig.json");
+        AssertSourceContains(vueBridge, "from './generated/bridge.client'", BridgeDxAssets, "samples/avalonia-vue/.../services.ts");
+        AssertSourceContains(vueClient, "@agibuild/bridge/profile", BridgeDxAssets, "samples/avalonia-vue/.../client.ts");
+        AssertSourceContains(vueTsConfig, "src/bridge/generated/bridge.d.ts", BridgeDxAssets, "samples/avalonia-vue/.../tsconfig.json");
+        AssertSourceContains(todoBridge, "from './generated/bridge.client'", BridgeDxAssets, "samples/showcase-todo/.../services.ts");
+        AssertSourceContains(todoClient, "@agibuild/bridge/profile", BridgeDxAssets, "samples/showcase-todo/.../client.ts");
+        AssertSourceContains(aiChatBridge, "from './generated/bridge.client'", BridgeDxAssets, "samples/avalonia-ai-chat/.../services.ts");
+        AssertSourceContains(aiChatClient, "@agibuild/bridge/profile", BridgeDxAssets, "samples/avalonia-ai-chat/.../client.ts");
+        AssertSourceContains(aiChatApp, "from './bridge/services'", BridgeDxAssets, "samples/avalonia-ai-chat/.../App.tsx");
+    }
+
+    [Fact]
+    public void Official_sample_and_template_app_layer_paths_enforce_single_entry_bridge_policy_without_exceptions()
+    {
+        var repoRoot = FindRepoRoot();
+        const string strictScope = "official-maintained-app-layer::strict-no-exception";
+
+        var governedFiles = new[]
+        {
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/client.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/hooks/useBridge.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/services.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/client.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/composables/useBridge.ts",
+            "templates/agibuild-hybrid/HybridApp.Web.Vite.Vue/src/bridge/services.ts",
+            "samples/avalonia-react/AvaloniReact.Web/src/bridge/client.ts",
+            "samples/avalonia-react/AvaloniReact.Web/src/hooks/useBridge.ts",
+            "samples/avalonia-react/AvaloniReact.Web/src/bridge/services.ts",
+            "samples/avalonia-vue/AvaloniVue.Web/src/bridge/client.ts",
+            "samples/avalonia-vue/AvaloniVue.Web/src/composables/useBridge.ts",
+            "samples/avalonia-vue/AvaloniVue.Web/src/bridge/services.ts",
+            "samples/showcase-todo/ShowcaseTodo.Web/src/bridge/client.ts",
+            "samples/showcase-todo/ShowcaseTodo.Web/src/hooks/useBridge.ts",
+            "samples/showcase-todo/ShowcaseTodo.Web/src/bridge/services.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/bridge/client.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/hooks/useBridge.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/bridge/services.ts",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Web/src/App.tsx",
+            "templates/agibuild-hybrid/HybridApp.Desktop/MainWindow.axaml.cs",
+            "samples/avalonia-react/AvaloniReact.Desktop/MainWindow.axaml.cs",
+            "samples/avalonia-vue/AvaloniVue.Desktop/MainWindow.axaml.cs",
+            "samples/showcase-todo/ShowcaseTodo.Desktop/MainWindow.axaml.cs",
+            "samples/avalonia-ai-chat/AvaloniAiChat.Desktop/MainWindow.axaml.cs"
+        };
+
+        var prohibitedMarkers = new[]
+        {
+            "window.agWebView",
+            ".rpc.invoke(",
+            "bridgeClient.getService",
+            "createBridgeClient(",
+            "EnableSpaHosting(",
+            "BootstrapSpaAsync(",
+            "WebView.NavigateAsync("
+        };
+
+        foreach (var relPath in governedFiles)
+        {
+            var path = Path.Combine(repoRoot, relPath.Replace('/', Path.DirectorySeparatorChar));
+            AssertFileExists(path, BridgeSingleEntryAppLayerPolicy);
+            var source = File.ReadAllText(path);
+
+            foreach (var marker in prohibitedMarkers)
+            {
+                if (!source.Contains(marker, StringComparison.Ordinal))
+                    continue;
+
+                throw new GovernanceInvariantViolationException(
+                    BridgeSingleEntryAppLayerPolicy,
+                    relPath,
+                    $"marker absent '{marker}' (scope={strictScope}, decision=deny)",
+                    $"marker present '{marker}' (scope={strictScope}, decision=deny)");
+            }
+        }
+    }
+
+    [Fact]
+    public void TypeScript_governance_target_emits_single_entry_semantic_diagnostics_and_blocks_violations()
+    {
+        var repoRoot = FindRepoRoot();
+        var governanceSourcePath = Path.Combine(repoRoot, "build", "Build.Governance.cs");
+        AssertFileExists(governanceSourcePath, BridgeSingleEntryAppLayerPolicy);
+
+        var source = File.ReadAllText(governanceSourcePath);
+        AssertSourceContains(source, "BridgeSingleEntryAppLayerPolicyInvariantId", BridgeSingleEntryAppLayerPolicy, governanceSourcePath);
+        AssertSourceContains(source, "semanticDiagnostics", BridgeSingleEntryAppLayerPolicy, governanceSourcePath);
+        AssertSourceContains(source, "official-maintained-app-layer::strict-no-exception", BridgeSingleEntryAppLayerPolicy, governanceSourcePath);
+        AssertSourceContains(source, "createBridgeProfile", BridgeSingleEntryAppLayerPolicy, governanceSourcePath);
+        AssertSourceContains(source, "BootstrapSpaProfileAsync", BridgeSingleEntryAppLayerPolicy, governanceSourcePath);
+        AssertSourceContains(source, "marker present", BridgeSingleEntryAppLayerPolicy, governanceSourcePath);
+    }
+
+    [Fact]
+    public void Sample_and_template_projects_use_package_references_without_source_or_conditional_project_references()
+    {
+        var repoRoot = FindRepoRoot();
+        var governedRoots = new[]
+        {
+            Path.Combine(repoRoot, "samples"),
+            Path.Combine(repoRoot, "templates")
+        };
+        var projectFiles = governedRoots
+            .Where(Directory.Exists)
+            .SelectMany(root => Directory.GetFiles(root, "*.csproj", SearchOption.AllDirectories))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.NotEmpty(projectFiles);
+
+        var sourceProjectReferencePattern = new Regex(
+            @"<(ProjectReference|Import)\b[^>]*(Include|Project)\s*=\s*""(?<path>[^""]*src[\\/]+Agibuild\.Fulora[^""]*)""[^>]*>",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        var conditionalProjectReferencePattern = new Regex(
+            @"<ProjectReference\b[^>]*\bCondition\s*=",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        var packageReferenceWithVersionAttributePattern = new Regex(
+            @"<PackageReference\b[^>]*Include=""(?<id>Agibuild\.Fulora(?:\.[^""]+)?)""[^>]*Version=""(?<version>[^""]+)""[^>]*/?>",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        var packageReferenceElementPattern = new Regex(
+            @"<PackageReference\b[^>]*Include=""(?<id>Agibuild\.Fulora(?:\.[^""]+)?)""[^>]*>(?<body>[\s\S]*?)</PackageReference>",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        var versionElementPattern = new Regex(
+            @"<Version>\s*(?<version>[^<]+)\s*</Version>",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
+        foreach (var projectFile in projectFiles)
+        {
+            var relativePath = Path.GetRelativePath(repoRoot, projectFile).Replace(Path.DirectorySeparatorChar, '/');
+            var source = File.ReadAllText(projectFile);
+
+            Assert.False(
+                sourceProjectReferencePattern.IsMatch(source),
+                $"[{SampleTemplatePackageReferencePolicy}] {relativePath} must not reference src/Agibuild.Fulora.* via ProjectReference/Import.");
+            Assert.False(
+                conditionalProjectReferencePattern.IsMatch(source),
+                $"[{SampleTemplatePackageReferencePolicy}] {relativePath} must not contain conditional ProjectReference.");
+
+            foreach (Match match in packageReferenceWithVersionAttributePattern.Matches(source))
+            {
+                var packageId = match.Groups["id"].Value;
+                var version = match.Groups["version"].Value.Trim();
+                Assert.True(
+                    string.Equals(version, "*-*", StringComparison.Ordinal),
+                    $"[{SampleTemplatePackageReferencePolicy}] {relativePath} package '{packageId}' must use '*-*', actual '{version}'.");
+            }
+
+            foreach (Match match in packageReferenceElementPattern.Matches(source))
+            {
+                var packageId = match.Groups["id"].Value;
+                var body = match.Groups["body"].Value;
+                var versionMatch = versionElementPattern.Match(body);
+                if (!versionMatch.Success)
+                    continue;
+
+                var version = versionMatch.Groups["version"].Value.Trim();
+                Assert.True(
+                    string.Equals(version, "*-*", StringComparison.Ordinal),
+                    $"[{SampleTemplatePackageReferencePolicy}] {relativePath} package '{packageId}' must use '*-*', actual '{version}'.");
+            }
+        }
     }
 
     [Fact]

@@ -1,9 +1,7 @@
 ## Purpose
 
 Define requirements for the JavaScript-side middleware pipeline in the BridgeClient.
-
 ## Requirements
-
 ### Requirement: BridgeClient supports middleware registration via use()
 
 The `BridgeClient` interface SHALL expose a `use(middleware)` method that registers a middleware function into the client's execution pipeline.
@@ -105,15 +103,19 @@ The package SHALL provide a `withRetry(options)` built-in middleware that retrie
 - **THEN** the caller SHALL receive the error from the last failed attempt
 
 ### Requirement: withErrorNormalization middleware wraps RPC errors
-
 The package SHALL provide a `withErrorNormalization()` built-in middleware that wraps raw JSON-RPC errors into typed `BridgeError` instances.
 
-#### Scenario: RPC error is wrapped in BridgeError
+Middleware-level error normalization SHALL preserve structured error fields (`code`, `message`, and optional `data`) whenever present and SHALL support deterministic global handling hooks for centralized retry/reporting strategy implementation.
 
+#### Scenario: RPC error is wrapped in BridgeError
 - **WHEN** `withErrorNormalization()` is registered and a bridge call returns a JSON-RPC error
 - **THEN** the error SHALL be wrapped in a `BridgeError` with `code`, `message`, and optional `data` properties
 
-#### Scenario: Non-RPC errors pass through unchanged
+#### Scenario: Global error hook observes normalized errors before rethrow
+- **WHEN** normalized bridge errors are produced in middleware pipeline
+- **THEN** configured global error hooks SHALL receive normalized error context before the error is rethrown to the caller
 
+#### Scenario: Non-RPC errors pass through unchanged
 - **WHEN** `withErrorNormalization()` is registered and a non-RPC error occurs (e.g., network failure)
 - **THEN** the original error SHALL propagate without wrapping
+

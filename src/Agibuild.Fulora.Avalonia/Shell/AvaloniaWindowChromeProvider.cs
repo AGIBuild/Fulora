@@ -75,7 +75,7 @@ public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDispo
                 Dispatcher.UIThread.Post(() =>
                 {
                     window.ExtendClientAreaToDecorationsHint = true;
-                    window.ExtendClientAreaChromeHints = Avalonia.Platform.ExtendClientAreaChromeHints.PreferSystemChrome;
+                    window.WindowDecorations = WindowDecorations.Full;
                 });
 
                 window.AddHandler(InputElement.PointerPressedEvent,
@@ -169,7 +169,7 @@ public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDispo
     private static void ApplyAppearanceToWindow(Window window, WindowAppearanceRequest request)
     {
         window.ExtendClientAreaToDecorationsHint = true;
-        window.ExtendClientAreaChromeHints = Avalonia.Platform.ExtendClientAreaChromeHints.PreferSystemChrome;
+        window.WindowDecorations = WindowDecorations.Full;
 
         var pct = request.OpacityPercent / 100d;
         var windowAlpha = (byte)Math.Clamp((int)(30 + pct * 210), 30, 240);

@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="OllamaSharp" Version="5.4.23" />
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
   </ItemGroup>
 </Project>

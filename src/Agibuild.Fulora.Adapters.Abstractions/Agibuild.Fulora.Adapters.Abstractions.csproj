@@ -28,4 +28,9 @@
     <InternalsVisibleTo Include="Agibuild.Fulora.Integration.Tests" />
     <InternalsVisibleTo Include="Agibuild.Fulora.Integration.Tests.Automation" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Update="MinVer" Version="8.0.0-alpha.1" />
+  </ItemGroup>
 </Project>
