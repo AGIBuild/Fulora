@@ -16,19 +16,23 @@ public sealed class BridgeEventCollector : IBridgeEventCollector
     private long _droppedCount;
     private readonly ConcurrentBag<Action<BridgeDevToolsEvent>> _subscribers = [];
 
+    /// <summary>Initializes a new collector with the specified ring-buffer capacity.</summary>
     public BridgeEventCollector(int capacity = 500)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
         _buffer = new BridgeDevToolsEvent[capacity];
     }
 
+    /// <summary>Maximum number of events the ring buffer can hold.</summary>
     public int Capacity => _buffer.Length;
 
+    /// <summary>Current number of events stored in the buffer.</summary>
     public int Count
     {
         get { lock (_lock) return _count; }
     }
 
+    /// <summary>Total number of events dropped due to buffer overflow.</summary>
     public long DroppedCount
     {
         get { lock (_lock) return _droppedCount; }
@@ -61,6 +65,7 @@ public sealed class BridgeEventCollector : IBridgeEventCollector
         }
     }
 
+    /// <summary>Returns a snapshot of all currently buffered events in chronological order.</summary>
     public IReadOnlyList<BridgeDevToolsEvent> GetEvents()
     {
         lock (_lock)
@@ -72,6 +77,7 @@ public sealed class BridgeEventCollector : IBridgeEventCollector
         }
     }
 
+    /// <summary>Removes all events from the buffer and resets counters.</summary>
     public void Clear()
     {
         lock (_lock)
@@ -83,6 +89,7 @@ public sealed class BridgeEventCollector : IBridgeEventCollector
         }
     }
 
+    /// <summary>Registers a callback invoked for each new event. Dispose the returned handle to unsubscribe.</summary>
     public IDisposable Subscribe(Action<BridgeDevToolsEvent> onEvent)
     {
         ArgumentNullException.ThrowIfNull(onEvent);

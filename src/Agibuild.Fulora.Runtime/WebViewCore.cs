@@ -800,9 +800,13 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// <summary>Raised when the user triggers a context menu (right-click, long-press).</summary>
     public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested;
 
+    /// <summary>Raised when a drag operation enters the WebView bounds.</summary>
     public event EventHandler<DragEventArgs>? DragEntered;
+    /// <summary>Raised when a drag operation moves over the WebView.</summary>
     public event EventHandler<DragEventArgs>? DragOver;
+    /// <summary>Raised when a drag operation leaves the WebView bounds.</summary>
     public event EventHandler<EventArgs>? DragLeft;
+    /// <summary>Raised when a drop is completed on the WebView.</summary>
     public event EventHandler<DropEventArgs>? DropCompleted;
 
     private void OnAdapterContextMenuRequested(object? sender, ContextMenuRequestedEventArgs e)

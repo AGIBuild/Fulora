@@ -22,6 +22,7 @@ public sealed class WindowShellService : IWindowShellService, IDisposable
     private WindowShellSettings _settings = new();
     private bool _disposed;
 
+    /// <summary>Creates a window shell service with the given chrome and theme providers.</summary>
     public WindowShellService(IWindowChromeProvider chromeProvider, IPlatformThemeProvider themeProvider)
     {
         _chromeProvider = chromeProvider ?? throw new ArgumentNullException(nameof(chromeProvider));
@@ -31,9 +32,11 @@ public sealed class WindowShellService : IWindowShellService, IDisposable
         _chromeProvider.AppearanceChanged += OnAppearanceChanged;
     }
 
+    /// <inheritdoc />
     public Task<WindowShellState> GetWindowShellState()
         => Task.FromResult(BuildState());
 
+    /// <inheritdoc />
     public async Task<WindowShellState> UpdateWindowShellSettings(WindowShellSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -53,6 +56,7 @@ public sealed class WindowShellService : IWindowShellService, IDisposable
         return BuildState();
     }
 
+    /// <inheritdoc />
     public async IAsyncEnumerable<WindowShellState> StreamWindowShellState(
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -204,6 +208,7 @@ public sealed class WindowShellService : IWindowShellService, IDisposable
         catch (SemaphoreFullException) { }
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;

@@ -20,6 +20,7 @@ public sealed class BridgeDevToolsService : IDisposable
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
+    /// <summary>Initializes the DevTools service with an optional existing tracer and buffer capacity.</summary>
     public BridgeDevToolsService(IBridgeTracer? existingTracer = null, int bufferCapacity = 500)
     {
         _collector = new BridgeEventCollector(bufferCapacity);
@@ -84,6 +85,7 @@ public sealed class BridgeDevToolsService : IDisposable
         _invokeScript = null;
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;

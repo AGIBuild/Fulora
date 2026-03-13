@@ -18,6 +18,7 @@ public sealed class AutoUpdateService : IAutoUpdateService, IDisposable
     private Timer? _checkTimer;
     private bool _disposed;
 
+    /// <summary>Initializes the auto-update service with the given platform provider and options.</summary>
     public AutoUpdateService(IAutoUpdatePlatformProvider provider, AutoUpdateOptions options)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
@@ -152,6 +153,7 @@ public sealed class AutoUpdateService : IAutoUpdateService, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;

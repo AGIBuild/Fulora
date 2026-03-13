@@ -15,6 +15,7 @@ public sealed class ThemeService : IThemeService, IDisposable
     private string _lastMode;
     private bool _disposed;
 
+    /// <summary>Creates a theme service using the given platform provider.</summary>
     public ThemeService(IPlatformThemeProvider provider)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
@@ -22,18 +23,22 @@ public sealed class ThemeService : IThemeService, IDisposable
         _provider.ThemeChanged += OnProviderThemeChanged;
     }
 
+    /// <inheritdoc />
     public IBridgeEvent<ThemeChangedEvent> ThemeChanged => _themeChanged;
 
+    /// <inheritdoc />
     public Task<ThemeInfo> GetCurrentTheme()
     {
         return Task.FromResult(BuildThemeInfo());
     }
 
+    /// <inheritdoc />
     public Task<string?> GetAccentColor()
     {
         return Task.FromResult(_provider.GetAccentColor());
     }
 
+    /// <inheritdoc />
     public Task<bool> GetHighContrastMode()
     {
         return Task.FromResult(_provider.GetIsHighContrast());
@@ -66,6 +71,7 @@ public sealed class ThemeService : IThemeService, IDisposable
         IsHighContrast = _provider.GetIsHighContrast()
     };
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;

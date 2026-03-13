@@ -17,6 +17,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
     private readonly object _lock = new();
     private bool _disposed;
 
+    /// <summary>Creates a new global shortcut service with the given platform provider and optional policy.</summary>
     public GlobalShortcutService(
         IGlobalShortcutPlatformProvider provider,
         IWebViewHostCapabilityPolicy? policy = null)
@@ -26,8 +27,10 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
         _provider.ShortcutActivated += OnShortcutActivated;
     }
 
+    /// <inheritdoc />
     public IBridgeEvent<GlobalShortcutTriggeredEvent> ShortcutTriggered => _shortcutTriggered;
 
+    /// <inheritdoc />
     public Task<GlobalShortcutResult> Register(GlobalShortcutBinding binding)
     {
         ArgumentNullException.ThrowIfNull(binding);
@@ -60,6 +63,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
         return Task.FromResult(GlobalShortcutResult.Success());
     }
 
+    /// <inheritdoc />
     public Task<GlobalShortcutResult> Unregister(string shortcutId)
     {
         ArgumentNullException.ThrowIfNull(shortcutId);
@@ -75,6 +79,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
         return Task.FromResult(GlobalShortcutResult.Success());
     }
 
+    /// <inheritdoc />
     public Task<bool> IsRegistered(string shortcutId)
     {
         lock (_lock)
@@ -83,6 +88,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public Task<GlobalShortcutBinding[]> GetRegistered()
     {
         lock (_lock)
@@ -91,6 +97,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;
@@ -112,7 +119,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
 
     /// <summary>
     /// Suppresses the next activation of the given shortcut ID.
-    /// Called by <see cref="WebViewShortcutRouter"/> when a window-local binding handles the same key combo.
+    /// Called by <c>WebViewShortcutRouter</c> when a window-local binding handles the same key combo.
     /// </summary>
     internal void SuppressNextActivation(string shortcutId)
     {
@@ -121,7 +128,7 @@ public sealed class GlobalShortcutService : IGlobalShortcutService, IDisposable
 
     /// <summary>
     /// Finds a registered shortcut matching the given key + modifiers, or null.
-    /// Used by <see cref="WebViewShortcutRouter"/> for priority resolution.
+    /// Used by <c>WebViewShortcutRouter</c> for priority resolution.
     /// </summary>
     internal string? FindIdByChord(ShortcutKey key, ShortcutModifiers modifiers)
     {

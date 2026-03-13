@@ -16,8 +16,10 @@ public sealed class SharedStateStore : ISharedStateStore
 
     private readonly ConcurrentDictionary<string, StateEntry> _entries = new();
 
+    /// <inheritdoc />
     public event EventHandler<StateChangedEventArgs>? StateChanged;
 
+    /// <inheritdoc />
     public void Set(string key, string? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -63,12 +65,14 @@ public sealed class SharedStateStore : ISharedStateStore
             StateChanged?.Invoke(this, new StateChangedEventArgs(key, oldValue, value));
     }
 
+    /// <inheritdoc />
     public string? Get(string key)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         return _entries.TryGetValue(key, out var entry) ? entry.Value : null;
     }
 
+    /// <inheritdoc />
     public bool TryGet(string key, out string? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -81,6 +85,7 @@ public sealed class SharedStateStore : ISharedStateStore
         return false;
     }
 
+    /// <inheritdoc />
     public bool Remove(string key)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -92,6 +97,7 @@ public sealed class SharedStateStore : ISharedStateStore
         return false;
     }
 
+    /// <inheritdoc />
     public IReadOnlyDictionary<string, string?> GetSnapshot()
     {
         var snapshot = new Dictionary<string, string?>();
@@ -100,12 +106,14 @@ public sealed class SharedStateStore : ISharedStateStore
         return snapshot;
     }
 
+    /// <inheritdoc />
     public void Set<T>(string key, T value)
     {
         var json = JsonSerializer.Serialize(value, JsonOptions);
         Set(key, json);
     }
 
+    /// <inheritdoc />
     public T? Get<T>(string key)
     {
         var json = Get(key);

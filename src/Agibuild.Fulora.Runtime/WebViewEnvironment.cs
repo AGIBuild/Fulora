@@ -25,7 +25,7 @@ public sealed class WebViewEnvironmentOptions : IWebViewEnvironmentOptions
 /// Global configuration for the Agibuild WebView components.
 /// <para>
 /// Call <see cref="Initialize(ILoggerFactory?)"/> once at application startup
-/// so that all <see cref="WebView"/> controls automatically receive shared services.
+/// so that all WebView controls automatically receive shared services.
 /// </para>
 /// </summary>
 public static class WebViewEnvironment
