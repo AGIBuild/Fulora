@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebDialogFactory
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 629
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 181
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Factory for creating <xref href="Agibuild.Fulora.IWebDialog" data-throw-if-not-resolved="false"></xref> instances.
-  example: []
   syntax:
     content: public interface IWebDialogFactory
     content.vb: Public Interface IWebDialogFactory
@@ -42,20 +40,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Create
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 635
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 183
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Creates a new WebDialog with optional environment options.
-
-    The dialog is not shown until <xref href="Agibuild.Fulora.IWebDialog.Show" data-throw-if-not-resolved="false"></xref> is called.
-  example: []
   syntax:
     content: IWebDialog Create(IWebViewEnvironmentOptions? options = null)
     parameters:
@@ -69,13 +62,6 @@ items:
   fullName.vb: Agibuild.Fulora.IWebDialogFactory.Create(Agibuild.Fulora.IWebViewEnvironmentOptions)
   name.vb: Create(IWebViewEnvironmentOptions)
 references:
-- uid: Agibuild.Fulora.IWebDialog
-  commentId: T:Agibuild.Fulora.IWebDialog
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebDialog.html
-  name: IWebDialog
-  nameWithType: IWebDialog
-  fullName: Agibuild.Fulora.IWebDialog
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -98,25 +84,6 @@ references:
   - uid: Agibuild.Fulora
     name: Fulora
     href: Agibuild.Fulora.html
-- uid: Agibuild.Fulora.IWebDialog.Show
-  commentId: M:Agibuild.Fulora.IWebDialog.Show
-  parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
-  name: Show()
-  nameWithType: IWebDialog.Show()
-  fullName: Agibuild.Fulora.IWebDialog.Show()
-  spec.csharp:
-  - uid: Agibuild.Fulora.IWebDialog.Show
-    name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.IWebDialog.Show
-    name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
-  - name: (
-  - name: )
 - uid: Agibuild.Fulora.IWebDialogFactory.Create*
   commentId: Overload:Agibuild.Fulora.IWebDialogFactory.Create
   href: Agibuild.Fulora.IWebDialogFactory.html#Agibuild_Fulora_IWebDialogFactory_Create_Agibuild_Fulora_IWebViewEnvironmentOptions_
@@ -130,3 +97,10 @@ references:
   name: IWebViewEnvironmentOptions
   nameWithType: IWebViewEnvironmentOptions
   fullName: Agibuild.Fulora.IWebViewEnvironmentOptions
+- uid: Agibuild.Fulora.IWebDialog
+  commentId: T:Agibuild.Fulora.IWebDialog
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWebDialog.html
+  name: IWebDialog
+  nameWithType: IWebDialog
+  fullName: Agibuild.Fulora.IWebDialog

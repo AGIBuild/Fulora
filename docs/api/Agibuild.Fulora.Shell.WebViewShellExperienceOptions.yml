@@ -923,7 +923,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: '>'
   spec.vb:
   - uid: System.Func`2
@@ -940,7 +939,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: )
 - uid: System.Func`2
   commentId: T:System.Func`2
@@ -1001,7 +999,6 @@ references:
   - name: <
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: System.Threading.CancellationToken
@@ -1025,7 +1022,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: System.Threading.CancellationToken
@@ -1332,12 +1328,10 @@ references:
   - name: <
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
-    href: Agibuild.Fulora.DownloadRequestedEventArgs.html
   - name: '>'
   spec.vb:
   - uid: System.Action`2
@@ -1349,12 +1343,10 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
-    href: Agibuild.Fulora.DownloadRequestedEventArgs.html
   - name: )
 - uid: System.Action`2
   commentId: T:System.Action`2
@@ -1415,12 +1407,10 @@ references:
   - name: <
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.PermissionRequestedEventArgs
     name: PermissionRequestedEventArgs
-    href: Agibuild.Fulora.PermissionRequestedEventArgs.html
   - name: '>'
   spec.vb:
   - uid: System.Action`2
@@ -1432,12 +1422,10 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.PermissionRequestedEventArgs
     name: PermissionRequestedEventArgs
-    href: Agibuild.Fulora.PermissionRequestedEventArgs.html
   - name: )
 - uid: Agibuild.Fulora.Shell.WebViewShellExperienceOptions.PolicyErrorHandler*
   commentId: Overload:Agibuild.Fulora.Shell.WebViewShellExperienceOptions.PolicyErrorHandler
@@ -1464,7 +1452,6 @@ references:
   - name: <
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewShellPolicyErrorEventArgs
@@ -1481,7 +1468,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewShellPolicyErrorEventArgs

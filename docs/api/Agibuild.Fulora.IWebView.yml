@@ -55,17 +55,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebView
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 108
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 7
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Public WebView contract surface for navigation, scripting, events, and feature adapters.
-  example: []
   syntax:
     content: 'public interface IWebView : IDisposable'
     content.vb: Public Interface IWebView Inherits IDisposable
@@ -84,17 +82,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Source
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 111
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 9
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets or sets the current navigation URI.
-  example: []
   syntax:
     content: Uri Source { get; set; }
     parameters: []
@@ -115,17 +111,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanGoBack
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 113
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 10
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets whether the WebView can navigate back in history.
-  example: []
   syntax:
     content: bool CanGoBack { get; }
     parameters: []
@@ -146,17 +140,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanGoForward
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 115
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 11
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets whether the WebView can navigate forward in history.
-  example: []
   syntax:
     content: bool CanGoForward { get; }
     parameters: []
@@ -177,17 +169,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsLoading
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 117
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 12
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets whether a navigation is currently in progress.
-  example: []
   syntax:
     content: bool IsLoading { get; }
     parameters: []
@@ -208,17 +198,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 120
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 13
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets the channel id used to isolate WebMessage traffic.
-  example: []
   syntax:
     content: Guid ChannelId { get; }
     parameters: []
@@ -239,23 +227,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 124
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 15
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigates to the specified URI.
-  example: []
   syntax:
     content: Task NavigateAsync(Uri uri)
     parameters:
     - id: uri
       type: System.Uri
-      description: The target URI.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Function NavigateAsync(uri As Uri) As Task
@@ -273,23 +258,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateToStringAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 127
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 16
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigates to a string of HTML.
-  example: []
   syntax:
     content: Task NavigateToStringAsync(string html)
     parameters:
     - id: html
       type: System.String
-      description: The HTML content.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Function NavigateToStringAsync(html As String) As Task
@@ -310,26 +292,22 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateToStringAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 131
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 17
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigates to a string of HTML with an optional base URL.
-  example: []
   syntax:
     content: Task NavigateToStringAsync(string html, Uri? baseUrl)
     parameters:
     - id: html
       type: System.String
-      description: The HTML content.
     - id: baseUrl
       type: System.Uri
-      description: Optional base URI for relative URL resolution.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Function NavigateToStringAsync(html As String, baseUrl As Uri) As Task
@@ -350,23 +328,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeScriptAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 134
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 18
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Executes JavaScript in the context of the current document.
-  example: []
   syntax:
     content: Task<string?> InvokeScriptAsync(string script)
     parameters:
     - id: script
       type: System.String
-      description: The JavaScript source.
     return:
       type: System.Threading.Tasks.Task{System.String}
     content.vb: Function InvokeScriptAsync(script As String) As Task(Of String)
@@ -387,17 +362,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GoBackAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 137
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 20
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Attempts to navigate back.
-  example: []
   syntax:
     content: Task<bool> GoBackAsync()
     return:
@@ -417,17 +390,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GoForwardAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 139
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 21
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Attempts to navigate forward.
-  example: []
   syntax:
     content: Task<bool> GoForwardAsync()
     return:
@@ -447,17 +418,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RefreshAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 141
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 22
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Reloads the current page.
-  example: []
   syntax:
     content: Task<bool> RefreshAsync()
     return:
@@ -477,17 +446,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: StopAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 143
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 23
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Stops an active navigation, if any.
-  example: []
   syntax:
     content: Task<bool> StopAsync()
     return:
@@ -507,17 +474,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCookieManager
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 146
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 25
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets the cookie manager if supported by the adapter; otherwise null.
-  example: []
   syntax:
     content: ICookieManager? TryGetCookieManager()
     return:
@@ -537,17 +502,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCommandManager
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 148
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 26
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets the command manager if supported by the adapter; otherwise null.
-  example: []
   syntax:
     content: ICommandManager? TryGetCommandManager()
     return:
@@ -567,17 +530,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetWebViewHandleAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 150
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 27
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets the typed native WebView handle if supported; otherwise null.
-  example: []
   syntax:
     content: Task<INativeHandle?> TryGetWebViewHandleAsync()
     return:
@@ -597,20 +558,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Rpc
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 156
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 29
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Gets the RPC service for bidirectional JS ↔ C# method calls.
-
-    Returns <code>null</code> until the WebMessage bridge is enabled.
-  example: []
   syntax:
     content: IWebViewRpcService? Rpc { get; }
     parameters: []
@@ -631,20 +587,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeTracer
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 162
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 30
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Sets the bridge tracer for observability. Must be set before the first access to
-
-    <xref href="Agibuild.Fulora.IWebView.Bridge" data-throw-if-not-resolved="false"></xref>; changes after the bridge is created are silently ignored.
-  example: []
   syntax:
     content: IBridgeTracer? BridgeTracer { get; set; }
     parameters: []
@@ -665,26 +616,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Bridge
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 171
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 31
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Gets the type-safe bridge service for exposing C# services to JS (<xref href="Agibuild.Fulora.JsExportAttribute" data-throw-if-not-resolved="false"></xref>)
-
-    and importing JS services into C# (<xref href="Agibuild.Fulora.JsImportAttribute" data-throw-if-not-resolved="false"></xref>).
-
-    <p>
-
-    Accessing this property auto-enables the WebMessage bridge if it is not already enabled.
-
-    </p>
-  example: []
   syntax:
     content: IBridgeService Bridge { get; }
     parameters: []
@@ -705,20 +645,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OpenDevToolsAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 177
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 33
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Opens the browser developer tools (inspector) at runtime.
-
-    No-op if the platform adapter does not support runtime DevTools toggling.
-  example: []
   syntax:
     content: Task OpenDevToolsAsync()
     return:
@@ -738,20 +673,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CloseDevToolsAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 183
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 34
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Closes the browser developer tools.
-
-    No-op if the platform adapter does not support runtime DevTools toggling.
-  example: []
   syntax:
     content: Task CloseDevToolsAsync()
     return:
@@ -771,20 +701,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsDevToolsOpenAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 189
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 35
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Returns whether developer tools are currently open.
-
-    Always returns false if the platform adapter does not support this check.
-  example: []
   syntax:
     content: Task<bool> IsDevToolsOpenAsync()
     return:
@@ -804,20 +729,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CaptureScreenshotAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 195
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 37
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Captures a screenshot of the current viewport as a PNG byte array.
-
-    Throws <xref href="System.NotSupportedException" data-throw-if-not-resolved="false"></xref> if the adapter does not support screenshots.
-  example: []
   syntax:
     content: Task<byte[]> CaptureScreenshotAsync()
     return:
@@ -837,20 +757,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PrintToPdfAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 201
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 38
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Prints the current page to a PDF byte array.
-
-    Throws <xref href="System.NotSupportedException" data-throw-if-not-resolved="false"></xref> if the adapter does not support printing.
-  example: []
   syntax:
     content: Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null)
     parameters:
@@ -876,17 +791,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationStarted
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 204
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 40
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when a navigation starts. Handlers may cancel the navigation.
-  example: []
   syntax:
     content: event EventHandler<NavigationStartingEventArgs>? NavigationStarted
     return:
@@ -905,17 +818,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationCompleted
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 206
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 41
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when a navigation completes (success, failure, canceled, superseded).
-  example: []
   syntax:
     content: event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted
     return:
@@ -934,17 +845,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NewWindowRequested
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 208
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 42
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when content requests opening a new window.
-  example: []
   syntax:
     content: event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested
     return:
@@ -963,17 +872,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageReceived
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 210
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 43
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when a WebMessage is received from the page.
-  example: []
   syntax:
     content: event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived
     return:
@@ -992,17 +899,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebResourceRequested
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 212
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 44
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when a custom-scheme request is intercepted.
-  example: []
   syntax:
     content: event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested
     return:
@@ -1021,17 +926,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnvironmentRequested
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 214
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 45
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when the environment is requested (placeholder).
-  example: []
   syntax:
     content: event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested
     return:
@@ -1050,17 +953,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DownloadRequested
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 217
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 46
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when a file download is initiated. The handler can set <code>DownloadPath</code> or <code>Cancel</code>.
-  example: []
   syntax:
     content: event EventHandler<DownloadRequestedEventArgs>? DownloadRequested
     return:
@@ -1079,17 +980,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PermissionRequested
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 220
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 47
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when web content requests a permission (camera, mic, geolocation, etc.).
-  example: []
   syntax:
     content: event EventHandler<PermissionRequestedEventArgs>? PermissionRequested
     return:
@@ -1108,17 +1007,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterCreated
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 223
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 48
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised after the native adapter is attached and ready. The event args carry the typed platform handle.
-  example: []
   syntax:
     content: event EventHandler<AdapterCreatedEventArgs>? AdapterCreated
     return:
@@ -1137,17 +1034,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterDestroyed
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 226
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 49
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised before the native adapter is detached/destroyed. After this event, <xref href="Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle" data-throw-if-not-resolved="false"></xref> returns <code>null</code>.
-  example: []
   syntax:
     content: event EventHandler? AdapterDestroyed
     return:
@@ -1166,17 +1061,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetZoomFactorAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 233
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 51
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets or sets the zoom factor. 1.0 = 100%. Returns 1.0 if zoom is not supported.
-  example: []
   syntax:
     content: Task<double> GetZoomFactorAsync()
     return:
@@ -1196,23 +1089,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SetZoomFactorAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 237
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 52
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Sets the zoom factor. 1.0 = 100%.
-  example: []
   syntax:
     content: Task SetZoomFactorAsync(double zoomFactor)
     parameters:
     - id: zoomFactor
       type: System.Double
-      description: The zoom factor to set.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Function SetZoomFactorAsync(zoomFactor As Double) As Task
@@ -1233,17 +1123,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: FindInPageAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 245
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 54
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Searches the current page for <code class="paramref">text</code>.
-  example: []
   syntax:
     content: Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null)
     parameters:
@@ -1255,10 +1143,6 @@ items:
       type: System.Threading.Tasks.Task{Agibuild.Fulora.FindInPageResult}
     content.vb: Function FindInPageAsync(text As String, options As FindInPageOptions = Nothing) As Task(Of FindInPageResult)
   overload: Agibuild.Fulora.IWebView.FindInPageAsync*
-  exceptions:
-  - type: System.NotSupportedException
-    commentId: T:System.NotSupportedException
-    description: The adapter does not implement find-in-page.
   nameWithType.vb: IWebView.FindInPageAsync(String, FindInPageOptions)
   fullName.vb: Agibuild.Fulora.IWebView.FindInPageAsync(String, Agibuild.Fulora.FindInPageOptions)
   name.vb: FindInPageAsync(String, FindInPageOptions)
@@ -1275,17 +1159,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: StopFindInPageAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 251
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 55
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Stops an active find session and optionally clears highlights.
-  example: []
   syntax:
     content: Task StopFindInPageAsync(bool clearHighlights = true)
     parameters:
@@ -1295,10 +1177,6 @@ items:
       type: System.Threading.Tasks.Task
     content.vb: Function StopFindInPageAsync(clearHighlights As Boolean = True) As Task
   overload: Agibuild.Fulora.IWebView.StopFindInPageAsync*
-  exceptions:
-  - type: System.NotSupportedException
-    commentId: T:System.NotSupportedException
-    description: The adapter does not implement find-in-page.
   nameWithType.vb: IWebView.StopFindInPageAsync(Boolean)
   fullName.vb: Agibuild.Fulora.IWebView.StopFindInPageAsync(Boolean)
   name.vb: StopFindInPageAsync(Boolean)
@@ -1315,17 +1193,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AddPreloadScriptAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 260
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 57
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Adds a JavaScript snippet that runs before every page load.
-  example: []
   syntax:
     content: Task<string> AddPreloadScriptAsync(string javaScript)
     parameters:
@@ -1333,13 +1209,8 @@ items:
       type: System.String
     return:
       type: System.Threading.Tasks.Task{System.String}
-      description: An opaque script ID for later removal.
     content.vb: Function AddPreloadScriptAsync(javaScript As String) As Task(Of String)
   overload: Agibuild.Fulora.IWebView.AddPreloadScriptAsync*
-  exceptions:
-  - type: System.NotSupportedException
-    commentId: T:System.NotSupportedException
-    description: The adapter does not implement preload scripts.
   nameWithType.vb: IWebView.AddPreloadScriptAsync(String)
   fullName.vb: Agibuild.Fulora.IWebView.AddPreloadScriptAsync(String)
   name.vb: AddPreloadScriptAsync(String)
@@ -1356,17 +1227,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RemovePreloadScriptAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 266
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 58
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Removes a previously added preload script.
-  example: []
   syntax:
     content: Task RemovePreloadScriptAsync(string scriptId)
     parameters:
@@ -1376,10 +1245,6 @@ items:
       type: System.Threading.Tasks.Task
     content.vb: Function RemovePreloadScriptAsync(scriptId As String) As Task
   overload: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync*
-  exceptions:
-  - type: System.NotSupportedException
-    commentId: T:System.NotSupportedException
-    description: The adapter does not implement preload scripts.
   nameWithType.vb: IWebView.RemovePreloadScriptAsync(String)
   fullName.vb: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(String)
   name.vb: RemovePreloadScriptAsync(String)
@@ -1396,17 +1261,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContextMenuRequested
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 271
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 60
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when the user triggers a context menu (right-click, long-press).
-  example: []
   syntax:
     content: event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested
     return:
@@ -1803,13 +1666,6 @@ references:
   name: IWebViewRpcService
   nameWithType: IWebViewRpcService
   fullName: Agibuild.Fulora.IWebViewRpcService
-- uid: Agibuild.Fulora.IWebView.Bridge
-  commentId: P:Agibuild.Fulora.IWebView.Bridge
-  parent: Agibuild.Fulora.IWebView
-  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Bridge
-  name: Bridge
-  nameWithType: IWebView.Bridge
-  fullName: Agibuild.Fulora.IWebView.Bridge
 - uid: Agibuild.Fulora.IWebView.BridgeTracer*
   commentId: Overload:Agibuild.Fulora.IWebView.BridgeTracer
   href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_BridgeTracer
@@ -1823,25 +1679,6 @@ references:
   name: IBridgeTracer
   nameWithType: IBridgeTracer
   fullName: Agibuild.Fulora.IBridgeTracer
-- uid: Agibuild.Fulora.IWebView
-  commentId: T:Agibuild.Fulora.IWebView
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebView.html
-  name: IWebView
-  nameWithType: IWebView
-  fullName: Agibuild.Fulora.IWebView
-- uid: Agibuild.Fulora.JsExportAttribute
-  commentId: T:Agibuild.Fulora.JsExportAttribute
-  href: Agibuild.Fulora.JsExportAttribute.html
-  name: JsExportAttribute
-  nameWithType: JsExportAttribute
-  fullName: Agibuild.Fulora.JsExportAttribute
-- uid: Agibuild.Fulora.JsImportAttribute
-  commentId: T:Agibuild.Fulora.JsImportAttribute
-  href: Agibuild.Fulora.JsImportAttribute.html
-  name: JsImportAttribute
-  nameWithType: JsImportAttribute
-  fullName: Agibuild.Fulora.JsImportAttribute
 - uid: Agibuild.Fulora.IWebView.Bridge*
   commentId: Overload:Agibuild.Fulora.IWebView.Bridge
   href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Bridge
@@ -1873,13 +1710,6 @@ references:
   name: IsDevToolsOpenAsync
   nameWithType: IWebView.IsDevToolsOpenAsync
   fullName: Agibuild.Fulora.IWebView.IsDevToolsOpenAsync
-- uid: System.NotSupportedException
-  commentId: T:System.NotSupportedException
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.notsupportedexception
-  name: NotSupportedException
-  nameWithType: NotSupportedException
-  fullName: System.NotSupportedException
 - uid: Agibuild.Fulora.IWebView.CaptureScreenshotAsync*
   commentId: Overload:Agibuild.Fulora.IWebView.CaptureScreenshotAsync
   href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CaptureScreenshotAsync
@@ -2262,24 +2092,6 @@ references:
   - uid: Agibuild.Fulora.AdapterCreatedEventArgs
     name: AdapterCreatedEventArgs
     href: Agibuild.Fulora.AdapterCreatedEventArgs.html
-  - name: )
-- uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-  commentId: M:Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-  href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  name: TryGetWebViewHandle()
-  nameWithType: INativeWebViewHandleProvider.TryGetWebViewHandle()
-  fullName: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle()
-  spec.csharp:
-  - uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-    name: TryGetWebViewHandle
-    href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-    name: TryGetWebViewHandle
-    href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  - name: (
   - name: )
 - uid: System.EventHandler
   commentId: T:System.EventHandler

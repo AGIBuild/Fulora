@@ -520,19 +520,16 @@ references:
   commentId: T:System.Nullable{Agibuild.Fulora.WebViewCommand}
   parent: System
   definition: System.Nullable`1
-  href: Agibuild.Fulora.WebViewCommand.html
   name: WebViewCommand?
   nameWithType: WebViewCommand?
   fullName: Agibuild.Fulora.WebViewCommand?
   spec.csharp:
   - uid: Agibuild.Fulora.WebViewCommand
     name: WebViewCommand
-    href: Agibuild.Fulora.WebViewCommand.html
   - name: '?'
   spec.vb:
   - uid: Agibuild.Fulora.WebViewCommand
     name: WebViewCommand
-    href: Agibuild.Fulora.WebViewCommand.html
   - name: '?'
 - uid: System.Nullable`1
   commentId: T:System.Nullable`1

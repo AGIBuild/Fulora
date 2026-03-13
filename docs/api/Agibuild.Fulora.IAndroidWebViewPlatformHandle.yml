@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IAndroidWebViewPlatformHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 489
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 152
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Typed platform handle for Android WebView.
-  example: []
   syntax:
     content: 'public interface IAndroidWebViewPlatformHandle : INativeHandle'
     content.vb: Public Interface IAndroidWebViewPlatformHandle Inherits INativeHandle
@@ -45,17 +43,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AndroidWebViewHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 492
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 154
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: JNI handle to the Android <code>WebView</code> instance.
-  example: []
   syntax:
     content: nint AndroidWebViewHandle { get; }
     parameters: []

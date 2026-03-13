@@ -18,17 +18,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContextMenuMediaType
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 536
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 35
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Media type at the context menu hit-test location.
-  example: []
   syntax:
     content: public enum ContextMenuMediaType
     content.vb: Public Enum ContextMenuMediaType
@@ -45,17 +43,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: None
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 539
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 37
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: No media element at the location.
-  example: []
   syntax:
     content: None = 0
     return:
@@ -73,17 +69,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Image
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 541
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 38
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: An image element.
-  example: []
   syntax:
     content: Image = 1
     return:
@@ -101,17 +95,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Video
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 543
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 39
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: A video element.
-  example: []
   syntax:
     content: Video = 2
     return:
@@ -129,17 +121,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Audio
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 545
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 40
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: An audio element.
-  example: []
   syntax:
     content: Audio = 3
     return:

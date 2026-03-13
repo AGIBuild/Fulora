@@ -389,12 +389,10 @@ references:
   - name: <
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
-    href: Agibuild.Fulora.DownloadRequestedEventArgs.html
   - name: '>'
   spec.vb:
   - uid: System.Action`2
@@ -406,12 +404,10 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
-    href: Agibuild.Fulora.DownloadRequestedEventArgs.html
   - name: )
 - uid: System.Action`2
   commentId: T:System.Action`2
@@ -467,12 +463,10 @@ references:
   - name: (
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
-    href: Agibuild.Fulora.DownloadRequestedEventArgs.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.Shell.IWebViewDownloadPolicy.Handle(Agibuild.Fulora.IWebView,Agibuild.Fulora.DownloadRequestedEventArgs)
@@ -481,12 +475,10 @@ references:
   - name: (
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
-    href: Agibuild.Fulora.DownloadRequestedEventArgs.html
   - name: )
 - uid: Agibuild.Fulora.IWebView
   commentId: T:Agibuild.Fulora.IWebView

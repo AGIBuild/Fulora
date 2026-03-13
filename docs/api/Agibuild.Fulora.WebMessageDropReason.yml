@@ -17,17 +17,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageDropReason
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 38
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 20
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Reason why an incoming WebMessage was dropped.
-  example: []
   syntax:
     content: public enum WebMessageDropReason
     content.vb: Public Enum WebMessageDropReason
@@ -44,17 +42,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OriginNotAllowed
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 41
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 22
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The message origin is not allowed by policy.
-  example: []
   syntax:
     content: OriginNotAllowed = 0
     return:
@@ -72,17 +68,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ProtocolMismatch
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 43
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 23
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The message protocol version does not match.
-  example: []
   syntax:
     content: ProtocolMismatch = 1
     return:
@@ -100,17 +94,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelMismatch
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 45
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 24
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The message channel id does not match.
-  example: []
   syntax:
     content: ChannelMismatch = 2
     return:

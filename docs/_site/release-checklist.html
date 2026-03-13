@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="public/docfx.min.css">
       <link rel="stylesheet" href="public/main.css">
       <meta name="docfx:navrel" content="toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <meta name="docfx:tocrel" content="articles/toc.html">
       
       <meta name="docfx:rel" content="">
       
@@ -63,9 +63,23 @@
     </header>
 
     <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
 
       <div class="content">
         <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
 
           <nav id="breadcrumb"></nav>
         </div>
@@ -73,74 +87,127 @@
         <article data-uid="">
 <h1 id="release-checklist">Release Checklist</h1>
 
-<p>Step-by-step guide for publishing a new Agibuild.Fulora release (NuGet + npm + GitHub Release).</p>
+<p>Step-by-step guide for publishing a new Agibuild.Fulora release via the unified CI/Release pipeline.</p>
+<h2 id="how-releases-work">How Releases Work</h2>
+<p>Releases are fully automated through the unified <code>ci.yml</code> workflow:</p>
+<ol>
+<li><strong>Version baseline</strong> is defined in <code>Directory.Build.props</code> (<code>&lt;VersionPrefix&gt;</code>). Update it with <code>nuke UpdateVersion</code> when you want to bump the version.</li>
+<li><strong>Every push to <code>main</code></strong> triggers the CI pipeline, which builds and tests across macOS, Windows, and Linux.</li>
+<li><strong>Package version</strong> is computed as <code>{VersionPrefix}.{run_number}</code> — deterministic, monotonic, and no manual tagging required.</li>
+<li><strong>After CI passes</strong>, the Release Promotion job waits for <strong>manual approval</strong> via the <code>release</code> GitHub environment.</li>
+<li><strong>After approval</strong>, the pipeline publishes NuGet packages, npm packages, creates a Git tag (<code>v{version}</code>), a GitHub Release, and deploys documentation — all in one run.</li>
+</ol>
 <h2 id="prerequisites">Prerequisites</h2>
-<h3 id="github-secrets-configuration">GitHub Secrets Configuration</h3>
+<h3 id="github-secrets">GitHub Secrets</h3>
 <table>
 <thead>
 <tr>
 <th>Secret</th>
-<th>Environment</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>NUGET_API_KEY</code></td>
-<td><code>nuget</code></td>
 <td>NuGet.org API key with push permissions for <code>Agibuild.Fulora.*</code> packages</td>
 </tr>
 <tr>
 <td><code>NPM_TOKEN</code></td>
-<td><code>npm</code></td>
 <td>npm access token with publish permissions for <code>@agibuild</code> scope</td>
 </tr>
 </tbody>
 </table>
-<h3 id="local-verification">Local Verification</h3>
-<p>Before creating a release tag, verify locally:</p>
-<pre><code class="lang-bash"># Run full test suite
-nuke Test
+<h3 id="github-environment">GitHub Environment</h3>
+<p>The <code>release</code> environment must have <strong>required reviewers</strong> configured (Settings → Environments → release → Required reviewers).</p>
+<h2 id="version-management">Version Management</h2>
+<pre><code class="lang-bash"># Auto-increment patch (e.g. 1.5.0 → 1.5.1)
+./build.sh --target UpdateVersion
 
-# Run coverage (must be ≥ 90%)
-nuke Coverage
-
-# Pack and validate NuGet packages
-nuke ValidatePackage
-
-# Build npm bridge package
-cd packages/bridge &amp;&amp; npm ci &amp;&amp; npm run build
+# Set explicit version (must be greater than current)
+./build.sh --target UpdateVersion --update-version-to 2.0.0
 </code></pre>
-<h2 id="creating-a-release">Creating a Release</h2>
-<h3 id="1-decide-the-version">1. Decide the version</h3>
-<ul>
-<li><strong>Stable</strong>: <code>v1.0.0</code>, <code>v1.1.0</code>, <code>v2.0.0</code> (semver, no suffix)</li>
-<li><strong>Pre-release</strong>: <code>v1.1.0-preview</code>, <code>v2.0.0-rc.1</code> (semver with suffix)</li>
-</ul>
-<p>MinVer derives the NuGet version from the git tag automatically.
-The npm version is extracted from the tag in CI and set before publish.</p>
-<h3 id="2-create-and-push-the-tag">2. Create and push the tag</h3>
-<pre><code class="lang-bash">git tag v1.0.0
-git push origin v1.0.0
+<p>After updating the version, commit the <code>Directory.Build.props</code> change and push to <code>main</code>. The next CI run will produce packages with the new version baseline.</p>
+<h2 id="local-verification-before-pushing">Local Verification (before pushing)</h2>
+<pre><code class="lang-bash"># Run full CI pipeline locally
+./build.sh --target Ci --configuration Release --package-version 1.5.0.999
+
+# Or run individual steps
+./build.sh --target Coverage       # Unit tests + coverage
+./build.sh --target ValidatePackage # Pack + validate NuGet contents
 </code></pre>
-<h3 id="3-monitor-the-release-workflow">3. Monitor the release workflow</h3>
-<p>The <code>Release</code> workflow (<code>.github/workflows/release.yml</code>) triggers automatically:</p>
+<h2 id="monitoring-a-release">Monitoring a Release</h2>
 <ol>
-<li><strong>Build job</strong> (macOS): Compiles, runs tests, validates packages</li>
-<li><strong>Publish job</strong> (parallel): Pushes <code>.nupkg</code> to NuGet.org</li>
-<li><strong>npm-publish job</strong> (parallel): Publishes <code>@agibuild/bridge</code> to npm</li>
-<li><strong>GitHub Release job</strong> (parallel): Creates a GitHub Release with auto-generated notes</li>
+<li>Push to <code>main</code> → CI runs automatically</li>
+<li>Watch the <a href="https://github.com/AGIBuild/Agibuild.Fulora/actions">Actions tab</a> for the &quot;CI and Release&quot; workflow</li>
+<li>After three platforms pass, click <strong>Review deployments</strong> to approve the release</li>
+<li>Release Promotion publishes packages, creates tag + GitHub Release</li>
+<li>Deploy Documentation builds and deploys the docfx site</li>
 </ol>
-<h3 id="4-post-publish-verification">4. Post-publish verification</h3>
-<pre><code class="lang-bash"># Verify NuGet
+<h2 id="post-release-verification">Post-Release Verification</h2>
+<pre><code class="lang-bash"># Verify NuGet packages
 dotnet package search Agibuild.Fulora.Avalonia --exact-match
 
-# Verify npm
+# Verify npm package
 npm info @agibuild/bridge
 
 # Verify GitHub Release
-gh release view v1.0.0
+gh release list --limit 3
 </code></pre>
+<h2 id="published-packages">Published Packages</h2>
+<h3 id="nuget-packages">NuGet Packages</h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Agibuild.Fulora.Core</code></td>
+<td>Core contracts and interfaces</td>
+</tr>
+<tr>
+<td><code>Agibuild.Fulora.Runtime</code></td>
+<td>Runtime implementation</td>
+</tr>
+<tr>
+<td><code>Agibuild.Fulora.Avalonia</code></td>
+<td>Avalonia WebView control</td>
+</tr>
+<tr>
+<td><code>Agibuild.Fulora.Bridge.Generator</code></td>
+<td>Roslyn source generator</td>
+</tr>
+<tr>
+<td><code>Agibuild.Fulora.Cli</code></td>
+<td>CLI tool (<code>fulora new</code>, <code>dev</code>, <code>generate</code>)</td>
+</tr>
+<tr>
+<td><code>Agibuild.Fulora.Telemetry.OpenTelemetry</code></td>
+<td>OpenTelemetry bridge tracer</td>
+</tr>
+<tr>
+<td><code>Agibuild.Fulora.Plugin.*</code></td>
+<td>Official bridge plugins (Database, HttpClient, FileSystem, Notifications, AuthToken, LocalStorage)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="npm-packages">npm Packages</h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@agibuild/bridge</code></td>
+<td>Bridge client, HMR preservation, Web Worker relay</td>
+</tr>
+</tbody>
+</table>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <table>
 <thead>
@@ -152,19 +219,19 @@ gh release view v1.0.0
 <tbody>
 <tr>
 <td>NuGet push fails with 409</td>
-<td>Package already exists at that version. <code>--skip-duplicate</code> handles this.</td>
-</tr>
-<tr>
-<td>npm publish fails with 409</td>
-<td>Version already published. The <code>\|\| true</code> fallback prevents workflow failure.</td>
+<td>Package already exists. <code>--skip-duplicate</code> handles this automatically.</td>
 </tr>
 <tr>
 <td>npm publish fails with 401</td>
-<td><code>NPM_TOKEN</code> is missing or expired. Regenerate token and update the GitHub secret.</td>
+<td><code>NPM_TOKEN</code> is missing or expired. Regenerate and update the GitHub secret.</td>
 </tr>
 <tr>
-<td>Build job fails</td>
-<td>Check test results artifact. Fix issues and re-tag (delete old tag first if needed).</td>
+<td>Release job runs without approval</td>
+<td>Verify <code>release</code> environment has required reviewers configured.</td>
+</tr>
+<tr>
+<td>Docs not deploying</td>
+<td>Check GitHub Pages source is set to &quot;GitHub Actions&quot; in repo settings.</td>
 </tr>
 </tbody>
 </table>

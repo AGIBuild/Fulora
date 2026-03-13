@@ -22,17 +22,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContextMenuRequestedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 549
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 81
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Event args for context menu interception.
-  example: []
   syntax:
     content: 'public sealed class ContextMenuRequestedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class ContextMenuRequestedEventArgs Inherits EventArgs
@@ -60,17 +58,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: X
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 552
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 83
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: X coordinate of the context menu trigger (CSS pixels).
-  example: []
   syntax:
     content: public double X { get; init; }
     parameters: []
@@ -91,17 +87,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Y
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 554
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 84
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Y coordinate of the context menu trigger (CSS pixels).
-  example: []
   syntax:
     content: public double Y { get; init; }
     parameters: []
@@ -122,17 +116,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: LinkUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 556
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 85
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The URI of the link at the location, if any.
-  example: []
   syntax:
     content: public Uri? LinkUri { get; init; }
     parameters: []
@@ -153,17 +145,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SelectionText
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 558
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 86
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The selected text at the location, if any.
-  example: []
   syntax:
     content: public string? SelectionText { get; init; }
     parameters: []
@@ -184,17 +174,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MediaType
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 560
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 87
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The media type at the location.
-  example: []
   syntax:
     content: public ContextMenuMediaType MediaType { get; init; }
     parameters: []
@@ -215,17 +203,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MediaSourceUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 562
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 88
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The source URI of the media element, if any.
-  example: []
   syntax:
     content: public Uri? MediaSourceUri { get; init; }
     parameters: []
@@ -246,17 +232,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsEditable
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 564
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 89
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Whether the element at the location is editable.
-  example: []
   syntax:
     content: public bool IsEditable { get; init; }
     parameters: []
@@ -277,17 +261,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handled
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 566
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 90
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set to true to suppress the native context menu.
-  example: []
   syntax:
     content: public bool Handled { get; set; }
     parameters: []

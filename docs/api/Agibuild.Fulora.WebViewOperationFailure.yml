@@ -16,17 +16,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewOperationFailure
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 66
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 6
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Helpers to annotate exceptions with <xref href="Agibuild.Fulora.WebViewOperationFailureCategory" data-throw-if-not-resolved="false"></xref> for governance and diagnostics.
-  example: []
   syntax:
     content: public static class WebViewOperationFailure
     content.vb: Public Module WebViewOperationFailure
@@ -53,26 +51,22 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SetCategory
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 73
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 10
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Associates a failure category with an exception.
-  example: []
   syntax:
     content: public static void SetCategory(Exception exception, WebViewOperationFailureCategory category)
     parameters:
     - id: exception
       type: System.Exception
-      description: The exception to annotate.
     - id: category
       type: Agibuild.Fulora.WebViewOperationFailureCategory
-      description: The failure category.
     content.vb: Public Shared Sub SetCategory(exception As Exception, category As WebViewOperationFailureCategory)
   overload: Agibuild.Fulora.WebViewOperationFailure.SetCategory*
 - uid: Agibuild.Fulora.WebViewOperationFailure.TryGetCategory(System.Exception,Agibuild.Fulora.WebViewOperationFailureCategory@)
@@ -88,42 +82,30 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCategory
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 83
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 16
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Attempts to read a failure category from an exception.
-  example: []
   syntax:
     content: public static bool TryGetCategory(Exception exception, out WebViewOperationFailureCategory category)
     parameters:
     - id: exception
       type: System.Exception
-      description: The exception to inspect.
     - id: category
       type: Agibuild.Fulora.WebViewOperationFailureCategory
-      description: When true is returned, receives the parsed category.
     return:
       type: System.Boolean
-      description: True when a category is present and can be parsed; otherwise false.
     content.vb: Public Shared Function TryGetCategory(exception As Exception, category As WebViewOperationFailureCategory) As Boolean
   overload: Agibuild.Fulora.WebViewOperationFailure.TryGetCategory*
   nameWithType.vb: WebViewOperationFailure.TryGetCategory(Exception, WebViewOperationFailureCategory)
   fullName.vb: Agibuild.Fulora.WebViewOperationFailure.TryGetCategory(System.Exception, Agibuild.Fulora.WebViewOperationFailureCategory)
   name.vb: TryGetCategory(Exception, WebViewOperationFailureCategory)
 references:
-- uid: Agibuild.Fulora.WebViewOperationFailureCategory
-  commentId: T:Agibuild.Fulora.WebViewOperationFailureCategory
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebViewOperationFailureCategory.html
-  name: WebViewOperationFailureCategory
-  nameWithType: WebViewOperationFailureCategory
-  fullName: Agibuild.Fulora.WebViewOperationFailureCategory
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -397,6 +379,13 @@ references:
   name: Exception
   nameWithType: Exception
   fullName: System.Exception
+- uid: Agibuild.Fulora.WebViewOperationFailureCategory
+  commentId: T:Agibuild.Fulora.WebViewOperationFailureCategory
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebViewOperationFailureCategory.html
+  name: WebViewOperationFailureCategory
+  nameWithType: WebViewOperationFailureCategory
+  fullName: Agibuild.Fulora.WebViewOperationFailureCategory
 - uid: Agibuild.Fulora.WebViewOperationFailure.TryGetCategory*
   commentId: Overload:Agibuild.Fulora.WebViewOperationFailure.TryGetCategory
   href: Agibuild.Fulora.WebViewOperationFailure.html#Agibuild_Fulora_WebViewOperationFailure_TryGetCategory_System_Exception_Agibuild_Fulora_WebViewOperationFailureCategory__

@@ -1,0 +1,900 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  commentId: T:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  id: AvaloniaWindowChromeProvider
+  parent: Agibuild.Fulora.Shell
+  children:
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.AppearanceChanged
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow(Avalonia.Controls.Window,Agibuild.Fulora.Shell.WindowChromeTrackingOptions)
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow(Avalonia.Controls.Window)
+  langs:
+  - csharp
+  - vb
+  name: AvaloniaWindowChromeProvider
+  nameWithType: AvaloniaWindowChromeProvider
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: AvaloniaWindowChromeProvider
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 41
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: >-
+    Avalonia-based <xref href="Agibuild.Fulora.IWindowChromeProvider" data-throw-if-not-resolved="false"></xref> that manages window transparency,
+
+    custom chrome drag regions, and appearance for one or more tracked Avalonia windows.
+  example: []
+  syntax:
+    content: 'public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDisposable'
+    content.vb: Public NotInheritable Class AvaloniaWindowChromeProvider Implements IWindowChromeProvider, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform
+  commentId: P:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform
+  id: Platform
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: Platform
+  nameWithType: AvaloniaWindowChromeProvider.Platform
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Platform
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 47
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Platform identifier (e.g. "Windows", "macOS", "Linux").
+  example: []
+  syntax:
+    content: public string Platform { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Platform As String
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform*
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider.Platform
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency
+  commentId: P:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency
+  id: SupportsTransparency
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: SupportsTransparency
+  nameWithType: AvaloniaWindowChromeProvider.SupportsTransparency
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SupportsTransparency
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 49
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Whether the current platform supports any transparency composition.
+  example: []
+  syntax:
+    content: public bool SupportsTransparency { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property SupportsTransparency As Boolean
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency*
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.AppearanceChanged
+  commentId: E:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.AppearanceChanged
+  id: AppearanceChanged
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: AppearanceChanged
+  nameWithType: AvaloniaWindowChromeProvider.AppearanceChanged
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.AppearanceChanged
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: AppearanceChanged
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 54
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Raised when the platform theme or transparency state changes externally.
+  example: []
+  syntax:
+    content: public event EventHandler? AppearanceChanged
+    return:
+      type: System.EventHandler
+    content.vb: Public Event AppearanceChanged As EventHandler
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow(Avalonia.Controls.Window,Agibuild.Fulora.Shell.WindowChromeTrackingOptions)
+  commentId: M:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow(Avalonia.Controls.Window,Agibuild.Fulora.Shell.WindowChromeTrackingOptions)
+  id: TrackWindow(Avalonia.Controls.Window,Agibuild.Fulora.Shell.WindowChromeTrackingOptions)
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: TrackWindow(Window, WindowChromeTrackingOptions?)
+  nameWithType: AvaloniaWindowChromeProvider.TrackWindow(Window, WindowChromeTrackingOptions?)
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow(Avalonia.Controls.Window, Agibuild.Fulora.Shell.WindowChromeTrackingOptions?)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TrackWindow
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 59
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Begins tracking a window for appearance management and optional drag region handling.
+  example: []
+  syntax:
+    content: public void TrackWindow(Window window, WindowChromeTrackingOptions? options = null)
+    parameters:
+    - id: window
+      type: Avalonia.Controls.Window
+    - id: options
+      type: Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+    content.vb: Public Sub TrackWindow(window As Window, options As WindowChromeTrackingOptions = Nothing)
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow*
+  nameWithType.vb: AvaloniaWindowChromeProvider.TrackWindow(Window, WindowChromeTrackingOptions)
+  fullName.vb: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow(Avalonia.Controls.Window, Agibuild.Fulora.Shell.WindowChromeTrackingOptions)
+  name.vb: TrackWindow(Window, WindowChromeTrackingOptions)
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow(Avalonia.Controls.Window)
+  commentId: M:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow(Avalonia.Controls.Window)
+  id: UntrackWindow(Avalonia.Controls.Window)
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: UntrackWindow(Window)
+  nameWithType: AvaloniaWindowChromeProvider.UntrackWindow(Window)
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow(Avalonia.Controls.Window)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UntrackWindow
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 95
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Stops tracking a window.
+  example: []
+  syntax:
+    content: public void UntrackWindow(Window window)
+    parameters:
+    - id: window
+      type: Avalonia.Controls.Window
+    content.vb: Public Sub UntrackWindow(window As Window)
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow*
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  commentId: M:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  id: ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: ApplyWindowAppearanceAsync(WindowAppearanceRequest)
+  nameWithType: AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync(WindowAppearanceRequest)
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ApplyWindowAppearanceAsync
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 102
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Apply appearance settings to all managed windows.
+  example: []
+  syntax:
+    content: public Task ApplyWindowAppearanceAsync(WindowAppearanceRequest request)
+    parameters:
+    - id: request
+      type: Agibuild.Fulora.WindowAppearanceRequest
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function ApplyWindowAppearanceAsync(request As WindowAppearanceRequest) As Task
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync*
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState
+  commentId: M:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState
+  id: GetTransparencyState
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: GetTransparencyState()
+  nameWithType: AvaloniaWindowChromeProvider.GetTransparencyState()
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetTransparencyState
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 119
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Return the effective transparency state from the primary window.
+  example: []
+  syntax:
+    content: public TransparencyEffectiveState GetTransparencyState()
+    return:
+      type: Agibuild.Fulora.TransparencyEffectiveState
+    content.vb: Public Function GetTransparencyState() As TransparencyEffectiveState
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState*
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics
+  commentId: M:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics
+  id: GetChromeMetrics
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: GetChromeMetrics()
+  nameWithType: AvaloniaWindowChromeProvider.GetChromeMetrics()
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetChromeMetrics
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 152
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Return chrome layout metrics (title bar height, safe insets, etc.).
+  example: []
+  syntax:
+    content: public WindowChromeMetrics GetChromeMetrics()
+    return:
+      type: Agibuild.Fulora.WindowChromeMetrics
+    content.vb: Public Function GetChromeMetrics() As WindowChromeMetrics
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics*
+  implements:
+  - Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose
+  commentId: M:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose
+  id: Dispose
+  parent: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: AvaloniaWindowChromeProvider.Dispose()
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Dispose
+    path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaWindowChromeProvider.cs
+    startLine: 319
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.Shell
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: Agibuild.Fulora.IWindowChromeProvider
+  commentId: T:Agibuild.Fulora.IWindowChromeProvider
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWindowChromeProvider.html
+  name: IWindowChromeProvider
+  nameWithType: IWindowChromeProvider
+  fullName: Agibuild.Fulora.IWindowChromeProvider
+- uid: Agibuild.Fulora.Shell
+  commentId: N:Agibuild.Fulora.Shell
+  href: Agibuild.html
+  name: Agibuild.Fulora.Shell
+  nameWithType: Agibuild.Fulora.Shell
+  fullName: Agibuild.Fulora.Shell
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  - name: .
+  - uid: Agibuild.Fulora.Shell
+    name: Shell
+    href: Agibuild.Fulora.Shell.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  - name: .
+  - uid: Agibuild.Fulora.Shell
+    name: Shell
+    href: Agibuild.Fulora.Shell.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_Platform
+  name: Platform
+  nameWithType: AvaloniaWindowChromeProvider.Platform
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Platform
+- uid: Agibuild.Fulora.IWindowChromeProvider.Platform
+  commentId: P:Agibuild.Fulora.IWindowChromeProvider.Platform
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  name: Platform
+  nameWithType: IWindowChromeProvider.Platform
+  fullName: Agibuild.Fulora.IWindowChromeProvider.Platform
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_SupportsTransparency
+  name: SupportsTransparency
+  nameWithType: AvaloniaWindowChromeProvider.SupportsTransparency
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.SupportsTransparency
+- uid: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  commentId: P:Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  name: SupportsTransparency
+  nameWithType: IWindowChromeProvider.SupportsTransparency
+  fullName: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+  commentId: E:Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  name: AppearanceChanged
+  nameWithType: IWindowChromeProvider.AppearanceChanged
+  fullName: Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+- uid: System.EventHandler
+  commentId: T:System.EventHandler
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler
+  name: EventHandler
+  nameWithType: EventHandler
+  fullName: System.EventHandler
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_TrackWindow_Avalonia_Controls_Window_Agibuild_Fulora_Shell_WindowChromeTrackingOptions_
+  name: TrackWindow
+  nameWithType: AvaloniaWindowChromeProvider.TrackWindow
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.TrackWindow
+- uid: Avalonia.Controls.Window
+  commentId: T:Avalonia.Controls.Window
+  parent: Avalonia.Controls
+  isExternal: true
+  name: Window
+  nameWithType: Window
+  fullName: Avalonia.Controls.Window
+- uid: Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+  commentId: T:Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+  parent: Agibuild.Fulora.Shell
+  href: Agibuild.Fulora.Shell.WindowChromeTrackingOptions.html
+  name: WindowChromeTrackingOptions
+  nameWithType: WindowChromeTrackingOptions
+  fullName: Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+- uid: Avalonia.Controls
+  commentId: N:Avalonia.Controls
+  isExternal: true
+  name: Avalonia.Controls
+  nameWithType: Avalonia.Controls
+  fullName: Avalonia.Controls
+  spec.csharp:
+  - uid: Avalonia
+    name: Avalonia
+    isExternal: true
+  - name: .
+  - uid: Avalonia.Controls
+    name: Controls
+    isExternal: true
+  spec.vb:
+  - uid: Avalonia
+    name: Avalonia
+    isExternal: true
+  - name: .
+  - uid: Avalonia.Controls
+    name: Controls
+    isExternal: true
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_UntrackWindow_Avalonia_Controls_Window_
+  name: UntrackWindow
+  nameWithType: AvaloniaWindowChromeProvider.UntrackWindow
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.UntrackWindow
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_ApplyWindowAppearanceAsync_Agibuild_Fulora_WindowAppearanceRequest_
+  name: ApplyWindowAppearanceAsync
+  nameWithType: AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.ApplyWindowAppearanceAsync
+- uid: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  commentId: M:Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  name: ApplyWindowAppearanceAsync(WindowAppearanceRequest)
+  nameWithType: IWindowChromeProvider.ApplyWindowAppearanceAsync(WindowAppearanceRequest)
+  fullName: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+    name: ApplyWindowAppearanceAsync
+  - name: (
+  - uid: Agibuild.Fulora.WindowAppearanceRequest
+    name: WindowAppearanceRequest
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+    name: ApplyWindowAppearanceAsync
+  - name: (
+  - uid: Agibuild.Fulora.WindowAppearanceRequest
+    name: WindowAppearanceRequest
+  - name: )
+- uid: Agibuild.Fulora.WindowAppearanceRequest
+  commentId: T:Agibuild.Fulora.WindowAppearanceRequest
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowAppearanceRequest.html
+  name: WindowAppearanceRequest
+  nameWithType: WindowAppearanceRequest
+  fullName: Agibuild.Fulora.WindowAppearanceRequest
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_GetTransparencyState
+  name: GetTransparencyState
+  nameWithType: AvaloniaWindowChromeProvider.GetTransparencyState
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetTransparencyState
+- uid: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+  commentId: M:Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  name: GetTransparencyState()
+  nameWithType: IWindowChromeProvider.GetTransparencyState()
+  fullName: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+    name: GetTransparencyState
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+    name: GetTransparencyState
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.TransparencyEffectiveState
+  commentId: T:Agibuild.Fulora.TransparencyEffectiveState
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.TransparencyEffectiveState.html
+  name: TransparencyEffectiveState
+  nameWithType: TransparencyEffectiveState
+  fullName: Agibuild.Fulora.TransparencyEffectiveState
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_GetChromeMetrics
+  name: GetChromeMetrics
+  nameWithType: AvaloniaWindowChromeProvider.GetChromeMetrics
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.GetChromeMetrics
+- uid: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+  commentId: M:Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  name: GetChromeMetrics()
+  nameWithType: IWindowChromeProvider.GetChromeMetrics()
+  fullName: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+    name: GetChromeMetrics
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+    name: GetChromeMetrics
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.WindowChromeMetrics
+  commentId: T:Agibuild.Fulora.WindowChromeMetrics
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowChromeMetrics.html
+  name: WindowChromeMetrics
+  nameWithType: WindowChromeMetrics
+  fullName: Agibuild.Fulora.WindowChromeMetrics
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose*
+  commentId: Overload:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html#Agibuild_Fulora_Shell_AvaloniaWindowChromeProvider_Dispose
+  name: Dispose
+  nameWithType: AvaloniaWindowChromeProvider.Dispose
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )

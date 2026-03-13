@@ -17,17 +17,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CustomSchemeRegistration
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 431
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 61
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Describes a custom URI scheme to register with the WebView.
-  example: []
   syntax:
     content: public sealed class CustomSchemeRegistration
     content.vb: Public NotInheritable Class CustomSchemeRegistration
@@ -53,17 +51,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SchemeName
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 434
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 63
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The scheme name (e.g., "app", "myprotocol"). Do not include "://".
-  example: []
   syntax:
     content: public required string SchemeName { get; init; }
     parameters: []
@@ -84,17 +80,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: HasAuthorityComponent
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 437
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 64
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Whether URIs with this scheme include an authority/host component (e.g., <code>app://host/path</code>).
-  example: []
   syntax:
     content: public bool HasAuthorityComponent { get; init; }
     parameters: []
@@ -115,17 +109,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TreatAsSecure
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 440
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 65
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Whether to treat this scheme as a secure context (like HTTPS). Only effective when <xref href="Agibuild.Fulora.CustomSchemeRegistration.HasAuthorityComponent" data-throw-if-not-resolved="false"></xref> is true.
-  example: []
   syntax:
     content: public bool TreatAsSecure { get; init; }
     parameters: []
@@ -403,12 +395,6 @@ references:
   nameWithType.vb: Boolean
   fullName.vb: Boolean
   name.vb: Boolean
-- uid: Agibuild.Fulora.CustomSchemeRegistration.HasAuthorityComponent
-  commentId: P:Agibuild.Fulora.CustomSchemeRegistration.HasAuthorityComponent
-  href: Agibuild.Fulora.CustomSchemeRegistration.html#Agibuild_Fulora_CustomSchemeRegistration_HasAuthorityComponent
-  name: HasAuthorityComponent
-  nameWithType: CustomSchemeRegistration.HasAuthorityComponent
-  fullName: Agibuild.Fulora.CustomSchemeRegistration.HasAuthorityComponent
 - uid: Agibuild.Fulora.CustomSchemeRegistration.TreatAsSecure*
   commentId: Overload:Agibuild.Fulora.CustomSchemeRegistration.TreatAsSecure
   href: Agibuild.Fulora.CustomSchemeRegistration.html#Agibuild_Fulora_CustomSchemeRegistration_TreatAsSecure

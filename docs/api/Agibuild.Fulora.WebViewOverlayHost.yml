@@ -1,0 +1,769 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.WebViewOverlayHost
+  commentId: T:Agibuild.Fulora.WebViewOverlayHost
+  id: WebViewOverlayHost
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.WebViewOverlayHost.Bounds
+  - Agibuild.Fulora.WebViewOverlayHost.Content
+  - Agibuild.Fulora.WebViewOverlayHost.Dispose
+  - Agibuild.Fulora.WebViewOverlayHost.DpiScale
+  - Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus
+  - Agibuild.Fulora.WebViewOverlayHost.HitTest(System.Double,System.Double)
+  - Agibuild.Fulora.WebViewOverlayHost.IsVisible
+  - Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith(System.Boolean)
+  - Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay
+  - Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView
+  langs:
+  - csharp
+  - vb
+  name: WebViewOverlayHost
+  nameWithType: WebViewOverlayHost
+  fullName: Agibuild.Fulora.WebViewOverlayHost
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: WebViewOverlayHost
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 15
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: >-
+    Manages a transparent companion window for rendering Avalonia controls above a WebView.
+
+    Uses a real borderless Avalonia <xref href="Avalonia.Controls.Window" data-throw-if-not-resolved="false"></xref> as a child of the parent window,
+
+    positioned to exactly cover the WebView bounds.
+  example: []
+  syntax:
+    content: 'public sealed class WebViewOverlayHost : IDisposable'
+    content.vb: Public NotInheritable Class WebViewOverlayHost Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus
+  commentId: P:Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus
+  id: HasKeyboardFocus
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: HasKeyboardFocus
+  nameWithType: WebViewOverlayHost.HasKeyboardFocus
+  fullName: Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: HasKeyboardFocus
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 27
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Whether the overlay currently has keyboard focus.
+  example: []
+  syntax:
+    content: public bool HasKeyboardFocus { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property HasKeyboardFocus As Boolean
+  overload: Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus*
+- uid: Agibuild.Fulora.WebViewOverlayHost.Content
+  commentId: P:Agibuild.Fulora.WebViewOverlayHost.Content
+  id: Content
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: Content
+  nameWithType: WebViewOverlayHost.Content
+  fullName: Agibuild.Fulora.WebViewOverlayHost.Content
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Content
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 38
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: >-
+    The Avalonia visual to render in the overlay.
+
+    Setting this updates the overlay window's content in real time.
+  example: []
+  syntax:
+    content: public object? Content { get; set; }
+    parameters: []
+    return:
+      type: System.Object
+    content.vb: Public Property Content As Object
+  overload: Agibuild.Fulora.WebViewOverlayHost.Content*
+- uid: Agibuild.Fulora.WebViewOverlayHost.IsVisible
+  commentId: P:Agibuild.Fulora.WebViewOverlayHost.IsVisible
+  id: IsVisible
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: IsVisible
+  nameWithType: WebViewOverlayHost.IsVisible
+  fullName: Agibuild.Fulora.WebViewOverlayHost.IsVisible
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IsVisible
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 50
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Whether the overlay is currently visible.
+  example: []
+  syntax:
+    content: public bool IsVisible { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsVisible As Boolean
+  overload: Agibuild.Fulora.WebViewOverlayHost.IsVisible*
+- uid: Agibuild.Fulora.WebViewOverlayHost.Bounds
+  commentId: P:Agibuild.Fulora.WebViewOverlayHost.Bounds
+  id: Bounds
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: Bounds
+  nameWithType: WebViewOverlayHost.Bounds
+  fullName: Agibuild.Fulora.WebViewOverlayHost.Bounds
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Bounds
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 53
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: DPI-adjusted bounds of the overlay (screen physical pixels).
+  example: []
+  syntax:
+    content: public Rect Bounds { get; }
+    parameters: []
+    return:
+      type: Avalonia.Rect
+    content.vb: Public ReadOnly Property Bounds As Rect
+  overload: Agibuild.Fulora.WebViewOverlayHost.Bounds*
+- uid: Agibuild.Fulora.WebViewOverlayHost.DpiScale
+  commentId: P:Agibuild.Fulora.WebViewOverlayHost.DpiScale
+  id: DpiScale
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: DpiScale
+  nameWithType: WebViewOverlayHost.DpiScale
+  fullName: Agibuild.Fulora.WebViewOverlayHost.DpiScale
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DpiScale
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 56
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Current DPI scale factor applied to bounds.
+  example: []
+  syntax:
+    content: public double DpiScale { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property DpiScale As Double
+  overload: Agibuild.Fulora.WebViewOverlayHost.DpiScale*
+- uid: Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith(System.Boolean)
+  commentId: M:Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith(System.Boolean)
+  id: SyncVisibilityWith(System.Boolean)
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: SyncVisibilityWith(bool)
+  nameWithType: WebViewOverlayHost.SyncVisibilityWith(bool)
+  fullName: Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith(bool)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SyncVisibilityWith
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 77
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Syncs overlay visibility with the WebView visibility.
+  example: []
+  syntax:
+    content: public void SyncVisibilityWith(bool isVisible)
+    parameters:
+    - id: isVisible
+      type: System.Boolean
+    content.vb: Public Sub SyncVisibilityWith(isVisible As Boolean)
+  overload: Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith*
+  nameWithType.vb: WebViewOverlayHost.SyncVisibilityWith(Boolean)
+  fullName.vb: Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith(Boolean)
+  name.vb: SyncVisibilityWith(Boolean)
+- uid: Agibuild.Fulora.WebViewOverlayHost.HitTest(System.Double,System.Double)
+  commentId: M:Agibuild.Fulora.WebViewOverlayHost.HitTest(System.Double,System.Double)
+  id: HitTest(System.Double,System.Double)
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: HitTest(double, double)
+  nameWithType: WebViewOverlayHost.HitTest(double, double)
+  fullName: Agibuild.Fulora.WebViewOverlayHost.HitTest(double, double)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: HitTest
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 102
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Hit-tests a point to determine whether it should be handled by the overlay or passed through.
+  example: []
+  syntax:
+    content: public OverlayHitTestResult HitTest(double x, double y)
+    parameters:
+    - id: x
+      type: System.Double
+    - id: y
+      type: System.Double
+    return:
+      type: Agibuild.Fulora.OverlayHitTestResult
+    content.vb: Public Function HitTest(x As Double, y As Double) As OverlayHitTestResult
+  overload: Agibuild.Fulora.WebViewOverlayHost.HitTest*
+  nameWithType.vb: WebViewOverlayHost.HitTest(Double, Double)
+  fullName.vb: Agibuild.Fulora.WebViewOverlayHost.HitTest(Double, Double)
+  name.vb: HitTest(Double, Double)
+- uid: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView
+  commentId: M:Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView
+  id: TransferFocusToWebView
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: TransferFocusToWebView()
+  nameWithType: WebViewOverlayHost.TransferFocusToWebView()
+  fullName: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TransferFocusToWebView
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 112
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Transfers keyboard focus from overlay to WebView.
+  example: []
+  syntax:
+    content: public void TransferFocusToWebView()
+    content.vb: Public Sub TransferFocusToWebView()
+  overload: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView*
+- uid: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay
+  commentId: M:Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay
+  id: TransferFocusToOverlay
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: TransferFocusToOverlay()
+  nameWithType: WebViewOverlayHost.TransferFocusToOverlay()
+  fullName: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TransferFocusToOverlay
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 115
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Transfers keyboard focus from WebView to overlay.
+  example: []
+  syntax:
+    content: public void TransferFocusToOverlay()
+    content.vb: Public Sub TransferFocusToOverlay()
+  overload: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay*
+- uid: Agibuild.Fulora.WebViewOverlayHost.Dispose
+  commentId: M:Agibuild.Fulora.WebViewOverlayHost.Dispose
+  id: Dispose
+  parent: Agibuild.Fulora.WebViewOverlayHost
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: WebViewOverlayHost.Dispose()
+  fullName: Agibuild.Fulora.WebViewOverlayHost.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Dispose
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 118
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: Agibuild.Fulora.WebViewOverlayHost.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: Avalonia.Controls.Window
+  commentId: T:Avalonia.Controls.Window
+  parent: Avalonia.Controls
+  isExternal: true
+  name: Window
+  nameWithType: Window
+  fullName: Avalonia.Controls.Window
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Avalonia.Controls
+  commentId: N:Avalonia.Controls
+  isExternal: true
+  name: Avalonia.Controls
+  nameWithType: Avalonia.Controls
+  fullName: Avalonia.Controls
+  spec.csharp:
+  - uid: Avalonia
+    name: Avalonia
+    isExternal: true
+  - name: .
+  - uid: Avalonia.Controls
+    name: Controls
+    isExternal: true
+  spec.vb:
+  - uid: Avalonia
+    name: Avalonia
+    isExternal: true
+  - name: .
+  - uid: Avalonia.Controls
+    name: Controls
+    isExternal: true
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_HasKeyboardFocus
+  name: HasKeyboardFocus
+  nameWithType: WebViewOverlayHost.HasKeyboardFocus
+  fullName: Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Agibuild.Fulora.WebViewOverlayHost.Content*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.Content
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_Content
+  name: Content
+  nameWithType: WebViewOverlayHost.Content
+  fullName: Agibuild.Fulora.WebViewOverlayHost.Content
+- uid: Agibuild.Fulora.WebViewOverlayHost.IsVisible*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.IsVisible
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_IsVisible
+  name: IsVisible
+  nameWithType: WebViewOverlayHost.IsVisible
+  fullName: Agibuild.Fulora.WebViewOverlayHost.IsVisible
+- uid: Agibuild.Fulora.WebViewOverlayHost.Bounds*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.Bounds
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_Bounds
+  name: Bounds
+  nameWithType: WebViewOverlayHost.Bounds
+  fullName: Agibuild.Fulora.WebViewOverlayHost.Bounds
+- uid: Avalonia.Rect
+  commentId: T:Avalonia.Rect
+  parent: Avalonia
+  isExternal: true
+  name: Rect
+  nameWithType: Rect
+  fullName: Avalonia.Rect
+- uid: Avalonia
+  commentId: N:Avalonia
+  isExternal: true
+  name: Avalonia
+  nameWithType: Avalonia
+  fullName: Avalonia
+- uid: Agibuild.Fulora.WebViewOverlayHost.DpiScale*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.DpiScale
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_DpiScale
+  name: DpiScale
+  nameWithType: WebViewOverlayHost.DpiScale
+  fullName: Agibuild.Fulora.WebViewOverlayHost.DpiScale
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_SyncVisibilityWith_System_Boolean_
+  name: SyncVisibilityWith
+  nameWithType: WebViewOverlayHost.SyncVisibilityWith
+  fullName: Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith
+- uid: Agibuild.Fulora.WebViewOverlayHost.HitTest*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.HitTest
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_HitTest_System_Double_System_Double_
+  name: HitTest
+  nameWithType: WebViewOverlayHost.HitTest
+  fullName: Agibuild.Fulora.WebViewOverlayHost.HitTest
+- uid: Agibuild.Fulora.OverlayHitTestResult
+  commentId: T:Agibuild.Fulora.OverlayHitTestResult
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.OverlayHitTestResult.html
+  name: OverlayHitTestResult
+  nameWithType: OverlayHitTestResult
+  fullName: Agibuild.Fulora.OverlayHitTestResult
+- uid: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_TransferFocusToWebView
+  name: TransferFocusToWebView
+  nameWithType: WebViewOverlayHost.TransferFocusToWebView
+  fullName: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView
+- uid: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_TransferFocusToOverlay
+  name: TransferFocusToOverlay
+  nameWithType: WebViewOverlayHost.TransferFocusToOverlay
+  fullName: Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay
+- uid: Agibuild.Fulora.WebViewOverlayHost.Dispose*
+  commentId: Overload:Agibuild.Fulora.WebViewOverlayHost.Dispose
+  href: Agibuild.Fulora.WebViewOverlayHost.html#Agibuild_Fulora_WebViewOverlayHost_Dispose
+  name: Dispose
+  nameWithType: WebViewOverlayHost.Dispose
+  fullName: Agibuild.Fulora.WebViewOverlayHost.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )

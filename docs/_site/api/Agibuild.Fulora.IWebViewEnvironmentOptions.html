@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IWebViewEnvironmentOptions | Agibuild.Fulora ">
       
-      <meta name="description" content="Options applied to the WebView runtime environment (devtools, user agent, storage, custom schemes, preload scripts).">
+      
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Agibuild_Fulora_IWebViewEnvironmentOptions" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions" class="text-break">
-Interface IWebViewEnvironmentOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L407"><i class="bi bi-code-slash"></i></a>
+Interface IWebViewEnvironmentOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L116"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,8 +97,7 @@ Interface IWebViewEnvironmentOptions  <a class="header-action link-secondary" ti
   <dl><dt>Assembly</dt><dd>Agibuild.Fulora.Core.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Options applied to the WebView runtime environment (devtools, user agent, storage, custom schemes, preload scripts).</p>
-</div>
+  <div class="markdown summary"></div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -125,12 +124,10 @@ Interface IWebViewEnvironmentOptions  <a class="header-action link-secondary" ti
 
   <h3 id="Agibuild_Fulora_IWebViewEnvironmentOptions_CustomSchemes" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes">
   CustomSchemes
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L422"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Custom URI schemes to register. Must be set before WebView creation.
-Adapters that implement <code>ICustomSchemeAdapter</code> receive these during initialization.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -158,11 +155,10 @@ Adapters that implement <code>ICustomSchemeAdapter</code> receive these during i
 
   <h3 id="Agibuild_Fulora_IWebViewEnvironmentOptions_CustomUserAgent" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.CustomUserAgent">
   CustomUserAgent
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L413"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Override the default User-Agent string. Null means use the platform default.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -190,11 +186,10 @@ Adapters that implement <code>ICustomSchemeAdapter</code> receive these during i
 
   <h3 id="Agibuild_Fulora_IWebViewEnvironmentOptions_EnableDevTools" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.EnableDevTools">
   EnableDevTools
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L410"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enable browser developer tools (Inspector). Platform-specific: macOS requires 13.3+.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -222,12 +217,10 @@ Adapters that implement <code>ICustomSchemeAdapter</code> receive these during i
 
   <h3 id="Agibuild_Fulora_IWebViewEnvironmentOptions_PreloadScripts" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.PreloadScripts">
   PreloadScripts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L428"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L123"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>JavaScript snippets to inject at document start on every new page load.
-These are applied globally to all new WebView instances.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -251,15 +244,45 @@ These are applied globally to all new WebView instances.</p>
 
 
 
+  <a id="Agibuild_Fulora_IWebViewEnvironmentOptions_TransparentBackground_" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground*"></a>
+
+  <h3 id="Agibuild_Fulora_IWebViewEnvironmentOptions_TransparentBackground" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground">
+  TransparentBackground
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L121"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool TransparentBackground { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Agibuild_Fulora_IWebViewEnvironmentOptions_UseEphemeralSession_" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.UseEphemeralSession*"></a>
 
   <h3 id="Agibuild_Fulora_IWebViewEnvironmentOptions_UseEphemeralSession" data-uid="Agibuild.Fulora.IWebViewEnvironmentOptions.UseEphemeralSession">
   UseEphemeralSession
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L416"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Use an ephemeral (non-persistent) data store. Cookies and storage are discarded when the WebView is disposed.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -287,7 +310,7 @@ These are applied globally to all new WebView instances.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L407" class="edit-link">Edit this page</a>
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L116" class="edit-link">Edit this page</a>
         </div>
 
 

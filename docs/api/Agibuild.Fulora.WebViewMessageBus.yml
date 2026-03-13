@@ -547,7 +547,7 @@ references:
   commentId: M:Agibuild.Fulora.IWebViewMessageBus.Publish(System.String,System.String,System.String)
   parent: Agibuild.Fulora.IWebViewMessageBus
   isExternal: true
-  href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Publish_System_String_System_String_System_String_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: Publish(string, string, string)
   nameWithType: IWebViewMessageBus.Publish(string, string, string)
   fullName: Agibuild.Fulora.IWebViewMessageBus.Publish(string, string, string)
@@ -557,7 +557,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IWebViewMessageBus.Publish(System.String,System.String,System.String)
     name: Publish
-    href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Publish_System_String_System_String_System_String_
   - name: (
   - uid: System.String
     name: string
@@ -579,7 +578,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IWebViewMessageBus.Publish(System.String,System.String,System.String)
     name: Publish
-    href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Publish_System_String_System_String_System_String_
   - name: (
   - uid: System.String
     name: String
@@ -619,7 +617,7 @@ references:
   commentId: M:Agibuild.Fulora.IWebViewMessageBus.Subscribe(System.String,System.Action{Agibuild.Fulora.WebViewMessage})
   parent: Agibuild.Fulora.IWebViewMessageBus
   isExternal: true
-  href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Subscribe_System_String_System_Action_Agibuild_Fulora_WebViewMessage__
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: Subscribe(string, Action<WebViewMessage>)
   nameWithType: IWebViewMessageBus.Subscribe(string, Action<WebViewMessage>)
   fullName: Agibuild.Fulora.IWebViewMessageBus.Subscribe(string, System.Action<Agibuild.Fulora.WebViewMessage>)
@@ -629,7 +627,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IWebViewMessageBus.Subscribe(System.String,System.Action{Agibuild.Fulora.WebViewMessage})
     name: Subscribe
-    href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Subscribe_System_String_System_Action_Agibuild_Fulora_WebViewMessage__
   - name: (
   - uid: System.String
     name: string
@@ -644,13 +641,11 @@ references:
   - name: <
   - uid: Agibuild.Fulora.WebViewMessage
     name: WebViewMessage
-    href: Agibuild.Fulora.WebViewMessage.html
   - name: '>'
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebViewMessageBus.Subscribe(System.String,System.Action{Agibuild.Fulora.WebViewMessage})
     name: Subscribe
-    href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Subscribe_System_String_System_Action_Agibuild_Fulora_WebViewMessage__
   - name: (
   - uid: System.String
     name: String
@@ -667,7 +662,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.WebViewMessage
     name: WebViewMessage
-    href: Agibuild.Fulora.WebViewMessage.html
   - name: )
   - name: )
 - uid: System.Action{Agibuild.Fulora.WebViewMessage}
@@ -749,7 +743,7 @@ references:
   commentId: M:Agibuild.Fulora.IWebViewMessageBus.Subscribe(System.String,System.String,System.Action{Agibuild.Fulora.WebViewMessage})
   parent: Agibuild.Fulora.IWebViewMessageBus
   isExternal: true
-  href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Subscribe_System_String_System_String_System_Action_Agibuild_Fulora_WebViewMessage__
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: Subscribe(string, string, Action<WebViewMessage>)
   nameWithType: IWebViewMessageBus.Subscribe(string, string, Action<WebViewMessage>)
   fullName: Agibuild.Fulora.IWebViewMessageBus.Subscribe(string, string, System.Action<Agibuild.Fulora.WebViewMessage>)
@@ -759,7 +753,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IWebViewMessageBus.Subscribe(System.String,System.String,System.Action{Agibuild.Fulora.WebViewMessage})
     name: Subscribe
-    href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Subscribe_System_String_System_String_System_Action_Agibuild_Fulora_WebViewMessage__
   - name: (
   - uid: System.String
     name: string
@@ -780,13 +773,11 @@ references:
   - name: <
   - uid: Agibuild.Fulora.WebViewMessage
     name: WebViewMessage
-    href: Agibuild.Fulora.WebViewMessage.html
   - name: '>'
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebViewMessageBus.Subscribe(System.String,System.String,System.Action{Agibuild.Fulora.WebViewMessage})
     name: Subscribe
-    href: Agibuild.Fulora.IWebViewMessageBus.html#Agibuild_Fulora_IWebViewMessageBus_Subscribe_System_String_System_String_System_Action_Agibuild_Fulora_WebViewMessage__
   - name: (
   - uid: System.String
     name: String
@@ -809,7 +800,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.WebViewMessage
     name: WebViewMessage
-    href: Agibuild.Fulora.WebViewMessage.html
   - name: )
   - name: )
 - uid: Agibuild.Fulora.WebViewMessageBus.RequestAsync*
@@ -978,7 +968,6 @@ references:
   - name: <
   - uid: Agibuild.Fulora.WebViewMessage
     name: WebViewMessage
-    href: Agibuild.Fulora.WebViewMessage.html
   - name: ','
   - name: " "
   - uid: System.Threading.Tasks.Task`1
@@ -1002,7 +991,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.WebViewMessage
     name: WebViewMessage
-    href: Agibuild.Fulora.WebViewMessage.html
   - name: ','
   - name: " "
   - uid: System.Threading.Tasks.Task`1

@@ -22,6 +22,7 @@ items:
   - Agibuild.Fulora.AvaloniaWebDialog.ContextMenuRequested
   - Agibuild.Fulora.AvaloniaWebDialog.Dispose
   - Agibuild.Fulora.AvaloniaWebDialog.DownloadRequested
+  - Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
   - Agibuild.Fulora.AvaloniaWebDialog.EnvironmentRequested
   - Agibuild.Fulora.AvaloniaWebDialog.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)
   - Agibuild.Fulora.AvaloniaWebDialog.GetZoomFactorAsync
@@ -96,12 +97,13 @@ items:
     </p>
   example: []
   syntax:
-    content: 'public sealed class AvaloniaWebDialog : IWebDialog, IWebView, IDisposable'
-    content.vb: Public NotInheritable Class AvaloniaWebDialog Implements IWebDialog, IWebView, IDisposable
+    content: 'public sealed class AvaloniaWebDialog : IWebDialog, ISpaHostingWebView, IWebView, IDisposable'
+    content.vb: Public NotInheritable Class AvaloniaWebDialog Implements IWebDialog, ISpaHostingWebView, IWebView, IDisposable
   inheritance:
   - System.Object
   implements:
   - Agibuild.Fulora.IWebDialog
+  - Agibuild.Fulora.ISpaHostingWebView
   - Agibuild.Fulora.IWebView
   - System.IDisposable
   inheritedMembers:
@@ -111,6 +113,9 @@ items:
   - System.Object.GetType
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
+  extensionMethods:
+  - Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  - Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
 - uid: Agibuild.Fulora.AvaloniaWebDialog.#ctor(Agibuild.Fulora.IWebViewEnvironmentOptions)
   commentId: M:Agibuild.Fulora.AvaloniaWebDialog.#ctor(Agibuild.Fulora.IWebViewEnvironmentOptions)
   id: '#ctor(Agibuild.Fulora.IWebViewEnvironmentOptions)'
@@ -166,7 +171,6 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets or sets the dialog title.
   example: []
   syntax:
     content: public string? Title { get; set; }
@@ -199,7 +203,6 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets or sets whether the user can resize the dialog.
   example: []
   syntax:
     content: public bool CanUserResize { get; set; }
@@ -232,7 +235,6 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Shows the dialog without an owner.
   example: []
   syntax:
     content: public void Show()
@@ -262,14 +264,12 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Shows the dialog with the specified owner.
   example: []
   syntax:
     content: public bool Show(INativeHandle owner)
     parameters:
     - id: owner
       type: Agibuild.Fulora.INativeHandle
-      description: Owner platform handle.
     return:
       type: System.Boolean
     content.vb: Public Function Show(owner As INativeHandle) As Boolean
@@ -298,7 +298,6 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Closes the dialog.
   example: []
   syntax:
     content: public void Close()
@@ -328,17 +327,14 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Resizes the dialog.
   example: []
   syntax:
     content: public bool Resize(int width, int height)
     parameters:
     - id: width
       type: System.Int32
-      description: New width in device-independent pixels.
     - id: height
       type: System.Int32
-      description: New height in device-independent pixels.
     return:
       type: System.Boolean
     content.vb: Public Function Resize(width As Integer, height As Integer) As Boolean
@@ -370,17 +366,14 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Moves the dialog.
   example: []
   syntax:
     content: public bool Move(int x, int y)
     parameters:
     - id: x
       type: System.Int32
-      description: New X position.
     - id: y
       type: System.Int32
-      description: New Y position.
     return:
       type: System.Boolean
     content.vb: Public Function Move(x As Integer, y As Integer) As Boolean
@@ -412,7 +405,6 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when the dialog is closing.
   example: []
   syntax:
     content: public event EventHandler? Closing
@@ -421,6 +413,38 @@ items:
     content.vb: Public Event Closing As EventHandler
   implements:
   - Agibuild.Fulora.IWebDialog.Closing
+- uid: Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  commentId: M:Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  id: EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  parent: Agibuild.Fulora.AvaloniaWebDialog
+  langs:
+  - csharp
+  - vb
+  name: EnableSpaHosting(SpaHostingOptions)
+  nameWithType: AvaloniaWebDialog.EnableSpaHosting(SpaHostingOptions)
+  fullName: Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: EnableSpaHosting
+    path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
+    startLine: 159
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  example: []
+  syntax:
+    content: public void EnableSpaHosting(SpaHostingOptions options)
+    parameters:
+    - id: options
+      type: Agibuild.Fulora.SpaHostingOptions
+    content.vb: Public Sub EnableSpaHosting(options As SpaHostingOptions)
+  overload: Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting*
+  implements:
+  - Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
 - uid: Agibuild.Fulora.AvaloniaWebDialog.Source
   commentId: P:Agibuild.Fulora.AvaloniaWebDialog.Source
   id: Source
@@ -439,11 +463,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Source
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 161
+    startLine: 168
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets or sets the current navigation URI.
   example: []
   syntax:
     content: public Uri Source { get; set; }
@@ -472,11 +495,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanGoBack
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 168
+    startLine: 175
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets whether the WebView can navigate back in history.
   example: []
   syntax:
     content: public bool CanGoBack { get; }
@@ -505,11 +527,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanGoForward
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 170
+    startLine: 177
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets whether the WebView can navigate forward in history.
   example: []
   syntax:
     content: public bool CanGoForward { get; }
@@ -538,11 +559,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsLoading
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 172
+    startLine: 179
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets whether a navigation is currently in progress.
   example: []
   syntax:
     content: public bool IsLoading { get; }
@@ -571,11 +591,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelId
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 174
+    startLine: 181
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets the channel id used to isolate WebMessage traffic.
   example: []
   syntax:
     content: public Guid ChannelId { get; }
@@ -604,18 +623,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 177
+    startLine: 184
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Navigates to the specified URI.
   example: []
   syntax:
     content: public Task NavigateAsync(Uri uri)
     parameters:
     - id: uri
       type: System.Uri
-      description: The target URI.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function NavigateAsync(uri As Uri) As Task
@@ -640,18 +657,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateToStringAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 188
+    startLine: 195
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Navigates to a string of HTML.
   example: []
   syntax:
     content: public Task NavigateToStringAsync(string html)
     parameters:
     - id: html
       type: System.String
-      description: The HTML content.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function NavigateToStringAsync(html As String) As Task
@@ -679,21 +694,18 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateToStringAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 196
+    startLine: 203
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Navigates to a string of HTML with an optional base URL.
   example: []
   syntax:
     content: public Task NavigateToStringAsync(string html, Uri? baseUrl)
     parameters:
     - id: html
       type: System.String
-      description: The HTML content.
     - id: baseUrl
       type: System.Uri
-      description: Optional base URI for relative URL resolution.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function NavigateToStringAsync(html As String, baseUrl As Uri) As Task
@@ -721,18 +733,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeScriptAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 204
+    startLine: 211
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Executes JavaScript in the context of the current document.
   example: []
   syntax:
     content: public Task<string?> InvokeScriptAsync(string script)
     parameters:
     - id: script
       type: System.String
-      description: The JavaScript source.
     return:
       type: System.Threading.Tasks.Task{System.String}
     content.vb: Public Function InvokeScriptAsync(script As String) As Task(Of String)
@@ -760,11 +770,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GoBackAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 212
+    startLine: 219
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Attempts to navigate back.
   example: []
   syntax:
     content: public Task<bool> GoBackAsync()
@@ -792,11 +801,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GoForwardAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 214
+    startLine: 221
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Attempts to navigate forward.
   example: []
   syntax:
     content: public Task<bool> GoForwardAsync()
@@ -824,11 +832,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RefreshAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 216
+    startLine: 223
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Reloads the current page.
   example: []
   syntax:
     content: public Task<bool> RefreshAsync()
@@ -856,11 +863,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: StopAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 218
+    startLine: 225
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Stops an active navigation, if any.
   example: []
   syntax:
     content: public Task<bool> StopAsync()
@@ -888,11 +894,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCookieManager
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 221
+    startLine: 228
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets the cookie manager if supported by the adapter; otherwise null.
   example: []
   syntax:
     content: public ICookieManager? TryGetCookieManager()
@@ -920,11 +925,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCommandManager
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 223
+    startLine: 230
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets the command manager if supported by the adapter; otherwise null.
   example: []
   syntax:
     content: public ICommandManager? TryGetCommandManager()
@@ -952,11 +956,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetWebViewHandleAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 225
+    startLine: 232
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets the typed native WebView handle if supported; otherwise null.
   example: []
   syntax:
     content: public Task<INativeHandle?> TryGetWebViewHandleAsync()
@@ -984,14 +987,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Rpc
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 227
+    startLine: 234
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Gets the RPC service for bidirectional JS ↔ C# method calls.
-
-    Returns <code>null</code> until the WebMessage bridge is enabled.
   example: []
   syntax:
     content: public IWebViewRpcService? Rpc { get; }
@@ -1020,14 +1019,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeTracer
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 229
+    startLine: 236
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Sets the bridge tracer for observability. Must be set before the first access to
-
-    <xref href="Agibuild.Fulora.IWebView.Bridge" data-throw-if-not-resolved="false"></xref>; changes after the bridge is created are silently ignored.
   example: []
   syntax:
     content: public IBridgeTracer? BridgeTracer { get; set; }
@@ -1056,20 +1051,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Bridge
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 231
+    startLine: 238
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Gets the type-safe bridge service for exposing C# services to JS (<xref href="Agibuild.Fulora.JsExportAttribute" data-throw-if-not-resolved="false"></xref>)
-
-    and importing JS services into C# (<xref href="Agibuild.Fulora.JsImportAttribute" data-throw-if-not-resolved="false"></xref>).
-
-    <p>
-
-    Accessing this property auto-enables the WebMessage bridge if it is not already enabled.
-
-    </p>
   example: []
   syntax:
     content: public IBridgeService Bridge { get; }
@@ -1098,14 +1083,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OpenDevToolsAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 233
+    startLine: 240
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Opens the browser developer tools (inspector) at runtime.
-
-    No-op if the platform adapter does not support runtime DevTools toggling.
   example: []
   syntax:
     content: public Task OpenDevToolsAsync()
@@ -1133,14 +1114,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CloseDevToolsAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 235
+    startLine: 242
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Closes the browser developer tools.
-
-    No-op if the platform adapter does not support runtime DevTools toggling.
   example: []
   syntax:
     content: public Task CloseDevToolsAsync()
@@ -1168,14 +1145,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsDevToolsOpenAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 237
+    startLine: 244
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Returns whether developer tools are currently open.
-
-    Always returns false if the platform adapter does not support this check.
   example: []
   syntax:
     content: public Task<bool> IsDevToolsOpenAsync()
@@ -1203,14 +1176,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CaptureScreenshotAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 239
+    startLine: 246
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Captures a screenshot of the current viewport as a PNG byte array.
-
-    Throws <xref href="System.NotSupportedException" data-throw-if-not-resolved="false"></xref> if the adapter does not support screenshots.
   example: []
   syntax:
     content: public Task<byte[]> CaptureScreenshotAsync()
@@ -1238,14 +1207,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PrintToPdfAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 241
+    startLine: 248
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Prints the current page to a PDF byte array.
-
-    Throws <xref href="System.NotSupportedException" data-throw-if-not-resolved="false"></xref> if the adapter does not support printing.
   example: []
   syntax:
     content: public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null)
@@ -1279,11 +1244,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetZoomFactorAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 244
+    startLine: 251
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets or sets the zoom factor. 1.0 = 100%. Returns 1.0 if zoom is not supported.
   example: []
   syntax:
     content: public Task<double> GetZoomFactorAsync()
@@ -1311,18 +1275,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SetZoomFactorAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 246
+    startLine: 253
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Sets the zoom factor. 1.0 = 100%.
   example: []
   syntax:
     content: public Task SetZoomFactorAsync(double zoomFactor)
     parameters:
     - id: zoomFactor
       type: System.Double
-      description: The zoom factor to set.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function SetZoomFactorAsync(zoomFactor As Double) As Task
@@ -1350,7 +1312,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: FindInPageAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 249
+    startLine: 256
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1400,7 +1362,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: StopFindInPageAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 251
+    startLine: 258
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1443,7 +1405,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AddPreloadScriptAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 254
+    startLine: 261
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1487,7 +1449,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RemovePreloadScriptAsync
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 256
+    startLine: 263
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1530,7 +1492,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContextMenuRequested
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 259
+    startLine: 266
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1561,11 +1523,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationStarted
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 266
+    startLine: 273
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a navigation starts. Handlers may cancel the navigation.
   example: []
   syntax:
     content: public event EventHandler<NavigationStartingEventArgs>? NavigationStarted
@@ -1592,11 +1553,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationCompleted
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 273
+    startLine: 280
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a navigation completes (success, failure, canceled, superseded).
   example: []
   syntax:
     content: public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted
@@ -1623,11 +1583,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NewWindowRequested
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 280
+    startLine: 287
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when content requests opening a new window.
   example: []
   syntax:
     content: public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested
@@ -1654,11 +1613,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageReceived
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 287
+    startLine: 294
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a WebMessage is received from the page.
   example: []
   syntax:
     content: public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived
@@ -1685,11 +1643,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebResourceRequested
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 294
+    startLine: 301
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a custom-scheme request is intercepted.
   example: []
   syntax:
     content: public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested
@@ -1716,11 +1673,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnvironmentRequested
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 301
+    startLine: 308
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when the environment is requested (placeholder).
   example: []
   syntax:
     content: public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested
@@ -1747,11 +1703,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DownloadRequested
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 308
+    startLine: 315
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a file download is initiated. The handler can set <code>DownloadPath</code> or <code>Cancel</code>.
   example: []
   syntax:
     content: public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested
@@ -1778,11 +1733,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PermissionRequested
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 315
+    startLine: 322
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when web content requests a permission (camera, mic, geolocation, etc.).
   example: []
   syntax:
     content: public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested
@@ -1809,11 +1763,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterCreated
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 322
+    startLine: 329
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised after the native adapter is attached and ready. The event args carry the typed platform handle.
   example: []
   syntax:
     content: public event EventHandler<AdapterCreatedEventArgs>? AdapterCreated
@@ -1840,11 +1793,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterDestroyed
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 329
+    startLine: 336
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised before the native adapter is detached/destroyed. After this event, <xref href="Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle" data-throw-if-not-resolved="false"></xref> returns <code>null</code>.
   example: []
   syntax:
     content: public event EventHandler? AdapterDestroyed
@@ -1871,7 +1823,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Dispose
     path: ../src/Agibuild.Fulora.Avalonia/AvaloniaWebDialog.cs
-    startLine: 338
+    startLine: 345
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1893,6 +1845,7 @@ references:
   fullName: Agibuild.Fulora.IWebDialog
 - uid: Avalonia.Controls.Window
   commentId: T:Avalonia.Controls.Window
+  parent: Avalonia.Controls
   isExternal: true
   name: Window
   nameWithType: Window
@@ -1937,6 +1890,13 @@ references:
   nameWithType.vb: Object
   fullName.vb: Object
   name.vb: Object
+- uid: Agibuild.Fulora.ISpaHostingWebView
+  commentId: T:Agibuild.Fulora.ISpaHostingWebView
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ISpaHostingWebView.html
+  name: ISpaHostingWebView
+  nameWithType: ISpaHostingWebView
+  fullName: Agibuild.Fulora.ISpaHostingWebView
 - uid: Agibuild.Fulora.IWebView
   commentId: T:Agibuild.Fulora.IWebView
   parent: Agibuild.Fulora
@@ -2147,6 +2107,116 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
+- uid: Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.WebViewBootstrapExtensions
+  definition: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+- uid: Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.WebViewBootstrapExtensions
+  definition: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapProfileOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+- uid: Avalonia.Controls
+  commentId: N:Avalonia.Controls
+  isExternal: true
+  name: Avalonia.Controls
+  nameWithType: Avalonia.Controls
+  fullName: Avalonia.Controls
+  spec.csharp:
+  - uid: Avalonia
+    name: Avalonia
+    isExternal: true
+  - name: .
+  - uid: Avalonia.Controls
+    name: Controls
+    isExternal: true
+  spec.vb:
+  - uid: Avalonia
+    name: Avalonia
+    isExternal: true
+  - name: .
+  - uid: Avalonia.Controls
+    name: Controls
+    isExternal: true
 - uid: System
   commentId: N:System
   isExternal: true
@@ -2154,6 +2224,99 @@ references:
   name: System
   nameWithType: System
   fullName: System
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  isExternal: true
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions
+  commentId: T:Agibuild.Fulora.WebViewBootstrapExtensions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html
+  name: WebViewBootstrapExtensions
+  nameWithType: WebViewBootstrapExtensions
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  isExternal: true
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapProfileOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
 - uid: Agibuild.Fulora.AvaloniaWebDialog.#ctor*
   commentId: Overload:Agibuild.Fulora.AvaloniaWebDialog.#ctor
   href: Agibuild.Fulora.AvaloniaWebDialog.html#Agibuild_Fulora_AvaloniaWebDialog__ctor_Agibuild_Fulora_IWebViewEnvironmentOptions_
@@ -2179,7 +2342,6 @@ references:
 - uid: Agibuild.Fulora.IWebDialog.Title
   commentId: P:Agibuild.Fulora.IWebDialog.Title
   parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Title
   name: Title
   nameWithType: IWebDialog.Title
   fullName: Agibuild.Fulora.IWebDialog.Title
@@ -2203,7 +2365,6 @@ references:
 - uid: Agibuild.Fulora.IWebDialog.CanUserResize
   commentId: P:Agibuild.Fulora.IWebDialog.CanUserResize
   parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_CanUserResize
   name: CanUserResize
   nameWithType: IWebDialog.CanUserResize
   fullName: Agibuild.Fulora.IWebDialog.CanUserResize
@@ -2227,46 +2388,38 @@ references:
 - uid: Agibuild.Fulora.IWebDialog.Show
   commentId: M:Agibuild.Fulora.IWebDialog.Show
   parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
   name: Show()
   nameWithType: IWebDialog.Show()
   fullName: Agibuild.Fulora.IWebDialog.Show()
   spec.csharp:
   - uid: Agibuild.Fulora.IWebDialog.Show
     name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebDialog.Show
     name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
   - name: (
   - name: )
 - uid: Agibuild.Fulora.IWebDialog.Show(Agibuild.Fulora.INativeHandle)
   commentId: M:Agibuild.Fulora.IWebDialog.Show(Agibuild.Fulora.INativeHandle)
   parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show_Agibuild_Fulora_INativeHandle_
   name: Show(INativeHandle)
   nameWithType: IWebDialog.Show(INativeHandle)
   fullName: Agibuild.Fulora.IWebDialog.Show(Agibuild.Fulora.INativeHandle)
   spec.csharp:
   - uid: Agibuild.Fulora.IWebDialog.Show(Agibuild.Fulora.INativeHandle)
     name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show_Agibuild_Fulora_INativeHandle_
   - name: (
   - uid: Agibuild.Fulora.INativeHandle
     name: INativeHandle
-    href: Agibuild.Fulora.INativeHandle.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebDialog.Show(Agibuild.Fulora.INativeHandle)
     name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show_Agibuild_Fulora_INativeHandle_
   - name: (
   - uid: Agibuild.Fulora.INativeHandle
     name: INativeHandle
-    href: Agibuild.Fulora.INativeHandle.html
   - name: )
 - uid: Agibuild.Fulora.INativeHandle
   commentId: T:Agibuild.Fulora.INativeHandle
@@ -2284,20 +2437,17 @@ references:
 - uid: Agibuild.Fulora.IWebDialog.Close
   commentId: M:Agibuild.Fulora.IWebDialog.Close
   parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Close
   name: Close()
   nameWithType: IWebDialog.Close()
   fullName: Agibuild.Fulora.IWebDialog.Close()
   spec.csharp:
   - uid: Agibuild.Fulora.IWebDialog.Close
     name: Close
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Close
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebDialog.Close
     name: Close
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Close
   - name: (
   - name: )
 - uid: Agibuild.Fulora.AvaloniaWebDialog.Resize*
@@ -2310,7 +2460,7 @@ references:
   commentId: M:Agibuild.Fulora.IWebDialog.Resize(System.Int32,System.Int32)
   parent: Agibuild.Fulora.IWebDialog
   isExternal: true
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Resize_System_Int32_System_Int32_
+  href: https://learn.microsoft.com/dotnet/api/system.int32
   name: Resize(int, int)
   nameWithType: IWebDialog.Resize(int, int)
   fullName: Agibuild.Fulora.IWebDialog.Resize(int, int)
@@ -2320,7 +2470,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IWebDialog.Resize(System.Int32,System.Int32)
     name: Resize
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Resize_System_Int32_System_Int32_
   - name: (
   - uid: System.Int32
     name: int
@@ -2336,7 +2485,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IWebDialog.Resize(System.Int32,System.Int32)
     name: Resize
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Resize_System_Int32_System_Int32_
   - name: (
   - uid: System.Int32
     name: Integer
@@ -2370,7 +2518,7 @@ references:
   commentId: M:Agibuild.Fulora.IWebDialog.Move(System.Int32,System.Int32)
   parent: Agibuild.Fulora.IWebDialog
   isExternal: true
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Move_System_Int32_System_Int32_
+  href: https://learn.microsoft.com/dotnet/api/system.int32
   name: Move(int, int)
   nameWithType: IWebDialog.Move(int, int)
   fullName: Agibuild.Fulora.IWebDialog.Move(int, int)
@@ -2380,7 +2528,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IWebDialog.Move(System.Int32,System.Int32)
     name: Move
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Move_System_Int32_System_Int32_
   - name: (
   - uid: System.Int32
     name: int
@@ -2396,7 +2543,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IWebDialog.Move(System.Int32,System.Int32)
     name: Move
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Move_System_Int32_System_Int32_
   - name: (
   - uid: System.Int32
     name: Integer
@@ -2412,7 +2558,6 @@ references:
 - uid: Agibuild.Fulora.IWebDialog.Closing
   commentId: E:Agibuild.Fulora.IWebDialog.Closing
   parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Closing
   name: Closing
   nameWithType: IWebDialog.Closing
   fullName: Agibuild.Fulora.IWebDialog.Closing
@@ -2424,6 +2569,39 @@ references:
   name: EventHandler
   nameWithType: EventHandler
   fullName: System.EventHandler
+- uid: Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting*
+  commentId: Overload:Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting
+  href: Agibuild.Fulora.AvaloniaWebDialog.html#Agibuild_Fulora_AvaloniaWebDialog_EnableSpaHosting_Agibuild_Fulora_SpaHostingOptions_
+  name: EnableSpaHosting
+  nameWithType: AvaloniaWebDialog.EnableSpaHosting
+  fullName: Agibuild.Fulora.AvaloniaWebDialog.EnableSpaHosting
+- uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  commentId: M:Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  parent: Agibuild.Fulora.ISpaHostingWebView
+  name: EnableSpaHosting(SpaHostingOptions)
+  nameWithType: ISpaHostingWebView.EnableSpaHosting(SpaHostingOptions)
+  fullName: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+    name: EnableSpaHosting
+  - name: (
+  - uid: Agibuild.Fulora.SpaHostingOptions
+    name: SpaHostingOptions
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+    name: EnableSpaHosting
+  - name: (
+  - uid: Agibuild.Fulora.SpaHostingOptions
+    name: SpaHostingOptions
+  - name: )
+- uid: Agibuild.Fulora.SpaHostingOptions
+  commentId: T:Agibuild.Fulora.SpaHostingOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaHostingOptions.html
+  name: SpaHostingOptions
+  nameWithType: SpaHostingOptions
+  fullName: Agibuild.Fulora.SpaHostingOptions
 - uid: Agibuild.Fulora.AvaloniaWebDialog.Source*
   commentId: Overload:Agibuild.Fulora.AvaloniaWebDialog.Source
   href: Agibuild.Fulora.AvaloniaWebDialog.html#Agibuild_Fulora_AvaloniaWebDialog_Source
@@ -3041,13 +3219,6 @@ references:
   name: IWebViewRpcService
   nameWithType: IWebViewRpcService
   fullName: Agibuild.Fulora.IWebViewRpcService
-- uid: Agibuild.Fulora.IWebView.Bridge
-  commentId: P:Agibuild.Fulora.IWebView.Bridge
-  parent: Agibuild.Fulora.IWebView
-  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Bridge
-  name: Bridge
-  nameWithType: IWebView.Bridge
-  fullName: Agibuild.Fulora.IWebView.Bridge
 - uid: Agibuild.Fulora.AvaloniaWebDialog.BridgeTracer*
   commentId: Overload:Agibuild.Fulora.AvaloniaWebDialog.BridgeTracer
   href: Agibuild.Fulora.AvaloniaWebDialog.html#Agibuild_Fulora_AvaloniaWebDialog_BridgeTracer
@@ -3068,24 +3239,19 @@ references:
   name: IBridgeTracer
   nameWithType: IBridgeTracer
   fullName: Agibuild.Fulora.IBridgeTracer
-- uid: Agibuild.Fulora.JsExportAttribute
-  commentId: T:Agibuild.Fulora.JsExportAttribute
-  href: Agibuild.Fulora.JsExportAttribute.html
-  name: JsExportAttribute
-  nameWithType: JsExportAttribute
-  fullName: Agibuild.Fulora.JsExportAttribute
-- uid: Agibuild.Fulora.JsImportAttribute
-  commentId: T:Agibuild.Fulora.JsImportAttribute
-  href: Agibuild.Fulora.JsImportAttribute.html
-  name: JsImportAttribute
-  nameWithType: JsImportAttribute
-  fullName: Agibuild.Fulora.JsImportAttribute
 - uid: Agibuild.Fulora.AvaloniaWebDialog.Bridge*
   commentId: Overload:Agibuild.Fulora.AvaloniaWebDialog.Bridge
   href: Agibuild.Fulora.AvaloniaWebDialog.html#Agibuild_Fulora_AvaloniaWebDialog_Bridge
   name: Bridge
   nameWithType: AvaloniaWebDialog.Bridge
   fullName: Agibuild.Fulora.AvaloniaWebDialog.Bridge
+- uid: Agibuild.Fulora.IWebView.Bridge
+  commentId: P:Agibuild.Fulora.IWebView.Bridge
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Bridge
+  name: Bridge
+  nameWithType: IWebView.Bridge
+  fullName: Agibuild.Fulora.IWebView.Bridge
 - uid: Agibuild.Fulora.IBridgeService
   commentId: T:Agibuild.Fulora.IBridgeService
   parent: Agibuild.Fulora
@@ -3168,13 +3334,6 @@ references:
     href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_IsDevToolsOpenAsync
   - name: (
   - name: )
-- uid: System.NotSupportedException
-  commentId: T:System.NotSupportedException
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.notsupportedexception
-  name: NotSupportedException
-  nameWithType: NotSupportedException
-  fullName: System.NotSupportedException
 - uid: Agibuild.Fulora.AvaloniaWebDialog.CaptureScreenshotAsync*
   commentId: Overload:Agibuild.Fulora.AvaloniaWebDialog.CaptureScreenshotAsync
   href: Agibuild.Fulora.AvaloniaWebDialog.html#Agibuild_Fulora_AvaloniaWebDialog_CaptureScreenshotAsync
@@ -3396,6 +3555,13 @@ references:
   name: IFindInPageAdapter
   nameWithType: IFindInPageAdapter
   fullName: Agibuild.Fulora.Adapters.Abstractions.IFindInPageAdapter
+- uid: System.NotSupportedException
+  commentId: T:System.NotSupportedException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.notsupportedexception
+  name: NotSupportedException
+  nameWithType: NotSupportedException
+  fullName: System.NotSupportedException
 - uid: System.ArgumentException
   commentId: T:System.ArgumentException
   isExternal: true
@@ -4093,24 +4259,6 @@ references:
   - uid: Agibuild.Fulora.AdapterCreatedEventArgs
     name: AdapterCreatedEventArgs
     href: Agibuild.Fulora.AdapterCreatedEventArgs.html
-  - name: )
-- uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-  commentId: M:Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-  href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  name: TryGetWebViewHandle()
-  nameWithType: INativeWebViewHandleProvider.TryGetWebViewHandle()
-  fullName: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle()
-  spec.csharp:
-  - uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-    name: TryGetWebViewHandle
-    href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-    name: TryGetWebViewHandle
-    href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  - name: (
   - name: )
 - uid: Agibuild.Fulora.IWebView.AdapterDestroyed
   commentId: E:Agibuild.Fulora.IWebView.AdapterDestroyed

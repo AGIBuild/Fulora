@@ -23,17 +23,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PdfPrintOptions
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 513
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 68
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Options for PDF printing.
-  example: []
   syntax:
     content: public sealed class PdfPrintOptions
     content.vb: Public NotInheritable Class PdfPrintOptions
@@ -59,17 +57,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Landscape
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 516
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 70
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Whether to print in landscape orientation.
-  example: []
   syntax:
     content: public bool Landscape { get; set; }
     parameters: []
@@ -90,17 +86,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PageWidth
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 518
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 71
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: 'Page width in inches (default: 8.5 = US Letter).'
-  example: []
   syntax:
     content: public double PageWidth { get; set; }
     parameters: []
@@ -121,17 +115,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PageHeight
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 520
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 72
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: 'Page height in inches (default: 11.0 = US Letter).'
-  example: []
   syntax:
     content: public double PageHeight { get; set; }
     parameters: []
@@ -152,17 +144,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MarginTop
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 522
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 73
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Top margin in inches.
-  example: []
   syntax:
     content: public double MarginTop { get; set; }
     parameters: []
@@ -183,17 +173,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MarginBottom
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 524
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 74
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Bottom margin in inches.
-  example: []
   syntax:
     content: public double MarginBottom { get; set; }
     parameters: []
@@ -214,17 +202,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MarginLeft
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 526
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 75
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Left margin in inches.
-  example: []
   syntax:
     content: public double MarginLeft { get; set; }
     parameters: []
@@ -245,17 +231,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MarginRight
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 528
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 76
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Right margin in inches.
-  example: []
   syntax:
     content: public double MarginRight { get; set; }
     parameters: []
@@ -276,17 +260,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Scale
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 530
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 77
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Scale factor (1.0 = 100%).
-  example: []
   syntax:
     content: public double Scale { get; set; }
     parameters: []
@@ -307,17 +289,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PrintBackground
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 532
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 78
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Whether to print background colors and images.
-  example: []
   syntax:
     content: public bool PrintBackground { get; set; }
     parameters: []

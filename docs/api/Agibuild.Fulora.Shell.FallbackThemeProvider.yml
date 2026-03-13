@@ -449,7 +449,6 @@ references:
 - uid: Agibuild.Fulora.IPlatformThemeProvider.ThemeChanged
   commentId: E:Agibuild.Fulora.IPlatformThemeProvider.ThemeChanged
   parent: Agibuild.Fulora.IPlatformThemeProvider
-  href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_ThemeChanged
   name: ThemeChanged
   nameWithType: IPlatformThemeProvider.ThemeChanged
   fullName: Agibuild.Fulora.IPlatformThemeProvider.ThemeChanged
@@ -470,20 +469,17 @@ references:
 - uid: Agibuild.Fulora.IPlatformThemeProvider.GetThemeMode
   commentId: M:Agibuild.Fulora.IPlatformThemeProvider.GetThemeMode
   parent: Agibuild.Fulora.IPlatformThemeProvider
-  href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetThemeMode
   name: GetThemeMode()
   nameWithType: IPlatformThemeProvider.GetThemeMode()
   fullName: Agibuild.Fulora.IPlatformThemeProvider.GetThemeMode()
   spec.csharp:
   - uid: Agibuild.Fulora.IPlatformThemeProvider.GetThemeMode
     name: GetThemeMode
-    href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetThemeMode
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IPlatformThemeProvider.GetThemeMode
     name: GetThemeMode
-    href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetThemeMode
   - name: (
   - name: )
 - uid: System.String
@@ -506,20 +502,17 @@ references:
 - uid: Agibuild.Fulora.IPlatformThemeProvider.GetAccentColor
   commentId: M:Agibuild.Fulora.IPlatformThemeProvider.GetAccentColor
   parent: Agibuild.Fulora.IPlatformThemeProvider
-  href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetAccentColor
   name: GetAccentColor()
   nameWithType: IPlatformThemeProvider.GetAccentColor()
   fullName: Agibuild.Fulora.IPlatformThemeProvider.GetAccentColor()
   spec.csharp:
   - uid: Agibuild.Fulora.IPlatformThemeProvider.GetAccentColor
     name: GetAccentColor
-    href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetAccentColor
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IPlatformThemeProvider.GetAccentColor
     name: GetAccentColor
-    href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetAccentColor
   - name: (
   - name: )
 - uid: Agibuild.Fulora.Shell.FallbackThemeProvider.GetIsHighContrast*
@@ -531,20 +524,17 @@ references:
 - uid: Agibuild.Fulora.IPlatformThemeProvider.GetIsHighContrast
   commentId: M:Agibuild.Fulora.IPlatformThemeProvider.GetIsHighContrast
   parent: Agibuild.Fulora.IPlatformThemeProvider
-  href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetIsHighContrast
   name: GetIsHighContrast()
   nameWithType: IPlatformThemeProvider.GetIsHighContrast()
   fullName: Agibuild.Fulora.IPlatformThemeProvider.GetIsHighContrast()
   spec.csharp:
   - uid: Agibuild.Fulora.IPlatformThemeProvider.GetIsHighContrast
     name: GetIsHighContrast
-    href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetIsHighContrast
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IPlatformThemeProvider.GetIsHighContrast
     name: GetIsHighContrast
-    href: Agibuild.Fulora.IPlatformThemeProvider.html#Agibuild_Fulora_IPlatformThemeProvider_GetIsHighContrast
   - name: (
   - name: )
 - uid: System.Boolean

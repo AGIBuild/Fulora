@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebAuthBroker
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 307
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 85
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Web authentication broker used for platform-specific auth flows (e.g. OAuth via external browser or embedded WebView).
-  example: []
   syntax:
     content: public interface IWebAuthBroker
     content.vb: Public Interface IWebAuthBroker
@@ -42,26 +40,22 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AuthenticateAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 312
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 87
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Starts an authentication flow and returns the result.
-  example: []
   syntax:
     content: Task<WebAuthResult> AuthenticateAsync(ITopLevelWindow owner, AuthOptions options)
     parameters:
     - id: owner
       type: Agibuild.Fulora.ITopLevelWindow
-      description: Owner top-level window.
     - id: options
       type: Agibuild.Fulora.AuthOptions
-      description: Authentication options.
     return:
       type: System.Threading.Tasks.Task{Agibuild.Fulora.WebAuthResult}
     content.vb: Function AuthenticateAsync(owner As ITopLevelWindow, options As AuthOptions) As Task(Of WebAuthResult)

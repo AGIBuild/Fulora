@@ -22,7 +22,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MenuInteractionEventArgs
     path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaMenuManager.cs
-    startLine: 111
+    startLine: 132
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora.Shell
@@ -60,7 +60,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
     path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaMenuManager.cs
-    startLine: 114
+    startLine: 135
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora.Shell
@@ -94,7 +94,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ItemId
     path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaMenuManager.cs
-    startLine: 120
+    startLine: 141
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora.Shell
@@ -125,7 +125,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Timestamp
     path: ../src/Agibuild.Fulora.Avalonia/Shell/AvaloniaMenuManager.cs
-    startLine: 123
+    startLine: 144
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora.Shell

@@ -1,0 +1,599 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  commentId: T:Agibuild.Fulora.IAutoUpdatePlatformProvider
+  id: IAutoUpdatePlatformProvider
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync(System.String,System.Threading.CancellationToken)
+  - Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync(Agibuild.Fulora.AutoUpdateOptions,System.String,System.Threading.CancellationToken)
+  - Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync(Agibuild.Fulora.UpdateInfo,Agibuild.Fulora.AutoUpdateOptions,System.Action{Agibuild.Fulora.UpdateDownloadProgress},System.Threading.CancellationToken)
+  - Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion
+  - Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync(System.String,Agibuild.Fulora.UpdateInfo,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IAutoUpdatePlatformProvider
+  nameWithType: IAutoUpdatePlatformProvider
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IAutoUpdatePlatformProvider
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+    startLine: 6
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Platform-specific provider for auto-update operations.
+
+    Implement this interface to supply update mechanics for each target platform.
+  example: []
+  syntax:
+    content: public interface IAutoUpdatePlatformProvider
+    content.vb: Public Interface IAutoUpdatePlatformProvider
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync(Agibuild.Fulora.AutoUpdateOptions,System.String,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync(Agibuild.Fulora.AutoUpdateOptions,System.String,System.Threading.CancellationToken)
+  id: CheckForUpdateAsync(Agibuild.Fulora.AutoUpdateOptions,System.String,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  langs:
+  - csharp
+  - vb
+  name: CheckForUpdateAsync(AutoUpdateOptions, string, CancellationToken)
+  nameWithType: IAutoUpdatePlatformProvider.CheckForUpdateAsync(AutoUpdateOptions, string, CancellationToken)
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync(Agibuild.Fulora.AutoUpdateOptions, string, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: CheckForUpdateAsync
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+    startLine: 12
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Fetches update metadata from the feed URL.
+
+    Returns <code>null</code> if the current version is already the latest.
+  example: []
+  syntax:
+    content: Task<UpdateInfo?> CheckForUpdateAsync(AutoUpdateOptions options, string currentVersion, CancellationToken ct = default)
+    parameters:
+    - id: options
+      type: Agibuild.Fulora.AutoUpdateOptions
+    - id: currentVersion
+      type: System.String
+    - id: ct
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.UpdateInfo}
+    content.vb: Function CheckForUpdateAsync(options As AutoUpdateOptions, currentVersion As String, ct As CancellationToken = Nothing) As Task(Of UpdateInfo)
+  overload: Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync*
+  nameWithType.vb: IAutoUpdatePlatformProvider.CheckForUpdateAsync(AutoUpdateOptions, String, CancellationToken)
+  fullName.vb: Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync(Agibuild.Fulora.AutoUpdateOptions, String, System.Threading.CancellationToken)
+  name.vb: CheckForUpdateAsync(AutoUpdateOptions, String, CancellationToken)
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync(Agibuild.Fulora.UpdateInfo,Agibuild.Fulora.AutoUpdateOptions,System.Action{Agibuild.Fulora.UpdateDownloadProgress},System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync(Agibuild.Fulora.UpdateInfo,Agibuild.Fulora.AutoUpdateOptions,System.Action{Agibuild.Fulora.UpdateDownloadProgress},System.Threading.CancellationToken)
+  id: DownloadUpdateAsync(Agibuild.Fulora.UpdateInfo,Agibuild.Fulora.AutoUpdateOptions,System.Action{Agibuild.Fulora.UpdateDownloadProgress},System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  langs:
+  - csharp
+  - vb
+  name: DownloadUpdateAsync(UpdateInfo, AutoUpdateOptions, Action<UpdateDownloadProgress>?, CancellationToken)
+  nameWithType: IAutoUpdatePlatformProvider.DownloadUpdateAsync(UpdateInfo, AutoUpdateOptions, Action<UpdateDownloadProgress>?, CancellationToken)
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync(Agibuild.Fulora.UpdateInfo, Agibuild.Fulora.AutoUpdateOptions, System.Action<Agibuild.Fulora.UpdateDownloadProgress>?, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DownloadUpdateAsync
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+    startLine: 22
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Downloads the update package to a staging location.
+  example: []
+  syntax:
+    content: Task<string> DownloadUpdateAsync(UpdateInfo update, AutoUpdateOptions options, Action<UpdateDownloadProgress>? onProgress = null, CancellationToken ct = default)
+    parameters:
+    - id: update
+      type: Agibuild.Fulora.UpdateInfo
+      description: The update to download.
+    - id: options
+      type: Agibuild.Fulora.AutoUpdateOptions
+      description: Update configuration.
+    - id: onProgress
+      type: System.Action{Agibuild.Fulora.UpdateDownloadProgress}
+      description: Progress callback invoked during download.
+    - id: ct
+      type: System.Threading.CancellationToken
+      description: Cancellation token.
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+      description: Path to the downloaded package file.
+    content.vb: Function DownloadUpdateAsync(update As UpdateInfo, options As AutoUpdateOptions, onProgress As Action(Of UpdateDownloadProgress) = Nothing, ct As CancellationToken = Nothing) As Task(Of String)
+  overload: Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync*
+  nameWithType.vb: IAutoUpdatePlatformProvider.DownloadUpdateAsync(UpdateInfo, AutoUpdateOptions, Action(Of UpdateDownloadProgress), CancellationToken)
+  fullName.vb: Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync(Agibuild.Fulora.UpdateInfo, Agibuild.Fulora.AutoUpdateOptions, System.Action(Of Agibuild.Fulora.UpdateDownloadProgress), System.Threading.CancellationToken)
+  name.vb: DownloadUpdateAsync(UpdateInfo, AutoUpdateOptions, Action(Of UpdateDownloadProgress), CancellationToken)
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync(System.String,Agibuild.Fulora.UpdateInfo,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync(System.String,Agibuild.Fulora.UpdateInfo,System.Threading.CancellationToken)
+  id: VerifyPackageAsync(System.String,Agibuild.Fulora.UpdateInfo,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  langs:
+  - csharp
+  - vb
+  name: VerifyPackageAsync(string, UpdateInfo, CancellationToken)
+  nameWithType: IAutoUpdatePlatformProvider.VerifyPackageAsync(string, UpdateInfo, CancellationToken)
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync(string, Agibuild.Fulora.UpdateInfo, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: VerifyPackageAsync
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+    startLine: 28
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Verifies the integrity of a downloaded update package.
+
+    Returns <code>true</code> if the package is valid.
+  example: []
+  syntax:
+    content: Task<bool> VerifyPackageAsync(string packagePath, UpdateInfo update, CancellationToken ct = default)
+    parameters:
+    - id: packagePath
+      type: System.String
+    - id: update
+      type: Agibuild.Fulora.UpdateInfo
+    - id: ct
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Function VerifyPackageAsync(packagePath As String, update As UpdateInfo, ct As CancellationToken = Nothing) As Task(Of Boolean)
+  overload: Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync*
+  nameWithType.vb: IAutoUpdatePlatformProvider.VerifyPackageAsync(String, UpdateInfo, CancellationToken)
+  fullName.vb: Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync(String, Agibuild.Fulora.UpdateInfo, System.Threading.CancellationToken)
+  name.vb: VerifyPackageAsync(String, UpdateInfo, CancellationToken)
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync(System.String,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync(System.String,System.Threading.CancellationToken)
+  id: ApplyUpdateAsync(System.String,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  langs:
+  - csharp
+  - vb
+  name: ApplyUpdateAsync(string, CancellationToken)
+  nameWithType: IAutoUpdatePlatformProvider.ApplyUpdateAsync(string, CancellationToken)
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync(string, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ApplyUpdateAsync
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+    startLine: 34
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Applies the downloaded update and restarts the application.
+
+    This method may not return if a restart is triggered.
+  example: []
+  syntax:
+    content: Task ApplyUpdateAsync(string packagePath, CancellationToken ct = default)
+    parameters:
+    - id: packagePath
+      type: System.String
+    - id: ct
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function ApplyUpdateAsync(packagePath As String, ct As CancellationToken = Nothing) As Task
+  overload: Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync*
+  nameWithType.vb: IAutoUpdatePlatformProvider.ApplyUpdateAsync(String, CancellationToken)
+  fullName.vb: Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync(String, System.Threading.CancellationToken)
+  name.vb: ApplyUpdateAsync(String, CancellationToken)
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion
+  commentId: M:Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion
+  id: GetCurrentVersion
+  parent: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentVersion()
+  nameWithType: IAutoUpdatePlatformProvider.GetCurrentVersion()
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetCurrentVersion
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdatePlatformProvider.cs
+    startLine: 39
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Returns the currently running application version string.
+  example: []
+  syntax:
+    content: string GetCurrentVersion()
+    return:
+      type: System.String
+    content.vb: Function GetCurrentVersion() As String
+  overload: Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync
+  href: Agibuild.Fulora.IAutoUpdatePlatformProvider.html#Agibuild_Fulora_IAutoUpdatePlatformProvider_CheckForUpdateAsync_Agibuild_Fulora_AutoUpdateOptions_System_String_System_Threading_CancellationToken_
+  name: CheckForUpdateAsync
+  nameWithType: IAutoUpdatePlatformProvider.CheckForUpdateAsync
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.CheckForUpdateAsync
+- uid: Agibuild.Fulora.AutoUpdateOptions
+  commentId: T:Agibuild.Fulora.AutoUpdateOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.AutoUpdateOptions.html
+  name: AutoUpdateOptions
+  nameWithType: AutoUpdateOptions
+  fullName: Agibuild.Fulora.AutoUpdateOptions
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{Agibuild.Fulora.UpdateInfo}
+  commentId: T:System.Threading.Tasks.Task{Agibuild.Fulora.UpdateInfo}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<UpdateInfo>
+  nameWithType: Task<UpdateInfo>
+  fullName: System.Threading.Tasks.Task<Agibuild.Fulora.UpdateInfo>
+  nameWithType.vb: Task(Of UpdateInfo)
+  fullName.vb: System.Threading.Tasks.Task(Of Agibuild.Fulora.UpdateInfo)
+  name.vb: Task(Of UpdateInfo)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Agibuild.Fulora.UpdateInfo
+    name: UpdateInfo
+    href: Agibuild.Fulora.UpdateInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.UpdateInfo
+    name: UpdateInfo
+    href: Agibuild.Fulora.UpdateInfo.html
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync
+  href: Agibuild.Fulora.IAutoUpdatePlatformProvider.html#Agibuild_Fulora_IAutoUpdatePlatformProvider_DownloadUpdateAsync_Agibuild_Fulora_UpdateInfo_Agibuild_Fulora_AutoUpdateOptions_System_Action_Agibuild_Fulora_UpdateDownloadProgress__System_Threading_CancellationToken_
+  name: DownloadUpdateAsync
+  nameWithType: IAutoUpdatePlatformProvider.DownloadUpdateAsync
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.DownloadUpdateAsync
+- uid: Agibuild.Fulora.UpdateInfo
+  commentId: T:Agibuild.Fulora.UpdateInfo
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.UpdateInfo.html
+  name: UpdateInfo
+  nameWithType: UpdateInfo
+  fullName: Agibuild.Fulora.UpdateInfo
+- uid: System.Action{Agibuild.Fulora.UpdateDownloadProgress}
+  commentId: T:System.Action{Agibuild.Fulora.UpdateDownloadProgress}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<UpdateDownloadProgress>
+  nameWithType: Action<UpdateDownloadProgress>
+  fullName: System.Action<Agibuild.Fulora.UpdateDownloadProgress>
+  nameWithType.vb: Action(Of UpdateDownloadProgress)
+  fullName.vb: System.Action(Of Agibuild.Fulora.UpdateDownloadProgress)
+  name.vb: Action(Of UpdateDownloadProgress)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: Agibuild.Fulora.UpdateDownloadProgress
+    name: UpdateDownloadProgress
+    href: Agibuild.Fulora.UpdateDownloadProgress.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.UpdateDownloadProgress
+    name: UpdateDownloadProgress
+    href: Agibuild.Fulora.UpdateDownloadProgress.html
+  - name: )
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<string>
+  nameWithType: Task<string>
+  fullName: System.Threading.Tasks.Task<string>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync
+  href: Agibuild.Fulora.IAutoUpdatePlatformProvider.html#Agibuild_Fulora_IAutoUpdatePlatformProvider_VerifyPackageAsync_System_String_Agibuild_Fulora_UpdateInfo_System_Threading_CancellationToken_
+  name: VerifyPackageAsync
+  nameWithType: IAutoUpdatePlatformProvider.VerifyPackageAsync
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.VerifyPackageAsync
+- uid: System.Threading.Tasks.Task{System.Boolean}
+  commentId: T:System.Threading.Tasks.Task{System.Boolean}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<bool>
+  nameWithType: Task<bool>
+  fullName: System.Threading.Tasks.Task<bool>
+  nameWithType.vb: Task(Of Boolean)
+  fullName.vb: System.Threading.Tasks.Task(Of Boolean)
+  name.vb: Task(Of Boolean)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync
+  href: Agibuild.Fulora.IAutoUpdatePlatformProvider.html#Agibuild_Fulora_IAutoUpdatePlatformProvider_ApplyUpdateAsync_System_String_System_Threading_CancellationToken_
+  name: ApplyUpdateAsync
+  nameWithType: IAutoUpdatePlatformProvider.ApplyUpdateAsync
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.ApplyUpdateAsync
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion
+  href: Agibuild.Fulora.IAutoUpdatePlatformProvider.html#Agibuild_Fulora_IAutoUpdatePlatformProvider_GetCurrentVersion
+  name: GetCurrentVersion
+  nameWithType: IAutoUpdatePlatformProvider.GetCurrentVersion
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider.GetCurrentVersion

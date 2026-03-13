@@ -18,17 +18,15 @@ items:
   type: Struct
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageDropDiagnostic
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 392
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Diagnostic payload describing a dropped WebMessage.
-  example: []
   syntax:
     content: 'public readonly record struct WebMessageDropDiagnostic : IEquatable<WebMessageDropDiagnostic>'
     content.vb: Public Structure WebMessageDropDiagnostic Implements IEquatable(Of WebMessageDropDiagnostic)
@@ -54,29 +52,24 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 392
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Diagnostic payload describing a dropped WebMessage.
-  example: []
   syntax:
     content: public WebMessageDropDiagnostic(WebMessageDropReason Reason, string Origin, Guid ChannelId)
     parameters:
     - id: Reason
       type: Agibuild.Fulora.WebMessageDropReason
-      description: Drop reason.
     - id: Origin
       type: System.String
-      description: Message origin.
     - id: ChannelId
       type: System.Guid
-      description: Message channel id.
     content.vb: Public Sub New(Reason As WebMessageDropReason, Origin As String, ChannelId As Guid)
   overload: Agibuild.Fulora.WebMessageDropDiagnostic.#ctor*
   nameWithType.vb: WebMessageDropDiagnostic.New(WebMessageDropReason, String, Guid)
@@ -95,17 +88,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Reason
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 392
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Drop reason.
-  example: []
   syntax:
     content: public WebMessageDropReason Reason { get; init; }
     parameters: []
@@ -126,17 +117,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Origin
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 392
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Message origin.
-  example: []
   syntax:
     content: public string Origin { get; init; }
     parameters: []
@@ -157,17 +146,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 392
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Message channel id.
-  example: []
   syntax:
     content: public Guid ChannelId { get; init; }
     parameters: []

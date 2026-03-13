@@ -109,6 +109,12 @@ Accent color and high-contrast are delegated to platform-specific detection.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html">AvaloniaWindowChromeProvider</a></dt>
+      <dd><p>Avalonia-based <a class="xref" href="Agibuild.Fulora.IWindowChromeProvider.html">IWindowChromeProvider</a> that manages window transparency,
+custom chrome drag regions, and appearance for one or more tracked Avalonia windows.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.Shell.DeepLinkActivationEnvelope.html">DeepLinkActivationEnvelope</a></dt>
       <dd><p>Canonical deep-link activation envelope normalized from platform-specific payloads.</p>
 </dd>
@@ -430,6 +436,18 @@ onto an <a class="xref" href="Agibuild.Fulora.IWebView.html">IWebView</a> instan
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.Shell.WebViewTrayStateRequest.html">WebViewTrayStateRequest</a></dt>
       <dd><p>Typed tray state payload for host app-shell integration.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.Shell.WindowChromeTrackingOptions.html">WindowChromeTrackingOptions</a></dt>
+      <dd><p>Options for tracking a window under the chrome provider.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.Shell.WindowShellService.html">WindowShellService</a></dt>
+      <dd><p>Framework-level shell-window service. Manages global appearance settings (theme,
+transparency, chrome metrics) across all tracked windows. Designed as an app-level
+singleton shared across multiple WebViews via <code>Bridge.Expose&lt;IWindowShellService&gt;()</code>.</p>
 </dd>
     </dl>
     <h3 id="structs">

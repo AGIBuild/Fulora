@@ -17,17 +17,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebAuthResult
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 655
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 113
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Result returned by <xref href="Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow%2cAgibuild.Fulora.AuthOptions)" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: public sealed class WebAuthResult
     content.vb: Public NotInheritable Class WebAuthResult
@@ -53,17 +51,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Status
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 658
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 115
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Authentication status.
-  example: []
   syntax:
     content: public WebAuthStatus Status { get; init; }
     parameters: []
@@ -84,17 +80,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CallbackUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 660
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 116
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Callback URI when available (e.g. redirect URI).
-  example: []
   syntax:
     content: public Uri? CallbackUri { get; init; }
     parameters: []
@@ -115,17 +109,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Error
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 662
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 117
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Optional error string when <xref href="Agibuild.Fulora.WebAuthResult.Status" data-throw-if-not-resolved="false"></xref> is <xref href="Agibuild.Fulora.WebAuthStatus.Error" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: public string? Error { get; init; }
     parameters: []
@@ -134,41 +126,6 @@ items:
     content.vb: Public Property [Error] As String
   overload: Agibuild.Fulora.WebAuthResult.Error*
 references:
-- uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-  commentId: M:Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-  parent: Agibuild.Fulora.IWebAuthBroker
-  href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
-  name: AuthenticateAsync(ITopLevelWindow, AuthOptions)
-  nameWithType: IWebAuthBroker.AuthenticateAsync(ITopLevelWindow, AuthOptions)
-  fullName: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow, Agibuild.Fulora.AuthOptions)
-  spec.csharp:
-  - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-    name: AuthenticateAsync
-    href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
-  - name: (
-  - uid: Agibuild.Fulora.ITopLevelWindow
-    name: ITopLevelWindow
-    href: Agibuild.Fulora.ITopLevelWindow.html
-  - name: ','
-  - name: " "
-  - uid: Agibuild.Fulora.AuthOptions
-    name: AuthOptions
-    href: Agibuild.Fulora.AuthOptions.html
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-    name: AuthenticateAsync
-    href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
-  - name: (
-  - uid: Agibuild.Fulora.ITopLevelWindow
-    name: ITopLevelWindow
-    href: Agibuild.Fulora.ITopLevelWindow.html
-  - name: ','
-  - name: " "
-  - uid: Agibuild.Fulora.AuthOptions
-    name: AuthOptions
-    href: Agibuild.Fulora.AuthOptions.html
-  - name: )
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -397,13 +354,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
-- uid: Agibuild.Fulora.IWebAuthBroker
-  commentId: T:Agibuild.Fulora.IWebAuthBroker
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebAuthBroker.html
-  name: IWebAuthBroker
-  nameWithType: IWebAuthBroker
-  fullName: Agibuild.Fulora.IWebAuthBroker
 - uid: System
   commentId: N:System
   isExternal: true
@@ -438,18 +388,6 @@ references:
   name: Uri
   nameWithType: Uri
   fullName: System.Uri
-- uid: Agibuild.Fulora.WebAuthResult.Status
-  commentId: P:Agibuild.Fulora.WebAuthResult.Status
-  href: Agibuild.Fulora.WebAuthResult.html#Agibuild_Fulora_WebAuthResult_Status
-  name: Status
-  nameWithType: WebAuthResult.Status
-  fullName: Agibuild.Fulora.WebAuthResult.Status
-- uid: Agibuild.Fulora.WebAuthStatus.Error
-  commentId: F:Agibuild.Fulora.WebAuthStatus.Error
-  href: Agibuild.Fulora.WebAuthStatus.html#Agibuild_Fulora_WebAuthStatus_Error
-  name: Error
-  nameWithType: WebAuthStatus.Error
-  fullName: Agibuild.Fulora.WebAuthStatus.Error
 - uid: Agibuild.Fulora.WebAuthResult.Error*
   commentId: Overload:Agibuild.Fulora.WebAuthResult.Error
   href: Agibuild.Fulora.WebAuthResult.html#Agibuild_Fulora_WebAuthResult_Error

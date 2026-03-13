@@ -1,0 +1,514 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.StateChangedEventArgs
+  commentId: T:Agibuild.Fulora.StateChangedEventArgs
+  id: StateChangedEventArgs
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.StateChangedEventArgs.#ctor(System.String,System.String,System.String)
+  - Agibuild.Fulora.StateChangedEventArgs.Key
+  - Agibuild.Fulora.StateChangedEventArgs.NewValue
+  - Agibuild.Fulora.StateChangedEventArgs.OldValue
+  langs:
+  - csharp
+  - vb
+  name: StateChangedEventArgs
+  nameWithType: StateChangedEventArgs
+  fullName: Agibuild.Fulora.StateChangedEventArgs
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/ISharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: StateChangedEventArgs
+    path: ../src/Agibuild.Fulora.Core/ISharedStateStore.cs
+    startLine: 41
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Event arguments for state change notifications.
+  example: []
+  syntax:
+    content: 'public sealed record StateChangedEventArgs : IEquatable<StateChangedEventArgs>'
+    content.vb: Public NotInheritable Class StateChangedEventArgs Implements IEquatable(Of StateChangedEventArgs)
+  inheritance:
+  - System.Object
+  implements:
+  - System.IEquatable{Agibuild.Fulora.StateChangedEventArgs}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.StateChangedEventArgs.#ctor(System.String,System.String,System.String)
+  commentId: M:Agibuild.Fulora.StateChangedEventArgs.#ctor(System.String,System.String,System.String)
+  id: '#ctor(System.String,System.String,System.String)'
+  parent: Agibuild.Fulora.StateChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: StateChangedEventArgs(string, string?, string?)
+  nameWithType: StateChangedEventArgs.StateChangedEventArgs(string, string?, string?)
+  fullName: Agibuild.Fulora.StateChangedEventArgs.StateChangedEventArgs(string, string?, string?)
+  type: Constructor
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/ISharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: .ctor
+    path: ../src/Agibuild.Fulora.Core/ISharedStateStore.cs
+    startLine: 41
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Event arguments for state change notifications.
+  example: []
+  syntax:
+    content: public StateChangedEventArgs(string Key, string? OldValue, string? NewValue)
+    parameters:
+    - id: Key
+      type: System.String
+      description: The key that changed.
+    - id: OldValue
+      type: System.String
+      description: The previous raw JSON value (null if key was new).
+    - id: NewValue
+      type: System.String
+      description: The new raw JSON value (null if key was removed).
+    content.vb: Public Sub New(Key As String, OldValue As String, NewValue As String)
+  overload: Agibuild.Fulora.StateChangedEventArgs.#ctor*
+  nameWithType.vb: StateChangedEventArgs.New(String, String, String)
+  fullName.vb: Agibuild.Fulora.StateChangedEventArgs.New(String, String, String)
+  name.vb: New(String, String, String)
+- uid: Agibuild.Fulora.StateChangedEventArgs.Key
+  commentId: P:Agibuild.Fulora.StateChangedEventArgs.Key
+  id: Key
+  parent: Agibuild.Fulora.StateChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Key
+  nameWithType: StateChangedEventArgs.Key
+  fullName: Agibuild.Fulora.StateChangedEventArgs.Key
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/ISharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Key
+    path: ../src/Agibuild.Fulora.Core/ISharedStateStore.cs
+    startLine: 41
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The key that changed.
+  example: []
+  syntax:
+    content: public string Key { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Key As String
+  overload: Agibuild.Fulora.StateChangedEventArgs.Key*
+- uid: Agibuild.Fulora.StateChangedEventArgs.OldValue
+  commentId: P:Agibuild.Fulora.StateChangedEventArgs.OldValue
+  id: OldValue
+  parent: Agibuild.Fulora.StateChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: OldValue
+  nameWithType: StateChangedEventArgs.OldValue
+  fullName: Agibuild.Fulora.StateChangedEventArgs.OldValue
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/ISharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: OldValue
+    path: ../src/Agibuild.Fulora.Core/ISharedStateStore.cs
+    startLine: 41
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The previous raw JSON value (null if key was new).
+  example: []
+  syntax:
+    content: public string? OldValue { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property OldValue As String
+  overload: Agibuild.Fulora.StateChangedEventArgs.OldValue*
+- uid: Agibuild.Fulora.StateChangedEventArgs.NewValue
+  commentId: P:Agibuild.Fulora.StateChangedEventArgs.NewValue
+  id: NewValue
+  parent: Agibuild.Fulora.StateChangedEventArgs
+  langs:
+  - csharp
+  - vb
+  name: NewValue
+  nameWithType: StateChangedEventArgs.NewValue
+  fullName: Agibuild.Fulora.StateChangedEventArgs.NewValue
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/ISharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: NewValue
+    path: ../src/Agibuild.Fulora.Core/ISharedStateStore.cs
+    startLine: 41
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The new raw JSON value (null if key was removed).
+  example: []
+  syntax:
+    content: public string? NewValue { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property NewValue As String
+  overload: Agibuild.Fulora.StateChangedEventArgs.NewValue*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IEquatable{Agibuild.Fulora.StateChangedEventArgs}
+  commentId: T:System.IEquatable{Agibuild.Fulora.StateChangedEventArgs}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<StateChangedEventArgs>
+  nameWithType: IEquatable<StateChangedEventArgs>
+  fullName: System.IEquatable<Agibuild.Fulora.StateChangedEventArgs>
+  nameWithType.vb: IEquatable(Of StateChangedEventArgs)
+  fullName.vb: System.IEquatable(Of Agibuild.Fulora.StateChangedEventArgs)
+  name.vb: IEquatable(Of StateChangedEventArgs)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: Agibuild.Fulora.StateChangedEventArgs
+    name: StateChangedEventArgs
+    href: Agibuild.Fulora.StateChangedEventArgs.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.StateChangedEventArgs
+    name: StateChangedEventArgs
+    href: Agibuild.Fulora.StateChangedEventArgs.html
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Agibuild.Fulora.StateChangedEventArgs.#ctor*
+  commentId: Overload:Agibuild.Fulora.StateChangedEventArgs.#ctor
+  href: Agibuild.Fulora.StateChangedEventArgs.html#Agibuild_Fulora_StateChangedEventArgs__ctor_System_String_System_String_System_String_
+  name: StateChangedEventArgs
+  nameWithType: StateChangedEventArgs.StateChangedEventArgs
+  fullName: Agibuild.Fulora.StateChangedEventArgs.StateChangedEventArgs
+  nameWithType.vb: StateChangedEventArgs.New
+  fullName.vb: Agibuild.Fulora.StateChangedEventArgs.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Agibuild.Fulora.StateChangedEventArgs.Key*
+  commentId: Overload:Agibuild.Fulora.StateChangedEventArgs.Key
+  href: Agibuild.Fulora.StateChangedEventArgs.html#Agibuild_Fulora_StateChangedEventArgs_Key
+  name: Key
+  nameWithType: StateChangedEventArgs.Key
+  fullName: Agibuild.Fulora.StateChangedEventArgs.Key
+- uid: Agibuild.Fulora.StateChangedEventArgs.OldValue*
+  commentId: Overload:Agibuild.Fulora.StateChangedEventArgs.OldValue
+  href: Agibuild.Fulora.StateChangedEventArgs.html#Agibuild_Fulora_StateChangedEventArgs_OldValue
+  name: OldValue
+  nameWithType: StateChangedEventArgs.OldValue
+  fullName: Agibuild.Fulora.StateChangedEventArgs.OldValue
+- uid: Agibuild.Fulora.StateChangedEventArgs.NewValue*
+  commentId: Overload:Agibuild.Fulora.StateChangedEventArgs.NewValue
+  href: Agibuild.Fulora.StateChangedEventArgs.html#Agibuild_Fulora_StateChangedEventArgs_NewValue
+  name: NewValue
+  nameWithType: StateChangedEventArgs.NewValue
+  fullName: Agibuild.Fulora.StateChangedEventArgs.NewValue

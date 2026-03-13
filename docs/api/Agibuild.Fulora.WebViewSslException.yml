@@ -15,17 +15,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewSslException
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1008
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 305
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigation failed due to a TLS/certificate issue.
-  example: []
   syntax:
     content: 'public class WebViewSslException : WebViewNavigationException, ISerializable'
     content.vb: Public Class WebViewSslException Inherits WebViewNavigationException Implements ISerializable
@@ -68,17 +66,15 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1011
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 307
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public WebViewSslException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
     parameters:

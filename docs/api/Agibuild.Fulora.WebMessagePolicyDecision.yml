@@ -19,17 +19,15 @@ items:
   type: Struct
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessagePolicyDecision
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 367
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 53
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Result of evaluating a <xref href="Agibuild.Fulora.WebMessageEnvelope" data-throw-if-not-resolved="false"></xref> against an <xref href="Agibuild.Fulora.IWebMessagePolicy" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: 'public readonly record struct WebMessagePolicyDecision : IEquatable<WebMessagePolicyDecision>'
     content.vb: Public Structure WebMessagePolicyDecision Implements IEquatable(Of WebMessagePolicyDecision)
@@ -55,26 +53,22 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 367
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 53
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Result of evaluating a <xref href="Agibuild.Fulora.WebMessageEnvelope" data-throw-if-not-resolved="false"></xref> against an <xref href="Agibuild.Fulora.IWebMessagePolicy" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: public WebMessagePolicyDecision(bool IsAllowed, WebMessageDropReason? DropReason)
     parameters:
     - id: IsAllowed
       type: System.Boolean
-      description: Whether the message is allowed.
     - id: DropReason
       type: System.Nullable{Agibuild.Fulora.WebMessageDropReason}
-      description: Reason for denial, when not allowed.
     content.vb: Public Sub New(IsAllowed As Boolean, DropReason As WebMessageDropReason?)
   overload: Agibuild.Fulora.WebMessagePolicyDecision.#ctor*
   nameWithType.vb: WebMessagePolicyDecision.New(Boolean, WebMessageDropReason?)
@@ -93,17 +87,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsAllowed
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 367
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 53
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Whether the message is allowed.
-  example: []
   syntax:
     content: public bool IsAllowed { get; init; }
     parameters: []
@@ -124,17 +116,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DropReason
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 367
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 53
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Reason for denial, when not allowed.
-  example: []
   syntax:
     content: public WebMessageDropReason? DropReason { get; init; }
     parameters: []
@@ -155,17 +145,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Allow
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 370
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 55
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates an allow decision.
-  example: []
   syntax:
     content: public static WebMessagePolicyDecision Allow()
     return:
@@ -185,41 +173,25 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Deny
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 374
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 56
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a deny decision.
-  example: []
   syntax:
     content: public static WebMessagePolicyDecision Deny(WebMessageDropReason reason)
     parameters:
     - id: reason
       type: Agibuild.Fulora.WebMessageDropReason
-      description: Drop reason.
     return:
       type: Agibuild.Fulora.WebMessagePolicyDecision
     content.vb: Public Shared Function Deny(reason As WebMessageDropReason) As WebMessagePolicyDecision
   overload: Agibuild.Fulora.WebMessagePolicyDecision.Deny*
 references:
-- uid: Agibuild.Fulora.WebMessageEnvelope
-  commentId: T:Agibuild.Fulora.WebMessageEnvelope
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebMessageEnvelope.html
-  name: WebMessageEnvelope
-  nameWithType: WebMessageEnvelope
-  fullName: Agibuild.Fulora.WebMessageEnvelope
-- uid: Agibuild.Fulora.IWebMessagePolicy
-  commentId: T:Agibuild.Fulora.IWebMessagePolicy
-  href: Agibuild.Fulora.IWebMessagePolicy.html
-  name: IWebMessagePolicy
-  nameWithType: IWebMessagePolicy
-  fullName: Agibuild.Fulora.IWebMessagePolicy
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html

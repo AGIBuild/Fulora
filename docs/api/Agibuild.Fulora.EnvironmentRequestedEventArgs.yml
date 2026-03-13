@@ -14,17 +14,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnvironmentRequestedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 858
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 237
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Placeholder — environment requested event is not yet implemented.
-  example: []
   syntax:
     content: 'public sealed class EnvironmentRequestedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class EnvironmentRequestedEventArgs Inherits EventArgs

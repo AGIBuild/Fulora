@@ -1,0 +1,379 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.IWindowChromeProvider
+  commentId: T:Agibuild.Fulora.IWindowChromeProvider
+  id: IWindowChromeProvider
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+  - Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  - Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+  - Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+  - Agibuild.Fulora.IWindowChromeProvider.Platform
+  - Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  langs:
+  - csharp
+  - vb
+  name: IWindowChromeProvider
+  nameWithType: IWindowChromeProvider
+  fullName: Agibuild.Fulora.IWindowChromeProvider
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IWindowChromeProvider
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 45
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Abstracts platform-specific window chrome operations (transparency, metrics, appearance).
+
+    Concrete implementations (e.g. Avalonia) add window tracking on the concrete type.
+  example: []
+  syntax:
+    content: public interface IWindowChromeProvider
+    content.vb: Public Interface IWindowChromeProvider
+- uid: Agibuild.Fulora.IWindowChromeProvider.Platform
+  commentId: P:Agibuild.Fulora.IWindowChromeProvider.Platform
+  id: Platform
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: Platform
+  nameWithType: IWindowChromeProvider.Platform
+  fullName: Agibuild.Fulora.IWindowChromeProvider.Platform
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Platform
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 48
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Platform identifier (e.g. "Windows", "macOS", "Linux").
+  example: []
+  syntax:
+    content: string Platform { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Platform As String
+  overload: Agibuild.Fulora.IWindowChromeProvider.Platform*
+- uid: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  commentId: P:Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  id: SupportsTransparency
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: SupportsTransparency
+  nameWithType: IWindowChromeProvider.SupportsTransparency
+  fullName: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SupportsTransparency
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 51
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Whether the current platform supports any transparency composition.
+  example: []
+  syntax:
+    content: bool SupportsTransparency { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property SupportsTransparency As Boolean
+  overload: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency*
+- uid: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  commentId: M:Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  id: ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: ApplyWindowAppearanceAsync(WindowAppearanceRequest)
+  nameWithType: IWindowChromeProvider.ApplyWindowAppearanceAsync(WindowAppearanceRequest)
+  fullName: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync(Agibuild.Fulora.WindowAppearanceRequest)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ApplyWindowAppearanceAsync
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 54
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Apply appearance settings to all managed windows.
+  example: []
+  syntax:
+    content: Task ApplyWindowAppearanceAsync(WindowAppearanceRequest request)
+    parameters:
+    - id: request
+      type: Agibuild.Fulora.WindowAppearanceRequest
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function ApplyWindowAppearanceAsync(request As WindowAppearanceRequest) As Task
+  overload: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync*
+- uid: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+  commentId: M:Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+  id: GetTransparencyState
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: GetTransparencyState()
+  nameWithType: IWindowChromeProvider.GetTransparencyState()
+  fullName: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetTransparencyState
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 57
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Return the effective transparency state from the primary window.
+  example: []
+  syntax:
+    content: TransparencyEffectiveState GetTransparencyState()
+    return:
+      type: Agibuild.Fulora.TransparencyEffectiveState
+    content.vb: Function GetTransparencyState() As TransparencyEffectiveState
+  overload: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState*
+- uid: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+  commentId: M:Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+  id: GetChromeMetrics
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: GetChromeMetrics()
+  nameWithType: IWindowChromeProvider.GetChromeMetrics()
+  fullName: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetChromeMetrics
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 60
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Return chrome layout metrics (title bar height, safe insets, etc.).
+  example: []
+  syntax:
+    content: WindowChromeMetrics GetChromeMetrics()
+    return:
+      type: Agibuild.Fulora.WindowChromeMetrics
+    content.vb: Function GetChromeMetrics() As WindowChromeMetrics
+  overload: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics*
+- uid: Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+  commentId: E:Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+  id: AppearanceChanged
+  parent: Agibuild.Fulora.IWindowChromeProvider
+  langs:
+  - csharp
+  - vb
+  name: AppearanceChanged
+  nameWithType: IWindowChromeProvider.AppearanceChanged
+  fullName: Agibuild.Fulora.IWindowChromeProvider.AppearanceChanged
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: AppearanceChanged
+    path: ../src/Agibuild.Fulora.Core/IWindowChromeProvider.cs
+    startLine: 63
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Raised when the platform theme or transparency state changes externally.
+  example: []
+  syntax:
+    content: event EventHandler? AppearanceChanged
+    return:
+      type: System.EventHandler
+    content.vb: Event AppearanceChanged As EventHandler
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IWindowChromeProvider.Platform*
+  commentId: Overload:Agibuild.Fulora.IWindowChromeProvider.Platform
+  href: Agibuild.Fulora.IWindowChromeProvider.html#Agibuild_Fulora_IWindowChromeProvider_Platform
+  name: Platform
+  nameWithType: IWindowChromeProvider.Platform
+  fullName: Agibuild.Fulora.IWindowChromeProvider.Platform
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency*
+  commentId: Overload:Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+  href: Agibuild.Fulora.IWindowChromeProvider.html#Agibuild_Fulora_IWindowChromeProvider_SupportsTransparency
+  name: SupportsTransparency
+  nameWithType: IWindowChromeProvider.SupportsTransparency
+  fullName: Agibuild.Fulora.IWindowChromeProvider.SupportsTransparency
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync*
+  commentId: Overload:Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync
+  href: Agibuild.Fulora.IWindowChromeProvider.html#Agibuild_Fulora_IWindowChromeProvider_ApplyWindowAppearanceAsync_Agibuild_Fulora_WindowAppearanceRequest_
+  name: ApplyWindowAppearanceAsync
+  nameWithType: IWindowChromeProvider.ApplyWindowAppearanceAsync
+  fullName: Agibuild.Fulora.IWindowChromeProvider.ApplyWindowAppearanceAsync
+- uid: Agibuild.Fulora.WindowAppearanceRequest
+  commentId: T:Agibuild.Fulora.WindowAppearanceRequest
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowAppearanceRequest.html
+  name: WindowAppearanceRequest
+  nameWithType: WindowAppearanceRequest
+  fullName: Agibuild.Fulora.WindowAppearanceRequest
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState*
+  commentId: Overload:Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+  href: Agibuild.Fulora.IWindowChromeProvider.html#Agibuild_Fulora_IWindowChromeProvider_GetTransparencyState
+  name: GetTransparencyState
+  nameWithType: IWindowChromeProvider.GetTransparencyState
+  fullName: Agibuild.Fulora.IWindowChromeProvider.GetTransparencyState
+- uid: Agibuild.Fulora.TransparencyEffectiveState
+  commentId: T:Agibuild.Fulora.TransparencyEffectiveState
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.TransparencyEffectiveState.html
+  name: TransparencyEffectiveState
+  nameWithType: TransparencyEffectiveState
+  fullName: Agibuild.Fulora.TransparencyEffectiveState
+- uid: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics*
+  commentId: Overload:Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+  href: Agibuild.Fulora.IWindowChromeProvider.html#Agibuild_Fulora_IWindowChromeProvider_GetChromeMetrics
+  name: GetChromeMetrics
+  nameWithType: IWindowChromeProvider.GetChromeMetrics
+  fullName: Agibuild.Fulora.IWindowChromeProvider.GetChromeMetrics
+- uid: Agibuild.Fulora.WindowChromeMetrics
+  commentId: T:Agibuild.Fulora.WindowChromeMetrics
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowChromeMetrics.html
+  name: WindowChromeMetrics
+  nameWithType: WindowChromeMetrics
+  fullName: Agibuild.Fulora.WindowChromeMetrics
+- uid: System.EventHandler
+  commentId: T:System.EventHandler
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler
+  name: EventHandler
+  nameWithType: EventHandler
+  fullName: System.EventHandler

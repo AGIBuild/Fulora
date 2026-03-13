@@ -1,0 +1,114 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.OverlayHitTestResult
+  commentId: T:Agibuild.Fulora.OverlayHitTestResult
+  id: OverlayHitTestResult
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.OverlayHitTestResult.Overlay
+  - Agibuild.Fulora.OverlayHitTestResult.Passthrough
+  langs:
+  - csharp
+  - vb
+  name: OverlayHitTestResult
+  nameWithType: OverlayHitTestResult
+  fullName: Agibuild.Fulora.OverlayHitTestResult
+  type: Enum
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: OverlayHitTestResult
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Result of hit-testing a point against the overlay.
+  example: []
+  syntax:
+    content: public enum OverlayHitTestResult
+    content.vb: Public Enum OverlayHitTestResult
+- uid: Agibuild.Fulora.OverlayHitTestResult.Overlay
+  commentId: F:Agibuild.Fulora.OverlayHitTestResult.Overlay
+  id: Overlay
+  parent: Agibuild.Fulora.OverlayHitTestResult
+  langs:
+  - csharp
+  - vb
+  name: Overlay
+  nameWithType: OverlayHitTestResult.Overlay
+  fullName: Agibuild.Fulora.OverlayHitTestResult.Overlay
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Overlay
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  syntax:
+    content: Overlay = 0
+    return:
+      type: Agibuild.Fulora.OverlayHitTestResult
+- uid: Agibuild.Fulora.OverlayHitTestResult.Passthrough
+  commentId: F:Agibuild.Fulora.OverlayHitTestResult.Passthrough
+  id: Passthrough
+  parent: Agibuild.Fulora.OverlayHitTestResult
+  langs:
+  - csharp
+  - vb
+  name: Passthrough
+  nameWithType: OverlayHitTestResult.Passthrough
+  fullName: Agibuild.Fulora.OverlayHitTestResult.Passthrough
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Passthrough
+    path: ../src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  syntax:
+    content: Passthrough = 1
+    return:
+      type: Agibuild.Fulora.OverlayHitTestResult
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.OverlayHitTestResult
+  commentId: T:Agibuild.Fulora.OverlayHitTestResult
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.OverlayHitTestResult.html
+  name: OverlayHitTestResult
+  nameWithType: OverlayHitTestResult
+  fullName: Agibuild.Fulora.OverlayHitTestResult

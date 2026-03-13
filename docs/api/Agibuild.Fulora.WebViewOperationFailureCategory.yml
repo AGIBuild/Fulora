@@ -18,17 +18,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewOperationFailureCategory
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 51
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 27
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Categorizes operational failures to enable consistent error handling across adapters.
-  example: []
   syntax:
     content: public enum WebViewOperationFailureCategory
     content.vb: Public Enum WebViewOperationFailureCategory
@@ -45,17 +43,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Disposed
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 54
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 29
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The operation failed because the WebView was disposed/detached.
-  example: []
   syntax:
     content: Disposed = 0
     return:
@@ -73,17 +69,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NotReady
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 56
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 30
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The operation failed because the WebView was not yet ready.
-  example: []
   syntax:
     content: NotReady = 1
     return:
@@ -101,17 +95,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DispatchFailed
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 58
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 31
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The operation failed because dispatching to the UI thread failed.
-  example: []
   syntax:
     content: DispatchFailed = 2
     return:
@@ -129,17 +121,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterFailed
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 60
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 32
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The operation failed due to an adapter/platform failure.
-  example: []
   syntax:
     content: AdapterFailed = 3
     return:

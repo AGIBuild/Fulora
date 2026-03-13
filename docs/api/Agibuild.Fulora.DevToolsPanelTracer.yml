@@ -71,10 +71,12 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 14
+    startLine: 17
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
+  summary: Initializes a new instance wrapping the given collector and optional inner tracer.
+  example: []
   syntax:
     content: public DevToolsPanelTracer(BridgeEventCollector collector, IBridgeTracer? inner = null)
     parameters:
@@ -105,7 +107,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Collector
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 21
+    startLine: 24
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -136,7 +138,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnExportCallStart
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 23
+    startLine: 27
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -176,7 +178,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnExportCallEnd
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 38
+    startLine: 43
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -218,7 +220,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnExportCallError
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 53
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -260,7 +262,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnImportCallStart
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 68
+    startLine: 75
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -300,7 +302,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnImportCallEnd
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 83
+    startLine: 91
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -340,7 +342,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnServiceExposed
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 97
+    startLine: 106
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -380,7 +382,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnServiceRemoved
     path: ../src/Agibuild.Fulora.Runtime/DevToolsPanelTracer.cs
-    startLine: 110
+    startLine: 120
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora

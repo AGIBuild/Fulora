@@ -17,17 +17,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewNavigationException
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 977
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 284
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Base exception for navigation failures with correlation metadata.
-  example: []
   syntax:
     content: 'public class WebViewNavigationException : Exception, ISerializable'
     content.vb: Public Class WebViewNavigationException Inherits Exception Implements ISerializable
@@ -71,32 +69,26 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 984
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 286
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new navigation exception.
-  example: []
   syntax:
     content: public WebViewNavigationException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
     parameters:
     - id: message
       type: System.String
-      description: The exception message.
     - id: navigationId
       type: System.Guid
-      description: The navigation correlation id.
     - id: requestUri
       type: System.Uri
-      description: The request URI.
     - id: innerException
       type: System.Exception
-      description: Optional inner exception.
     content.vb: Public Sub New(message As String, navigationId As Guid, requestUri As Uri, innerException As Exception = Nothing)
   overload: Agibuild.Fulora.WebViewNavigationException.#ctor*
   nameWithType.vb: WebViewNavigationException.New(String, Guid, Uri, Exception)
@@ -115,17 +107,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 992
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 293
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigation correlation id.
-  example: []
   syntax:
     content: public Guid NavigationId { get; }
     parameters: []
@@ -146,17 +136,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RequestUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 994
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 294
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The request URI.
-  example: []
   syntax:
     content: public Uri RequestUri { get; }
     parameters: []

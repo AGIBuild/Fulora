@@ -22,7 +22,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeOptions
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 103
+    startLine: 105
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -58,7 +58,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AllowedOrigins
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 109
+    startLine: 111
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -92,7 +92,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RateLimit
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 114
+    startLine: 116
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -123,7 +123,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Middleware
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 119
+    startLine: 121
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora

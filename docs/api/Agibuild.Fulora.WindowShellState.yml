@@ -1,0 +1,459 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.WindowShellState
+  commentId: T:Agibuild.Fulora.WindowShellState
+  id: WindowShellState
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.WindowShellState.Capabilities
+  - Agibuild.Fulora.WindowShellState.ChromeMetrics
+  - Agibuild.Fulora.WindowShellState.EffectiveThemeMode
+  - Agibuild.Fulora.WindowShellState.Settings
+  langs:
+  - csharp
+  - vb
+  name: WindowShellState
+  nameWithType: WindowShellState
+  fullName: Agibuild.Fulora.WindowShellState
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WindowShellContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: WindowShellState
+    path: ../src/Agibuild.Fulora.Core/WindowShellContracts.cs
+    startLine: 106
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Applied shell-window state returned to web content.
+  example: []
+  syntax:
+    content: public sealed class WindowShellState
+    content.vb: Public NotInheritable Class WindowShellState
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.WindowShellState.Settings
+  commentId: P:Agibuild.Fulora.WindowShellState.Settings
+  id: Settings
+  parent: Agibuild.Fulora.WindowShellState
+  langs:
+  - csharp
+  - vb
+  name: Settings
+  nameWithType: WindowShellState.Settings
+  fullName: Agibuild.Fulora.WindowShellState.Settings
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WindowShellContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Settings
+    path: ../src/Agibuild.Fulora.Core/WindowShellContracts.cs
+    startLine: 111
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Requested settings after host normalization.
+  example: []
+  syntax:
+    content: public WindowShellSettings Settings { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.WindowShellSettings
+    content.vb: Public Property Settings As WindowShellSettings
+  overload: Agibuild.Fulora.WindowShellState.Settings*
+- uid: Agibuild.Fulora.WindowShellState.EffectiveThemeMode
+  commentId: P:Agibuild.Fulora.WindowShellState.EffectiveThemeMode
+  id: EffectiveThemeMode
+  parent: Agibuild.Fulora.WindowShellState
+  langs:
+  - csharp
+  - vb
+  name: EffectiveThemeMode
+  nameWithType: WindowShellState.EffectiveThemeMode
+  fullName: Agibuild.Fulora.WindowShellState.EffectiveThemeMode
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WindowShellContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: EffectiveThemeMode
+    path: ../src/Agibuild.Fulora.Core/WindowShellContracts.cs
+    startLine: 116
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Effective theme mode used by host shell.
+  example: []
+  syntax:
+    content: public string EffectiveThemeMode { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property EffectiveThemeMode As String
+  overload: Agibuild.Fulora.WindowShellState.EffectiveThemeMode*
+- uid: Agibuild.Fulora.WindowShellState.Capabilities
+  commentId: P:Agibuild.Fulora.WindowShellState.Capabilities
+  id: Capabilities
+  parent: Agibuild.Fulora.WindowShellState
+  langs:
+  - csharp
+  - vb
+  name: Capabilities
+  nameWithType: WindowShellState.Capabilities
+  fullName: Agibuild.Fulora.WindowShellState.Capabilities
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WindowShellContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Capabilities
+    path: ../src/Agibuild.Fulora.Core/WindowShellContracts.cs
+    startLine: 121
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Effective host composition capability snapshot.
+  example: []
+  syntax:
+    content: public WindowShellCapabilities Capabilities { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.WindowShellCapabilities
+    content.vb: Public Property Capabilities As WindowShellCapabilities
+  overload: Agibuild.Fulora.WindowShellState.Capabilities*
+- uid: Agibuild.Fulora.WindowShellState.ChromeMetrics
+  commentId: P:Agibuild.Fulora.WindowShellState.ChromeMetrics
+  id: ChromeMetrics
+  parent: Agibuild.Fulora.WindowShellState
+  langs:
+  - csharp
+  - vb
+  name: ChromeMetrics
+  nameWithType: WindowShellState.ChromeMetrics
+  fullName: Agibuild.Fulora.WindowShellState.ChromeMetrics
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WindowShellContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ChromeMetrics
+    path: ../src/Agibuild.Fulora.Core/WindowShellContracts.cs
+    startLine: 126
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Host chrome metrics for web layout alignment.
+  example: []
+  syntax:
+    content: public WindowChromeMetrics ChromeMetrics { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.WindowChromeMetrics
+    content.vb: Public Property ChromeMetrics As WindowChromeMetrics
+  overload: Agibuild.Fulora.WindowShellState.ChromeMetrics*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.WindowShellState.Settings*
+  commentId: Overload:Agibuild.Fulora.WindowShellState.Settings
+  href: Agibuild.Fulora.WindowShellState.html#Agibuild_Fulora_WindowShellState_Settings
+  name: Settings
+  nameWithType: WindowShellState.Settings
+  fullName: Agibuild.Fulora.WindowShellState.Settings
+- uid: Agibuild.Fulora.WindowShellSettings
+  commentId: T:Agibuild.Fulora.WindowShellSettings
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowShellSettings.html
+  name: WindowShellSettings
+  nameWithType: WindowShellSettings
+  fullName: Agibuild.Fulora.WindowShellSettings
+- uid: Agibuild.Fulora.WindowShellState.EffectiveThemeMode*
+  commentId: Overload:Agibuild.Fulora.WindowShellState.EffectiveThemeMode
+  href: Agibuild.Fulora.WindowShellState.html#Agibuild_Fulora_WindowShellState_EffectiveThemeMode
+  name: EffectiveThemeMode
+  nameWithType: WindowShellState.EffectiveThemeMode
+  fullName: Agibuild.Fulora.WindowShellState.EffectiveThemeMode
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Agibuild.Fulora.WindowShellState.Capabilities*
+  commentId: Overload:Agibuild.Fulora.WindowShellState.Capabilities
+  href: Agibuild.Fulora.WindowShellState.html#Agibuild_Fulora_WindowShellState_Capabilities
+  name: Capabilities
+  nameWithType: WindowShellState.Capabilities
+  fullName: Agibuild.Fulora.WindowShellState.Capabilities
+- uid: Agibuild.Fulora.WindowShellCapabilities
+  commentId: T:Agibuild.Fulora.WindowShellCapabilities
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowShellCapabilities.html
+  name: WindowShellCapabilities
+  nameWithType: WindowShellCapabilities
+  fullName: Agibuild.Fulora.WindowShellCapabilities
+- uid: Agibuild.Fulora.WindowShellState.ChromeMetrics*
+  commentId: Overload:Agibuild.Fulora.WindowShellState.ChromeMetrics
+  href: Agibuild.Fulora.WindowShellState.html#Agibuild_Fulora_WindowShellState_ChromeMetrics
+  name: ChromeMetrics
+  nameWithType: WindowShellState.ChromeMetrics
+  fullName: Agibuild.Fulora.WindowShellState.ChromeMetrics
+- uid: Agibuild.Fulora.WindowChromeMetrics
+  commentId: T:Agibuild.Fulora.WindowChromeMetrics
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowChromeMetrics.html
+  name: WindowChromeMetrics
+  nameWithType: WindowChromeMetrics
+  fullName: Agibuild.Fulora.WindowChromeMetrics

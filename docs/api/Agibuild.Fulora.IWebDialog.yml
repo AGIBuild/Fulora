@@ -22,17 +22,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebDialog
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 277
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 71
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Dialog-style WebView contract for displaying web content in a separate top-level window.
-  example: []
   syntax:
     content: 'public interface IWebDialog : IWebView, IDisposable'
     content.vb: Public Interface IWebDialog Inherits IWebView, IDisposable
@@ -92,17 +90,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Title
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 280
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 73
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets or sets the dialog title.
-  example: []
   syntax:
     content: string? Title { get; set; }
     parameters: []
@@ -123,17 +119,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanUserResize
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 282
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 74
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets or sets whether the user can resize the dialog.
-  example: []
   syntax:
     content: bool CanUserResize { get; set; }
     parameters: []
@@ -154,17 +148,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Show
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 285
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 76
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Shows the dialog without an owner.
-  example: []
   syntax:
     content: void Show()
     content.vb: Sub Show()
@@ -182,23 +174,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Show
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 288
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 77
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Shows the dialog with the specified owner.
-  example: []
   syntax:
     content: bool Show(INativeHandle owner)
     parameters:
     - id: owner
       type: Agibuild.Fulora.INativeHandle
-      description: Owner platform handle.
     return:
       type: System.Boolean
     content.vb: Function Show(owner As INativeHandle) As Boolean
@@ -216,17 +205,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Close
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 290
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 78
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Closes the dialog.
-  example: []
   syntax:
     content: void Close()
     content.vb: Sub Close()
@@ -244,26 +231,22 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Resize
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 294
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 79
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Resizes the dialog.
-  example: []
   syntax:
     content: bool Resize(int width, int height)
     parameters:
     - id: width
       type: System.Int32
-      description: New width in device-independent pixels.
     - id: height
       type: System.Int32
-      description: New height in device-independent pixels.
     return:
       type: System.Boolean
     content.vb: Function Resize(width As Integer, height As Integer) As Boolean
@@ -284,26 +267,22 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Move
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 298
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 80
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Moves the dialog.
-  example: []
   syntax:
     content: bool Move(int x, int y)
     parameters:
     - id: x
       type: System.Int32
-      description: New X position.
     - id: y
       type: System.Int32
-      description: New Y position.
     return:
       type: System.Boolean
     content.vb: Function Move(x As Integer, y As Integer) As Boolean
@@ -324,17 +303,15 @@ items:
   type: Event
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Closing
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 301
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 82
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when the dialog is closing.
-  example: []
   syntax:
     content: event EventHandler? Closing
     return:

@@ -895,19 +895,16 @@ references:
   commentId: T:System.Nullable{Agibuild.Fulora.WebViewOperationFailureCategory}
   parent: System
   definition: System.Nullable`1
-  href: Agibuild.Fulora.WebViewOperationFailureCategory.html
   name: WebViewOperationFailureCategory?
   nameWithType: WebViewOperationFailureCategory?
   fullName: Agibuild.Fulora.WebViewOperationFailureCategory?
   spec.csharp:
   - uid: Agibuild.Fulora.WebViewOperationFailureCategory
     name: WebViewOperationFailureCategory
-    href: Agibuild.Fulora.WebViewOperationFailureCategory.html
   - name: '?'
   spec.vb:
   - uid: Agibuild.Fulora.WebViewOperationFailureCategory
     name: WebViewOperationFailureCategory
-    href: Agibuild.Fulora.WebViewOperationFailureCategory.html
   - name: '?'
 - uid: System.Int64
   commentId: T:System.Int64

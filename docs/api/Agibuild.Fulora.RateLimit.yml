@@ -22,7 +22,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RateLimit
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 163
+    startLine: 165
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -58,7 +58,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MaxCalls
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 166
+    startLine: 168
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -89,7 +89,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Window
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 169
+    startLine: 171
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -120,7 +120,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 174
+    startLine: 176
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora

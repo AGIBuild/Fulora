@@ -1,0 +1,147 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.ContentFilterAction
+  commentId: T:Agibuild.Fulora.ContentFilterAction
+  id: ContentFilterAction
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.ContentFilterAction.Allow
+  - Agibuild.Fulora.ContentFilterAction.Block
+  - Agibuild.Fulora.ContentFilterAction.Transform
+  langs:
+  - csharp
+  - vb
+  name: ContentFilterAction
+  nameWithType: ContentFilterAction
+  fullName: Agibuild.Fulora.ContentFilterAction
+  type: Enum
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ContentFilterAction
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 53
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The action a content filter takes on content.
+  example: []
+  syntax:
+    content: public enum ContentFilterAction
+    content.vb: Public Enum ContentFilterAction
+- uid: Agibuild.Fulora.ContentFilterAction.Allow
+  commentId: F:Agibuild.Fulora.ContentFilterAction.Allow
+  id: Allow
+  parent: Agibuild.Fulora.ContentFilterAction
+  langs:
+  - csharp
+  - vb
+  name: Allow
+  nameWithType: ContentFilterAction.Allow
+  fullName: Agibuild.Fulora.ContentFilterAction.Allow
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Allow
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 56
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Allow content through unchanged.
+  example: []
+  syntax:
+    content: Allow = 0
+    return:
+      type: Agibuild.Fulora.ContentFilterAction
+- uid: Agibuild.Fulora.ContentFilterAction.Block
+  commentId: F:Agibuild.Fulora.ContentFilterAction.Block
+  id: Block
+  parent: Agibuild.Fulora.ContentFilterAction
+  langs:
+  - csharp
+  - vb
+  name: Block
+  nameWithType: ContentFilterAction.Block
+  fullName: Agibuild.Fulora.ContentFilterAction.Block
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Block
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 59
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Block content entirely.
+  example: []
+  syntax:
+    content: Block = 1
+    return:
+      type: Agibuild.Fulora.ContentFilterAction
+- uid: Agibuild.Fulora.ContentFilterAction.Transform
+  commentId: F:Agibuild.Fulora.ContentFilterAction.Transform
+  id: Transform
+  parent: Agibuild.Fulora.ContentFilterAction
+  langs:
+  - csharp
+  - vb
+  name: Transform
+  nameWithType: ContentFilterAction.Transform
+  fullName: Agibuild.Fulora.ContentFilterAction.Transform
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Transform
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 62
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Replace content with transformed version.
+  example: []
+  syntax:
+    content: Transform = 2
+    return:
+      type: Agibuild.Fulora.ContentFilterAction
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.ContentFilterAction
+  commentId: T:Agibuild.Fulora.ContentFilterAction
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ContentFilterAction.html
+  name: ContentFilterAction
+  nameWithType: ContentFilterAction
+  fullName: Agibuild.Fulora.ContentFilterAction

@@ -87,7 +87,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 630
+    startLine: 632
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -123,7 +123,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PolicyError
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 701
+    startLine: 749
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -152,7 +152,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ManagedWindowLifecycleChanged
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 705
+    startLine: 753
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -181,7 +181,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SessionPermissionProfileEvaluated
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 709
+    startLine: 757
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -210,7 +210,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SystemIntegrationEventReceived
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 713
+    startLine: 761
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -239,7 +239,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SessionDecision
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 718
+    startLine: 766
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -270,7 +270,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RootProfileIdentity
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 722
+    startLine: 770
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -301,7 +301,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EffectiveMenuModel
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 726
+    startLine: 774
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -332,7 +332,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RootWindowId
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 731
+    startLine: 779
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -363,7 +363,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ManagedWindowCount
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 736
+    startLine: 784
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -394,7 +394,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetManagedWindowIds
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 748
+    startLine: 792
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -424,7 +424,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetManagedWindow
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 757
+    startLine: 798
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -462,7 +462,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ReadClipboardText
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 776
+    startLine: 805
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -495,7 +495,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WriteClipboardText
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 787
+    startLine: 812
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -534,7 +534,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ShowOpenFileDialog
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 798
+    startLine: 819
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -570,7 +570,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ShowSaveFileDialog
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 809
+    startLine: 826
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -606,7 +606,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ShowNotification
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 820
+    startLine: 833
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -642,7 +642,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ApplyMenuModel
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 831
+    startLine: 840
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -678,7 +678,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: UpdateTrayState
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 867
+    startLine: 847
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -714,7 +714,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ExecuteSystemAction
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 893
+    startLine: 854
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -750,7 +750,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PublishSystemIntegrationEvent
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 928
+    startLine: 860
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -783,7 +783,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OpenDevToolsAsync
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 956
+    startLine: 868
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -816,7 +816,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CloseDevToolsAsync
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 975
+    startLine: 887
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -849,7 +849,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsDevToolsOpenAsync
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 994
+    startLine: 906
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -882,7 +882,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ExecuteCommandAsync
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 1013
+    startLine: 925
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -918,7 +918,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CloseManagedWindowAsync
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 1247
+    startLine: 1145
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
@@ -955,7 +955,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Dispose
     path: ../src/Agibuild.Fulora.Runtime/Shell/WebViewShellExperience.cs
-    startLine: 1773
+    startLine: 1405
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell

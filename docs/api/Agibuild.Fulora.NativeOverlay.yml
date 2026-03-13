@@ -1,0 +1,61 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.NativeOverlay
+  commentId: N:Agibuild.Fulora.NativeOverlay
+  id: Agibuild.Fulora.NativeOverlay
+  children:
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  - Agibuild.Fulora.NativeOverlay.NativeOverlayProviderFactory
+  langs:
+  - csharp
+  - vb
+  name: Agibuild.Fulora.NativeOverlay
+  nameWithType: Agibuild.Fulora.NativeOverlay
+  fullName: Agibuild.Fulora.NativeOverlay
+  type: Namespace
+  assemblies:
+  - Agibuild.Fulora
+references:
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  commentId: T:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  parent: Agibuild.Fulora.NativeOverlay
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html
+  name: INativeOverlayProvider
+  nameWithType: INativeOverlayProvider
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+- uid: Agibuild.Fulora.NativeOverlay.NativeOverlayProviderFactory
+  commentId: T:Agibuild.Fulora.NativeOverlay.NativeOverlayProviderFactory
+  href: Agibuild.Fulora.NativeOverlay.NativeOverlayProviderFactory.html
+  name: NativeOverlayProviderFactory
+  nameWithType: NativeOverlayProviderFactory
+  fullName: Agibuild.Fulora.NativeOverlay.NativeOverlayProviderFactory
+- uid: Agibuild.Fulora.NativeOverlay
+  commentId: N:Agibuild.Fulora.NativeOverlay
+  href: Agibuild.html
+  name: Agibuild.Fulora.NativeOverlay
+  nameWithType: Agibuild.Fulora.NativeOverlay
+  fullName: Agibuild.Fulora.NativeOverlay
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  - name: .
+  - uid: Agibuild.Fulora.NativeOverlay
+    name: NativeOverlay
+    href: Agibuild.Fulora.NativeOverlay.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  - name: .
+  - uid: Agibuild.Fulora.NativeOverlay
+    name: NativeOverlay
+    href: Agibuild.Fulora.NativeOverlay.html

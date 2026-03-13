@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hybrid E2E Testing Guide | Agibuild.Fulora </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hybrid E2E Testing Guide | Agibuild.Fulora ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="articles/toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/docs/hybrid-e2e-testing-guide.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Agibuild.Fulora">
+            Agibuild.Fulora
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hybrid-e2e-testing-guide">Hybrid E2E Testing Guide</h1>
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p>The hybrid E2E testing stack consists of:</p>
+<ul>
+<li><strong>FuloraTestApp</strong> – Test fixture that creates a <code>WebViewCore</code> with a configurable adapter and <code>BridgeTestTracer</code>.</li>
+<li><strong>WebViewTestHandle</strong> – Handle for interacting with the WebView (JS execution, DOM waiting, bridge observation).</li>
+<li><strong>MockWebViewAdapter</strong> – Used in CI (especially Linux); does not execute JavaScript but supports navigation and script invocation stubs.</li>
+<li><strong>Real adapter</strong> – On macOS/Windows, you can use the platform WebView adapter for full E2E with real JS execution.</li>
+</ul>
+<h2 id="writing-tests-with-bridgetesttracer">Writing Tests with BridgeTestTracer</h2>
+<p><code>BridgeTestTracer</code> implements <code>IBridgeTracer</code> and records all bridge calls (export and import) for assertions. Use <code>app.Tracer</code> to simulate or observe calls:</p>
+<pre><code class="lang-csharp">app.Tracer.OnExportCallStart(&quot;TodoService&quot;, &quot;addTodo&quot;, &quot;&quot;&quot;{&quot;text&quot;:&quot;Buy milk&quot;}&quot;&quot;&quot;);
+app.Tracer.OnExportCallEnd(&quot;TodoService&quot;, &quot;addTodo&quot;, 5, &quot;void&quot;);
+var calls = app.Tracer.GetBridgeCalls(&quot;TodoService&quot;);
+Assert.Single(calls);
+Assert.Equal(&quot;addTodo&quot;, calls[0].MethodName);
+</code></pre>
+<h2 id="webviewtesthandle-api-reference">WebViewTestHandle API Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EvaluateJsAsync(script, ct)</code></td>
+<td>Executes JavaScript and returns the result as a string.</td>
+</tr>
+<tr>
+<td><code>WaitForElementAsync(selector, timeout?, ct)</code></td>
+<td>Waits until an element matching the selector exists in the DOM.</td>
+</tr>
+<tr>
+<td><code>WaitForBridgeReadyAsync(timeout?, ct)</code></td>
+<td>Waits until <code>window.__agibuild?.bridge?.ready</code> is true.</td>
+</tr>
+<tr>
+<td><code>ClickElementAsync(selector, ct)</code></td>
+<td>Clicks the element matching the selector.</td>
+</tr>
+<tr>
+<td><code>TypeTextAsync(selector, text, ct)</code></td>
+<td>Types text into the element (sets value and fires input/change events).</td>
+</tr>
+<tr>
+<td><code>GetBridgeCalls(serviceFilter?)</code></td>
+<td>Returns recorded bridge calls, optionally filtered by service name.</td>
+</tr>
+<tr>
+<td><code>WaitForBridgeCallAsync(service, method, timeout?, ct)</code></td>
+<td>Waits for a bridge call matching the given service and method.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ci-setup">CI Setup</h2>
+<ul>
+<li><strong>macOS/Windows</strong>: Use the real WebView adapter for full E2E (JS execution, DOM, bridge).</li>
+<li><strong>Linux CI</strong>: Use <code>MockWebViewAdapter</code> via <code>FuloraTestApp.Create()</code>. JS is not executed, but bridge calls are traceable via the tracer.</li>
+<li><strong>Example xUnit test class</strong>:</li>
+</ul>
+<pre><code class="lang-csharp">public sealed class HybridE2ETestingTests
+{
+    [Fact]
+    public async Task Example_FullLifecycle_create_use_dispose()
+    {
+        await using var app = FuloraTestApp.Create();
+        var handle = app.GetWebView();
+        Assert.NotNull(handle);
+        // Simulate bridge activity, assert via app.Tracer
+        app.Tracer.Reset();
+        Assert.Empty(app.Tracer.GetBridgeCalls());
+    }
+}
+</code></pre>
+<p>Use <code>TestContext.Current.CancellationToken</code> for all async test methods that accept a <code>CancellationToken</code>.</p>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li><strong>MockWebViewAdapter</strong> does not execute JavaScript; <code>InvokeScriptAsync</code> returns a configurable stub (e.g. <code>ScriptResult</code> or <code>ScriptCallback</code>).</li>
+<li><strong>WaitForElementAsync</strong> and <strong>WaitForBridgeReadyAsync</strong> will not work with the mock adapter because they rely on JS execution returning <code>&quot;true&quot;</code>.</li>
+<li>The bridge tracer captures call metadata (service, method, params, result type) but does not execute the actual bridge logic; it records what the bridge layer reports.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/docs/hybrid-e2e-testing-guide.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Agibuild.Fulora — Cross-platform Hybrid App Framework
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

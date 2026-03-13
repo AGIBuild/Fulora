@@ -1,0 +1,411 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.IWindowShellService
+  commentId: T:Agibuild.Fulora.IWindowShellService
+  id: IWindowShellService
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.IWindowShellService.GetWindowShellState
+  - Agibuild.Fulora.IWindowShellService.StreamWindowShellState(System.Threading.CancellationToken)
+  - Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings(Agibuild.Fulora.WindowShellSettings)
+  langs:
+  - csharp
+  - vb
+  name: IWindowShellService
+  nameWithType: IWindowShellService
+  fullName: Agibuild.Fulora.IWindowShellService
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowShellService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IWindowShellService
+    path: ../src/Agibuild.Fulora.Core/IWindowShellService.cs
+    startLine: 10
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Framework-level shell-window service contract. Provides snapshot, update, and stream
+
+    access to the global shell-window state (theme, transparency, chrome metrics).
+  example: []
+  syntax:
+    content: public interface IWindowShellService
+    content.vb: Public Interface IWindowShellService
+- uid: Agibuild.Fulora.IWindowShellService.GetWindowShellState
+  commentId: M:Agibuild.Fulora.IWindowShellService.GetWindowShellState
+  id: GetWindowShellState
+  parent: Agibuild.Fulora.IWindowShellService
+  langs:
+  - csharp
+  - vb
+  name: GetWindowShellState()
+  nameWithType: IWindowShellService.GetWindowShellState()
+  fullName: Agibuild.Fulora.IWindowShellService.GetWindowShellState()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowShellService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetWindowShellState
+    path: ../src/Agibuild.Fulora.Core/IWindowShellService.cs
+    startLine: 14
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Return the current shell-window state snapshot.
+  example: []
+  syntax:
+    content: Task<WindowShellState> GetWindowShellState()
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.WindowShellState}
+    content.vb: Function GetWindowShellState() As Task(Of WindowShellState)
+  overload: Agibuild.Fulora.IWindowShellService.GetWindowShellState*
+- uid: Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings(Agibuild.Fulora.WindowShellSettings)
+  commentId: M:Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings(Agibuild.Fulora.WindowShellSettings)
+  id: UpdateWindowShellSettings(Agibuild.Fulora.WindowShellSettings)
+  parent: Agibuild.Fulora.IWindowShellService
+  langs:
+  - csharp
+  - vb
+  name: UpdateWindowShellSettings(WindowShellSettings)
+  nameWithType: IWindowShellService.UpdateWindowShellSettings(WindowShellSettings)
+  fullName: Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings(Agibuild.Fulora.WindowShellSettings)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowShellService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpdateWindowShellSettings
+    path: ../src/Agibuild.Fulora.Core/IWindowShellService.cs
+    startLine: 17
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Apply new settings and return the resulting state.
+  example: []
+  syntax:
+    content: Task<WindowShellState> UpdateWindowShellSettings(WindowShellSettings settings)
+    parameters:
+    - id: settings
+      type: Agibuild.Fulora.WindowShellSettings
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.WindowShellState}
+    content.vb: Function UpdateWindowShellSettings(settings As WindowShellSettings) As Task(Of WindowShellState)
+  overload: Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings*
+- uid: Agibuild.Fulora.IWindowShellService.StreamWindowShellState(System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IWindowShellService.StreamWindowShellState(System.Threading.CancellationToken)
+  id: StreamWindowShellState(System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IWindowShellService
+  langs:
+  - csharp
+  - vb
+  name: StreamWindowShellState(CancellationToken)
+  nameWithType: IWindowShellService.StreamWindowShellState(CancellationToken)
+  fullName: Agibuild.Fulora.IWindowShellService.StreamWindowShellState(System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IWindowShellService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: StreamWindowShellState
+    path: ../src/Agibuild.Fulora.Core/IWindowShellService.cs
+    startLine: 20
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Stream state updates with signature-based deduplication.
+  example: []
+  syntax:
+    content: IAsyncEnumerable<WindowShellState> StreamWindowShellState(CancellationToken cancellationToken = default)
+    parameters:
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Collections.Generic.IAsyncEnumerable{Agibuild.Fulora.WindowShellState}
+    content.vb: Function StreamWindowShellState(cancellationToken As CancellationToken = Nothing) As IAsyncEnumerable(Of WindowShellState)
+  overload: Agibuild.Fulora.IWindowShellService.StreamWindowShellState*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IWindowShellService.GetWindowShellState*
+  commentId: Overload:Agibuild.Fulora.IWindowShellService.GetWindowShellState
+  href: Agibuild.Fulora.IWindowShellService.html#Agibuild_Fulora_IWindowShellService_GetWindowShellState
+  name: GetWindowShellState
+  nameWithType: IWindowShellService.GetWindowShellState
+  fullName: Agibuild.Fulora.IWindowShellService.GetWindowShellState
+- uid: System.Threading.Tasks.Task{Agibuild.Fulora.WindowShellState}
+  commentId: T:System.Threading.Tasks.Task{Agibuild.Fulora.WindowShellState}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<WindowShellState>
+  nameWithType: Task<WindowShellState>
+  fullName: System.Threading.Tasks.Task<Agibuild.Fulora.WindowShellState>
+  nameWithType.vb: Task(Of WindowShellState)
+  fullName.vb: System.Threading.Tasks.Task(Of Agibuild.Fulora.WindowShellState)
+  name.vb: Task(Of WindowShellState)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Agibuild.Fulora.WindowShellState
+    name: WindowShellState
+    href: Agibuild.Fulora.WindowShellState.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.WindowShellState
+    name: WindowShellState
+    href: Agibuild.Fulora.WindowShellState.html
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings*
+  commentId: Overload:Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings
+  href: Agibuild.Fulora.IWindowShellService.html#Agibuild_Fulora_IWindowShellService_UpdateWindowShellSettings_Agibuild_Fulora_WindowShellSettings_
+  name: UpdateWindowShellSettings
+  nameWithType: IWindowShellService.UpdateWindowShellSettings
+  fullName: Agibuild.Fulora.IWindowShellService.UpdateWindowShellSettings
+- uid: Agibuild.Fulora.WindowShellSettings
+  commentId: T:Agibuild.Fulora.WindowShellSettings
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowShellSettings.html
+  name: WindowShellSettings
+  nameWithType: WindowShellSettings
+  fullName: Agibuild.Fulora.WindowShellSettings
+- uid: Agibuild.Fulora.IWindowShellService.StreamWindowShellState*
+  commentId: Overload:Agibuild.Fulora.IWindowShellService.StreamWindowShellState
+  href: Agibuild.Fulora.IWindowShellService.html#Agibuild_Fulora_IWindowShellService_StreamWindowShellState_System_Threading_CancellationToken_
+  name: StreamWindowShellState
+  nameWithType: IWindowShellService.StreamWindowShellState
+  fullName: Agibuild.Fulora.IWindowShellService.StreamWindowShellState
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Collections.Generic.IAsyncEnumerable{Agibuild.Fulora.WindowShellState}
+  commentId: T:System.Collections.Generic.IAsyncEnumerable{Agibuild.Fulora.WindowShellState}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IAsyncEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1
+  name: IAsyncEnumerable<WindowShellState>
+  nameWithType: IAsyncEnumerable<WindowShellState>
+  fullName: System.Collections.Generic.IAsyncEnumerable<Agibuild.Fulora.WindowShellState>
+  nameWithType.vb: IAsyncEnumerable(Of WindowShellState)
+  fullName.vb: System.Collections.Generic.IAsyncEnumerable(Of Agibuild.Fulora.WindowShellState)
+  name.vb: IAsyncEnumerable(Of WindowShellState)
+  spec.csharp:
+  - uid: System.Collections.Generic.IAsyncEnumerable`1
+    name: IAsyncEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1
+  - name: <
+  - uid: Agibuild.Fulora.WindowShellState
+    name: WindowShellState
+    href: Agibuild.Fulora.WindowShellState.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IAsyncEnumerable`1
+    name: IAsyncEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.WindowShellState
+    name: WindowShellState
+    href: Agibuild.Fulora.WindowShellState.html
+  - name: )
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Collections.Generic.IAsyncEnumerable`1
+  commentId: T:System.Collections.Generic.IAsyncEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1
+  name: IAsyncEnumerable<T>
+  nameWithType: IAsyncEnumerable<T>
+  fullName: System.Collections.Generic.IAsyncEnumerable<T>
+  nameWithType.vb: IAsyncEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IAsyncEnumerable(Of T)
+  name.vb: IAsyncEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IAsyncEnumerable`1
+    name: IAsyncEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IAsyncEnumerable`1
+    name: IAsyncEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic

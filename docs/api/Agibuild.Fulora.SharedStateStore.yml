@@ -1,0 +1,1119 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.SharedStateStore
+  commentId: T:Agibuild.Fulora.SharedStateStore
+  id: SharedStateStore
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.SharedStateStore.Get(System.String)
+  - Agibuild.Fulora.SharedStateStore.GetSnapshot
+  - Agibuild.Fulora.SharedStateStore.Get``1(System.String)
+  - Agibuild.Fulora.SharedStateStore.Remove(System.String)
+  - Agibuild.Fulora.SharedStateStore.Set(System.String,System.String)
+  - Agibuild.Fulora.SharedStateStore.Set``1(System.String,``0)
+  - Agibuild.Fulora.SharedStateStore.StateChanged
+  - Agibuild.Fulora.SharedStateStore.TryGet(System.String,System.String@)
+  langs:
+  - csharp
+  - vb
+  name: SharedStateStore
+  nameWithType: SharedStateStore
+  fullName: Agibuild.Fulora.SharedStateStore
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SharedStateStore
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 9
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: >-
+    Thread-safe shared state store with last-writer-wins (LWW) conflict resolution.
+
+    Each entry tracks a timestamp; stale writes are silently ignored.
+  example: []
+  syntax:
+    content: 'public sealed class SharedStateStore : ISharedStateStore'
+    content.vb: Public NotInheritable Class SharedStateStore Implements ISharedStateStore
+  inheritance:
+  - System.Object
+  implements:
+  - Agibuild.Fulora.ISharedStateStore
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.SharedStateStore.StateChanged
+  commentId: E:Agibuild.Fulora.SharedStateStore.StateChanged
+  id: StateChanged
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: StateChanged
+  nameWithType: SharedStateStore.StateChanged
+  fullName: Agibuild.Fulora.SharedStateStore.StateChanged
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: StateChanged
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 18
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Raised when a value changes in the store.
+  example: []
+  syntax:
+    content: public event EventHandler<StateChangedEventArgs>? StateChanged
+    return:
+      type: System.EventHandler{Agibuild.Fulora.StateChangedEventArgs}
+    content.vb: Public Event StateChanged As EventHandler(Of StateChangedEventArgs)
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.StateChanged
+- uid: Agibuild.Fulora.SharedStateStore.Set(System.String,System.String)
+  commentId: M:Agibuild.Fulora.SharedStateStore.Set(System.String,System.String)
+  id: Set(System.String,System.String)
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: Set(string, string?)
+  nameWithType: SharedStateStore.Set(string, string?)
+  fullName: Agibuild.Fulora.SharedStateStore.Set(string, string?)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Set
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 20
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Sets a raw JSON value for the given key.
+  example: []
+  syntax:
+    content: public void Set(string key, string? value)
+    parameters:
+    - id: key
+      type: System.String
+    - id: value
+      type: System.String
+    content.vb: Public Sub [Set](key As String, value As String)
+  overload: Agibuild.Fulora.SharedStateStore.Set*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.Set(System.String,System.String)
+  nameWithType.vb: SharedStateStore.Set(String, String)
+  fullName.vb: Agibuild.Fulora.SharedStateStore.Set(String, String)
+  name.vb: Set(String, String)
+- uid: Agibuild.Fulora.SharedStateStore.Get(System.String)
+  commentId: M:Agibuild.Fulora.SharedStateStore.Get(System.String)
+  id: Get(System.String)
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: Get(string)
+  nameWithType: SharedStateStore.Get(string)
+  fullName: Agibuild.Fulora.SharedStateStore.Get(string)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Get
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 65
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Gets the raw JSON value for the given key, or null if not present.
+  example: []
+  syntax:
+    content: public string? Get(string key)
+    parameters:
+    - id: key
+      type: System.String
+    return:
+      type: System.String
+    content.vb: Public Function [Get](key As String) As String
+  overload: Agibuild.Fulora.SharedStateStore.Get*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.Get(System.String)
+  nameWithType.vb: SharedStateStore.Get(String)
+  fullName.vb: Agibuild.Fulora.SharedStateStore.Get(String)
+  name.vb: Get(String)
+- uid: Agibuild.Fulora.SharedStateStore.TryGet(System.String,System.String@)
+  commentId: M:Agibuild.Fulora.SharedStateStore.TryGet(System.String,System.String@)
+  id: TryGet(System.String,System.String@)
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: TryGet(string, out string?)
+  nameWithType: SharedStateStore.TryGet(string, out string?)
+  fullName: Agibuild.Fulora.SharedStateStore.TryGet(string, out string?)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TryGet
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 71
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Tries to get the raw JSON value for the given key.
+  example: []
+  syntax:
+    content: public bool TryGet(string key, out string? value)
+    parameters:
+    - id: key
+      type: System.String
+    - id: value
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGet(key As String, value As String) As Boolean
+  overload: Agibuild.Fulora.SharedStateStore.TryGet*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.TryGet(System.String,System.String@)
+  nameWithType.vb: SharedStateStore.TryGet(String, String)
+  fullName.vb: Agibuild.Fulora.SharedStateStore.TryGet(String, String)
+  name.vb: TryGet(String, String)
+- uid: Agibuild.Fulora.SharedStateStore.Remove(System.String)
+  commentId: M:Agibuild.Fulora.SharedStateStore.Remove(System.String)
+  id: Remove(System.String)
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: Remove(string)
+  nameWithType: SharedStateStore.Remove(string)
+  fullName: Agibuild.Fulora.SharedStateStore.Remove(string)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Remove
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 83
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Removes a key and its value from the store.
+  example: []
+  syntax:
+    content: public bool Remove(string key)
+    parameters:
+    - id: key
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Function Remove(key As String) As Boolean
+  overload: Agibuild.Fulora.SharedStateStore.Remove*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.Remove(System.String)
+  nameWithType.vb: SharedStateStore.Remove(String)
+  fullName.vb: Agibuild.Fulora.SharedStateStore.Remove(String)
+  name.vb: Remove(String)
+- uid: Agibuild.Fulora.SharedStateStore.GetSnapshot
+  commentId: M:Agibuild.Fulora.SharedStateStore.GetSnapshot
+  id: GetSnapshot
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: GetSnapshot()
+  nameWithType: SharedStateStore.GetSnapshot()
+  fullName: Agibuild.Fulora.SharedStateStore.GetSnapshot()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetSnapshot
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 94
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Returns a snapshot of all current key-value pairs.
+  example: []
+  syntax:
+    content: public IReadOnlyDictionary<string, string?> GetSnapshot()
+    return:
+      type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+    content.vb: Public Function GetSnapshot() As IReadOnlyDictionary(Of String, String)
+  overload: Agibuild.Fulora.SharedStateStore.GetSnapshot*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.GetSnapshot
+- uid: Agibuild.Fulora.SharedStateStore.Set``1(System.String,``0)
+  commentId: M:Agibuild.Fulora.SharedStateStore.Set``1(System.String,``0)
+  id: Set``1(System.String,``0)
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: Set<T>(string, T)
+  nameWithType: SharedStateStore.Set<T>(string, T)
+  fullName: Agibuild.Fulora.SharedStateStore.Set<T>(string, T)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Set
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 102
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Sets a typed value (serialized to JSON).
+  example: []
+  syntax:
+    content: public void Set<T>(string key, T value)
+    parameters:
+    - id: key
+      type: System.String
+    - id: value
+      type: '{T}'
+    typeParameters:
+    - id: T
+    content.vb: Public Sub [Set](Of T)(key As String, value As T)
+  overload: Agibuild.Fulora.SharedStateStore.Set*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.Set``1(System.String,{T})
+  nameWithType.vb: SharedStateStore.Set(Of T)(String, T)
+  fullName.vb: Agibuild.Fulora.SharedStateStore.Set(Of T)(String, T)
+  name.vb: Set(Of T)(String, T)
+- uid: Agibuild.Fulora.SharedStateStore.Get``1(System.String)
+  commentId: M:Agibuild.Fulora.SharedStateStore.Get``1(System.String)
+  id: Get``1(System.String)
+  parent: Agibuild.Fulora.SharedStateStore
+  langs:
+  - csharp
+  - vb
+  name: Get<T>(string)
+  nameWithType: SharedStateStore.Get<T>(string)
+  fullName: Agibuild.Fulora.SharedStateStore.Get<T>(string)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Get
+    path: ../src/Agibuild.Fulora.Runtime/SharedStateStore.cs
+    startLine: 108
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Gets a typed value (deserialized from JSON), or default if not present.
+  example: []
+  syntax:
+    content: public T? Get<T>(string key)
+    parameters:
+    - id: key
+      type: System.String
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function [Get](Of T)(key As String) As T
+  overload: Agibuild.Fulora.SharedStateStore.Get*
+  implements:
+  - Agibuild.Fulora.ISharedStateStore.Get``1(System.String)
+  nameWithType.vb: SharedStateStore.Get(Of T)(String)
+  fullName.vb: Agibuild.Fulora.SharedStateStore.Get(Of T)(String)
+  name.vb: Get(Of T)(String)
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Agibuild.Fulora.ISharedStateStore
+  commentId: T:Agibuild.Fulora.ISharedStateStore
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ISharedStateStore.html
+  name: ISharedStateStore
+  nameWithType: ISharedStateStore
+  fullName: Agibuild.Fulora.ISharedStateStore
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.ISharedStateStore.StateChanged
+  commentId: E:Agibuild.Fulora.ISharedStateStore.StateChanged
+  parent: Agibuild.Fulora.ISharedStateStore
+  name: StateChanged
+  nameWithType: ISharedStateStore.StateChanged
+  fullName: Agibuild.Fulora.ISharedStateStore.StateChanged
+- uid: System.EventHandler{Agibuild.Fulora.StateChangedEventArgs}
+  commentId: T:System.EventHandler{Agibuild.Fulora.StateChangedEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<StateChangedEventArgs>
+  nameWithType: EventHandler<StateChangedEventArgs>
+  fullName: System.EventHandler<Agibuild.Fulora.StateChangedEventArgs>
+  nameWithType.vb: EventHandler(Of StateChangedEventArgs)
+  fullName.vb: System.EventHandler(Of Agibuild.Fulora.StateChangedEventArgs)
+  name.vb: EventHandler(Of StateChangedEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Agibuild.Fulora.StateChangedEventArgs
+    name: StateChangedEventArgs
+    href: Agibuild.Fulora.StateChangedEventArgs.html
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.StateChangedEventArgs
+    name: StateChangedEventArgs
+    href: Agibuild.Fulora.StateChangedEventArgs.html
+  - name: )
+- uid: System.EventHandler`1
+  commentId: T:System.EventHandler`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<TEventArgs>
+  nameWithType: EventHandler<TEventArgs>
+  fullName: System.EventHandler<TEventArgs>
+  nameWithType.vb: EventHandler(Of TEventArgs)
+  fullName.vb: System.EventHandler(Of TEventArgs)
+  name.vb: EventHandler(Of TEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - name: TEventArgs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TEventArgs
+  - name: )
+- uid: Agibuild.Fulora.SharedStateStore.Set*
+  commentId: Overload:Agibuild.Fulora.SharedStateStore.Set
+  href: Agibuild.Fulora.SharedStateStore.html#Agibuild_Fulora_SharedStateStore_Set_System_String_System_String_
+  name: Set
+  nameWithType: SharedStateStore.Set
+  fullName: Agibuild.Fulora.SharedStateStore.Set
+- uid: Agibuild.Fulora.ISharedStateStore.Set(System.String,System.String)
+  commentId: M:Agibuild.Fulora.ISharedStateStore.Set(System.String,System.String)
+  parent: Agibuild.Fulora.ISharedStateStore
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Set(string, string)
+  nameWithType: ISharedStateStore.Set(string, string)
+  fullName: Agibuild.Fulora.ISharedStateStore.Set(string, string)
+  nameWithType.vb: ISharedStateStore.Set(String, String)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.Set(String, String)
+  name.vb: Set(String, String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.Set(System.String,System.String)
+    name: Set
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.Set(System.String,System.String)
+    name: Set
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Agibuild.Fulora.SharedStateStore.Get*
+  commentId: Overload:Agibuild.Fulora.SharedStateStore.Get
+  href: Agibuild.Fulora.SharedStateStore.html#Agibuild_Fulora_SharedStateStore_Get_System_String_
+  name: Get
+  nameWithType: SharedStateStore.Get
+  fullName: Agibuild.Fulora.SharedStateStore.Get
+- uid: Agibuild.Fulora.ISharedStateStore.Get(System.String)
+  commentId: M:Agibuild.Fulora.ISharedStateStore.Get(System.String)
+  parent: Agibuild.Fulora.ISharedStateStore
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Get(string)
+  nameWithType: ISharedStateStore.Get(string)
+  fullName: Agibuild.Fulora.ISharedStateStore.Get(string)
+  nameWithType.vb: ISharedStateStore.Get(String)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.Get(String)
+  name.vb: Get(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.Get(System.String)
+    name: Get
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.Get(System.String)
+    name: Get
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.SharedStateStore.TryGet*
+  commentId: Overload:Agibuild.Fulora.SharedStateStore.TryGet
+  href: Agibuild.Fulora.SharedStateStore.html#Agibuild_Fulora_SharedStateStore_TryGet_System_String_System_String__
+  name: TryGet
+  nameWithType: SharedStateStore.TryGet
+  fullName: Agibuild.Fulora.SharedStateStore.TryGet
+- uid: Agibuild.Fulora.ISharedStateStore.TryGet(System.String,System.String@)
+  commentId: M:Agibuild.Fulora.ISharedStateStore.TryGet(System.String,System.String@)
+  parent: Agibuild.Fulora.ISharedStateStore
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: TryGet(string, out string)
+  nameWithType: ISharedStateStore.TryGet(string, out string)
+  fullName: Agibuild.Fulora.ISharedStateStore.TryGet(string, out string)
+  nameWithType.vb: ISharedStateStore.TryGet(String, String)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.TryGet(String, String)
+  name.vb: TryGet(String, String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.TryGet(System.String,System.String@)
+    name: TryGet
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: out
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.TryGet(System.String,System.String@)
+    name: TryGet
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Agibuild.Fulora.SharedStateStore.Remove*
+  commentId: Overload:Agibuild.Fulora.SharedStateStore.Remove
+  href: Agibuild.Fulora.SharedStateStore.html#Agibuild_Fulora_SharedStateStore_Remove_System_String_
+  name: Remove
+  nameWithType: SharedStateStore.Remove
+  fullName: Agibuild.Fulora.SharedStateStore.Remove
+- uid: Agibuild.Fulora.ISharedStateStore.Remove(System.String)
+  commentId: M:Agibuild.Fulora.ISharedStateStore.Remove(System.String)
+  parent: Agibuild.Fulora.ISharedStateStore
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Remove(string)
+  nameWithType: ISharedStateStore.Remove(string)
+  fullName: Agibuild.Fulora.ISharedStateStore.Remove(string)
+  nameWithType.vb: ISharedStateStore.Remove(String)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.Remove(String)
+  name.vb: Remove(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.Remove(System.String)
+    name: Remove
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.Remove(System.String)
+    name: Remove
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.SharedStateStore.GetSnapshot*
+  commentId: Overload:Agibuild.Fulora.SharedStateStore.GetSnapshot
+  href: Agibuild.Fulora.SharedStateStore.html#Agibuild_Fulora_SharedStateStore_GetSnapshot
+  name: GetSnapshot
+  nameWithType: SharedStateStore.GetSnapshot
+  fullName: Agibuild.Fulora.SharedStateStore.GetSnapshot
+- uid: Agibuild.Fulora.ISharedStateStore.GetSnapshot
+  commentId: M:Agibuild.Fulora.ISharedStateStore.GetSnapshot
+  parent: Agibuild.Fulora.ISharedStateStore
+  name: GetSnapshot()
+  nameWithType: ISharedStateStore.GetSnapshot()
+  fullName: Agibuild.Fulora.ISharedStateStore.GetSnapshot()
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.GetSnapshot
+    name: GetSnapshot
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.GetSnapshot
+    name: GetSnapshot
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<string, string>
+  nameWithType: IReadOnlyDictionary<string, string>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<string, string>
+  nameWithType.vb: IReadOnlyDictionary(Of String, String)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of String, String)
+  name.vb: IReadOnlyDictionary(Of String, String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyDictionary`2
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  name: IReadOnlyDictionary<TKey, TValue>
+  nameWithType: IReadOnlyDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
+  nameWithType.vb: IReadOnlyDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of TKey, TValue)
+  name.vb: IReadOnlyDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,{T})
+  commentId: M:Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+  parent: Agibuild.Fulora.ISharedStateStore
+  definition: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Set<T>(string, T)
+  nameWithType: ISharedStateStore.Set<T>(string, T)
+  fullName: Agibuild.Fulora.ISharedStateStore.Set<T>(string, T)
+  nameWithType.vb: ISharedStateStore.Set(Of T)(String, T)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.Set(Of T)(String, T)
+  name.vb: Set(Of T)(String, T)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+    name: Set
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+    name: Set
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+  commentId: M:Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Set<T>(string, T)
+  nameWithType: ISharedStateStore.Set<T>(string, T)
+  fullName: Agibuild.Fulora.ISharedStateStore.Set<T>(string, T)
+  nameWithType.vb: ISharedStateStore.Set(Of T)(String, T)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.Set(Of T)(String, T)
+  name.vb: Set(Of T)(String, T)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+    name: Set
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.Set``1(System.String,``0)
+    name: Set
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Agibuild.Fulora.ISharedStateStore.Get``1(System.String)
+  commentId: M:Agibuild.Fulora.ISharedStateStore.Get``1(System.String)
+  parent: Agibuild.Fulora.ISharedStateStore
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Get<T>(string)
+  nameWithType: ISharedStateStore.Get<T>(string)
+  fullName: Agibuild.Fulora.ISharedStateStore.Get<T>(string)
+  nameWithType.vb: ISharedStateStore.Get(Of T)(String)
+  fullName.vb: Agibuild.Fulora.ISharedStateStore.Get(Of T)(String)
+  name.vb: Get(Of T)(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISharedStateStore.Get``1(System.String)
+    name: Get
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISharedStateStore.Get``1(System.String)
+    name: Get
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )

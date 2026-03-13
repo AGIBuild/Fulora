@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class WebViewOverlayHost | Agibuild.Fulora </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class WebViewOverlayHost | Agibuild.Fulora ">
+      
+      <meta name="description" content="Manages a transparent companion window for rendering Avalonia controls above a WebView. Uses a real borderless Avalonia  as a child of the parent window, positioned to exactly cover the WebView bounds.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/AGIBuild/Agibuild.Fulora/new/main/apiSpec/new?filename=Agibuild_Fulora_WebViewOverlayHost.md&amp;value=---%0Auid%3A%20Agibuild.Fulora.WebViewOverlayHost%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Agibuild.Fulora">
+            Agibuild.Fulora
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Agibuild.Fulora.WebViewOverlayHost">
+
+
+
+  <h1 id="Agibuild_Fulora_WebViewOverlayHost" data-uid="Agibuild.Fulora.WebViewOverlayHost" class="text-break">
+Class WebViewOverlayHost  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Agibuild.html">Agibuild</a>.<a class="xref" href="Agibuild.Fulora.html">Fulora</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Agibuild.Fulora.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Manages a transparent companion window for rendering Avalonia controls above a WebView.
+Uses a real borderless Avalonia <span class="xref">Avalonia.Controls.Window</span> as a child of the parent window,
+positioned to exactly cover the WebView bounds.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class WebViewOverlayHost : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">WebViewOverlayHost</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_Bounds_" data-uid="Agibuild.Fulora.WebViewOverlayHost.Bounds*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_Bounds" data-uid="Agibuild.Fulora.WebViewOverlayHost.Bounds">
+  Bounds
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>DPI-adjusted bounds of the overlay (screen physical pixels).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Rect Bounds { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Rect</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_Content_" data-uid="Agibuild.Fulora.WebViewOverlayHost.Content*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_Content" data-uid="Agibuild.Fulora.WebViewOverlayHost.Content">
+  Content
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The Avalonia visual to render in the overlay.
+Setting this updates the overlay window's content in real time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object? Content { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_DpiScale_" data-uid="Agibuild.Fulora.WebViewOverlayHost.DpiScale*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_DpiScale" data-uid="Agibuild.Fulora.WebViewOverlayHost.DpiScale">
+  DpiScale
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Current DPI scale factor applied to bounds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DpiScale { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_HasKeyboardFocus_" data-uid="Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_HasKeyboardFocus" data-uid="Agibuild.Fulora.WebViewOverlayHost.HasKeyboardFocus">
+  HasKeyboardFocus
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the overlay currently has keyboard focus.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasKeyboardFocus { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_IsVisible_" data-uid="Agibuild.Fulora.WebViewOverlayHost.IsVisible*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_IsVisible" data-uid="Agibuild.Fulora.WebViewOverlayHost.IsVisible">
+  IsVisible
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the overlay is currently visible.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsVisible { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_Dispose_" data-uid="Agibuild.Fulora.WebViewOverlayHost.Dispose*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_Dispose" data-uid="Agibuild.Fulora.WebViewOverlayHost.Dispose">
+  Dispose()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_HitTest_" data-uid="Agibuild.Fulora.WebViewOverlayHost.HitTest*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_HitTest_System_Double_System_Double_" data-uid="Agibuild.Fulora.WebViewOverlayHost.HitTest(System.Double,System.Double)">
+  HitTest(double, double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Hit-tests a point to determine whether it should be handled by the overlay or passed through.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OverlayHitTestResult HitTest(double x, double y)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+    <dt><code>y</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Agibuild.Fulora.OverlayHitTestResult.html">OverlayHitTestResult</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_SyncVisibilityWith_" data-uid="Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_SyncVisibilityWith_System_Boolean_" data-uid="Agibuild.Fulora.WebViewOverlayHost.SyncVisibilityWith(System.Boolean)">
+  SyncVisibilityWith(bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Syncs overlay visibility with the WebView visibility.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SyncVisibilityWith(bool isVisible)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>isVisible</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_TransferFocusToOverlay_" data-uid="Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_TransferFocusToOverlay" data-uid="Agibuild.Fulora.WebViewOverlayHost.TransferFocusToOverlay">
+  TransferFocusToOverlay()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transfers keyboard focus from WebView to overlay.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TransferFocusToOverlay()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Agibuild_Fulora_WebViewOverlayHost_TransferFocusToWebView_" data-uid="Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView*"></a>
+
+  <h3 id="Agibuild_Fulora_WebViewOverlayHost_TransferFocusToWebView" data-uid="Agibuild.Fulora.WebViewOverlayHost.TransferFocusToWebView">
+  TransferFocusToWebView()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transfers keyboard focus from overlay to WebView.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TransferFocusToWebView()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Avalonia/WebViewOverlayHost.cs/#L16" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Agibuild.Fulora — Cross-platform Hybrid App Framework
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

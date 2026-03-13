@@ -17,17 +17,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NewWindowRequestedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 743
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 173
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Event args raised when content requests opening a new window.
-  example: []
   syntax:
     content: 'public sealed class NewWindowRequestedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class NewWindowRequestedEventArgs Inherits EventArgs
@@ -55,23 +53,20 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 747
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 175
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates new event args.
-  example: []
   syntax:
     content: public NewWindowRequestedEventArgs(Uri? uri = null)
     parameters:
     - id: uri
       type: System.Uri
-      description: The requested URI.
     content.vb: Public Sub New(uri As Uri = Nothing)
   overload: Agibuild.Fulora.NewWindowRequestedEventArgs.#ctor*
   nameWithType.vb: NewWindowRequestedEventArgs.New(Uri)
@@ -90,17 +85,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Uri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 753
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 180
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The URI that was requested to open in a new window.
-  example: []
   syntax:
     content: public Uri? Uri { get; }
     parameters: []
@@ -121,22 +114,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handled
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 760
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 181
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Set to <code>true</code> to indicate the event has been handled.
-
-    When unhandled, the WebView control will navigate
-
-    to the URI in the current view instead of opening a new window.
-  example: []
   syntax:
     content: public bool Handled { get; set; }
     parameters: []

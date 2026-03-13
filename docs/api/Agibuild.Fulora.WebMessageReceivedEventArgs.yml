@@ -21,17 +21,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageReceivedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 764
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 184
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Event args raised when a WebMessage is received from the page.
-  example: []
   syntax:
     content: 'public sealed class WebMessageReceivedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class WebMessageReceivedEventArgs Inherits EventArgs
@@ -59,17 +57,15 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 767
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 186
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a default WebMessage event args.
-  example: []
   syntax:
     content: public WebMessageReceivedEventArgs()
     content.vb: Public Sub New()
@@ -90,29 +86,24 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 779
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 194
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates event args for a WebMessage.
-  example: []
   syntax:
     content: public WebMessageReceivedEventArgs(string body, string origin, Guid channelId)
     parameters:
     - id: body
       type: System.String
-      description: Message body.
     - id: origin
       type: System.String
-      description: Message origin.
     - id: channelId
       type: System.Guid
-      description: Message channel id.
     content.vb: Public Sub New(body As String, origin As String, channelId As Guid)
   overload: Agibuild.Fulora.WebMessageReceivedEventArgs.#ctor*
   nameWithType.vb: WebMessageReceivedEventArgs.New(String, String, Guid)
@@ -131,32 +122,26 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 792
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 202
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates event args for a WebMessage.
-  example: []
   syntax:
     content: public WebMessageReceivedEventArgs(string body, string origin, Guid channelId, int protocolVersion)
     parameters:
     - id: body
       type: System.String
-      description: Message body.
     - id: origin
       type: System.String
-      description: Message origin.
     - id: channelId
       type: System.Guid
-      description: Message channel id.
     - id: protocolVersion
       type: System.Int32
-      description: Protocol version.
     content.vb: Public Sub New(body As String, origin As String, channelId As Guid, protocolVersion As Integer)
   overload: Agibuild.Fulora.WebMessageReceivedEventArgs.#ctor*
   nameWithType.vb: WebMessageReceivedEventArgs.New(String, String, Guid, Integer)
@@ -175,17 +160,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Body
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 801
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 210
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Message body.
-  example: []
   syntax:
     content: public string Body { get; }
     parameters: []
@@ -206,17 +189,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Origin
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 803
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 211
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Message origin.
-  example: []
   syntax:
     content: public string Origin { get; }
     parameters: []
@@ -237,17 +218,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 805
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 212
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Message channel id.
-  example: []
   syntax:
     content: public Guid ChannelId { get; }
     parameters: []
@@ -268,17 +247,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ProtocolVersion
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 807
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 213
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Message protocol version.
-  example: []
   syntax:
     content: public int ProtocolVersion { get; }
     parameters: []

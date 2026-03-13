@@ -391,7 +391,6 @@ references:
   - name: <
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewShellCommandPolicyContext
@@ -413,7 +412,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewShellCommandPolicyContext
@@ -485,7 +483,6 @@ references:
   - name: (
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewShellCommandPolicyContext
@@ -499,7 +496,6 @@ references:
   - name: (
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewShellCommandPolicyContext

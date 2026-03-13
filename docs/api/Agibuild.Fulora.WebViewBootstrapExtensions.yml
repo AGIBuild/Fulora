@@ -1,0 +1,523 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions
+  commentId: T:Agibuild.Fulora.WebViewBootstrapExtensions
+  id: WebViewBootstrapExtensions
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  - Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: WebViewBootstrapExtensions
+  nameWithType: WebViewBootstrapExtensions
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/WebViewBootstrapExtensions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: WebViewBootstrapExtensions
+    path: ../src/Agibuild.Fulora.Runtime/WebViewBootstrapExtensions.cs
+    startLine: 5
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: Extension methods for bootstrapping SPA navigation and bridge registration on <xref href="Agibuild.Fulora.IWebView" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static class WebViewBootstrapExtensions
+    content.vb: Public Module WebViewBootstrapExtensions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  id: BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  isExtensionMethod: true
+  parent: Agibuild.Fulora.WebViewBootstrapExtensions
+  langs:
+  - csharp
+  - vb
+  name: BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapProfileOptions, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/WebViewBootstrapExtensions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: BootstrapSpaProfileAsync
+    path: ../src/Agibuild.Fulora.Runtime/WebViewBootstrapExtensions.cs
+    startLine: 18
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: >-
+    Bootstraps WebView using profile options that wrap baseline <xref href="Agibuild.Fulora.SpaBootstrapOptions" data-throw-if-not-resolved="false"></xref>
+
+    and explicit extension hooks.
+  example: []
+  syntax:
+    content: public static Task BootstrapSpaProfileAsync(this IWebView webView, SpaBootstrapProfileOptions profileOptions, CancellationToken cancellationToken = default)
+    parameters:
+    - id: webView
+      type: Agibuild.Fulora.IWebView
+    - id: profileOptions
+      type: Agibuild.Fulora.SpaBootstrapProfileOptions
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Shared Function BootstrapSpaProfileAsync(webView As IWebView, profileOptions As SpaBootstrapProfileOptions, cancellationToken As CancellationToken = Nothing) As Task
+  overload: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync*
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  id: BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  isExtensionMethod: true
+  parent: Agibuild.Fulora.WebViewBootstrapExtensions
+  langs:
+  - csharp
+  - vb
+  name: BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapOptions, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/WebViewBootstrapExtensions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: BootstrapSpaAsync
+    path: ../src/Agibuild.Fulora.Runtime/WebViewBootstrapExtensions.cs
+    startLine: 42
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: >-
+    Bootstraps the WebView with SPA navigation and bridge service registration in one deterministic call.
+
+    <p>
+
+    When <xref href="Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl" data-throw-if-not-resolved="false"></xref> is set, navigates directly to the dev server.
+
+    Otherwise, navigates to the SPA entry point (caller must enable SPA hosting beforehand for production).
+
+    </p>
+
+    <p>
+
+    After successful navigation, configures bridge services via <xref href="Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge" data-throw-if-not-resolved="false"></xref>
+
+    and dispatches the <code>agWebViewReady</code> event to the page.
+
+    </p>
+  example: []
+  syntax:
+    content: public static Task BootstrapSpaAsync(this IWebView webView, SpaBootstrapOptions options, CancellationToken cancellationToken = default)
+    parameters:
+    - id: webView
+      type: Agibuild.Fulora.IWebView
+    - id: options
+      type: Agibuild.Fulora.SpaBootstrapOptions
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Shared Function BootstrapSpaAsync(webView As IWebView, options As SpaBootstrapOptions, cancellationToken As CancellationToken = Nothing) As Task
+  overload: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync*
+references:
+- uid: Agibuild.Fulora.IWebView
+  commentId: T:Agibuild.Fulora.IWebView
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWebView.html
+  name: IWebView
+  nameWithType: IWebView
+  fullName: Agibuild.Fulora.IWebView
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.SpaBootstrapOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapOptions.html
+  name: SpaBootstrapOptions
+  nameWithType: SpaBootstrapOptions
+  fullName: Agibuild.Fulora.SpaBootstrapOptions
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync*
+  commentId: Overload:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaProfileAsync
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaProfileAsync
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapProfileOptions.html
+  name: SpaBootstrapProfileOptions
+  nameWithType: SpaBootstrapProfileOptions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_DevServerUrl
+  name: DevServerUrl
+  nameWithType: SpaBootstrapOptions.DevServerUrl
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_ConfigureBridge
+  name: ConfigureBridge
+  nameWithType: SpaBootstrapOptions.ConfigureBridge
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync*
+  commentId: Overload:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaAsync
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaAsync
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync

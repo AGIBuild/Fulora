@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" rx="8" fill="#1a1a2e"/>
+  <rect x="0" y="0" width="56" height="450" fill="#16213e"/>
+  <rect x="56" y="0" width="744" height="48" fill="#0f3460"/>
+  <text x="80" y="32" fill="#e94560" font-family="system-ui" font-size="18" font-weight="bold">Settings</text>
+  <rect x="80" y="72" width="640" height="350" rx="8" fill="#16213e"/>
+  <text x="110" y="110" fill="#cbd5e1" font-family="system-ui" font-size="15" font-weight="bold">Appearance</text>
+  <text x="110" y="150" fill="#94a3b8" font-family="system-ui" font-size="13">Theme</text>
+  <rect x="300" y="132" width="80" height="28" rx="4" fill="#e94560"/>
+  <text x="340" y="152" fill="#fff" font-family="system-ui" font-size="12" text-anchor="middle">Dark</text>
+  <rect x="386" y="132" width="80" height="28" rx="4" fill="#0f3460"/>
+  <text x="426" y="152" fill="#94a3b8" font-family="system-ui" font-size="12" text-anchor="middle">Light</text>
+  <rect x="472" y="132" width="80" height="28" rx="4" fill="#0f3460"/>
+  <text x="512" y="152" fill="#94a3b8" font-family="system-ui" font-size="12" text-anchor="middle">System</text>
+  <text x="110" y="200" fill="#94a3b8" font-family="system-ui" font-size="13">Language</text>
+  <rect x="300" y="182" width="140" height="28" rx="4" fill="#0f3460" stroke="#e94560" stroke-width="1"/>
+  <text x="370" y="202" fill="#cbd5e1" font-family="system-ui" font-size="12" text-anchor="middle">English</text>
+  <text x="110" y="250" fill="#94a3b8" font-family="system-ui" font-size="13">Font Size</text>
+  <rect x="300" y="234" width="200" height="6" rx="3" fill="#0f3460"/>
+  <rect x="300" y="234" width="120" height="6" rx="3" fill="#e94560"/>
+  <circle cx="420" cy="237" r="8" fill="#e94560"/>
+  <text x="520" y="242" fill="#cbd5e1" font-family="system-ui" font-size="12">16px</text>
+  <text x="110" y="310" fill="#cbd5e1" font-family="system-ui" font-size="15" font-weight="bold">Layout</text>
+  <text x="110" y="350" fill="#94a3b8" font-family="system-ui" font-size="13">Compact Sidebar</text>
+  <rect x="300" y="334" width="44" height="24" rx="12" fill="#e94560"/>
+  <circle cx="332" cy="346" r="9" fill="#fff"/>
+  <text x="400" y="436" fill="#475569" font-family="system-ui" font-size="10" text-anchor="middle">[ Placeholder  replace with actual screenshot ]</text>
+</svg>

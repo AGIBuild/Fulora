@@ -22,17 +22,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DownloadRequestedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 864
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 242
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when a file download is initiated by the web content.
-  example: []
   syntax:
     content: 'public sealed class DownloadRequestedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class DownloadRequestedEventArgs Inherits EventArgs
@@ -60,32 +58,26 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 871
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 244
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public DownloadRequestedEventArgs(Uri downloadUri, string? suggestedFileName = null, string? contentType = null, long? contentLength = null)
     parameters:
     - id: downloadUri
       type: System.Uri
-      description: The download URI.
     - id: suggestedFileName
       type: System.String
-      description: Suggested file name.
     - id: contentType
       type: System.String
-      description: MIME type.
     - id: contentLength
       type: System.Nullable{System.Int64}
-      description: Content length in bytes.
     content.vb: Public Sub New(downloadUri As Uri, suggestedFileName As String = Nothing, contentType As String = Nothing, contentLength As Long? = Nothing)
   overload: Agibuild.Fulora.DownloadRequestedEventArgs.#ctor*
   nameWithType.vb: DownloadRequestedEventArgs.New(Uri, String, String, Long?)
@@ -104,17 +96,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DownloadUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 880
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 252
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The URL of the resource being downloaded.
-  example: []
   syntax:
     content: public Uri DownloadUri { get; }
     parameters: []
@@ -135,17 +125,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SuggestedFileName
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 883
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 253
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Suggested filename from Content-Disposition header or URL path.
-  example: []
   syntax:
     content: public string? SuggestedFileName { get; }
     parameters: []
@@ -166,17 +154,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContentType
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 886
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 254
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: MIME type of the download content.
-  example: []
   syntax:
     content: public string? ContentType { get; }
     parameters: []
@@ -197,17 +183,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContentLength
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 889
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 255
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Content length in bytes, or null if unknown.
-  example: []
   syntax:
     content: public long? ContentLength { get; }
     parameters: []
@@ -228,17 +212,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DownloadPath
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 892
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 256
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set by consumer to specify the save file path.
-  example: []
   syntax:
     content: public string? DownloadPath { get; set; }
     parameters: []
@@ -259,17 +241,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Cancel
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 895
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 257
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set to true by consumer to cancel the download.
-  example: []
   syntax:
     content: public bool Cancel { get; set; }
     parameters: []
@@ -290,17 +270,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handled
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 898
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 258
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set to true by consumer to indicate the download is fully handled externally.
-  example: []
   syntax:
     content: public bool Handled { get; set; }
     parameters: []

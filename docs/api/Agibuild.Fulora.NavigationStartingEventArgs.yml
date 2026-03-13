@@ -19,17 +19,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationStartingEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 666
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 120
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Event args raised when a navigation starts.
-  example: []
   syntax:
     content: 'public sealed class NavigationStartingEventArgs : EventArgs'
     content.vb: Public NotInheritable Class NavigationStartingEventArgs Inherits EventArgs
@@ -57,23 +55,20 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 670
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 122
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates new args with an empty navigation id.
-  example: []
   syntax:
     content: public NavigationStartingEventArgs(Uri requestUri)
     parameters:
     - id: requestUri
       type: System.Uri
-      description: The requested URI.
     content.vb: Public Sub New(requestUri As Uri)
   overload: Agibuild.Fulora.NavigationStartingEventArgs.#ctor*
   nameWithType.vb: NavigationStartingEventArgs.New(Uri)
@@ -92,26 +87,22 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 679
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 128
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates new args with the specified navigation id.
-  example: []
   syntax:
     content: public NavigationStartingEventArgs(Guid navigationId, Uri requestUri)
     parameters:
     - id: navigationId
       type: System.Guid
-      description: Navigation correlation id.
     - id: requestUri
       type: System.Uri
-      description: The requested URI.
     content.vb: Public Sub New(navigationId As Guid, requestUri As Uri)
   overload: Agibuild.Fulora.NavigationStartingEventArgs.#ctor*
   nameWithType.vb: NavigationStartingEventArgs.New(Guid, Uri)
@@ -130,17 +121,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 686
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 134
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigation correlation id (may be empty when not available).
-  example: []
   syntax:
     content: public Guid NavigationId { get; }
     parameters: []
@@ -161,17 +150,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RequestUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 688
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 135
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The requested URI.
-  example: []
   syntax:
     content: public Uri RequestUri { get; }
     parameters: []
@@ -192,17 +179,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Cancel
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 690
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 136
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set to true to cancel the navigation.
-  example: []
   syntax:
     content: public bool Cancel { get; set; }
     parameters: []

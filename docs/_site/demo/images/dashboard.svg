@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" rx="8" fill="#1a1a2e"/>
+  <rect x="0" y="0" width="56" height="450" fill="#16213e"/>
+  <rect x="56" y="0" width="744" height="48" fill="#0f3460"/>
+  <text x="80" y="32" fill="#e94560" font-family="system-ui" font-size="18" font-weight="bold">Dashboard</text>
+  <rect x="80" y="72" width="200" height="100" rx="8" fill="#16213e" stroke="#0f3460" stroke-width="1"/>
+  <text x="180" y="110" fill="#94a3b8" font-family="system-ui" font-size="12" text-anchor="middle">Working Set</text>
+  <text x="180" y="145" fill="#e94560" font-family="system-ui" font-size="28" text-anchor="middle" font-weight="bold">128 MB</text>
+  <rect x="300" y="72" width="200" height="100" rx="8" fill="#16213e" stroke="#0f3460" stroke-width="1"/>
+  <text x="400" y="110" fill="#94a3b8" font-family="system-ui" font-size="12" text-anchor="middle">GC Memory</text>
+  <text x="400" y="145" fill="#e94560" font-family="system-ui" font-size="28" text-anchor="middle" font-weight="bold">42 MB</text>
+  <rect x="520" y="72" width="200" height="100" rx="8" fill="#16213e" stroke="#0f3460" stroke-width="1"/>
+  <text x="620" y="110" fill="#94a3b8" font-family="system-ui" font-size="12" text-anchor="middle">Threads</text>
+  <text x="620" y="145" fill="#e94560" font-family="system-ui" font-size="28" text-anchor="middle" font-weight="bold">12</text>
+  <rect x="80" y="196" width="640" height="220" rx="8" fill="#16213e" stroke="#0f3460" stroke-width="1"/>
+  <text x="100" y="226" fill="#94a3b8" font-family="system-ui" font-size="14" font-weight="bold">Platform Details</text>
+  <text x="100" y="260" fill="#64748b" font-family="system-ui" font-size="12">OS</text>
+  <text x="300" y="260" fill="#cbd5e1" font-family="system-ui" font-size="12">macOS 15.3 (Darwin)</text>
+  <text x="100" y="288" fill="#64748b" font-family="system-ui" font-size="12">.NET Runtime</text>
+  <text x="300" y="288" fill="#cbd5e1" font-family="system-ui" font-size="12">.NET 10.0.0-preview</text>
+  <text x="100" y="316" fill="#64748b" font-family="system-ui" font-size="12">Avalonia</text>
+  <text x="300" y="316" fill="#cbd5e1" font-family="system-ui" font-size="12">12.0.0-preview2</text>
+  <text x="100" y="344" fill="#64748b" font-family="system-ui" font-size="12">WebView Engine</text>
+  <text x="300" y="344" fill="#cbd5e1" font-family="system-ui" font-size="12">WKWebView</text>
+  <text x="400" y="436" fill="#475569" font-family="system-ui" font-size="10" text-anchor="middle">[ Placeholder  replace with actual screenshot ]</text>
+</svg>

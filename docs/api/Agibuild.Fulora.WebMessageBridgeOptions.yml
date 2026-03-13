@@ -7,6 +7,7 @@ items:
   children:
   - Agibuild.Fulora.WebMessageBridgeOptions.AllowedOrigins
   - Agibuild.Fulora.WebMessageBridgeOptions.DropDiagnosticsSink
+  - Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics
   - Agibuild.Fulora.WebMessageBridgeOptions.ProtocolVersion
   langs:
   - csharp
@@ -136,6 +137,40 @@ items:
       type: Agibuild.Fulora.IWebMessageDropDiagnosticsSink
     content.vb: Public Property DropDiagnosticsSink As IWebMessageDropDiagnosticsSink
   overload: Agibuild.Fulora.WebMessageBridgeOptions.DropDiagnosticsSink*
+- uid: Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics
+  commentId: P:Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics
+  id: EnableDevToolsDiagnostics
+  parent: Agibuild.Fulora.WebMessageBridgeOptions
+  langs:
+  - csharp
+  - vb
+  name: EnableDevToolsDiagnostics
+  nameWithType: WebMessageBridgeOptions.EnableDevToolsDiagnostics
+  fullName: Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Runtime/WebMessageBridgeOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: EnableDevToolsDiagnostics
+    path: ../src/Agibuild.Fulora.Runtime/WebMessageBridgeOptions.cs
+    startLine: 27
+  assemblies:
+  - Agibuild.Fulora.Runtime
+  namespace: Agibuild.Fulora
+  summary: >-
+    When true, bridge error responses include actionable hints in the <code>data.hint</code> field.
+
+    Default is false to avoid information leakage in production.
+  example: []
+  syntax:
+    content: public bool EnableDevToolsDiagnostics { get; init; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property EnableDevToolsDiagnostics As Boolean
+  overload: Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics*
 references:
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
@@ -508,3 +543,20 @@ references:
   name: IWebMessageDropDiagnosticsSink
   nameWithType: IWebMessageDropDiagnosticsSink
   fullName: Agibuild.Fulora.IWebMessageDropDiagnosticsSink
+- uid: Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics*
+  commentId: Overload:Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics
+  href: Agibuild.Fulora.WebMessageBridgeOptions.html#Agibuild_Fulora_WebMessageBridgeOptions_EnableDevToolsDiagnostics
+  name: EnableDevToolsDiagnostics
+  nameWithType: WebMessageBridgeOptions.EnableDevToolsDiagnostics
+  fullName: Agibuild.Fulora.WebMessageBridgeOptions.EnableDevToolsDiagnostics
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

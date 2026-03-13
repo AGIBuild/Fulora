@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: INativeWebViewHandleProvider
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 458
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 131
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Provides access to the native WebView handle for adapter-specific interop scenarios.
-  example: []
   syntax:
     content: public interface INativeWebViewHandleProvider
     content.vb: Public Interface INativeWebViewHandleProvider
@@ -42,17 +40,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetWebViewHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 461
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 133
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Returns the platform handle when available; otherwise null.
-  example: []
   syntax:
     content: INativeHandle? TryGetWebViewHandle()
     return:

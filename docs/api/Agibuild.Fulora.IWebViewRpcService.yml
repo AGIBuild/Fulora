@@ -24,17 +24,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebViewRpcService
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1058
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 186
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Bidirectional JSON-RPC 2.0 service for JS ↔ C# method calls over the WebMessage bridge.
-  example: []
   syntax:
     content: public interface IWebViewRpcService
     content.vb: Public Interface IWebViewRpcService
@@ -51,17 +49,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1061
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 188
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Registers an async C# handler callable from JS.
-  example: []
   syntax:
     content: void Handle(string method, Func<JsonElement?, Task<object?>> handler)
     parameters:
@@ -87,17 +83,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1064
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 189
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Registers a synchronous C# handler callable from JS.
-  example: []
   syntax:
     content: void Handle(string method, Func<JsonElement?, object?> handler)
     parameters:
@@ -123,17 +117,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1067
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 190
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Registers a cancellation-aware async handler. The CancellationToken is cancelled when a $/cancelRequest is received.
-  example: []
   syntax:
     content: void Handle(string method, Func<JsonElement?, CancellationToken, Task<object?>> handler)
     parameters:
@@ -159,17 +151,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RegisterEnumerator
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1071
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 193
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Registers a streaming enumerator for pull-based consumption. Returns a unique token for the enumerator.
-  example: []
   syntax:
     content: void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose)
     parameters:
@@ -197,17 +187,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RemoveHandler
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1077
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 194
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Removes a previously registered handler.
-  example: []
   syntax:
     content: void RemoveHandler(string method)
     parameters:
@@ -231,17 +219,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1080
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 196
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Calls a JS-side handler and returns the raw result.
-  example: []
   syntax:
     content: Task<JsonElement> InvokeAsync(string method, object? args = null)
     parameters:
@@ -269,17 +255,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1083
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 197
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Calls a JS-side handler and deserializes the result.
-  example: []
   syntax:
     content: Task<T?> InvokeAsync<T>(string method, object? args = null)
     parameters:
@@ -309,17 +293,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1086
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 198
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Calls a JS-side handler with cancellation support. Sends $/cancelRequest on cancellation.
-  example: []
   syntax:
     content: Task<JsonElement> InvokeAsync(string method, object? args, CancellationToken cancellationToken)
     parameters:
@@ -349,17 +331,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1090
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 200
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Calls a JS-side handler with cancellation support. Sends $/cancelRequest on cancellation.
-  example: []
   syntax:
     content: Task<T?> InvokeAsync<T>(string method, object? args, CancellationToken cancellationToken)
     parameters:
@@ -391,20 +371,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NotifyAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1097
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 203
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Sends a JSON-RPC notification to JavaScript (fire-and-forget, no response expected).
-
-    Used internally by bridge event channels.
-  example: []
   syntax:
     content: Task NotifyAsync(string method, object? args = null)
     parameters:

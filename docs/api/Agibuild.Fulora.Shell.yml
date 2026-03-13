@@ -6,6 +6,7 @@ items:
   children:
   - Agibuild.Fulora.Shell.AvaloniaHostCapabilityProvider
   - Agibuild.Fulora.Shell.AvaloniaThemeProvider
+  - Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
   - Agibuild.Fulora.Shell.DeepLinkActivationEnvelope
   - Agibuild.Fulora.Shell.DeepLinkActivationIngressResult
   - Agibuild.Fulora.Shell.DeepLinkActivationIngressStatus
@@ -101,6 +102,8 @@ items:
   - Agibuild.Fulora.Shell.WebViewSystemIntegrationEventKind
   - Agibuild.Fulora.Shell.WebViewSystemIntegrationEventRequest
   - Agibuild.Fulora.Shell.WebViewTrayStateRequest
+  - Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+  - Agibuild.Fulora.Shell.WindowShellService
   langs:
   - csharp
   - vb
@@ -135,6 +138,19 @@ references:
   name: TrayInteractionEventArgs
   nameWithType: TrayInteractionEventArgs
   fullName: Agibuild.Fulora.Shell.TrayInteractionEventArgs
+- uid: Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+  commentId: T:Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+  parent: Agibuild.Fulora.Shell
+  href: Agibuild.Fulora.Shell.WindowChromeTrackingOptions.html
+  name: WindowChromeTrackingOptions
+  nameWithType: WindowChromeTrackingOptions
+  fullName: Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+- uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  commentId: T:Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+  href: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider.html
+  name: AvaloniaWindowChromeProvider
+  nameWithType: AvaloniaWindowChromeProvider
+  fullName: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
 - uid: Agibuild.Fulora.Shell.FallbackThemeProvider
   commentId: T:Agibuild.Fulora.Shell.FallbackThemeProvider
   href: Agibuild.Fulora.Shell.FallbackThemeProvider.html
@@ -166,12 +182,6 @@ references:
   name: SharpHookGlobalShortcutProvider
   nameWithType: SharpHookGlobalShortcutProvider
   fullName: Agibuild.Fulora.Shell.SharpHookGlobalShortcutProvider
-- uid: Agibuild.Fulora.Shell.ThemeService
-  commentId: T:Agibuild.Fulora.Shell.ThemeService
-  href: Agibuild.Fulora.Shell.ThemeService.html
-  name: ThemeService
-  nameWithType: ThemeService
-  fullName: Agibuild.Fulora.Shell.ThemeService
 - uid: Agibuild.Fulora.Shell.DeepLinkPlatformSupport
   commentId: T:Agibuild.Fulora.Shell.DeepLinkPlatformSupport
   parent: Agibuild.Fulora.Shell
@@ -281,6 +291,12 @@ references:
   name: DeepLinkRegistrationService
   nameWithType: DeepLinkRegistrationService
   fullName: Agibuild.Fulora.Shell.DeepLinkRegistrationService
+- uid: Agibuild.Fulora.Shell.ThemeService
+  commentId: T:Agibuild.Fulora.Shell.ThemeService
+  href: Agibuild.Fulora.Shell.ThemeService.html
+  name: ThemeService
+  nameWithType: ThemeService
+  fullName: Agibuild.Fulora.Shell.ThemeService
 - uid: Agibuild.Fulora.Shell.WebViewHostCapabilityOperation
   commentId: T:Agibuild.Fulora.Shell.WebViewHostCapabilityOperation
   parent: Agibuild.Fulora.Shell
@@ -777,6 +793,12 @@ references:
   name: WebViewShellExperience
   nameWithType: WebViewShellExperience
   fullName: Agibuild.Fulora.Shell.WebViewShellExperience
+- uid: Agibuild.Fulora.Shell.WindowShellService
+  commentId: T:Agibuild.Fulora.Shell.WindowShellService
+  href: Agibuild.Fulora.Shell.WindowShellService.html
+  name: WindowShellService
+  nameWithType: WindowShellService
+  fullName: Agibuild.Fulora.Shell.WindowShellService
 - uid: Agibuild.Fulora.Shell
   commentId: N:Agibuild.Fulora.Shell
   href: Agibuild.html

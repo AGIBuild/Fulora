@@ -517,7 +517,6 @@ references:
 - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider.IsSupported
   commentId: P:Agibuild.Fulora.IGlobalShortcutPlatformProvider.IsSupported
   parent: Agibuild.Fulora.IGlobalShortcutPlatformProvider
-  href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_IsSupported
   name: IsSupported
   nameWithType: IGlobalShortcutPlatformProvider.IsSupported
   fullName: Agibuild.Fulora.IGlobalShortcutPlatformProvider.IsSupported
@@ -535,7 +534,6 @@ references:
 - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider.ShortcutActivated
   commentId: E:Agibuild.Fulora.IGlobalShortcutPlatformProvider.ShortcutActivated
   parent: Agibuild.Fulora.IGlobalShortcutPlatformProvider
-  href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_ShortcutActivated
   name: ShortcutActivated
   nameWithType: IGlobalShortcutPlatformProvider.ShortcutActivated
   fullName: Agibuild.Fulora.IGlobalShortcutPlatformProvider.ShortcutActivated
@@ -612,7 +610,7 @@ references:
   commentId: M:Agibuild.Fulora.IGlobalShortcutPlatformProvider.Register(System.String,Agibuild.Fulora.ShortcutKey,Agibuild.Fulora.ShortcutModifiers)
   parent: Agibuild.Fulora.IGlobalShortcutPlatformProvider
   isExternal: true
-  href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_Register_System_String_Agibuild_Fulora_ShortcutKey_Agibuild_Fulora_ShortcutModifiers_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: Register(string, ShortcutKey, ShortcutModifiers)
   nameWithType: IGlobalShortcutPlatformProvider.Register(string, ShortcutKey, ShortcutModifiers)
   fullName: Agibuild.Fulora.IGlobalShortcutPlatformProvider.Register(string, Agibuild.Fulora.ShortcutKey, Agibuild.Fulora.ShortcutModifiers)
@@ -622,7 +620,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider.Register(System.String,Agibuild.Fulora.ShortcutKey,Agibuild.Fulora.ShortcutModifiers)
     name: Register
-    href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_Register_System_String_Agibuild_Fulora_ShortcutKey_Agibuild_Fulora_ShortcutModifiers_
   - name: (
   - uid: System.String
     name: string
@@ -632,17 +629,14 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.ShortcutKey
     name: ShortcutKey
-    href: Agibuild.Fulora.ShortcutKey.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.ShortcutModifiers
     name: ShortcutModifiers
-    href: Agibuild.Fulora.ShortcutModifiers.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider.Register(System.String,Agibuild.Fulora.ShortcutKey,Agibuild.Fulora.ShortcutModifiers)
     name: Register
-    href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_Register_System_String_Agibuild_Fulora_ShortcutKey_Agibuild_Fulora_ShortcutModifiers_
   - name: (
   - uid: System.String
     name: String
@@ -652,12 +646,10 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.ShortcutKey
     name: ShortcutKey
-    href: Agibuild.Fulora.ShortcutKey.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.ShortcutModifiers
     name: ShortcutModifiers
-    href: Agibuild.Fulora.ShortcutModifiers.html
   - name: )
 - uid: System.String
   commentId: T:System.String
@@ -694,7 +686,7 @@ references:
   commentId: M:Agibuild.Fulora.IGlobalShortcutPlatformProvider.Unregister(System.String)
   parent: Agibuild.Fulora.IGlobalShortcutPlatformProvider
   isExternal: true
-  href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_Unregister_System_String_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: Unregister(string)
   nameWithType: IGlobalShortcutPlatformProvider.Unregister(string)
   fullName: Agibuild.Fulora.IGlobalShortcutPlatformProvider.Unregister(string)
@@ -704,7 +696,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider.Unregister(System.String)
     name: Unregister
-    href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_Unregister_System_String_
   - name: (
   - uid: System.String
     name: string
@@ -714,7 +705,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider.Unregister(System.String)
     name: Unregister
-    href: Agibuild.Fulora.IGlobalShortcutPlatformProvider.html#Agibuild_Fulora_IGlobalShortcutPlatformProvider_Unregister_System_String_
   - name: (
   - uid: System.String
     name: String

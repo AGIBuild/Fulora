@@ -79,10 +79,6 @@ items:
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: >-
-    Creates a new WebDialog with optional environment options.
-
-    The dialog is not shown until <xref href="Agibuild.Fulora.IWebDialog.Show" data-throw-if-not-resolved="false"></xref> is called.
   example: []
   syntax:
     content: public IWebDialog Create(IWebViewEnvironmentOptions? options = null)
@@ -347,25 +343,6 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: Agibuild.Fulora.IWebDialog.Show
-  commentId: M:Agibuild.Fulora.IWebDialog.Show
-  parent: Agibuild.Fulora.IWebDialog
-  href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
-  name: Show()
-  nameWithType: IWebDialog.Show()
-  fullName: Agibuild.Fulora.IWebDialog.Show()
-  spec.csharp:
-  - uid: Agibuild.Fulora.IWebDialog.Show
-    name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.IWebDialog.Show
-    name: Show
-    href: Agibuild.Fulora.IWebDialog.html#Agibuild_Fulora_IWebDialog_Show
-  - name: (
-  - name: )
 - uid: Agibuild.Fulora.AvaloniaWebDialogFactory.Create*
   commentId: Overload:Agibuild.Fulora.AvaloniaWebDialogFactory.Create
   href: Agibuild.Fulora.AvaloniaWebDialogFactory.html#Agibuild_Fulora_AvaloniaWebDialogFactory_Create_Agibuild_Fulora_IWebViewEnvironmentOptions_
@@ -375,27 +352,22 @@ references:
 - uid: Agibuild.Fulora.IWebDialogFactory.Create(Agibuild.Fulora.IWebViewEnvironmentOptions)
   commentId: M:Agibuild.Fulora.IWebDialogFactory.Create(Agibuild.Fulora.IWebViewEnvironmentOptions)
   parent: Agibuild.Fulora.IWebDialogFactory
-  href: Agibuild.Fulora.IWebDialogFactory.html#Agibuild_Fulora_IWebDialogFactory_Create_Agibuild_Fulora_IWebViewEnvironmentOptions_
   name: Create(IWebViewEnvironmentOptions)
   nameWithType: IWebDialogFactory.Create(IWebViewEnvironmentOptions)
   fullName: Agibuild.Fulora.IWebDialogFactory.Create(Agibuild.Fulora.IWebViewEnvironmentOptions)
   spec.csharp:
   - uid: Agibuild.Fulora.IWebDialogFactory.Create(Agibuild.Fulora.IWebViewEnvironmentOptions)
     name: Create
-    href: Agibuild.Fulora.IWebDialogFactory.html#Agibuild_Fulora_IWebDialogFactory_Create_Agibuild_Fulora_IWebViewEnvironmentOptions_
   - name: (
   - uid: Agibuild.Fulora.IWebViewEnvironmentOptions
     name: IWebViewEnvironmentOptions
-    href: Agibuild.Fulora.IWebViewEnvironmentOptions.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebDialogFactory.Create(Agibuild.Fulora.IWebViewEnvironmentOptions)
     name: Create
-    href: Agibuild.Fulora.IWebDialogFactory.html#Agibuild_Fulora_IWebDialogFactory_Create_Agibuild_Fulora_IWebViewEnvironmentOptions_
   - name: (
   - uid: Agibuild.Fulora.IWebViewEnvironmentOptions
     name: IWebViewEnvironmentOptions
-    href: Agibuild.Fulora.IWebViewEnvironmentOptions.html
   - name: )
 - uid: Agibuild.Fulora.IWebViewEnvironmentOptions
   commentId: T:Agibuild.Fulora.IWebViewEnvironmentOptions

@@ -1,0 +1,535 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.IAutoUpdateService
+  commentId: T:Agibuild.Fulora.IAutoUpdateService
+  id: IAutoUpdateService
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.IAutoUpdateService.ApplyUpdate
+  - Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+  - Agibuild.Fulora.IAutoUpdateService.DownloadProgress
+  - Agibuild.Fulora.IAutoUpdateService.DownloadUpdate
+  - Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion
+  - Agibuild.Fulora.IAutoUpdateService.UpdateAvailable
+  langs:
+  - csharp
+  - vb
+  name: IAutoUpdateService
+  nameWithType: IAutoUpdateService
+  fullName: Agibuild.Fulora.IAutoUpdateService
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IAutoUpdateService
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 6
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Provides application auto-update lifecycle: check, download, verify, and apply updates.
+
+    Registered via <code>Bridge.Expose&lt;IAutoUpdateService&gt;(impl)</code>.
+  example: []
+  syntax:
+    content: public interface IAutoUpdateService
+    content.vb: Public Interface IAutoUpdateService
+- uid: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+  commentId: M:Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+  id: CheckForUpdate
+  parent: Agibuild.Fulora.IAutoUpdateService
+  langs:
+  - csharp
+  - vb
+  name: CheckForUpdate()
+  nameWithType: IAutoUpdateService.CheckForUpdate()
+  fullName: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: CheckForUpdate
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 10
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Checks the update feed for a newer version.
+  example: []
+  syntax:
+    content: Task<UpdateResult> CheckForUpdate()
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.UpdateResult}
+    content.vb: Function CheckForUpdate() As Task(Of UpdateResult)
+  overload: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate*
+- uid: Agibuild.Fulora.IAutoUpdateService.DownloadUpdate
+  commentId: M:Agibuild.Fulora.IAutoUpdateService.DownloadUpdate
+  id: DownloadUpdate
+  parent: Agibuild.Fulora.IAutoUpdateService
+  langs:
+  - csharp
+  - vb
+  name: DownloadUpdate()
+  nameWithType: IAutoUpdateService.DownloadUpdate()
+  fullName: Agibuild.Fulora.IAutoUpdateService.DownloadUpdate()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DownloadUpdate
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 13
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Downloads the update package identified by a previous <xref href="Agibuild.Fulora.IAutoUpdateService.CheckForUpdate" data-throw-if-not-resolved="false"></xref> call.
+  example: []
+  syntax:
+    content: Task<UpdateResult> DownloadUpdate()
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.UpdateResult}
+    content.vb: Function DownloadUpdate() As Task(Of UpdateResult)
+  overload: Agibuild.Fulora.IAutoUpdateService.DownloadUpdate*
+- uid: Agibuild.Fulora.IAutoUpdateService.ApplyUpdate
+  commentId: M:Agibuild.Fulora.IAutoUpdateService.ApplyUpdate
+  id: ApplyUpdate
+  parent: Agibuild.Fulora.IAutoUpdateService
+  langs:
+  - csharp
+  - vb
+  name: ApplyUpdate()
+  nameWithType: IAutoUpdateService.ApplyUpdate()
+  fullName: Agibuild.Fulora.IAutoUpdateService.ApplyUpdate()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ApplyUpdate
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 19
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Applies the downloaded update and restarts the application.
+
+    Returns <xref href="Agibuild.Fulora.UpdateStatus.Error" data-throw-if-not-resolved="false"></xref> if no update has been downloaded.
+  example: []
+  syntax:
+    content: Task<UpdateResult> ApplyUpdate()
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.UpdateResult}
+    content.vb: Function ApplyUpdate() As Task(Of UpdateResult)
+  overload: Agibuild.Fulora.IAutoUpdateService.ApplyUpdate*
+- uid: Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion
+  commentId: M:Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion
+  id: GetCurrentVersion
+  parent: Agibuild.Fulora.IAutoUpdateService
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentVersion()
+  nameWithType: IAutoUpdateService.GetCurrentVersion()
+  fullName: Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetCurrentVersion
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 22
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Returns the currently running application version.
+  example: []
+  syntax:
+    content: Task<string> GetCurrentVersion()
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+    content.vb: Function GetCurrentVersion() As Task(Of String)
+  overload: Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion*
+- uid: Agibuild.Fulora.IAutoUpdateService.UpdateAvailable
+  commentId: P:Agibuild.Fulora.IAutoUpdateService.UpdateAvailable
+  id: UpdateAvailable
+  parent: Agibuild.Fulora.IAutoUpdateService
+  langs:
+  - csharp
+  - vb
+  name: UpdateAvailable
+  nameWithType: IAutoUpdateService.UpdateAvailable
+  fullName: Agibuild.Fulora.IAutoUpdateService.UpdateAvailable
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpdateAvailable
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 25
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Push event fired when an update check discovers a new version.
+  example: []
+  syntax:
+    content: IBridgeEvent<UpdateInfo> UpdateAvailable { get; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.IBridgeEvent{Agibuild.Fulora.UpdateInfo}
+    content.vb: ReadOnly Property UpdateAvailable As IBridgeEvent(Of UpdateInfo)
+  overload: Agibuild.Fulora.IAutoUpdateService.UpdateAvailable*
+- uid: Agibuild.Fulora.IAutoUpdateService.DownloadProgress
+  commentId: P:Agibuild.Fulora.IAutoUpdateService.DownloadProgress
+  id: DownloadProgress
+  parent: Agibuild.Fulora.IAutoUpdateService
+  langs:
+  - csharp
+  - vb
+  name: DownloadProgress
+  nameWithType: IAutoUpdateService.DownloadProgress
+  fullName: Agibuild.Fulora.IAutoUpdateService.DownloadProgress
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DownloadProgress
+    path: ../src/Agibuild.Fulora.Core/IAutoUpdateService.cs
+    startLine: 28
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Push event fired during download to report progress.
+  example: []
+  syntax:
+    content: IBridgeEvent<UpdateDownloadProgress> DownloadProgress { get; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.IBridgeEvent{Agibuild.Fulora.UpdateDownloadProgress}
+    content.vb: ReadOnly Property DownloadProgress As IBridgeEvent(Of UpdateDownloadProgress)
+  overload: Agibuild.Fulora.IAutoUpdateService.DownloadProgress*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_CheckForUpdate
+  name: CheckForUpdate
+  nameWithType: IAutoUpdateService.CheckForUpdate
+  fullName: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+- uid: System.Threading.Tasks.Task{Agibuild.Fulora.UpdateResult}
+  commentId: T:System.Threading.Tasks.Task{Agibuild.Fulora.UpdateResult}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<UpdateResult>
+  nameWithType: Task<UpdateResult>
+  fullName: System.Threading.Tasks.Task<Agibuild.Fulora.UpdateResult>
+  nameWithType.vb: Task(Of UpdateResult)
+  fullName.vb: System.Threading.Tasks.Task(Of Agibuild.Fulora.UpdateResult)
+  name.vb: Task(Of UpdateResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Agibuild.Fulora.UpdateResult
+    name: UpdateResult
+    href: Agibuild.Fulora.UpdateResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.UpdateResult
+    name: UpdateResult
+    href: Agibuild.Fulora.UpdateResult.html
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+  commentId: M:Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+  parent: Agibuild.Fulora.IAutoUpdateService
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_CheckForUpdate
+  name: CheckForUpdate()
+  nameWithType: IAutoUpdateService.CheckForUpdate()
+  fullName: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+    name: CheckForUpdate
+    href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_CheckForUpdate
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IAutoUpdateService.CheckForUpdate
+    name: CheckForUpdate
+    href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_CheckForUpdate
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IAutoUpdateService.DownloadUpdate*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdateService.DownloadUpdate
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_DownloadUpdate
+  name: DownloadUpdate
+  nameWithType: IAutoUpdateService.DownloadUpdate
+  fullName: Agibuild.Fulora.IAutoUpdateService.DownloadUpdate
+- uid: Agibuild.Fulora.IAutoUpdateService
+  commentId: T:Agibuild.Fulora.IAutoUpdateService
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IAutoUpdateService.html
+  name: IAutoUpdateService
+  nameWithType: IAutoUpdateService
+  fullName: Agibuild.Fulora.IAutoUpdateService
+- uid: Agibuild.Fulora.UpdateStatus.Error
+  commentId: F:Agibuild.Fulora.UpdateStatus.Error
+  href: Agibuild.Fulora.UpdateStatus.html#Agibuild_Fulora_UpdateStatus_Error
+  name: Error
+  nameWithType: UpdateStatus.Error
+  fullName: Agibuild.Fulora.UpdateStatus.Error
+- uid: Agibuild.Fulora.IAutoUpdateService.ApplyUpdate*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdateService.ApplyUpdate
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_ApplyUpdate
+  name: ApplyUpdate
+  nameWithType: IAutoUpdateService.ApplyUpdate
+  fullName: Agibuild.Fulora.IAutoUpdateService.ApplyUpdate
+- uid: Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_GetCurrentVersion
+  name: GetCurrentVersion
+  nameWithType: IAutoUpdateService.GetCurrentVersion
+  fullName: Agibuild.Fulora.IAutoUpdateService.GetCurrentVersion
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<string>
+  nameWithType: Task<string>
+  fullName: System.Threading.Tasks.Task<string>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.IAutoUpdateService.UpdateAvailable*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdateService.UpdateAvailable
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_UpdateAvailable
+  name: UpdateAvailable
+  nameWithType: IAutoUpdateService.UpdateAvailable
+  fullName: Agibuild.Fulora.IAutoUpdateService.UpdateAvailable
+- uid: Agibuild.Fulora.IBridgeEvent{Agibuild.Fulora.UpdateInfo}
+  commentId: T:Agibuild.Fulora.IBridgeEvent{Agibuild.Fulora.UpdateInfo}
+  parent: Agibuild.Fulora
+  definition: Agibuild.Fulora.IBridgeEvent`1
+  href: Agibuild.Fulora.IBridgeEvent-1.html
+  name: IBridgeEvent<UpdateInfo>
+  nameWithType: IBridgeEvent<UpdateInfo>
+  fullName: Agibuild.Fulora.IBridgeEvent<Agibuild.Fulora.UpdateInfo>
+  nameWithType.vb: IBridgeEvent(Of UpdateInfo)
+  fullName.vb: Agibuild.Fulora.IBridgeEvent(Of Agibuild.Fulora.UpdateInfo)
+  name.vb: IBridgeEvent(Of UpdateInfo)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IBridgeEvent`1
+    name: IBridgeEvent
+    href: Agibuild.Fulora.IBridgeEvent-1.html
+  - name: <
+  - uid: Agibuild.Fulora.UpdateInfo
+    name: UpdateInfo
+    href: Agibuild.Fulora.UpdateInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: Agibuild.Fulora.IBridgeEvent`1
+    name: IBridgeEvent
+    href: Agibuild.Fulora.IBridgeEvent-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.UpdateInfo
+    name: UpdateInfo
+    href: Agibuild.Fulora.UpdateInfo.html
+  - name: )
+- uid: Agibuild.Fulora.IBridgeEvent`1
+  commentId: T:Agibuild.Fulora.IBridgeEvent`1
+  href: Agibuild.Fulora.IBridgeEvent-1.html
+  name: IBridgeEvent<T>
+  nameWithType: IBridgeEvent<T>
+  fullName: Agibuild.Fulora.IBridgeEvent<T>
+  nameWithType.vb: IBridgeEvent(Of T)
+  fullName.vb: Agibuild.Fulora.IBridgeEvent(Of T)
+  name.vb: IBridgeEvent(Of T)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IBridgeEvent`1
+    name: IBridgeEvent
+    href: Agibuild.Fulora.IBridgeEvent-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Agibuild.Fulora.IBridgeEvent`1
+    name: IBridgeEvent
+    href: Agibuild.Fulora.IBridgeEvent-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Agibuild.Fulora.IAutoUpdateService.DownloadProgress*
+  commentId: Overload:Agibuild.Fulora.IAutoUpdateService.DownloadProgress
+  href: Agibuild.Fulora.IAutoUpdateService.html#Agibuild_Fulora_IAutoUpdateService_DownloadProgress
+  name: DownloadProgress
+  nameWithType: IAutoUpdateService.DownloadProgress
+  fullName: Agibuild.Fulora.IAutoUpdateService.DownloadProgress
+- uid: Agibuild.Fulora.IBridgeEvent{Agibuild.Fulora.UpdateDownloadProgress}
+  commentId: T:Agibuild.Fulora.IBridgeEvent{Agibuild.Fulora.UpdateDownloadProgress}
+  parent: Agibuild.Fulora
+  definition: Agibuild.Fulora.IBridgeEvent`1
+  href: Agibuild.Fulora.IBridgeEvent-1.html
+  name: IBridgeEvent<UpdateDownloadProgress>
+  nameWithType: IBridgeEvent<UpdateDownloadProgress>
+  fullName: Agibuild.Fulora.IBridgeEvent<Agibuild.Fulora.UpdateDownloadProgress>
+  nameWithType.vb: IBridgeEvent(Of UpdateDownloadProgress)
+  fullName.vb: Agibuild.Fulora.IBridgeEvent(Of Agibuild.Fulora.UpdateDownloadProgress)
+  name.vb: IBridgeEvent(Of UpdateDownloadProgress)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IBridgeEvent`1
+    name: IBridgeEvent
+    href: Agibuild.Fulora.IBridgeEvent-1.html
+  - name: <
+  - uid: Agibuild.Fulora.UpdateDownloadProgress
+    name: UpdateDownloadProgress
+    href: Agibuild.Fulora.UpdateDownloadProgress.html
+  - name: '>'
+  spec.vb:
+  - uid: Agibuild.Fulora.IBridgeEvent`1
+    name: IBridgeEvent
+    href: Agibuild.Fulora.IBridgeEvent-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.UpdateDownloadProgress
+    name: UpdateDownloadProgress
+    href: Agibuild.Fulora.UpdateDownloadProgress.html
+  - name: )

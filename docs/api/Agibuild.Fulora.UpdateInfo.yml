@@ -1,0 +1,576 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.UpdateInfo
+  commentId: T:Agibuild.Fulora.UpdateInfo
+  id: UpdateInfo
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.UpdateInfo.DownloadUrl
+  - Agibuild.Fulora.UpdateInfo.IsMandatory
+  - Agibuild.Fulora.UpdateInfo.ReleaseNotes
+  - Agibuild.Fulora.UpdateInfo.Sha256
+  - Agibuild.Fulora.UpdateInfo.SizeBytes
+  - Agibuild.Fulora.UpdateInfo.Version
+  langs:
+  - csharp
+  - vb
+  name: UpdateInfo
+  nameWithType: UpdateInfo
+  fullName: Agibuild.Fulora.UpdateInfo
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpdateInfo
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 5
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Describes an available application update.
+  example: []
+  syntax:
+    content: public sealed class UpdateInfo
+    content.vb: Public NotInheritable Class UpdateInfo
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.UpdateInfo.Version
+  commentId: P:Agibuild.Fulora.UpdateInfo.Version
+  id: Version
+  parent: Agibuild.Fulora.UpdateInfo
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: UpdateInfo.Version
+  fullName: Agibuild.Fulora.UpdateInfo.Version
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Version
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Version string of the available update (e.g. "1.2.0").
+  example: []
+  syntax:
+    content: public required string Version { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Version As String
+  overload: Agibuild.Fulora.UpdateInfo.Version*
+- uid: Agibuild.Fulora.UpdateInfo.ReleaseNotes
+  commentId: P:Agibuild.Fulora.UpdateInfo.ReleaseNotes
+  id: ReleaseNotes
+  parent: Agibuild.Fulora.UpdateInfo
+  langs:
+  - csharp
+  - vb
+  name: ReleaseNotes
+  nameWithType: UpdateInfo.ReleaseNotes
+  fullName: Agibuild.Fulora.UpdateInfo.ReleaseNotes
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ReleaseNotes
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 11
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Release notes or changelog summary, or <code>null</code> if unavailable.
+  example: []
+  syntax:
+    content: public string? ReleaseNotes { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property ReleaseNotes As String
+  overload: Agibuild.Fulora.UpdateInfo.ReleaseNotes*
+- uid: Agibuild.Fulora.UpdateInfo.DownloadUrl
+  commentId: P:Agibuild.Fulora.UpdateInfo.DownloadUrl
+  id: DownloadUrl
+  parent: Agibuild.Fulora.UpdateInfo
+  langs:
+  - csharp
+  - vb
+  name: DownloadUrl
+  nameWithType: UpdateInfo.DownloadUrl
+  fullName: Agibuild.Fulora.UpdateInfo.DownloadUrl
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DownloadUrl
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 14
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Download URL for the update package.
+  example: []
+  syntax:
+    content: public required string DownloadUrl { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property DownloadUrl As String
+  overload: Agibuild.Fulora.UpdateInfo.DownloadUrl*
+- uid: Agibuild.Fulora.UpdateInfo.SizeBytes
+  commentId: P:Agibuild.Fulora.UpdateInfo.SizeBytes
+  id: SizeBytes
+  parent: Agibuild.Fulora.UpdateInfo
+  langs:
+  - csharp
+  - vb
+  name: SizeBytes
+  nameWithType: UpdateInfo.SizeBytes
+  fullName: Agibuild.Fulora.UpdateInfo.SizeBytes
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SizeBytes
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 17
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Size in bytes of the update package, or <code>null</code> if unknown.
+  example: []
+  syntax:
+    content: public long? SizeBytes { get; init; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int64}
+    content.vb: Public Property SizeBytes As Long?
+  overload: Agibuild.Fulora.UpdateInfo.SizeBytes*
+- uid: Agibuild.Fulora.UpdateInfo.IsMandatory
+  commentId: P:Agibuild.Fulora.UpdateInfo.IsMandatory
+  id: IsMandatory
+  parent: Agibuild.Fulora.UpdateInfo
+  langs:
+  - csharp
+  - vb
+  name: IsMandatory
+  nameWithType: UpdateInfo.IsMandatory
+  fullName: Agibuild.Fulora.UpdateInfo.IsMandatory
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IsMandatory
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 20
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Whether this update is mandatory (user cannot skip).
+  example: []
+  syntax:
+    content: public bool IsMandatory { get; init; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsMandatory As Boolean
+  overload: Agibuild.Fulora.UpdateInfo.IsMandatory*
+- uid: Agibuild.Fulora.UpdateInfo.Sha256
+  commentId: P:Agibuild.Fulora.UpdateInfo.Sha256
+  id: Sha256
+  parent: Agibuild.Fulora.UpdateInfo
+  langs:
+  - csharp
+  - vb
+  name: Sha256
+  nameWithType: UpdateInfo.Sha256
+  fullName: Agibuild.Fulora.UpdateInfo.Sha256
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Sha256
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 23
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: SHA-256 hash of the update package for integrity verification, or <code>null</code> if unavailable.
+  example: []
+  syntax:
+    content: public string? Sha256 { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Sha256 As String
+  overload: Agibuild.Fulora.UpdateInfo.Sha256*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.UpdateInfo.Version*
+  commentId: Overload:Agibuild.Fulora.UpdateInfo.Version
+  href: Agibuild.Fulora.UpdateInfo.html#Agibuild_Fulora_UpdateInfo_Version
+  name: Version
+  nameWithType: UpdateInfo.Version
+  fullName: Agibuild.Fulora.UpdateInfo.Version
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Agibuild.Fulora.UpdateInfo.ReleaseNotes*
+  commentId: Overload:Agibuild.Fulora.UpdateInfo.ReleaseNotes
+  href: Agibuild.Fulora.UpdateInfo.html#Agibuild_Fulora_UpdateInfo_ReleaseNotes
+  name: ReleaseNotes
+  nameWithType: UpdateInfo.ReleaseNotes
+  fullName: Agibuild.Fulora.UpdateInfo.ReleaseNotes
+- uid: Agibuild.Fulora.UpdateInfo.DownloadUrl*
+  commentId: Overload:Agibuild.Fulora.UpdateInfo.DownloadUrl
+  href: Agibuild.Fulora.UpdateInfo.html#Agibuild_Fulora_UpdateInfo_DownloadUrl
+  name: DownloadUrl
+  nameWithType: UpdateInfo.DownloadUrl
+  fullName: Agibuild.Fulora.UpdateInfo.DownloadUrl
+- uid: Agibuild.Fulora.UpdateInfo.SizeBytes*
+  commentId: Overload:Agibuild.Fulora.UpdateInfo.SizeBytes
+  href: Agibuild.Fulora.UpdateInfo.html#Agibuild_Fulora_UpdateInfo_SizeBytes
+  name: SizeBytes
+  nameWithType: UpdateInfo.SizeBytes
+  fullName: Agibuild.Fulora.UpdateInfo.SizeBytes
+- uid: System.Nullable{System.Int64}
+  commentId: T:System.Nullable{System.Int64}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long?
+  nameWithType: long?
+  fullName: long?
+  nameWithType.vb: Long?
+  fullName.vb: Long?
+  name.vb: Long?
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '?'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Agibuild.Fulora.UpdateInfo.IsMandatory*
+  commentId: Overload:Agibuild.Fulora.UpdateInfo.IsMandatory
+  href: Agibuild.Fulora.UpdateInfo.html#Agibuild_Fulora_UpdateInfo_IsMandatory
+  name: IsMandatory
+  nameWithType: UpdateInfo.IsMandatory
+  fullName: Agibuild.Fulora.UpdateInfo.IsMandatory
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Agibuild.Fulora.UpdateInfo.Sha256*
+  commentId: Overload:Agibuild.Fulora.UpdateInfo.Sha256
+  href: Agibuild.Fulora.UpdateInfo.html#Agibuild_Fulora_UpdateInfo_Sha256
+  name: Sha256
+  nameWithType: UpdateInfo.Sha256
+  fullName: Agibuild.Fulora.UpdateInfo.Sha256

@@ -23,7 +23,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewEnvironment
     path: ../src/Agibuild.Fulora.Runtime/WebViewEnvironment.cs
-    startLine: 28
+    startLine: 30
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -69,7 +69,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: LoggerFactory
     path: ../src/Agibuild.Fulora.Runtime/WebViewEnvironment.cs
-    startLine: 34
+    startLine: 36
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -103,7 +103,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Options
     path: ../src/Agibuild.Fulora.Runtime/WebViewEnvironment.cs
-    startLine: 39
+    startLine: 41
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -134,7 +134,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Initialize
     path: ../src/Agibuild.Fulora.Runtime/WebViewEnvironment.cs
-    startLine: 44
+    startLine: 46
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -168,7 +168,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Initialize
     path: ../src/Agibuild.Fulora.Runtime/WebViewEnvironment.cs
-    startLine: 52
+    startLine: 54
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora

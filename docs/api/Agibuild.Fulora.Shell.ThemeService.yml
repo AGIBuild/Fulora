@@ -20,14 +20,14 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ThemeService
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 10
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   summary: >-
     Bridge service implementation that exposes OS theme information to JavaScript.
@@ -64,14 +64,14 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 17
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   syntax:
     content: public ThemeService(IPlatformThemeProvider provider)
@@ -96,14 +96,14 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ThemeChanged
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 24
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   summary: Push event fired when the OS theme changes (dark/light, accent color, high-contrast).
   example: []
@@ -129,14 +129,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetCurrentTheme
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 26
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   summary: Returns the current OS theme info (mode, accent color, high-contrast state).
   example: []
@@ -161,14 +161,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetAccentColor
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 31
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   summary: Returns the OS accent color as a hex string (<code>"#RRGGBB"</code>), or <code>null</code> on unsupported platforms.
   example: []
@@ -193,14 +193,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetHighContrastMode
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 36
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   summary: Returns <code>true</code> if the OS is in high-contrast mode.
   example: []
@@ -225,14 +225,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Dispose
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/ThemeService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/ThemeService.cs
     startLine: 68
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora.Shell
   summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
   example: []
@@ -573,7 +573,6 @@ references:
 - uid: Agibuild.Fulora.IThemeService.ThemeChanged
   commentId: P:Agibuild.Fulora.IThemeService.ThemeChanged
   parent: Agibuild.Fulora.IThemeService
-  href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_ThemeChanged
   name: ThemeChanged
   nameWithType: IThemeService.ThemeChanged
   fullName: Agibuild.Fulora.IThemeService.ThemeChanged
@@ -642,20 +641,17 @@ references:
 - uid: Agibuild.Fulora.IThemeService.GetCurrentTheme
   commentId: M:Agibuild.Fulora.IThemeService.GetCurrentTheme
   parent: Agibuild.Fulora.IThemeService
-  href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetCurrentTheme
   name: GetCurrentTheme()
   nameWithType: IThemeService.GetCurrentTheme()
   fullName: Agibuild.Fulora.IThemeService.GetCurrentTheme()
   spec.csharp:
   - uid: Agibuild.Fulora.IThemeService.GetCurrentTheme
     name: GetCurrentTheme
-    href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetCurrentTheme
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IThemeService.GetCurrentTheme
     name: GetCurrentTheme
-    href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetCurrentTheme
   - name: (
   - name: )
 - uid: System.Threading.Tasks.Task{Agibuild.Fulora.ThemeInfo}
@@ -765,20 +761,17 @@ references:
 - uid: Agibuild.Fulora.IThemeService.GetAccentColor
   commentId: M:Agibuild.Fulora.IThemeService.GetAccentColor
   parent: Agibuild.Fulora.IThemeService
-  href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetAccentColor
   name: GetAccentColor()
   nameWithType: IThemeService.GetAccentColor()
   fullName: Agibuild.Fulora.IThemeService.GetAccentColor()
   spec.csharp:
   - uid: Agibuild.Fulora.IThemeService.GetAccentColor
     name: GetAccentColor
-    href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetAccentColor
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IThemeService.GetAccentColor
     name: GetAccentColor
-    href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetAccentColor
   - name: (
   - name: )
 - uid: System.Threading.Tasks.Task{System.String}
@@ -825,20 +818,17 @@ references:
 - uid: Agibuild.Fulora.IThemeService.GetHighContrastMode
   commentId: M:Agibuild.Fulora.IThemeService.GetHighContrastMode
   parent: Agibuild.Fulora.IThemeService
-  href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetHighContrastMode
   name: GetHighContrastMode()
   nameWithType: IThemeService.GetHighContrastMode()
   fullName: Agibuild.Fulora.IThemeService.GetHighContrastMode()
   spec.csharp:
   - uid: Agibuild.Fulora.IThemeService.GetHighContrastMode
     name: GetHighContrastMode
-    href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetHighContrastMode
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IThemeService.GetHighContrastMode
     name: GetHighContrastMode
-    href: Agibuild.Fulora.IThemeService.html#Agibuild_Fulora_IThemeService_GetHighContrastMode
   - name: (
   - name: )
 - uid: System.Threading.Tasks.Task{System.Boolean}

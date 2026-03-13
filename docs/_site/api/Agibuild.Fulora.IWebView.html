@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IWebView | Agibuild.Fulora ">
       
-      <meta name="description" content="Public WebView contract surface for navigation, scripting, events, and feature adapters.">
+      
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Agibuild_Fulora_IWebView" data-uid="Agibuild.Fulora.IWebView" class="text-break">
-Interface IWebView  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L109"><i class="bi bi-code-slash"></i></a>
+Interface IWebView  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L8"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,8 +97,7 @@ Interface IWebView  <a class="header-action link-secondary" title="View source" 
   <dl><dt>Assembly</dt><dd>Agibuild.Fulora.Core.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Public WebView contract surface for navigation, scripting, events, and feature adapters.</p>
-</div>
+  <div class="markdown summary"></div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -132,15 +131,10 @@ Interface IWebView  <a class="header-action link-secondary" title="View source" 
 
   <h3 id="Agibuild_Fulora_IWebView_Bridge" data-uid="Agibuild.Fulora.IWebView.Bridge">
   Bridge
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the type-safe bridge service for exposing C# services to JS (<a class="xref" href="Agibuild.Fulora.JsExportAttribute.html">JsExportAttribute</a>)
-and importing JS services into C# (<a class="xref" href="Agibuild.Fulora.JsImportAttribute.html">JsImportAttribute</a>).</p>
-<p>
-Accessing this property auto-enables the WebMessage bridge if it is not already enabled.
-</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -168,12 +162,10 @@ Accessing this property auto-enables the WebMessage bridge if it is not already 
 
   <h3 id="Agibuild_Fulora_IWebView_BridgeTracer" data-uid="Agibuild.Fulora.IWebView.BridgeTracer">
   BridgeTracer
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the bridge tracer for observability. Must be set before the first access to
-<a class="xref" href="Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Bridge">Bridge</a>; changes after the bridge is created are silently ignored.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -201,11 +193,10 @@ Accessing this property auto-enables the WebMessage bridge if it is not already 
 
   <h3 id="Agibuild_Fulora_IWebView_CanGoBack" data-uid="Agibuild.Fulora.IWebView.CanGoBack">
   CanGoBack
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets whether the WebView can navigate back in history.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -233,11 +224,10 @@ Accessing this property auto-enables the WebMessage bridge if it is not already 
 
   <h3 id="Agibuild_Fulora_IWebView_CanGoForward" data-uid="Agibuild.Fulora.IWebView.CanGoForward">
   CanGoForward
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets whether the WebView can navigate forward in history.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -265,11 +255,10 @@ Accessing this property auto-enables the WebMessage bridge if it is not already 
 
   <h3 id="Agibuild_Fulora_IWebView_ChannelId" data-uid="Agibuild.Fulora.IWebView.ChannelId">
   ChannelId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L121"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the channel id used to isolate WebMessage traffic.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -297,11 +286,10 @@ Accessing this property auto-enables the WebMessage bridge if it is not already 
 
   <h3 id="Agibuild_Fulora_IWebView_IsLoading" data-uid="Agibuild.Fulora.IWebView.IsLoading">
   IsLoading
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L13"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets whether a navigation is currently in progress.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -329,12 +317,10 @@ Accessing this property auto-enables the WebMessage bridge if it is not already 
 
   <h3 id="Agibuild_Fulora_IWebView_Rpc" data-uid="Agibuild.Fulora.IWebView.Rpc">
   Rpc
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the RPC service for bidirectional JS ↔ C# method calls.
-Returns <code>null</code> until the WebMessage bridge is enabled.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -362,11 +348,10 @@ Returns <code>null</code> until the WebMessage bridge is enabled.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_Source" data-uid="Agibuild.Fulora.IWebView.Source">
   Source
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets the current navigation URI.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -398,11 +383,10 @@ Returns <code>null</code> until the WebMessage bridge is enabled.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_AddPreloadScriptAsync_System_String_" data-uid="Agibuild.Fulora.IWebView.AddPreloadScriptAsync(System.String)">
   AddPreloadScriptAsync(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L261"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L58"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Adds a JavaScript snippet that runs before every page load.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -418,8 +402,7 @@ Returns <code>null</code> until the WebMessage bridge is enabled.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-    <dd><p>An opaque script ID for later removal.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -429,12 +412,6 @@ Returns <code>null</code> until the WebMessage bridge is enabled.</p>
 
 
 
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></dt>
-    <dd><p>The adapter does not implement preload scripts.</p>
-</dd>
-  </dl>
 
 
 
@@ -442,12 +419,10 @@ Returns <code>null</code> until the WebMessage bridge is enabled.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_CaptureScreenshotAsync" data-uid="Agibuild.Fulora.IWebView.CaptureScreenshotAsync">
   CaptureScreenshotAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L196"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Captures a screenshot of the current viewport as a PNG byte array.
-Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a> if the adapter does not support screenshots.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -475,12 +450,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_CloseDevToolsAsync" data-uid="Agibuild.Fulora.IWebView.CloseDevToolsAsync">
   CloseDevToolsAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Closes the browser developer tools.
-No-op if the platform adapter does not support runtime DevTools toggling.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -508,11 +481,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_FindInPageAsync_System_String_Agibuild_Fulora_FindInPageOptions_" data-uid="Agibuild.Fulora.IWebView.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)">
   FindInPageAsync(string, FindInPageOptions?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L246"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Searches the current page for <code class="paramref">text</code>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -540,12 +512,6 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
 
 
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></dt>
-    <dd><p>The adapter does not implement find-in-page.</p>
-</dd>
-  </dl>
 
 
 
@@ -553,11 +519,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_GetZoomFactorAsync" data-uid="Agibuild.Fulora.IWebView.GetZoomFactorAsync">
   GetZoomFactorAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L234"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets the zoom factor. 1.0 = 100%. Returns 1.0 if zoom is not supported.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -585,11 +550,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_GoBackAsync" data-uid="Agibuild.Fulora.IWebView.GoBackAsync">
   GoBackAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Attempts to navigate back.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -617,11 +581,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_GoForwardAsync" data-uid="Agibuild.Fulora.IWebView.GoForwardAsync">
   GoForwardAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Attempts to navigate forward.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -649,11 +612,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_InvokeScriptAsync_System_String_" data-uid="Agibuild.Fulora.IWebView.InvokeScriptAsync(System.String)">
   InvokeScriptAsync(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Executes JavaScript in the context of the current document.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -663,8 +625,7 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>script</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The JavaScript source.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -687,12 +648,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_IsDevToolsOpenAsync" data-uid="Agibuild.Fulora.IWebView.IsDevToolsOpenAsync">
   IsDevToolsOpenAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns whether developer tools are currently open.
-Always returns false if the platform adapter does not support this check.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -720,11 +679,10 @@ Always returns false if the platform adapter does not support this check.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_NavigateAsync_System_Uri_" data-uid="Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)">
   NavigateAsync(Uri)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Navigates to the specified URI.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -734,8 +692,7 @@ Always returns false if the platform adapter does not support this check.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd><p>The target URI.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -758,11 +715,10 @@ Always returns false if the platform adapter does not support this check.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_" data-uid="Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String)">
   NavigateToStringAsync(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Navigates to a string of HTML.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -772,8 +728,7 @@ Always returns false if the platform adapter does not support this check.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>html</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The HTML content.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -796,11 +751,10 @@ Always returns false if the platform adapter does not support this check.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_System_Uri_" data-uid="Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String,System.Uri)">
   NavigateToStringAsync(string, Uri?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Navigates to a string of HTML with an optional base URL.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -810,11 +764,9 @@ Always returns false if the platform adapter does not support this check.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>html</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The HTML content.</p>
-</dd>
+    <dd></dd>
     <dt><code>baseUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd><p>Optional base URI for relative URL resolution.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -837,12 +789,10 @@ Always returns false if the platform adapter does not support this check.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_OpenDevToolsAsync" data-uid="Agibuild.Fulora.IWebView.OpenDevToolsAsync">
   OpenDevToolsAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Opens the browser developer tools (inspector) at runtime.
-No-op if the platform adapter does not support runtime DevTools toggling.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -870,12 +820,10 @@ No-op if the platform adapter does not support runtime DevTools toggling.</p>
 
   <h3 id="Agibuild_Fulora_IWebView_PrintToPdfAsync_Agibuild_Fulora_PdfPrintOptions_" data-uid="Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)">
   PrintToPdfAsync(PdfPrintOptions?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L202"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Prints the current page to a PDF byte array.
-Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a> if the adapter does not support printing.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -908,11 +856,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_RefreshAsync" data-uid="Agibuild.Fulora.IWebView.RefreshAsync">
   RefreshAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L142"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Reloads the current page.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -940,11 +887,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_RemovePreloadScriptAsync_System_String_" data-uid="Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(System.String)">
   RemovePreloadScriptAsync(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L267"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L59"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Removes a previously added preload script.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -970,12 +916,6 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
 
 
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></dt>
-    <dd><p>The adapter does not implement preload scripts.</p>
-</dd>
-  </dl>
 
 
 
@@ -983,11 +923,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_SetZoomFactorAsync_System_Double_" data-uid="Agibuild.Fulora.IWebView.SetZoomFactorAsync(System.Double)">
   SetZoomFactorAsync(double)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L238"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the zoom factor. 1.0 = 100%.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -997,8 +936,7 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>zoomFactor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
-    <dd><p>The zoom factor to set.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1021,11 +959,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_StopAsync" data-uid="Agibuild.Fulora.IWebView.StopAsync">
   StopAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L144"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Stops an active navigation, if any.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1053,11 +990,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_StopFindInPageAsync_System_Boolean_" data-uid="Agibuild.Fulora.IWebView.StopFindInPageAsync(System.Boolean)">
   StopFindInPageAsync(bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Stops an active find session and optionally clears highlights.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1083,12 +1019,6 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
 
 
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></dt>
-    <dd><p>The adapter does not implement find-in-page.</p>
-</dd>
-  </dl>
 
 
 
@@ -1096,11 +1026,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_TryGetCommandManager" data-uid="Agibuild.Fulora.IWebView.TryGetCommandManager">
   TryGetCommandManager()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the command manager if supported by the adapter; otherwise null.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1128,11 +1057,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_TryGetCookieManager" data-uid="Agibuild.Fulora.IWebView.TryGetCookieManager">
   TryGetCookieManager()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the cookie manager if supported by the adapter; otherwise null.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1160,11 +1088,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_TryGetWebViewHandleAsync" data-uid="Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync">
   TryGetWebViewHandleAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the typed native WebView handle if supported; otherwise null.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1195,11 +1122,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_AdapterCreated" data-uid="Agibuild.Fulora.IWebView.AdapterCreated">
   AdapterCreated
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L224"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised after the native adapter is attached and ready. The event args carry the typed platform handle.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1226,11 +1152,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_AdapterDestroyed" data-uid="Agibuild.Fulora.IWebView.AdapterDestroyed">
   AdapterDestroyed
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised before the native adapter is detached/destroyed. After this event, <a class="xref" href="Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle">TryGetWebViewHandle()</a> returns <code>null</code>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1257,11 +1182,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_ContextMenuRequested" data-uid="Agibuild.Fulora.IWebView.ContextMenuRequested">
   ContextMenuRequested
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when the user triggers a context menu (right-click, long-press).</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1288,11 +1212,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_DownloadRequested" data-uid="Agibuild.Fulora.IWebView.DownloadRequested">
   DownloadRequested
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L218"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when a file download is initiated. The handler can set <code>DownloadPath</code> or <code>Cancel</code>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1319,11 +1242,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_EnvironmentRequested" data-uid="Agibuild.Fulora.IWebView.EnvironmentRequested">
   EnvironmentRequested
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when the environment is requested (placeholder).</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1350,11 +1272,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_NavigationCompleted" data-uid="Agibuild.Fulora.IWebView.NavigationCompleted">
   NavigationCompleted
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L207"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when a navigation completes (success, failure, canceled, superseded).</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1381,11 +1302,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_NavigationStarted" data-uid="Agibuild.Fulora.IWebView.NavigationStarted">
   NavigationStarted
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L205"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when a navigation starts. Handlers may cancel the navigation.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1412,11 +1332,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_NewWindowRequested" data-uid="Agibuild.Fulora.IWebView.NewWindowRequested">
   NewWindowRequested
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L209"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when content requests opening a new window.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1443,11 +1362,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_PermissionRequested" data-uid="Agibuild.Fulora.IWebView.PermissionRequested">
   PermissionRequested
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L221"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when web content requests a permission (camera, mic, geolocation, etc.).</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1474,11 +1392,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_WebMessageReceived" data-uid="Agibuild.Fulora.IWebView.WebMessageReceived">
   WebMessageReceived
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L211"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when a WebMessage is received from the page.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1505,11 +1422,10 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 
   <h3 id="Agibuild_Fulora_IWebView_WebResourceRequested" data-uid="Agibuild.Fulora.IWebView.WebResourceRequested">
   WebResourceRequested
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L213"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Raised when a custom-scheme request is intercepted.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1537,7 +1453,7 @@ Throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsu
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L109" class="edit-link">Edit this page</a>
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewInterfaces.cs/#L8" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -18,17 +18,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AuthOptions
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 639
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 105
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Options for <xref href="Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow%2cAgibuild.Fulora.AuthOptions)" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: public sealed class AuthOptions
     content.vb: Public NotInheritable Class AuthOptions
@@ -54,17 +52,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AuthorizeUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 642
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 107
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The OAuth authorization URL to navigate to.
-  example: []
   syntax:
     content: public Uri? AuthorizeUri { get; set; }
     parameters: []
@@ -85,17 +81,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CallbackUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 645
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 108
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The expected callback/redirect URI. Navigation to this URI completes the flow.
-  example: []
   syntax:
     content: public Uri? CallbackUri { get; set; }
     parameters: []
@@ -116,17 +110,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: UseEphemeralSession
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 648
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 109
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Use an ephemeral (non-persistent) data store for the authentication dialog.
-  example: []
   syntax:
     content: public bool UseEphemeralSession { get; set; }
     parameters: []
@@ -147,17 +139,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Timeout
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 651
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 110
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: 'Optional timeout for the authentication flow. Default: no timeout.'
-  example: []
   syntax:
     content: public TimeSpan? Timeout { get; set; }
     parameters: []
@@ -166,41 +156,6 @@ items:
     content.vb: Public Property Timeout As TimeSpan?
   overload: Agibuild.Fulora.AuthOptions.Timeout*
 references:
-- uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-  commentId: M:Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-  parent: Agibuild.Fulora.IWebAuthBroker
-  href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
-  name: AuthenticateAsync(ITopLevelWindow, AuthOptions)
-  nameWithType: IWebAuthBroker.AuthenticateAsync(ITopLevelWindow, AuthOptions)
-  fullName: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow, Agibuild.Fulora.AuthOptions)
-  spec.csharp:
-  - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-    name: AuthenticateAsync
-    href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
-  - name: (
-  - uid: Agibuild.Fulora.ITopLevelWindow
-    name: ITopLevelWindow
-    href: Agibuild.Fulora.ITopLevelWindow.html
-  - name: ','
-  - name: " "
-  - uid: Agibuild.Fulora.AuthOptions
-    name: AuthOptions
-    href: Agibuild.Fulora.AuthOptions.html
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
-    name: AuthenticateAsync
-    href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
-  - name: (
-  - uid: Agibuild.Fulora.ITopLevelWindow
-    name: ITopLevelWindow
-    href: Agibuild.Fulora.ITopLevelWindow.html
-  - name: ','
-  - name: " "
-  - uid: Agibuild.Fulora.AuthOptions
-    name: AuthOptions
-    href: Agibuild.Fulora.AuthOptions.html
-  - name: )
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -429,13 +384,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
-- uid: Agibuild.Fulora.IWebAuthBroker
-  commentId: T:Agibuild.Fulora.IWebAuthBroker
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebAuthBroker.html
-  name: IWebAuthBroker
-  nameWithType: IWebAuthBroker
-  fullName: Agibuild.Fulora.IWebAuthBroker
 - uid: System
   commentId: N:System
   isExternal: true

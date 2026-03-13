@@ -1,0 +1,216 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.DragDropEffects
+  commentId: T:Agibuild.Fulora.DragDropEffects
+  id: DragDropEffects
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.DragDropEffects.All
+  - Agibuild.Fulora.DragDropEffects.Copy
+  - Agibuild.Fulora.DragDropEffects.Link
+  - Agibuild.Fulora.DragDropEffects.Move
+  - Agibuild.Fulora.DragDropEffects.None
+  langs:
+  - csharp
+  - vb
+  name: DragDropEffects
+  nameWithType: DragDropEffects
+  fullName: Agibuild.Fulora.DragDropEffects
+  type: Enum
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DragDropEffects
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 5
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Drag-and-drop effect flags for native ↔ web interoperability.
+  example: []
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum DragDropEffects
+    content.vb: >-
+      <Flags>
+
+      Public Enum DragDropEffects
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: Agibuild.Fulora.DragDropEffects.None
+  commentId: F:Agibuild.Fulora.DragDropEffects.None
+  id: None
+  parent: Agibuild.Fulora.DragDropEffects
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: DragDropEffects.None
+  fullName: Agibuild.Fulora.DragDropEffects.None
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: None
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 9
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: No drag-drop effect.
+  example: []
+  syntax:
+    content: None = 0
+    return:
+      type: Agibuild.Fulora.DragDropEffects
+- uid: Agibuild.Fulora.DragDropEffects.Copy
+  commentId: F:Agibuild.Fulora.DragDropEffects.Copy
+  id: Copy
+  parent: Agibuild.Fulora.DragDropEffects
+  langs:
+  - csharp
+  - vb
+  name: Copy
+  nameWithType: DragDropEffects.Copy
+  fullName: Agibuild.Fulora.DragDropEffects.Copy
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Copy
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 11
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Copy the dragged data.
+  example: []
+  syntax:
+    content: Copy = 1
+    return:
+      type: Agibuild.Fulora.DragDropEffects
+- uid: Agibuild.Fulora.DragDropEffects.Move
+  commentId: F:Agibuild.Fulora.DragDropEffects.Move
+  id: Move
+  parent: Agibuild.Fulora.DragDropEffects
+  langs:
+  - csharp
+  - vb
+  name: Move
+  nameWithType: DragDropEffects.Move
+  fullName: Agibuild.Fulora.DragDropEffects.Move
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Move
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 13
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Move the dragged data.
+  example: []
+  syntax:
+    content: Move = 2
+    return:
+      type: Agibuild.Fulora.DragDropEffects
+- uid: Agibuild.Fulora.DragDropEffects.Link
+  commentId: F:Agibuild.Fulora.DragDropEffects.Link
+  id: Link
+  parent: Agibuild.Fulora.DragDropEffects
+  langs:
+  - csharp
+  - vb
+  name: Link
+  nameWithType: DragDropEffects.Link
+  fullName: Agibuild.Fulora.DragDropEffects.Link
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Link
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 15
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Create a link to the dragged data.
+  example: []
+  syntax:
+    content: Link = 4
+    return:
+      type: Agibuild.Fulora.DragDropEffects
+- uid: Agibuild.Fulora.DragDropEffects.All
+  commentId: F:Agibuild.Fulora.DragDropEffects.All
+  id: All
+  parent: Agibuild.Fulora.DragDropEffects
+  langs:
+  - csharp
+  - vb
+  name: All
+  nameWithType: DragDropEffects.All
+  fullName: Agibuild.Fulora.DragDropEffects.All
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: All
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 17
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Copy, move, or link.
+  example: []
+  syntax:
+    content: All = Copy | Move | Link
+    return:
+      type: Agibuild.Fulora.DragDropEffects
+    content.vb: All = Copy Or Move Or Link
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.DragDropEffects
+  commentId: T:Agibuild.Fulora.DragDropEffects
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.DragDropEffects.html
+  name: DragDropEffects
+  nameWithType: DragDropEffects
+  fullName: Agibuild.Fulora.DragDropEffects

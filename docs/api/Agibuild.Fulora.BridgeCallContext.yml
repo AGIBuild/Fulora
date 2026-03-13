@@ -24,7 +24,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeCallContext
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 142
+    startLine: 144
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -60,7 +60,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ServiceName
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 145
+    startLine: 147
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -91,7 +91,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: MethodName
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 148
+    startLine: 150
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -122,7 +122,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Arguments
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 151
+    startLine: 153
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -153,7 +153,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CancellationToken
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 154
+    startLine: 156
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -184,7 +184,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Properties
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 157
+    startLine: 159
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora

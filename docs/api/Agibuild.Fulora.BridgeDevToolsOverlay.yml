@@ -50,8 +50,8 @@ items:
     </p>
   example: []
   syntax:
-    content: 'public sealed class BridgeDevToolsOverlay : ContentControl, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, INamed, IInputElement, IDataTemplateHost, ISetterValue, IDisposable'
-    content.vb: Public NotInheritable Class BridgeDevToolsOverlay Inherits ContentControl Implements INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, INamed, IInputElement, IDataTemplateHost, ISetterValue, IDisposable
+    content: 'public sealed class BridgeDevToolsOverlay : ContentControl, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, INamed, IInputElement, IDataTemplateHost, ISetterValue, IDisposable'
+    content.vb: Public NotInheritable Class BridgeDevToolsOverlay Inherits ContentControl Implements INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, INamed, IInputElement, IDataTemplateHost, ISetterValue, IDisposable
   inheritance:
   - System.Object
   - Avalonia.AvaloniaObject
@@ -75,7 +75,6 @@ items:
   - Avalonia.Controls.ISetLogicalParent
   - Avalonia.Controls.ISetInheritanceParent
   - System.ComponentModel.ISupportInitialize
-  - Avalonia.Styling.IStyleable
   - Avalonia.INamed
   - Avalonia.Input.IInputElement
   - Avalonia.Controls.Templates.IDataTemplateHost
@@ -103,6 +102,7 @@ items:
   - Avalonia.Controls.Primitives.TemplatedControl.FontWeightProperty
   - Avalonia.Controls.Primitives.TemplatedControl.FontStretchProperty
   - Avalonia.Controls.Primitives.TemplatedControl.ForegroundProperty
+  - Avalonia.Controls.Primitives.TemplatedControl.LetterSpacingProperty
   - Avalonia.Controls.Primitives.TemplatedControl.PaddingProperty
   - Avalonia.Controls.Primitives.TemplatedControl.TemplateProperty
   - Avalonia.Controls.Primitives.TemplatedControl.IsTemplateFocusTargetProperty
@@ -122,6 +122,7 @@ items:
   - Avalonia.Controls.Primitives.TemplatedControl.FontWeight
   - Avalonia.Controls.Primitives.TemplatedControl.FontStretch
   - Avalonia.Controls.Primitives.TemplatedControl.Foreground
+  - Avalonia.Controls.Primitives.TemplatedControl.LetterSpacing
   - Avalonia.Controls.Primitives.TemplatedControl.Padding
   - Avalonia.Controls.Primitives.TemplatedControl.Template
   - Avalonia.Controls.Primitives.TemplatedControl.TemplateApplied
@@ -130,7 +131,6 @@ items:
   - Avalonia.Controls.Control.ContextMenuProperty
   - Avalonia.Controls.Control.ContextFlyoutProperty
   - Avalonia.Controls.Control.RequestBringIntoViewEvent
-  - Avalonia.Controls.Control.ContextRequestedEvent
   - Avalonia.Controls.Control.LoadedEvent
   - Avalonia.Controls.Control.UnloadedEvent
   - Avalonia.Controls.Control.SizeChangedEvent
@@ -140,7 +140,6 @@ items:
   - Avalonia.Controls.Control.ContextFlyout
   - Avalonia.Controls.Control.IsLoaded
   - Avalonia.Controls.Control.Tag
-  - Avalonia.Controls.Control.ContextRequested
   - Avalonia.Controls.Control.Loaded
   - Avalonia.Controls.Control.Unloaded
   - Avalonia.Controls.Control.SizeChanged
@@ -154,7 +153,9 @@ items:
   - Avalonia.Input.InputElement.IsPointerOverProperty
   - Avalonia.Input.InputElement.IsTabStopProperty
   - Avalonia.Input.InputElement.GotFocusEvent
+  - Avalonia.Input.InputElement.GettingFocusEvent
   - Avalonia.Input.InputElement.LostFocusEvent
+  - Avalonia.Input.InputElement.LosingFocusEvent
   - Avalonia.Input.InputElement.KeyDownEvent
   - Avalonia.Input.InputElement.KeyUpEvent
   - Avalonia.Input.InputElement.TabIndexProperty
@@ -167,10 +168,30 @@ items:
   - Avalonia.Input.InputElement.PointerReleasedEvent
   - Avalonia.Input.InputElement.PointerCaptureLostEvent
   - Avalonia.Input.InputElement.PointerWheelChangedEvent
+  - Avalonia.Input.InputElement.ContextRequestedEvent
+  - Avalonia.Input.InputElement.ContextCanceledEvent
+  - Avalonia.Input.InputElement.IsHoldingEnabledProperty
+  - Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+  - Avalonia.Input.InputElement.PinchEvent
+  - Avalonia.Input.InputElement.PinchEndedEvent
+  - Avalonia.Input.InputElement.PullGestureEvent
+  - Avalonia.Input.InputElement.PullGestureEndedEvent
+  - Avalonia.Input.InputElement.SwipeGestureEvent
+  - Avalonia.Input.InputElement.ScrollGestureEvent
+  - Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+  - Avalonia.Input.InputElement.ScrollGestureEndedEvent
+  - Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+  - Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+  - Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
   - Avalonia.Input.InputElement.TappedEvent
+  - Avalonia.Input.InputElement.RightTappedEvent
   - Avalonia.Input.InputElement.HoldingEvent
   - Avalonia.Input.InputElement.DoubleTappedEvent
   - Avalonia.Input.InputElement.Focus(Avalonia.Input.NavigationMethod,Avalonia.Input.KeyModifiers)
+  - Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  - Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+  - Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  - Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
   - Avalonia.Input.InputElement.Focusable
   - Avalonia.Input.InputElement.IsEnabled
   - Avalonia.Input.InputElement.Cursor
@@ -184,7 +205,9 @@ items:
   - Avalonia.Input.InputElement.KeyBindings
   - Avalonia.Input.InputElement.GestureRecognizers
   - Avalonia.Input.InputElement.GotFocus
+  - Avalonia.Input.InputElement.GettingFocus
   - Avalonia.Input.InputElement.LostFocus
+  - Avalonia.Input.InputElement.LosingFocus
   - Avalonia.Input.InputElement.KeyDown
   - Avalonia.Input.InputElement.KeyUp
   - Avalonia.Input.InputElement.TextInput
@@ -196,7 +219,21 @@ items:
   - Avalonia.Input.InputElement.PointerReleased
   - Avalonia.Input.InputElement.PointerCaptureLost
   - Avalonia.Input.InputElement.PointerWheelChanged
+  - Avalonia.Input.InputElement.ContextRequested
+  - Avalonia.Input.InputElement.ContextCanceled
+  - Avalonia.Input.InputElement.Pinch
+  - Avalonia.Input.InputElement.PinchEnded
+  - Avalonia.Input.InputElement.PullGesture
+  - Avalonia.Input.InputElement.PullGestureEnded
+  - Avalonia.Input.InputElement.ScrollGesture
+  - Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+  - Avalonia.Input.InputElement.ScrollGestureEnded
+  - Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+  - Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+  - Avalonia.Input.InputElement.SwipeGesture
+  - Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
   - Avalonia.Input.InputElement.Tapped
+  - Avalonia.Input.InputElement.RightTapped
   - Avalonia.Input.InputElement.Holding
   - Avalonia.Input.InputElement.DoubleTapped
   - Avalonia.Interactivity.Interactive.AddHandler(Avalonia.Interactivity.RoutedEvent,System.Delegate,Avalonia.Interactivity.RoutingStrategies,System.Boolean)
@@ -241,6 +278,7 @@ items:
   - Avalonia.Visual.IsVisibleProperty
   - Avalonia.Visual.OpacityProperty
   - Avalonia.Visual.OpacityMaskProperty
+  - Avalonia.Visual.CacheModeProperty
   - Avalonia.Visual.EffectProperty
   - Avalonia.Visual.HasMirrorTransformProperty
   - Avalonia.Visual.RenderTransformProperty
@@ -259,6 +297,7 @@ items:
   - Avalonia.Visual.IsVisible
   - Avalonia.Visual.Opacity
   - Avalonia.Visual.OpacityMask
+  - Avalonia.Visual.CacheMode
   - Avalonia.Visual.Effect
   - Avalonia.Visual.HasMirrorTransform
   - Avalonia.Visual.RenderTransform
@@ -314,7 +353,7 @@ items:
   - Avalonia.AvaloniaObject.SetValue``1(Avalonia.DirectPropertyBase{{T}},{T})
   - Avalonia.AvaloniaObject.SetCurrentValue(Avalonia.AvaloniaProperty,System.Object)
   - Avalonia.AvaloniaObject.SetCurrentValue``1(Avalonia.StyledProperty{{T}},{T})
-  - Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+  - Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
   - Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,System.IObservable{System.Object},Avalonia.Data.BindingPriority)
   - Avalonia.AvaloniaObject.Bind``1(Avalonia.StyledProperty{{T}},System.IObservable{System.Object},Avalonia.Data.BindingPriority)
   - Avalonia.AvaloniaObject.Bind``1(Avalonia.StyledProperty{{T}},System.IObservable{{T}},Avalonia.Data.BindingPriority)
@@ -325,6 +364,7 @@ items:
   - Avalonia.AvaloniaObject.CoerceValue(Avalonia.AvaloniaProperty)
   - Avalonia.AvaloniaObject.Item(Avalonia.AvaloniaProperty)
   - Avalonia.AvaloniaObject.Item(Avalonia.Data.IndexerDescriptor)
+  - Avalonia.AvaloniaObject.Dispatcher
   - Avalonia.AvaloniaObject.PropertyChanged
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.GetType
@@ -596,7 +636,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IBridgeTracer
     name: IBridgeTracer
-    href: Agibuild.Fulora.IBridgeTracer.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.BridgeDevToolsOverlay.Attach(Agibuild.Fulora.WebView,Agibuild.Fulora.IBridgeTracer)
@@ -610,7 +649,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.IBridgeTracer
     name: IBridgeTracer
-    href: Agibuild.Fulora.IBridgeTracer.html
   - name: )
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
@@ -787,13 +825,6 @@ references:
   name: ISupportInitialize
   nameWithType: ISupportInitialize
   fullName: System.ComponentModel.ISupportInitialize
-- uid: Avalonia.Styling.IStyleable
-  commentId: T:Avalonia.Styling.IStyleable
-  parent: Avalonia.Styling
-  isExternal: true
-  name: IStyleable
-  nameWithType: IStyleable
-  fullName: Avalonia.Styling.IStyleable
 - uid: Avalonia.INamed
   commentId: T:Avalonia.INamed
   parent: Avalonia
@@ -977,6 +1008,13 @@ references:
   name: ForegroundProperty
   nameWithType: TemplatedControl.ForegroundProperty
   fullName: Avalonia.Controls.Primitives.TemplatedControl.ForegroundProperty
+- uid: Avalonia.Controls.Primitives.TemplatedControl.LetterSpacingProperty
+  commentId: F:Avalonia.Controls.Primitives.TemplatedControl.LetterSpacingProperty
+  parent: Avalonia.Controls.Primitives.TemplatedControl
+  isExternal: true
+  name: LetterSpacingProperty
+  nameWithType: TemplatedControl.LetterSpacingProperty
+  fullName: Avalonia.Controls.Primitives.TemplatedControl.LetterSpacingProperty
 - uid: Avalonia.Controls.Primitives.TemplatedControl.PaddingProperty
   commentId: F:Avalonia.Controls.Primitives.TemplatedControl.PaddingProperty
   parent: Avalonia.Controls.Primitives.TemplatedControl
@@ -1174,6 +1212,13 @@ references:
   name: Foreground
   nameWithType: TemplatedControl.Foreground
   fullName: Avalonia.Controls.Primitives.TemplatedControl.Foreground
+- uid: Avalonia.Controls.Primitives.TemplatedControl.LetterSpacing
+  commentId: P:Avalonia.Controls.Primitives.TemplatedControl.LetterSpacing
+  parent: Avalonia.Controls.Primitives.TemplatedControl
+  isExternal: true
+  name: LetterSpacing
+  nameWithType: TemplatedControl.LetterSpacing
+  fullName: Avalonia.Controls.Primitives.TemplatedControl.LetterSpacing
 - uid: Avalonia.Controls.Primitives.TemplatedControl.Padding
   commentId: P:Avalonia.Controls.Primitives.TemplatedControl.Padding
   parent: Avalonia.Controls.Primitives.TemplatedControl
@@ -1230,13 +1275,6 @@ references:
   name: RequestBringIntoViewEvent
   nameWithType: Control.RequestBringIntoViewEvent
   fullName: Avalonia.Controls.Control.RequestBringIntoViewEvent
-- uid: Avalonia.Controls.Control.ContextRequestedEvent
-  commentId: F:Avalonia.Controls.Control.ContextRequestedEvent
-  parent: Avalonia.Controls.Control
-  isExternal: true
-  name: ContextRequestedEvent
-  nameWithType: Control.ContextRequestedEvent
-  fullName: Avalonia.Controls.Control.ContextRequestedEvent
 - uid: Avalonia.Controls.Control.LoadedEvent
   commentId: F:Avalonia.Controls.Control.LoadedEvent
   parent: Avalonia.Controls.Control
@@ -1300,13 +1338,6 @@ references:
   name: Tag
   nameWithType: Control.Tag
   fullName: Avalonia.Controls.Control.Tag
-- uid: Avalonia.Controls.Control.ContextRequested
-  commentId: E:Avalonia.Controls.Control.ContextRequested
-  parent: Avalonia.Controls.Control
-  isExternal: true
-  name: ContextRequested
-  nameWithType: Control.ContextRequested
-  fullName: Avalonia.Controls.Control.ContextRequested
 - uid: Avalonia.Controls.Control.Loaded
   commentId: E:Avalonia.Controls.Control.Loaded
   parent: Avalonia.Controls.Control
@@ -1398,6 +1429,13 @@ references:
   name: GotFocusEvent
   nameWithType: InputElement.GotFocusEvent
   fullName: Avalonia.Input.InputElement.GotFocusEvent
+- uid: Avalonia.Input.InputElement.GettingFocusEvent
+  commentId: F:Avalonia.Input.InputElement.GettingFocusEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GettingFocusEvent
+  nameWithType: InputElement.GettingFocusEvent
+  fullName: Avalonia.Input.InputElement.GettingFocusEvent
 - uid: Avalonia.Input.InputElement.LostFocusEvent
   commentId: F:Avalonia.Input.InputElement.LostFocusEvent
   parent: Avalonia.Input.InputElement
@@ -1405,6 +1443,13 @@ references:
   name: LostFocusEvent
   nameWithType: InputElement.LostFocusEvent
   fullName: Avalonia.Input.InputElement.LostFocusEvent
+- uid: Avalonia.Input.InputElement.LosingFocusEvent
+  commentId: F:Avalonia.Input.InputElement.LosingFocusEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: LosingFocusEvent
+  nameWithType: InputElement.LosingFocusEvent
+  fullName: Avalonia.Input.InputElement.LosingFocusEvent
 - uid: Avalonia.Input.InputElement.KeyDownEvent
   commentId: F:Avalonia.Input.InputElement.KeyDownEvent
   parent: Avalonia.Input.InputElement
@@ -1489,6 +1534,111 @@ references:
   name: PointerWheelChangedEvent
   nameWithType: InputElement.PointerWheelChangedEvent
   fullName: Avalonia.Input.InputElement.PointerWheelChangedEvent
+- uid: Avalonia.Input.InputElement.ContextRequestedEvent
+  commentId: F:Avalonia.Input.InputElement.ContextRequestedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextRequestedEvent
+  nameWithType: InputElement.ContextRequestedEvent
+  fullName: Avalonia.Input.InputElement.ContextRequestedEvent
+- uid: Avalonia.Input.InputElement.ContextCanceledEvent
+  commentId: F:Avalonia.Input.InputElement.ContextCanceledEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextCanceledEvent
+  nameWithType: InputElement.ContextCanceledEvent
+  fullName: Avalonia.Input.InputElement.ContextCanceledEvent
+- uid: Avalonia.Input.InputElement.IsHoldingEnabledProperty
+  commentId: F:Avalonia.Input.InputElement.IsHoldingEnabledProperty
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: IsHoldingEnabledProperty
+  nameWithType: InputElement.IsHoldingEnabledProperty
+  fullName: Avalonia.Input.InputElement.IsHoldingEnabledProperty
+- uid: Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+  commentId: F:Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: IsHoldWithMouseEnabledProperty
+  nameWithType: InputElement.IsHoldWithMouseEnabledProperty
+  fullName: Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+- uid: Avalonia.Input.InputElement.PinchEvent
+  commentId: F:Avalonia.Input.InputElement.PinchEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PinchEvent
+  nameWithType: InputElement.PinchEvent
+  fullName: Avalonia.Input.InputElement.PinchEvent
+- uid: Avalonia.Input.InputElement.PinchEndedEvent
+  commentId: F:Avalonia.Input.InputElement.PinchEndedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PinchEndedEvent
+  nameWithType: InputElement.PinchEndedEvent
+  fullName: Avalonia.Input.InputElement.PinchEndedEvent
+- uid: Avalonia.Input.InputElement.PullGestureEvent
+  commentId: F:Avalonia.Input.InputElement.PullGestureEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGestureEvent
+  nameWithType: InputElement.PullGestureEvent
+  fullName: Avalonia.Input.InputElement.PullGestureEvent
+- uid: Avalonia.Input.InputElement.PullGestureEndedEvent
+  commentId: F:Avalonia.Input.InputElement.PullGestureEndedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGestureEndedEvent
+  nameWithType: InputElement.PullGestureEndedEvent
+  fullName: Avalonia.Input.InputElement.PullGestureEndedEvent
+- uid: Avalonia.Input.InputElement.SwipeGestureEvent
+  commentId: F:Avalonia.Input.InputElement.SwipeGestureEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: SwipeGestureEvent
+  nameWithType: InputElement.SwipeGestureEvent
+  fullName: Avalonia.Input.InputElement.SwipeGestureEvent
+- uid: Avalonia.Input.InputElement.ScrollGestureEvent
+  commentId: F:Avalonia.Input.InputElement.ScrollGestureEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureEvent
+  nameWithType: InputElement.ScrollGestureEvent
+  fullName: Avalonia.Input.InputElement.ScrollGestureEvent
+- uid: Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+  commentId: F:Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureInertiaStartingEvent
+  nameWithType: InputElement.ScrollGestureInertiaStartingEvent
+  fullName: Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+- uid: Avalonia.Input.InputElement.ScrollGestureEndedEvent
+  commentId: F:Avalonia.Input.InputElement.ScrollGestureEndedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureEndedEvent
+  nameWithType: InputElement.ScrollGestureEndedEvent
+  fullName: Avalonia.Input.InputElement.ScrollGestureEndedEvent
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+  commentId: F:Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureMagnifyEvent
+  nameWithType: InputElement.PointerTouchPadGestureMagnifyEvent
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+  commentId: F:Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureRotateEvent
+  nameWithType: InputElement.PointerTouchPadGestureRotateEvent
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
+  commentId: F:Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureSwipeEvent
+  nameWithType: InputElement.PointerTouchPadGestureSwipeEvent
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
 - uid: Avalonia.Input.InputElement.TappedEvent
   commentId: F:Avalonia.Input.InputElement.TappedEvent
   parent: Avalonia.Input.InputElement
@@ -1496,6 +1646,13 @@ references:
   name: TappedEvent
   nameWithType: InputElement.TappedEvent
   fullName: Avalonia.Input.InputElement.TappedEvent
+- uid: Avalonia.Input.InputElement.RightTappedEvent
+  commentId: F:Avalonia.Input.InputElement.RightTappedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: RightTappedEvent
+  nameWithType: InputElement.RightTappedEvent
+  fullName: Avalonia.Input.InputElement.RightTappedEvent
 - uid: Avalonia.Input.InputElement.HoldingEvent
   commentId: F:Avalonia.Input.InputElement.HoldingEvent
   parent: Avalonia.Input.InputElement
@@ -1544,6 +1701,138 @@ references:
   - uid: Avalonia.Input.KeyModifiers
     name: KeyModifiers
     isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  commentId: M:Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetIsHoldingEnabled(StyledElement)
+  nameWithType: InputElement.GetIsHoldingEnabled(StyledElement)
+  fullName: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+    name: GetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+    name: GetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+  commentId: M:Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: SetIsHoldingEnabled(StyledElement, bool)
+  nameWithType: InputElement.SetIsHoldingEnabled(StyledElement, bool)
+  fullName: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement, bool)
+  nameWithType.vb: InputElement.SetIsHoldingEnabled(StyledElement, Boolean)
+  fullName.vb: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement, Boolean)
+  name.vb: SetIsHoldingEnabled(StyledElement, Boolean)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  commentId: M:Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetIsHoldWithMouseEnabled(StyledElement)
+  nameWithType: InputElement.GetIsHoldWithMouseEnabled(StyledElement)
+  fullName: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+    name: GetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+    name: GetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+  commentId: M:Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: SetIsHoldWithMouseEnabled(StyledElement, bool)
+  nameWithType: InputElement.SetIsHoldWithMouseEnabled(StyledElement, bool)
+  fullName: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement, bool)
+  nameWithType.vb: InputElement.SetIsHoldWithMouseEnabled(StyledElement, Boolean)
+  fullName.vb: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement, Boolean)
+  name.vb: SetIsHoldWithMouseEnabled(StyledElement, Boolean)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
   - name: )
 - uid: Avalonia.Input.InputElement.Focusable
   commentId: P:Avalonia.Input.InputElement.Focusable
@@ -1636,6 +1925,13 @@ references:
   name: GotFocus
   nameWithType: InputElement.GotFocus
   fullName: Avalonia.Input.InputElement.GotFocus
+- uid: Avalonia.Input.InputElement.GettingFocus
+  commentId: E:Avalonia.Input.InputElement.GettingFocus
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GettingFocus
+  nameWithType: InputElement.GettingFocus
+  fullName: Avalonia.Input.InputElement.GettingFocus
 - uid: Avalonia.Input.InputElement.LostFocus
   commentId: E:Avalonia.Input.InputElement.LostFocus
   parent: Avalonia.Input.InputElement
@@ -1643,6 +1939,13 @@ references:
   name: LostFocus
   nameWithType: InputElement.LostFocus
   fullName: Avalonia.Input.InputElement.LostFocus
+- uid: Avalonia.Input.InputElement.LosingFocus
+  commentId: E:Avalonia.Input.InputElement.LosingFocus
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: LosingFocus
+  nameWithType: InputElement.LosingFocus
+  fullName: Avalonia.Input.InputElement.LosingFocus
 - uid: Avalonia.Input.InputElement.KeyDown
   commentId: E:Avalonia.Input.InputElement.KeyDown
   parent: Avalonia.Input.InputElement
@@ -1720,6 +2023,97 @@ references:
   name: PointerWheelChanged
   nameWithType: InputElement.PointerWheelChanged
   fullName: Avalonia.Input.InputElement.PointerWheelChanged
+- uid: Avalonia.Input.InputElement.ContextRequested
+  commentId: E:Avalonia.Input.InputElement.ContextRequested
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextRequested
+  nameWithType: InputElement.ContextRequested
+  fullName: Avalonia.Input.InputElement.ContextRequested
+- uid: Avalonia.Input.InputElement.ContextCanceled
+  commentId: E:Avalonia.Input.InputElement.ContextCanceled
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextCanceled
+  nameWithType: InputElement.ContextCanceled
+  fullName: Avalonia.Input.InputElement.ContextCanceled
+- uid: Avalonia.Input.InputElement.Pinch
+  commentId: E:Avalonia.Input.InputElement.Pinch
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: Pinch
+  nameWithType: InputElement.Pinch
+  fullName: Avalonia.Input.InputElement.Pinch
+- uid: Avalonia.Input.InputElement.PinchEnded
+  commentId: E:Avalonia.Input.InputElement.PinchEnded
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PinchEnded
+  nameWithType: InputElement.PinchEnded
+  fullName: Avalonia.Input.InputElement.PinchEnded
+- uid: Avalonia.Input.InputElement.PullGesture
+  commentId: E:Avalonia.Input.InputElement.PullGesture
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGesture
+  nameWithType: InputElement.PullGesture
+  fullName: Avalonia.Input.InputElement.PullGesture
+- uid: Avalonia.Input.InputElement.PullGestureEnded
+  commentId: E:Avalonia.Input.InputElement.PullGestureEnded
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGestureEnded
+  nameWithType: InputElement.PullGestureEnded
+  fullName: Avalonia.Input.InputElement.PullGestureEnded
+- uid: Avalonia.Input.InputElement.ScrollGesture
+  commentId: E:Avalonia.Input.InputElement.ScrollGesture
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGesture
+  nameWithType: InputElement.ScrollGesture
+  fullName: Avalonia.Input.InputElement.ScrollGesture
+- uid: Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+  commentId: E:Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureInertiaStarting
+  nameWithType: InputElement.ScrollGestureInertiaStarting
+  fullName: Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+- uid: Avalonia.Input.InputElement.ScrollGestureEnded
+  commentId: E:Avalonia.Input.InputElement.ScrollGestureEnded
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureEnded
+  nameWithType: InputElement.ScrollGestureEnded
+  fullName: Avalonia.Input.InputElement.ScrollGestureEnded
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+  commentId: E:Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureMagnify
+  nameWithType: InputElement.PointerTouchPadGestureMagnify
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+  commentId: E:Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureRotate
+  nameWithType: InputElement.PointerTouchPadGestureRotate
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+- uid: Avalonia.Input.InputElement.SwipeGesture
+  commentId: E:Avalonia.Input.InputElement.SwipeGesture
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: SwipeGesture
+  nameWithType: InputElement.SwipeGesture
+  fullName: Avalonia.Input.InputElement.SwipeGesture
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
+  commentId: E:Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureSwipe
+  nameWithType: InputElement.PointerTouchPadGestureSwipe
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
 - uid: Avalonia.Input.InputElement.Tapped
   commentId: E:Avalonia.Input.InputElement.Tapped
   parent: Avalonia.Input.InputElement
@@ -1727,6 +2121,13 @@ references:
   name: Tapped
   nameWithType: InputElement.Tapped
   fullName: Avalonia.Input.InputElement.Tapped
+- uid: Avalonia.Input.InputElement.RightTapped
+  commentId: E:Avalonia.Input.InputElement.RightTapped
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: RightTapped
+  nameWithType: InputElement.RightTapped
+  fullName: Avalonia.Input.InputElement.RightTapped
 - uid: Avalonia.Input.InputElement.Holding
   commentId: E:Avalonia.Input.InputElement.Holding
   parent: Avalonia.Input.InputElement
@@ -2350,6 +2751,13 @@ references:
   name: OpacityMaskProperty
   nameWithType: Visual.OpacityMaskProperty
   fullName: Avalonia.Visual.OpacityMaskProperty
+- uid: Avalonia.Visual.CacheModeProperty
+  commentId: F:Avalonia.Visual.CacheModeProperty
+  parent: Avalonia.Visual
+  isExternal: true
+  name: CacheModeProperty
+  nameWithType: Visual.CacheModeProperty
+  fullName: Avalonia.Visual.CacheModeProperty
 - uid: Avalonia.Visual.EffectProperty
   commentId: F:Avalonia.Visual.EffectProperty
   parent: Avalonia.Visual
@@ -2552,6 +2960,13 @@ references:
   name: OpacityMask
   nameWithType: Visual.OpacityMask
   fullName: Avalonia.Visual.OpacityMask
+- uid: Avalonia.Visual.CacheMode
+  commentId: P:Avalonia.Visual.CacheMode
+  parent: Avalonia.Visual
+  isExternal: true
+  name: CacheMode
+  nameWithType: Visual.CacheMode
+  fullName: Avalonia.Visual.CacheMode
 - uid: Avalonia.Visual.Effect
   commentId: P:Avalonia.Visual.Effect
   parent: Avalonia.Visual
@@ -3592,15 +4007,15 @@ references:
   - name: " "
   - name: T
   - name: )
-- uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
-  commentId: M:Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+- uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
+  commentId: M:Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
   parent: Avalonia.AvaloniaObject
   isExternal: true
-  name: Bind(AvaloniaProperty, IBinding)
-  nameWithType: AvaloniaObject.Bind(AvaloniaProperty, IBinding)
-  fullName: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty, Avalonia.Data.IBinding)
+  name: Bind(AvaloniaProperty, BindingBase)
+  nameWithType: AvaloniaObject.Bind(AvaloniaProperty, BindingBase)
+  fullName: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty, Avalonia.Data.BindingBase)
   spec.csharp:
-  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
     name: Bind
     isExternal: true
   - name: (
@@ -3609,12 +4024,12 @@ references:
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Avalonia.Data.IBinding
-    name: IBinding
+  - uid: Avalonia.Data.BindingBase
+    name: BindingBase
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
     name: Bind
     isExternal: true
   - name: (
@@ -3623,8 +4038,8 @@ references:
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Avalonia.Data.IBinding
-    name: IBinding
+  - uid: Avalonia.Data.BindingBase
+    name: BindingBase
     isExternal: true
   - name: )
 - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,System.IObservable{System.Object},Avalonia.Data.BindingPriority)
@@ -4225,6 +4640,13 @@ references:
     name: IndexerDescriptor
     isExternal: true
   - name: )
+- uid: Avalonia.AvaloniaObject.Dispatcher
+  commentId: P:Avalonia.AvaloniaObject.Dispatcher
+  parent: Avalonia.AvaloniaObject
+  isExternal: true
+  name: Dispatcher
+  nameWithType: AvaloniaObject.Dispatcher
+  fullName: Avalonia.AvaloniaObject.Dispatcher
 - uid: Avalonia.AvaloniaObject.PropertyChanged
   commentId: E:Avalonia.AvaloniaObject.PropertyChanged
   parent: Avalonia.AvaloniaObject

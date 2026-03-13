@@ -9,6 +9,7 @@ items:
   - Agibuild.Fulora.IWebViewEnvironmentOptions.CustomUserAgent
   - Agibuild.Fulora.IWebViewEnvironmentOptions.EnableDevTools
   - Agibuild.Fulora.IWebViewEnvironmentOptions.PreloadScripts
+  - Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground
   - Agibuild.Fulora.IWebViewEnvironmentOptions.UseEphemeralSession
   langs:
   - csharp
@@ -19,17 +20,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebViewEnvironmentOptions
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 406
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 115
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Options applied to the WebView runtime environment (devtools, user agent, storage, custom schemes, preload scripts).
-  example: []
   syntax:
     content: public interface IWebViewEnvironmentOptions
     content.vb: Public Interface IWebViewEnvironmentOptions
@@ -46,17 +45,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnableDevTools
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 409
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 117
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: 'Enable browser developer tools (Inspector). Platform-specific: macOS requires 13.3+.'
-  example: []
   syntax:
     content: bool EnableDevTools { get; set; }
     parameters: []
@@ -77,17 +74,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CustomUserAgent
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 412
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 118
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Override the default User-Agent string. Null means use the platform default.
-  example: []
   syntax:
     content: string? CustomUserAgent { get; set; }
     parameters: []
@@ -108,17 +103,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: UseEphemeralSession
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 415
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 119
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Use an ephemeral (non-persistent) data store. Cookies and storage are discarded when the WebView is disposed.
-  example: []
   syntax:
     content: bool UseEphemeralSession { get; set; }
     parameters: []
@@ -126,6 +119,35 @@ items:
       type: System.Boolean
     content.vb: Property UseEphemeralSession As Boolean
   overload: Agibuild.Fulora.IWebViewEnvironmentOptions.UseEphemeralSession*
+- uid: Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground
+  commentId: P:Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground
+  id: TransparentBackground
+  parent: Agibuild.Fulora.IWebViewEnvironmentOptions
+  langs:
+  - csharp
+  - vb
+  name: TransparentBackground
+  nameWithType: IWebViewEnvironmentOptions.TransparentBackground
+  fullName: Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TransparentBackground
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 120
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: bool TransparentBackground { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Property TransparentBackground As Boolean
+  overload: Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground*
 - uid: Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes
   commentId: P:Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes
   id: CustomSchemes
@@ -139,20 +161,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CustomSchemes
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 421
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 121
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Custom URI schemes to register. Must be set before WebView creation.
-
-    Adapters that implement <code>ICustomSchemeAdapter</code> receive these during initialization.
-  example: []
   syntax:
     content: IReadOnlyList<CustomSchemeRegistration> CustomSchemes { get; }
     parameters: []
@@ -173,20 +190,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PreloadScripts
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 427
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 122
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    JavaScript snippets to inject at document start on every new page load.
-
-    These are applied globally to all new WebView instances.
-  example: []
   syntax:
     content: IReadOnlyList<string> PreloadScripts { get; }
     parameters: []
@@ -264,6 +276,12 @@ references:
   name: UseEphemeralSession
   nameWithType: IWebViewEnvironmentOptions.UseEphemeralSession
   fullName: Agibuild.Fulora.IWebViewEnvironmentOptions.UseEphemeralSession
+- uid: Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground*
+  commentId: Overload:Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground
+  href: Agibuild.Fulora.IWebViewEnvironmentOptions.html#Agibuild_Fulora_IWebViewEnvironmentOptions_TransparentBackground
+  name: TransparentBackground
+  nameWithType: IWebViewEnvironmentOptions.TransparentBackground
+  fullName: Agibuild.Fulora.IWebViewEnvironmentOptions.TransparentBackground
 - uid: Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes*
   commentId: Overload:Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes
   href: Agibuild.Fulora.IWebViewEnvironmentOptions.html#Agibuild_Fulora_IWebViewEnvironmentOptions_CustomSchemes

@@ -24,17 +24,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewPermissionKind
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 902
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 53
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The type of permission being requested by web content.
-  example: []
   syntax:
     content: public enum WebViewPermissionKind
     content.vb: Public Enum WebViewPermissionKind
@@ -51,17 +49,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Unknown
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 905
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 55
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Unknown permission kind.
-  example: []
   syntax:
     content: Unknown = 0
     return:
@@ -79,17 +75,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Camera
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 907
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 56
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Camera access.
-  example: []
   syntax:
     content: Camera = 1
     return:
@@ -107,17 +101,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Microphone
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 909
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 57
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Microphone access.
-  example: []
   syntax:
     content: Microphone = 2
     return:
@@ -135,17 +127,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Geolocation
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 911
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 58
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Geolocation access.
-  example: []
   syntax:
     content: Geolocation = 3
     return:
@@ -163,17 +153,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Notifications
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 913
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 59
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Notifications.
-  example: []
   syntax:
     content: Notifications = 4
     return:
@@ -191,17 +179,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ClipboardRead
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 915
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 60
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Clipboard read.
-  example: []
   syntax:
     content: ClipboardRead = 5
     return:
@@ -219,17 +205,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ClipboardWrite
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 917
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 61
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Clipboard write.
-  example: []
   syntax:
     content: ClipboardWrite = 6
     return:
@@ -247,17 +231,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Midi
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 919
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 62
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: MIDI access.
-  example: []
   syntax:
     content: Midi = 7
     return:
@@ -275,17 +257,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Sensors
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 921
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 63
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Sensors access.
-  example: []
   syntax:
     content: Sensors = 8
     return:
@@ -303,17 +283,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Other
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 923
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 64
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Other / platform-specific permission.
-  example: []
   syntax:
     content: Other = 9
     return:

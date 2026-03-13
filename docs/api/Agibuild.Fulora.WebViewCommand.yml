@@ -20,17 +20,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewCommand
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 588
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 43
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Standard editing commands supported by WebView.
-  example: []
   syntax:
     content: public enum WebViewCommand
     content.vb: Public Enum WebViewCommand
@@ -47,17 +45,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Copy
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 591
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 45
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Copy selected content to clipboard.
-  example: []
   syntax:
     content: Copy = 0
     return:
@@ -75,17 +71,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Cut
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 593
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 46
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Cut selected content to clipboard.
-  example: []
   syntax:
     content: Cut = 1
     return:
@@ -103,17 +97,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Paste
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 595
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 47
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Paste clipboard content.
-  example: []
   syntax:
     content: Paste = 2
     return:
@@ -131,17 +123,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SelectAll
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 597
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 48
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Select all content.
-  example: []
   syntax:
     content: SelectAll = 3
     return:
@@ -159,17 +149,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Undo
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 599
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 49
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Undo the last editing action.
-  example: []
   syntax:
     content: Undo = 4
     return:
@@ -187,17 +175,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Redo
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 601
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 50
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Redo the last undone editing action.
-  example: []
   syntax:
     content: Redo = 5
     return:

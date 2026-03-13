@@ -1,0 +1,575 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileOptions
+  id: SpaBootstrapProfileOptions
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions
+  - Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope
+  - Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions
+  - Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns
+  langs:
+  - csharp
+  - vb
+  name: SpaBootstrapProfileOptions
+  nameWithType: SpaBootstrapProfileOptions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SpaBootstrapProfileOptions
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+    startLine: 57
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Profile-level bootstrap options that wrap <xref href="Agibuild.Fulora.SpaBootstrapOptions" data-throw-if-not-resolved="false"></xref>
+
+    and add explicit extension hooks plus governance metadata.
+  example: []
+  syntax:
+    content: public sealed class SpaBootstrapProfileOptions
+    content.vb: Public NotInheritable Class SpaBootstrapProfileOptions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions
+  commentId: P:Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions
+  id: BootstrapOptions
+  parent: Agibuild.Fulora.SpaBootstrapProfileOptions
+  langs:
+  - csharp
+  - vb
+  name: BootstrapOptions
+  nameWithType: SpaBootstrapProfileOptions.BootstrapOptions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: BootstrapOptions
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+    startLine: 62
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The underlying SPA bootstrap options used for navigation and baseline bridge registration.
+  example: []
+  syntax:
+    content: public required SpaBootstrapOptions BootstrapOptions { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.SpaBootstrapOptions
+    content.vb: Public Property BootstrapOptions As SpaBootstrapOptions
+  overload: Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions*
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions
+  commentId: P:Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions
+  id: Extensions
+  parent: Agibuild.Fulora.SpaBootstrapProfileOptions
+  langs:
+  - csharp
+  - vb
+  name: Extensions
+  nameWithType: SpaBootstrapProfileOptions.Extensions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Extensions
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+    startLine: 67
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Optional ordered extension hooks for advanced profile customization.
+  example: []
+  syntax:
+    content: public IReadOnlyList<SpaBootstrapProfileExtension> Extensions { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.SpaBootstrapProfileExtension}
+    content.vb: Public Property Extensions As IReadOnlyList(Of SpaBootstrapProfileExtension)
+  overload: Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions*
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope
+  commentId: P:Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope
+  id: ExceptionScope
+  parent: Agibuild.Fulora.SpaBootstrapProfileOptions
+  langs:
+  - csharp
+  - vb
+  name: ExceptionScope
+  nameWithType: SpaBootstrapProfileOptions.ExceptionScope
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ExceptionScope
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+    startLine: 72
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Optional governance metadata describing why an exception scope is used.
+  example: []
+  syntax:
+    content: public SpaBootstrapProfileExceptionScope? ExceptionScope { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+    content.vb: Public Property ExceptionScope As SpaBootstrapProfileExceptionScope
+  overload: Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope*
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns
+  commentId: P:Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns
+  id: Teardowns
+  parent: Agibuild.Fulora.SpaBootstrapProfileOptions
+  langs:
+  - csharp
+  - vb
+  name: Teardowns
+  nameWithType: SpaBootstrapProfileOptions.Teardowns
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Teardowns
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapProfileOptions.cs
+    startLine: 77
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Optional ordered teardown callbacks executed once during host disposal.
+  example: []
+  syntax:
+    content: public IReadOnlyList<SpaBootstrapProfileTeardown> Teardowns { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.SpaBootstrapProfileTeardown}
+    content.vb: Public Property Teardowns As IReadOnlyList(Of SpaBootstrapProfileTeardown)
+  overload: Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns*
+references:
+- uid: Agibuild.Fulora.SpaBootstrapOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapOptions.html
+  name: SpaBootstrapOptions
+  nameWithType: SpaBootstrapOptions
+  fullName: Agibuild.Fulora.SpaBootstrapOptions
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions
+  href: Agibuild.Fulora.SpaBootstrapProfileOptions.html#Agibuild_Fulora_SpaBootstrapProfileOptions_BootstrapOptions
+  name: BootstrapOptions
+  nameWithType: SpaBootstrapProfileOptions.BootstrapOptions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.BootstrapOptions
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions
+  href: Agibuild.Fulora.SpaBootstrapProfileOptions.html#Agibuild_Fulora_SpaBootstrapProfileOptions_Extensions
+  name: Extensions
+  nameWithType: SpaBootstrapProfileOptions.Extensions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.Extensions
+- uid: System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.SpaBootstrapProfileExtension}
+  commentId: T:System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.SpaBootstrapProfileExtension}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<SpaBootstrapProfileExtension>
+  nameWithType: IReadOnlyList<SpaBootstrapProfileExtension>
+  fullName: System.Collections.Generic.IReadOnlyList<Agibuild.Fulora.SpaBootstrapProfileExtension>
+  nameWithType.vb: IReadOnlyList(Of SpaBootstrapProfileExtension)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of Agibuild.Fulora.SpaBootstrapProfileExtension)
+  name.vb: IReadOnlyList(Of SpaBootstrapProfileExtension)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - uid: Agibuild.Fulora.SpaBootstrapProfileExtension
+    name: SpaBootstrapProfileExtension
+    href: Agibuild.Fulora.SpaBootstrapProfileExtension.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileExtension
+    name: SpaBootstrapProfileExtension
+    href: Agibuild.Fulora.SpaBootstrapProfileExtension.html
+  - name: )
+- uid: System.Collections.Generic.IReadOnlyList`1
+  commentId: T:System.Collections.Generic.IReadOnlyList`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<T>
+  nameWithType: IReadOnlyList<T>
+  fullName: System.Collections.Generic.IReadOnlyList<T>
+  nameWithType.vb: IReadOnlyList(Of T)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of T)
+  name.vb: IReadOnlyList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope
+  href: Agibuild.Fulora.SpaBootstrapProfileOptions.html#Agibuild_Fulora_SpaBootstrapProfileOptions_ExceptionScope
+  name: ExceptionScope
+  nameWithType: SpaBootstrapProfileOptions.ExceptionScope
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.ExceptionScope
+- uid: Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapProfileExceptionScope.html
+  name: SpaBootstrapProfileExceptionScope
+  nameWithType: SpaBootstrapProfileExceptionScope
+  fullName: Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns
+  href: Agibuild.Fulora.SpaBootstrapProfileOptions.html#Agibuild_Fulora_SpaBootstrapProfileOptions_Teardowns
+  name: Teardowns
+  nameWithType: SpaBootstrapProfileOptions.Teardowns
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions.Teardowns
+- uid: System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.SpaBootstrapProfileTeardown}
+  commentId: T:System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.SpaBootstrapProfileTeardown}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  name: IReadOnlyList<SpaBootstrapProfileTeardown>
+  nameWithType: IReadOnlyList<SpaBootstrapProfileTeardown>
+  fullName: System.Collections.Generic.IReadOnlyList<Agibuild.Fulora.SpaBootstrapProfileTeardown>
+  nameWithType.vb: IReadOnlyList(Of SpaBootstrapProfileTeardown)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of Agibuild.Fulora.SpaBootstrapProfileTeardown)
+  name.vb: IReadOnlyList(Of SpaBootstrapProfileTeardown)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: <
+  - uid: Agibuild.Fulora.SpaBootstrapProfileTeardown
+    name: SpaBootstrapProfileTeardown
+    href: Agibuild.Fulora.SpaBootstrapProfileTeardown.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileTeardown
+    name: SpaBootstrapProfileTeardown
+    href: Agibuild.Fulora.SpaBootstrapProfileTeardown.html
+  - name: )

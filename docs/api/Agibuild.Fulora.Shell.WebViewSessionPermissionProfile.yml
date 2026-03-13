@@ -636,7 +636,6 @@ references:
   - name: <
   - uid: Agibuild.Fulora.WebViewPermissionKind
     name: WebViewPermissionKind
-    href: Agibuild.Fulora.WebViewPermissionKind.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewPermissionProfileDecision
@@ -653,7 +652,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.WebViewPermissionKind
     name: WebViewPermissionKind
-    href: Agibuild.Fulora.WebViewPermissionKind.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewPermissionProfileDecision

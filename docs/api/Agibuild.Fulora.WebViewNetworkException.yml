@@ -15,17 +15,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewNetworkException
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 998
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 297
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigation failed due to a network connectivity issue (DNS, unreachable host, connection lost, no internet).
-  example: []
   syntax:
     content: 'public class WebViewNetworkException : WebViewNavigationException, ISerializable'
     content.vb: Public Class WebViewNetworkException Inherits WebViewNavigationException Implements ISerializable
@@ -68,17 +66,15 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1001
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 299
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public WebViewNetworkException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
     parameters:

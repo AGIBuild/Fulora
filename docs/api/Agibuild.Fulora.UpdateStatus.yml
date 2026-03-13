@@ -1,0 +1,205 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.UpdateStatus
+  commentId: T:Agibuild.Fulora.UpdateStatus
+  id: UpdateStatus
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.UpdateStatus.Downloading
+  - Agibuild.Fulora.UpdateStatus.Error
+  - Agibuild.Fulora.UpdateStatus.ReadyToInstall
+  - Agibuild.Fulora.UpdateStatus.UpToDate
+  - Agibuild.Fulora.UpdateStatus.UpdateAvailable
+  langs:
+  - csharp
+  - vb
+  name: UpdateStatus
+  nameWithType: UpdateStatus
+  fullName: Agibuild.Fulora.UpdateStatus
+  type: Enum
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpdateStatus
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 44
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Status of an auto-update operation.
+  example: []
+  syntax:
+    content: public enum UpdateStatus
+    content.vb: Public Enum UpdateStatus
+- uid: Agibuild.Fulora.UpdateStatus.UpToDate
+  commentId: F:Agibuild.Fulora.UpdateStatus.UpToDate
+  id: UpToDate
+  parent: Agibuild.Fulora.UpdateStatus
+  langs:
+  - csharp
+  - vb
+  name: UpToDate
+  nameWithType: UpdateStatus.UpToDate
+  fullName: Agibuild.Fulora.UpdateStatus.UpToDate
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpToDate
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 47
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: No update available; current version is the latest.
+  example: []
+  syntax:
+    content: UpToDate = 0
+    return:
+      type: Agibuild.Fulora.UpdateStatus
+- uid: Agibuild.Fulora.UpdateStatus.UpdateAvailable
+  commentId: F:Agibuild.Fulora.UpdateStatus.UpdateAvailable
+  id: UpdateAvailable
+  parent: Agibuild.Fulora.UpdateStatus
+  langs:
+  - csharp
+  - vb
+  name: UpdateAvailable
+  nameWithType: UpdateStatus.UpdateAvailable
+  fullName: Agibuild.Fulora.UpdateStatus.UpdateAvailable
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpdateAvailable
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 49
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: An update is available for download.
+  example: []
+  syntax:
+    content: UpdateAvailable = 1
+    return:
+      type: Agibuild.Fulora.UpdateStatus
+- uid: Agibuild.Fulora.UpdateStatus.Downloading
+  commentId: F:Agibuild.Fulora.UpdateStatus.Downloading
+  id: Downloading
+  parent: Agibuild.Fulora.UpdateStatus
+  langs:
+  - csharp
+  - vb
+  name: Downloading
+  nameWithType: UpdateStatus.Downloading
+  fullName: Agibuild.Fulora.UpdateStatus.Downloading
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Downloading
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 51
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Update download is in progress.
+  example: []
+  syntax:
+    content: Downloading = 2
+    return:
+      type: Agibuild.Fulora.UpdateStatus
+- uid: Agibuild.Fulora.UpdateStatus.ReadyToInstall
+  commentId: F:Agibuild.Fulora.UpdateStatus.ReadyToInstall
+  id: ReadyToInstall
+  parent: Agibuild.Fulora.UpdateStatus
+  langs:
+  - csharp
+  - vb
+  name: ReadyToInstall
+  nameWithType: UpdateStatus.ReadyToInstall
+  fullName: Agibuild.Fulora.UpdateStatus.ReadyToInstall
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ReadyToInstall
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 53
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Update has been downloaded and is ready to apply.
+  example: []
+  syntax:
+    content: ReadyToInstall = 3
+    return:
+      type: Agibuild.Fulora.UpdateStatus
+- uid: Agibuild.Fulora.UpdateStatus.Error
+  commentId: F:Agibuild.Fulora.UpdateStatus.Error
+  id: Error
+  parent: Agibuild.Fulora.UpdateStatus
+  langs:
+  - csharp
+  - vb
+  name: Error
+  nameWithType: UpdateStatus.Error
+  fullName: Agibuild.Fulora.UpdateStatus.Error
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Error
+    path: ../src/Agibuild.Fulora.Core/AutoUpdateContracts.cs
+    startLine: 55
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The operation failed.
+  example: []
+  syntax:
+    content: Error = 4
+    return:
+      type: Agibuild.Fulora.UpdateStatus
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.UpdateStatus
+  commentId: T:Agibuild.Fulora.UpdateStatus
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.UpdateStatus.html
+  name: UpdateStatus
+  nameWithType: UpdateStatus
+  fullName: Agibuild.Fulora.UpdateStatus

@@ -7,6 +7,12 @@ items:
   - uid: Agibuild.Fulora.AdapterCreatedEventArgs
     name: AdapterCreatedEventArgs
     type: Class
+  - uid: Agibuild.Fulora.AiMediaPayload
+    name: AiMediaPayload
+    type: Class
+  - uid: Agibuild.Fulora.AiToolAttribute
+    name: AiToolAttribute
+    type: Class
   - uid: Agibuild.Fulora.AotCompatibilityAttribute
     name: AotCompatibilityAttribute
     type: Class
@@ -15,6 +21,12 @@ items:
     type: Class
   - uid: Agibuild.Fulora.AuthOptions
     name: AuthOptions
+    type: Class
+  - uid: Agibuild.Fulora.AutoUpdateOptions
+    name: AutoUpdateOptions
+    type: Class
+  - uid: Agibuild.Fulora.AutoUpdateService
+    name: AutoUpdateService
     type: Class
   - uid: Agibuild.Fulora.AvaloniaWebDialog
     name: AvaloniaWebDialog
@@ -34,6 +46,15 @@ items:
   - uid: Agibuild.Fulora.BridgeCallPhase
     name: BridgeCallPhase
     type: Enum
+  - uid: Agibuild.Fulora.BridgeCallProfiler
+    name: BridgeCallProfiler
+    type: Class
+  - uid: Agibuild.Fulora.BridgeDebugServer
+    name: BridgeDebugServer
+    type: Class
+  - uid: Agibuild.Fulora.BridgeDebugServerOptions
+    name: BridgeDebugServerOptions
+    type: Class
   - uid: Agibuild.Fulora.BridgeDevToolsEvent
     name: BridgeDevToolsEvent
     type: Class
@@ -42,6 +63,12 @@ items:
     type: Class
   - uid: Agibuild.Fulora.BridgeDevToolsService
     name: BridgeDevToolsService
+    type: Class
+  - uid: Agibuild.Fulora.BridgeErrorCode
+    name: BridgeErrorCode
+    type: Enum
+  - uid: Agibuild.Fulora.BridgeErrorDiagnostic
+    name: BridgeErrorDiagnostic
     type: Class
   - uid: Agibuild.Fulora.BridgeEventCollector
     name: BridgeEventCollector
@@ -70,11 +97,20 @@ items:
   - uid: Agibuild.Fulora.BridgeTelemetryTracer
     name: BridgeTelemetryTracer
     type: Class
+  - uid: Agibuild.Fulora.CompositeBridgeTracer
+    name: CompositeBridgeTracer
+    type: Class
   - uid: Agibuild.Fulora.CompositeTelemetryProvider
     name: CompositeTelemetryProvider
     type: Class
   - uid: Agibuild.Fulora.ConsoleTelemetryProvider
     name: ConsoleTelemetryProvider
+    type: Class
+  - uid: Agibuild.Fulora.ContentFilterAction
+    name: ContentFilterAction
+    type: Enum
+  - uid: Agibuild.Fulora.ContentFilterResult
+    name: ContentFilterResult
     type: Class
   - uid: Agibuild.Fulora.ContextMenuMediaType
     name: ContextMenuMediaType
@@ -91,8 +127,26 @@ items:
   - uid: Agibuild.Fulora.DownloadRequestedEventArgs
     name: DownloadRequestedEventArgs
     type: Class
+  - uid: Agibuild.Fulora.DragDropBridgeService
+    name: DragDropBridgeService
+    type: Class
+  - uid: Agibuild.Fulora.DragDropEffects
+    name: DragDropEffects
+    type: Enum
+  - uid: Agibuild.Fulora.DragDropPayload
+    name: DragDropPayload
+    type: Class
+  - uid: Agibuild.Fulora.DragEventArgs
+    name: DragEventArgs
+    type: Class
+  - uid: Agibuild.Fulora.DropEventArgs
+    name: DropEventArgs
+    type: Class
   - uid: Agibuild.Fulora.EnvironmentRequestedEventArgs
     name: EnvironmentRequestedEventArgs
+    type: Class
+  - uid: Agibuild.Fulora.FileDropInfo
+    name: FileDropInfo
     type: Class
   - uid: Agibuild.Fulora.FindInPageOptions
     name: FindInPageOptions
@@ -115,11 +169,20 @@ items:
   - uid: Agibuild.Fulora.GlobalShortcutTriggeredEvent
     name: GlobalShortcutTriggeredEvent
     type: Class
+  - uid: Agibuild.Fulora.IAiContentFilter
+    name: IAiContentFilter
+    type: Interface
   - uid: Agibuild.Fulora.IAndroidWebViewPlatformHandle
     name: IAndroidWebViewPlatformHandle
     type: Interface
   - uid: Agibuild.Fulora.IAppleWKWebViewPlatformHandle
     name: IAppleWKWebViewPlatformHandle
+    type: Interface
+  - uid: Agibuild.Fulora.IAutoUpdatePlatformProvider
+    name: IAutoUpdatePlatformProvider
+    type: Interface
+  - uid: Agibuild.Fulora.IAutoUpdateService
+    name: IAutoUpdateService
     type: Interface
   - uid: Agibuild.Fulora.IBridgeEventCollector
     name: IBridgeEventCollector
@@ -154,6 +217,9 @@ items:
   - uid: Agibuild.Fulora.IDialogHost
     name: IDialogHost
     type: Interface
+  - uid: Agibuild.Fulora.IDragDropBridgeService
+    name: IDragDropBridgeService
+    type: Interface
   - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider
     name: IGlobalShortcutPlatformProvider
     type: Interface
@@ -174,6 +240,12 @@ items:
     type: Interface
   - uid: Agibuild.Fulora.IPlatformThemeProvider
     name: IPlatformThemeProvider
+    type: Interface
+  - uid: Agibuild.Fulora.ISharedStateStore
+    name: ISharedStateStore
+    type: Interface
+  - uid: Agibuild.Fulora.ISpaHostingWebView
+    name: ISpaHostingWebView
     type: Interface
   - uid: Agibuild.Fulora.ITelemetryProvider
     name: ITelemetryProvider
@@ -214,6 +286,12 @@ items:
   - uid: Agibuild.Fulora.IWebViewRpcService
     name: IWebViewRpcService
     type: Interface
+  - uid: Agibuild.Fulora.IWindowChromeProvider
+    name: IWindowChromeProvider
+    type: Interface
+  - uid: Agibuild.Fulora.IWindowShellService
+    name: IWindowShellService
+    type: Interface
   - uid: Agibuild.Fulora.IWindowsWebView2PlatformHandle
     name: IWindowsWebView2PlatformHandle
     type: Interface
@@ -231,6 +309,9 @@ items:
     type: Class
   - uid: Agibuild.Fulora.MauiWebViewHostOptions
     name: MauiWebViewHostOptions
+    type: Class
+  - uid: Agibuild.Fulora.MethodProfileStats
+    name: MethodProfileStats
     type: Class
   - uid: Agibuild.Fulora.MockBridgeService
     name: MockBridgeService
@@ -253,6 +334,9 @@ items:
   - uid: Agibuild.Fulora.NullTelemetryProvider
     name: NullTelemetryProvider
     type: Class
+  - uid: Agibuild.Fulora.OverlayHitTestResult
+    name: OverlayHitTestResult
+    type: Enum
   - uid: Agibuild.Fulora.PdfPrintOptions
     name: PdfPrintOptions
     type: Class
@@ -262,6 +346,9 @@ items:
   - uid: Agibuild.Fulora.PermissionState
     name: PermissionState
     type: Enum
+  - uid: Agibuild.Fulora.PluginManifest
+    name: PluginManifest
+    type: Class
   - uid: Agibuild.Fulora.RateLimit
     name: RateLimit
     type: Class
@@ -271,6 +358,9 @@ items:
   - uid: Agibuild.Fulora.ScriptResultHelper
     name: ScriptResultHelper
     type: Class
+  - uid: Agibuild.Fulora.ServiceProfileStats
+    name: ServiceProfileStats
+    type: Class
   - uid: Agibuild.Fulora.ServiceWorkerCacheStrategy
     name: ServiceWorkerCacheStrategy
     type: Enum
@@ -279,6 +369,9 @@ items:
     type: Class
   - uid: Agibuild.Fulora.ServiceWorkerRegistrar
     name: ServiceWorkerRegistrar
+    type: Class
+  - uid: Agibuild.Fulora.SharedStateStore
+    name: SharedStateStore
     type: Class
   - uid: Agibuild.Fulora.ShortcutKey
     name: ShortcutKey
@@ -292,17 +385,56 @@ items:
   - uid: Agibuild.Fulora.SpaAssetHotUpdateService
     name: SpaAssetHotUpdateService
     type: Class
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+    type: Class
+  - uid: Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+    name: SpaBootstrapProfileExceptionScope
+    type: Class
+  - uid: Agibuild.Fulora.SpaBootstrapProfileExtension
+    name: SpaBootstrapProfileExtension
+    type: Class
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+    type: Class
+  - uid: Agibuild.Fulora.SpaBootstrapProfileTeardown
+    name: SpaBootstrapProfileTeardown
+    type: Class
   - uid: Agibuild.Fulora.SpaHostingExtensions
     name: SpaHostingExtensions
     type: Class
   - uid: Agibuild.Fulora.SpaHostingOptions
     name: SpaHostingOptions
     type: Class
+  - uid: Agibuild.Fulora.StateChangedEventArgs
+    name: StateChangedEventArgs
+    type: Class
   - uid: Agibuild.Fulora.ThemeChangedEvent
     name: ThemeChangedEvent
     type: Class
   - uid: Agibuild.Fulora.ThemeInfo
     name: ThemeInfo
+    type: Class
+  - uid: Agibuild.Fulora.TransparencyEffectiveState
+    name: TransparencyEffectiveState
+    type: Class
+  - uid: Agibuild.Fulora.TransparencyLevel
+    name: TransparencyLevel
+    type: Enum
+  - uid: Agibuild.Fulora.UpdateDownloadProgress
+    name: UpdateDownloadProgress
+    type: Class
+  - uid: Agibuild.Fulora.UpdateInfo
+    name: UpdateInfo
+    type: Class
+  - uid: Agibuild.Fulora.UpdateResult
+    name: UpdateResult
+    type: Class
+  - uid: Agibuild.Fulora.UpdateStatus
+    name: UpdateStatus
+    type: Enum
+  - uid: Agibuild.Fulora.VelopackAutoUpdateProvider
+    name: VelopackAutoUpdateProvider
     type: Class
   - uid: Agibuild.Fulora.WebAuthBroker
     name: WebAuthBroker
@@ -346,6 +478,9 @@ items:
   - uid: Agibuild.Fulora.WebView
     name: WebView
     type: Class
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions
+    name: WebViewBootstrapExtensions
+    type: Class
   - uid: Agibuild.Fulora.WebViewCommand
     name: WebViewCommand
     type: Enum
@@ -379,6 +514,9 @@ items:
   - uid: Agibuild.Fulora.WebViewOperationFailureCategory
     name: WebViewOperationFailureCategory
     type: Enum
+  - uid: Agibuild.Fulora.WebViewOverlayHost
+    name: WebViewOverlayHost
+    type: Class
   - uid: Agibuild.Fulora.WebViewPermissionKind
     name: WebViewPermissionKind
     type: Enum
@@ -409,6 +547,34 @@ items:
   - uid: Agibuild.Fulora.WebViewTimeoutException
     name: WebViewTimeoutException
     type: Class
+  - uid: Agibuild.Fulora.WindowAppearanceRequest
+    name: WindowAppearanceRequest
+    type: Class
+  - uid: Agibuild.Fulora.WindowChromeMetrics
+    name: WindowChromeMetrics
+    type: Class
+  - uid: Agibuild.Fulora.WindowSafeInsets
+    name: WindowSafeInsets
+    type: Class
+  - uid: Agibuild.Fulora.WindowShellCapabilities
+    name: WindowShellCapabilities
+    type: Class
+  - uid: Agibuild.Fulora.WindowShellSettings
+    name: WindowShellSettings
+    type: Class
+  - uid: Agibuild.Fulora.WindowShellState
+    name: WindowShellState
+    type: Class
+- uid: Agibuild.Fulora.NativeOverlay
+  name: Agibuild.Fulora.NativeOverlay
+  type: Namespace
+  items:
+  - uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+    name: INativeOverlayProvider
+    type: Interface
+  - uid: Agibuild.Fulora.NativeOverlay.NativeOverlayProviderFactory
+    name: NativeOverlayProviderFactory
+    type: Class
 - uid: Agibuild.Fulora.Shell
   name: Agibuild.Fulora.Shell
   type: Namespace
@@ -418,6 +584,9 @@ items:
     type: Class
   - uid: Agibuild.Fulora.Shell.AvaloniaThemeProvider
     name: AvaloniaThemeProvider
+    type: Class
+  - uid: Agibuild.Fulora.Shell.AvaloniaWindowChromeProvider
+    name: AvaloniaWindowChromeProvider
     type: Class
   - uid: Agibuild.Fulora.Shell.DeepLinkActivationEnvelope
     name: DeepLinkActivationEnvelope
@@ -703,5 +872,11 @@ items:
     type: Class
   - uid: Agibuild.Fulora.Shell.WebViewTrayStateRequest
     name: WebViewTrayStateRequest
+    type: Class
+  - uid: Agibuild.Fulora.Shell.WindowChromeTrackingOptions
+    name: WindowChromeTrackingOptions
+    type: Class
+  - uid: Agibuild.Fulora.Shell.WindowShellService
+    name: WindowShellService
     type: Class
 memberLayout: SamePage

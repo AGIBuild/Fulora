@@ -19,7 +19,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeCallDelegate
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 125
+    startLine: 127
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora

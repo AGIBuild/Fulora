@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="public/docfx.min.css">
       <link rel="stylesheet" href="public/main.css">
       <meta name="docfx:navrel" content="toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <meta name="docfx:tocrel" content="articles/toc.html">
       
       <meta name="docfx:rel" content="">
       
@@ -63,9 +63,23 @@
     </header>
 
     <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
 
       <div class="content">
         <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
 
           <nav id="breadcrumb"></nav>
         </div>
@@ -73,9 +87,9 @@
         <article data-uid="">
 <h1 id="api-surface-review--agibuildfulora">API Surface Review — Agibuild.Fulora</h1>
 
-<p><strong>Date</strong>: 2026-03-01
+<p><strong>Date</strong>: 2026-03-02
 <strong>Status</strong>: 1.0 Freeze Audit
-<strong>Test Count</strong>: 1293 CTs passing (1113 unit + 180 integration)
+<strong>Test Count</strong>: 1668 CTs passing (1459 unit + 209 integration)
 <strong>Inventory</strong>: <code>docs/API_SURFACE_INVENTORY.release.txt</code> (Core: 72 types, Runtime: 100 types)</p>
 <hr>
 <h2 id="summary">Summary</h2>

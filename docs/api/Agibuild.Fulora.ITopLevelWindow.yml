@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ITopLevelWindow
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 622
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 176
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Abstraction for a top-level window that can serve as an owner for dialogs.
-  example: []
   syntax:
     content: public interface ITopLevelWindow
     content.vb: Public Interface ITopLevelWindow
@@ -42,17 +40,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PlatformHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 625
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 178
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The underlying platform handle for the window.
-  example: []
   syntax:
     content: INativeHandle? PlatformHandle { get; }
     parameters: []

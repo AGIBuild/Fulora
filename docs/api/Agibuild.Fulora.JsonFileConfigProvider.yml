@@ -564,7 +564,7 @@ references:
   commentId: M:Agibuild.Fulora.IConfigProvider.GetValueAsync(System.String,System.Threading.CancellationToken)
   parent: Agibuild.Fulora.IConfigProvider
   isExternal: true
-  href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetValueAsync_System_String_System_Threading_CancellationToken_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: GetValueAsync(string, CancellationToken)
   nameWithType: IConfigProvider.GetValueAsync(string, CancellationToken)
   fullName: Agibuild.Fulora.IConfigProvider.GetValueAsync(string, System.Threading.CancellationToken)
@@ -574,7 +574,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IConfigProvider.GetValueAsync(System.String,System.Threading.CancellationToken)
     name: GetValueAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetValueAsync_System_String_System_Threading_CancellationToken_
   - name: (
   - uid: System.String
     name: string
@@ -590,7 +589,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IConfigProvider.GetValueAsync(System.String,System.Threading.CancellationToken)
     name: GetValueAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetValueAsync_System_String_System_Threading_CancellationToken_
   - name: (
   - uid: System.String
     name: String
@@ -742,7 +740,7 @@ references:
   commentId: M:Agibuild.Fulora.IConfigProvider.GetValueAsync``1(System.String,System.Threading.CancellationToken)
   parent: Agibuild.Fulora.IConfigProvider
   isExternal: true
-  href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetValueAsync__1_System_String_System_Threading_CancellationToken_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: GetValueAsync<T>(string, CancellationToken)
   nameWithType: IConfigProvider.GetValueAsync<T>(string, CancellationToken)
   fullName: Agibuild.Fulora.IConfigProvider.GetValueAsync<T>(string, System.Threading.CancellationToken)
@@ -752,7 +750,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IConfigProvider.GetValueAsync``1(System.String,System.Threading.CancellationToken)
     name: GetValueAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetValueAsync__1_System_String_System_Threading_CancellationToken_
   - name: <
   - name: T
   - name: '>'
@@ -771,7 +768,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IConfigProvider.GetValueAsync``1(System.String,System.Threading.CancellationToken)
     name: GetValueAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetValueAsync__1_System_String_System_Threading_CancellationToken_
   - name: (
   - name: Of
   - name: " "
@@ -828,7 +824,7 @@ references:
   commentId: M:Agibuild.Fulora.IConfigProvider.IsFeatureEnabledAsync(System.String,System.Threading.CancellationToken)
   parent: Agibuild.Fulora.IConfigProvider
   isExternal: true
-  href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_IsFeatureEnabledAsync_System_String_System_Threading_CancellationToken_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: IsFeatureEnabledAsync(string, CancellationToken)
   nameWithType: IConfigProvider.IsFeatureEnabledAsync(string, CancellationToken)
   fullName: Agibuild.Fulora.IConfigProvider.IsFeatureEnabledAsync(string, System.Threading.CancellationToken)
@@ -838,7 +834,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IConfigProvider.IsFeatureEnabledAsync(System.String,System.Threading.CancellationToken)
     name: IsFeatureEnabledAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_IsFeatureEnabledAsync_System_String_System_Threading_CancellationToken_
   - name: (
   - uid: System.String
     name: string
@@ -854,7 +849,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IConfigProvider.IsFeatureEnabledAsync(System.String,System.Threading.CancellationToken)
     name: IsFeatureEnabledAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_IsFeatureEnabledAsync_System_String_System_Threading_CancellationToken_
   - name: (
   - uid: System.String
     name: String
@@ -912,7 +906,7 @@ references:
   commentId: M:Agibuild.Fulora.IConfigProvider.GetSectionAsync(System.String,System.Threading.CancellationToken)
   parent: Agibuild.Fulora.IConfigProvider
   isExternal: true
-  href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetSectionAsync_System_String_System_Threading_CancellationToken_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: GetSectionAsync(string, CancellationToken)
   nameWithType: IConfigProvider.GetSectionAsync(string, CancellationToken)
   fullName: Agibuild.Fulora.IConfigProvider.GetSectionAsync(string, System.Threading.CancellationToken)
@@ -922,7 +916,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IConfigProvider.GetSectionAsync(System.String,System.Threading.CancellationToken)
     name: GetSectionAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetSectionAsync_System_String_System_Threading_CancellationToken_
   - name: (
   - uid: System.String
     name: string
@@ -938,7 +931,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IConfigProvider.GetSectionAsync(System.String,System.Threading.CancellationToken)
     name: GetSectionAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_GetSectionAsync_System_String_System_Threading_CancellationToken_
   - name: (
   - uid: System.String
     name: String
@@ -1022,14 +1014,13 @@ references:
   commentId: M:Agibuild.Fulora.IConfigProvider.RefreshAsync(System.Threading.CancellationToken)
   parent: Agibuild.Fulora.IConfigProvider
   isExternal: true
-  href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_RefreshAsync_System_Threading_CancellationToken_
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
   name: RefreshAsync(CancellationToken)
   nameWithType: IConfigProvider.RefreshAsync(CancellationToken)
   fullName: Agibuild.Fulora.IConfigProvider.RefreshAsync(System.Threading.CancellationToken)
   spec.csharp:
   - uid: Agibuild.Fulora.IConfigProvider.RefreshAsync(System.Threading.CancellationToken)
     name: RefreshAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_RefreshAsync_System_Threading_CancellationToken_
   - name: (
   - uid: System.Threading.CancellationToken
     name: CancellationToken
@@ -1039,7 +1030,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IConfigProvider.RefreshAsync(System.Threading.CancellationToken)
     name: RefreshAsync
-    href: Agibuild.Fulora.IConfigProvider.html#Agibuild_Fulora_IConfigProvider_RefreshAsync_System_Threading_CancellationToken_
   - name: (
   - uid: System.Threading.CancellationToken
     name: CancellationToken

@@ -1,0 +1,836 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.SpaBootstrapOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapOptions
+  id: SpaBootstrapOptions
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  - Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  - Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  - Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory
+  - Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument
+  - Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly
+  - Agibuild.Fulora.SpaBootstrapOptions.Scheme
+  - Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider
+  langs:
+  - csharp
+  - vb
+  name: SpaBootstrapOptions
+  nameWithType: SpaBootstrapOptions
+  fullName: Agibuild.Fulora.SpaBootstrapOptions
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SpaBootstrapOptions
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Options for WebViewBootstrapExtensions.BootstrapSpaAsync.
+
+    Encapsulates dev/prod navigation, bridge service registration, and error handling.
+  example: []
+  syntax:
+    content: public sealed class SpaBootstrapOptions
+    content.vb: Public NotInheritable Class SpaBootstrapOptions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  id: DevServerUrl
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: DevServerUrl
+  nameWithType: SpaBootstrapOptions.DevServerUrl
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DevServerUrl
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 15
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Dev server URL for development mode (e.g. "http://localhost:5173").
+
+    When set, the WebView navigates directly to this URL without SPA hosting.
+
+    When null, SPA hosting with embedded resources is used (production mode).
+  example: []
+  syntax:
+    content: public string? DevServerUrl { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property DevServerUrl As String
+  overload: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  id: EmbeddedResourcePrefix
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: EmbeddedResourcePrefix
+  nameWithType: SpaBootstrapOptions.EmbeddedResourcePrefix
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: EmbeddedResourcePrefix
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 21
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Embedded resource prefix for production SPA hosting (e.g. "wwwroot").
+
+    Required when <xref href="Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl" data-throw-if-not-resolved="false"></xref> is null.
+  example: []
+  syntax:
+    content: public string? EmbeddedResourcePrefix { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property EmbeddedResourcePrefix As String
+  overload: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly
+  id: ResourceAssembly
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: ResourceAssembly
+  nameWithType: SpaBootstrapOptions.ResourceAssembly
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ResourceAssembly
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 27
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Assembly containing embedded resources for production SPA hosting.
+
+    Required when <xref href="Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix" data-throw-if-not-resolved="false"></xref> is set.
+  example: []
+  syntax:
+    content: public Assembly? ResourceAssembly { get; init; }
+    parameters: []
+    return:
+      type: System.Reflection.Assembly
+    content.vb: Public Property ResourceAssembly As Assembly
+  overload: Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.Scheme
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.Scheme
+  id: Scheme
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: Scheme
+  nameWithType: SpaBootstrapOptions.Scheme
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.Scheme
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Scheme
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 32
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: 'Custom scheme name for SPA hosting. Default: "app".'
+  example: []
+  syntax:
+    content: public string Scheme { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Scheme As String
+  overload: Agibuild.Fulora.SpaBootstrapOptions.Scheme*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument
+  id: FallbackDocument
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: FallbackDocument
+  nameWithType: SpaBootstrapOptions.FallbackDocument
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: FallbackDocument
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 37
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: 'The SPA entry document. Default: "index.html".'
+  example: []
+  syntax:
+    content: public string FallbackDocument { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property FallbackDocument As String
+  overload: Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  id: ConfigureBridge
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: ConfigureBridge
+  nameWithType: SpaBootstrapOptions.ConfigureBridge
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ConfigureBridge
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 44
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Configures bridge services after navigation completes.
+
+    Called with the bridge service and an optional service provider.
+
+    Use this to call <code>bridge.Expose&lt;T&gt;()</code> or <code>bridge.UsePlugin&lt;T&gt;(sp)</code>.
+  example: []
+  syntax:
+    content: public Action<IBridgeService, IServiceProvider?>? ConfigureBridge { get; init; }
+    parameters: []
+    return:
+      type: System.Action{Agibuild.Fulora.IBridgeService,System.IServiceProvider}
+    content.vb: Public Property ConfigureBridge As Action(Of IBridgeService, IServiceProvider)
+  overload: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider
+  id: ServiceProvider
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: ServiceProvider
+  nameWithType: SpaBootstrapOptions.ServiceProvider
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ServiceProvider
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 50
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Optional service provider for DI-aware bridge service factories.
+
+    Passed to <xref href="Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public IServiceProvider? ServiceProvider { get; init; }
+    parameters: []
+    return:
+      type: System.IServiceProvider
+    content.vb: Public Property ServiceProvider As IServiceProvider
+  overload: Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider*
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory
+  id: ErrorPageFactory
+  parent: Agibuild.Fulora.SpaBootstrapOptions
+  langs:
+  - csharp
+  - vb
+  name: ErrorPageFactory
+  nameWithType: SpaBootstrapOptions.ErrorPageFactory
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ErrorPageFactory
+    path: ../src/Agibuild.Fulora.Core/SpaBootstrapOptions.cs
+    startLine: 56
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Optional HTML content to display when navigation fails.
+
+    When null, a default error page is shown.
+  example: []
+  syntax:
+    content: public Func<Exception, string>? ErrorPageFactory { get; init; }
+    parameters: []
+    return:
+      type: System.Func{System.Exception,System.String}
+    content.vb: Public Property ErrorPageFactory As Func(Of Exception, String)
+  overload: Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_DevServerUrl
+  name: DevServerUrl
+  nameWithType: SpaBootstrapOptions.DevServerUrl
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_DevServerUrl
+  name: DevServerUrl
+  nameWithType: SpaBootstrapOptions.DevServerUrl
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.DevServerUrl
+- uid: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_EmbeddedResourcePrefix
+  name: EmbeddedResourcePrefix
+  nameWithType: SpaBootstrapOptions.EmbeddedResourcePrefix
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+- uid: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_EmbeddedResourcePrefix
+  name: EmbeddedResourcePrefix
+  nameWithType: SpaBootstrapOptions.EmbeddedResourcePrefix
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.EmbeddedResourcePrefix
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_ResourceAssembly
+  name: ResourceAssembly
+  nameWithType: SpaBootstrapOptions.ResourceAssembly
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ResourceAssembly
+- uid: System.Reflection.Assembly
+  commentId: T:System.Reflection.Assembly
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.assembly
+  name: Assembly
+  nameWithType: Assembly
+  fullName: System.Reflection.Assembly
+- uid: System.Reflection
+  commentId: N:System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Reflection
+  nameWithType: System.Reflection
+  fullName: System.Reflection
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+- uid: Agibuild.Fulora.SpaBootstrapOptions.Scheme*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.Scheme
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_Scheme
+  name: Scheme
+  nameWithType: SpaBootstrapOptions.Scheme
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.Scheme
+- uid: Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_FallbackDocument
+  name: FallbackDocument
+  nameWithType: SpaBootstrapOptions.FallbackDocument
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.FallbackDocument
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_ConfigureBridge
+  name: ConfigureBridge
+  nameWithType: SpaBootstrapOptions.ConfigureBridge
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+- uid: System.Action{Agibuild.Fulora.IBridgeService,System.IServiceProvider}
+  commentId: T:System.Action{Agibuild.Fulora.IBridgeService,System.IServiceProvider}
+  parent: System
+  definition: System.Action`2
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<IBridgeService, IServiceProvider>
+  nameWithType: Action<IBridgeService, IServiceProvider>
+  fullName: System.Action<Agibuild.Fulora.IBridgeService, System.IServiceProvider>
+  nameWithType.vb: Action(Of IBridgeService, IServiceProvider)
+  fullName.vb: System.Action(Of Agibuild.Fulora.IBridgeService, System.IServiceProvider)
+  name.vb: Action(Of IBridgeService, IServiceProvider)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - uid: Agibuild.Fulora.IBridgeService
+    name: IBridgeService
+    href: Agibuild.Fulora.IBridgeService.html
+  - name: ','
+  - name: " "
+  - uid: System.IServiceProvider
+    name: IServiceProvider
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.IBridgeService
+    name: IBridgeService
+    href: Agibuild.Fulora.IBridgeService.html
+  - name: ','
+  - name: " "
+  - uid: System.IServiceProvider
+    name: IServiceProvider
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  - name: )
+- uid: System.Action`2
+  commentId: T:System.Action`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<T1, T2>
+  nameWithType: Action<T1, T2>
+  fullName: System.Action<T1, T2>
+  nameWithType.vb: Action(Of T1, T2)
+  fullName.vb: System.Action(Of T1, T2)
+  name.vb: Action(Of T1, T2)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  commentId: P:Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_ConfigureBridge
+  name: ConfigureBridge
+  nameWithType: SpaBootstrapOptions.ConfigureBridge
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ConfigureBridge
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_ServiceProvider
+  name: ServiceProvider
+  nameWithType: SpaBootstrapOptions.ServiceProvider
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ServiceProvider
+- uid: System.IServiceProvider
+  commentId: T:System.IServiceProvider
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  name: IServiceProvider
+  nameWithType: IServiceProvider
+  fullName: System.IServiceProvider
+- uid: Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory*
+  commentId: Overload:Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory
+  href: Agibuild.Fulora.SpaBootstrapOptions.html#Agibuild_Fulora_SpaBootstrapOptions_ErrorPageFactory
+  name: ErrorPageFactory
+  nameWithType: SpaBootstrapOptions.ErrorPageFactory
+  fullName: Agibuild.Fulora.SpaBootstrapOptions.ErrorPageFactory
+- uid: System.Func{System.Exception,System.String}
+  commentId: T:System.Func{System.Exception,System.String}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<Exception, string>
+  nameWithType: Func<Exception, string>
+  fullName: System.Func<System.Exception, string>
+  nameWithType.vb: Func(Of Exception, String)
+  fullName.vb: System.Func(Of System.Exception, String)
+  name.vb: Func(Of Exception, String)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )

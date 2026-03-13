@@ -15,17 +15,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewTimeoutException
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1018
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 313
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigation failed due to a request timeout.
-  example: []
   syntax:
     content: 'public class WebViewTimeoutException : WebViewNavigationException, ISerializable'
     content.vb: Public Class WebViewTimeoutException Inherits WebViewNavigationException Implements ISerializable
@@ -68,32 +66,26 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1027
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 315
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Initializes a new instance of <xref href="Agibuild.Fulora.WebViewTimeoutException" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: public WebViewTimeoutException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
     parameters:
     - id: message
       type: System.String
-      description: The exception message.
     - id: navigationId
       type: System.Guid
-      description: The navigation id associated with the timed out request.
     - id: requestUri
       type: System.Uri
-      description: The request URI.
     - id: innerException
       type: System.Exception
-      description: The optional inner exception.
     content.vb: Public Sub New(message As String, navigationId As Guid, requestUri As Uri, innerException As Exception = Nothing)
   overload: Agibuild.Fulora.WebViewTimeoutException.#ctor*
   nameWithType.vb: WebViewTimeoutException.New(String, Guid, Uri, Exception)
@@ -523,12 +515,6 @@ references:
     name: Serialization
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization
-- uid: Agibuild.Fulora.WebViewTimeoutException
-  commentId: T:Agibuild.Fulora.WebViewTimeoutException
-  href: Agibuild.Fulora.WebViewTimeoutException.html
-  name: WebViewTimeoutException
-  nameWithType: WebViewTimeoutException
-  fullName: Agibuild.Fulora.WebViewTimeoutException
 - uid: Agibuild.Fulora.WebViewTimeoutException.#ctor*
   commentId: Overload:Agibuild.Fulora.WebViewTimeoutException.#ctor
   href: Agibuild.Fulora.WebViewTimeoutException.html#Agibuild_Fulora_WebViewTimeoutException__ctor_System_String_System_Guid_System_Uri_System_Exception_

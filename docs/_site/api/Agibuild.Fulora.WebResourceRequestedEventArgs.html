@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class WebResourceRequestedEventArgs | Agibuild.Fulora ">
       
-      <meta name="description" content="Raised when a registered custom-scheme request is intercepted. The handler can supply a response body, content type, and status code. Custom schemes must be registered via  before the WebView is created.">
+      
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Agibuild_Fulora_WebResourceRequestedEventArgs" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs" class="text-break">
-Class WebResourceRequestedEventArgs  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L817"><i class="bi bi-code-slash"></i></a>
+Class WebResourceRequestedEventArgs  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L217"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,11 +97,7 @@ Class WebResourceRequestedEventArgs  <a class="header-action link-secondary" tit
   <dl><dt>Assembly</dt><dd>Agibuild.Fulora.Core.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Raised when a registered custom-scheme request is intercepted.
-The handler can supply a response body, content type, and status code.
-Custom schemes must be registered via <a class="xref" href="Agibuild.Fulora.IWebViewEnvironmentOptions.html#Agibuild_Fulora_IWebViewEnvironmentOptions_CustomSchemes">CustomSchemes</a>
-before the WebView is created.</p>
-</div>
+  <div class="markdown summary"></div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -161,11 +157,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs__ctor" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.#ctor">
   WebResourceRequestedEventArgs()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L820"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L219"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new instance.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -188,11 +183,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs__ctor_System_Uri_System_String_System_Collections_Generic_IReadOnlyDictionary_System_String_System_String__" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.#ctor(System.Uri,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})">
   WebResourceRequestedEventArgs(Uri, string, IReadOnlyDictionary&lt;string, string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L826"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L221"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new instance.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -202,14 +196,11 @@ before the WebView is created.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>requestUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
-    <dd><p>Intercepted request URI.</p>
-</dd>
+    <dd></dd>
     <dt><code>method</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>HTTP method.</p>
-</dd>
+    <dd></dd>
     <dt><code>requestHeaders</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-    <dd><p>Optional request headers.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -231,11 +222,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_Handled" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.Handled">
   Handled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L855"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L235"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Set to true to indicate the request has been handled and a response is provided.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -263,11 +253,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_Method" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.Method">
   Method
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L837"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L229"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>HTTP method (GET, POST, etc.).</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -295,11 +284,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_RequestHeaders" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.RequestHeaders">
   RequestHeaders
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L840"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L230"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Request headers from the intercepted request. May be null if not available on the platform.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -327,11 +315,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_RequestUri" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.RequestUri">
   RequestUri
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L834"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L228"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The URI of the intercepted request.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -359,11 +346,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_ResponseBody" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.ResponseBody">
   ResponseBody
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L843"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L231"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Set by the handler to provide a response body as a stream (supports binary content).</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -391,11 +377,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_ResponseContentType" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.ResponseContentType">
   ResponseContentType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L846"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L232"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Set by the handler to provide a response content type. Default: text/html.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -423,11 +408,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_ResponseHeaders" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.ResponseHeaders">
   ResponseHeaders
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L852"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L234"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Set by the handler to provide custom response headers.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -455,11 +439,10 @@ before the WebView is created.</p>
 
   <h3 id="Agibuild_Fulora_WebResourceRequestedEventArgs_ResponseStatusCode" data-uid="Agibuild.Fulora.WebResourceRequestedEventArgs.ResponseStatusCode">
   ResponseStatusCode
-  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L849"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L233"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Set by the handler to provide an HTTP status code. Default: 200.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -487,7 +470,7 @@ before the WebView is created.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewContracts.cs/#L817" class="edit-link">Edit this page</a>
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/src/Agibuild.Fulora.Core/WebViewRecords.cs/#L217" class="edit-link">Edit this page</a>
         </div>
 
 

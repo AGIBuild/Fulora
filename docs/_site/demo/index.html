@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Demo: Avalonia + React Hybrid App | Agibuild.Fulora </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Demo: Avalonia + React Hybrid App | Agibuild.Fulora ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/docs/demo/index.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Agibuild.Fulora">
+            Agibuild.Fulora
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="demo-avalonia--react-hybrid-app">Demo: Avalonia + React Hybrid App</h1>
+
+<p>This sample application demonstrates the full capabilities of <strong>Agibuild.Fulora</strong> — a cross-platform hybrid framework that combines Avalonia's native desktop shell with a modern React frontend, communicating through a type-safe C# ↔ JavaScript bridge.</p>
+<blockquote>
+<p><strong>Source code</strong>: <a href="https://github.com/AGIBuild/Agibuild.Fulora/tree/main/samples/avalonia-react"><code>samples/avalonia-react/</code></a></p>
+</blockquote>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<pre><code>┌─────────────────────────────────────────────────┐
+│  Avalonia Desktop Shell  (C# / .NET)            │
+│  ┌───────────────────────────────────────────┐  │
+│  │  WebView Control                          │  │
+│  │  ┌─────────────────────────────────────┐  │  │
+│  │  │  React SPA (TypeScript / Tailwind)  │  │  │
+│  │  └─────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────┘  │
+│           ▲               │                     │
+│           │  JSON-RPC     │                     │
+│           ▼               ▼                     │
+│  [JsExport] C#→JS    [JsImport] JS→C#          │
+└─────────────────────────────────────────────────┘
+</code></pre>
+<p>The demo contains <strong>4 pages</strong>, each showcasing a different bridge capability.</p>
+<hr>
+<h2 id="dashboard--system-metrics-via-bridge">Dashboard — System Metrics via Bridge</h2>
+<p><img src="images/dashboard.jpg" alt="Dashboard"></p>
+<p>The Dashboard page demonstrates <strong>read-only data fetching</strong> from C# to JavaScript via the bridge.</p>
+<p><strong>Key capabilities shown:</strong></p>
+<ul>
+<li><strong><code>ISystemInfoService.getSystemInfo()</code></strong> — Fetches OS name, .NET runtime version, Avalonia version, WebView engine type, machine name, and total memory. This data is impossible to obtain from JavaScript alone.</li>
+<li><strong><code>ISystemInfoService.getRuntimeMetrics()</code></strong> — Retrieves live .NET process metrics (working set, GC memory, thread count, uptime) with <strong>auto-refresh every 2 seconds</strong>.</li>
+<li><strong>Metric cards</strong> display real-time values with animated updates.</li>
+<li><strong>Platform Details</strong> table shows static system information.</li>
+</ul>
+<p><strong>Bridge interface:</strong></p>
+<pre><code class="lang-csharp">[JsExport]
+public interface ISystemInfoService
+{
+    Task&lt;SystemInfo&gt; GetSystemInfo();
+    Task&lt;RuntimeMetrics&gt; GetRuntimeMetrics();
+}
+</code></pre>
+<hr>
+<h2 id="chat--bidirectional-communication">Chat — Bidirectional Communication</h2>
+<p><img src="images/chat.jpg" alt="Chat"></p>
+<p>The Chat page demonstrates <strong>bidirectional message passing</strong> between C# and JavaScript.</p>
+<p><strong>Key capabilities shown:</strong></p>
+<ul>
+<li><strong><code>IChatService.sendMessage()</code></strong> — Sends a user message to C# and receives a response. The C# service processes commands like <code>time</code>, <code>memory</code>, <code>bridge</code>, and <code>help</code>.</li>
+<li><strong><code>IChatService.getHistory()</code></strong> / <strong><code>IChatService.clearHistory()</code></strong> — Chat history persistence across page navigations, managed entirely in C#.</li>
+<li><strong>Optimistic UI</strong> — User messages appear instantly while awaiting C# response.</li>
+<li><strong>Error handling</strong> — Network/bridge errors are caught and displayed inline.</li>
+</ul>
+<p><strong>Bridge interface:</strong></p>
+<pre><code class="lang-csharp">[JsExport]
+public interface IChatService
+{
+    Task&lt;ChatResponse&gt; SendMessage(ChatRequest request);
+    Task&lt;ChatMessage[]&gt; GetHistory();
+    Task ClearHistory();
+}
+</code></pre>
+<hr>
+<h2 id="files--native-file-system-access">Files — Native File System Access</h2>
+<p>The Files page demonstrates <strong>native OS capabilities</strong> exposed to the web frontend through the bridge.</p>
+<p><strong>Key capabilities shown:</strong></p>
+<ul>
+<li><strong><code>IFileService.getUserDocumentsPath()</code></strong> — Retrieves the user's Documents directory path from .NET.</li>
+<li><strong><code>IFileService.listFiles()</code></strong> — Lists directory contents with metadata (name, size, modification date, isDirectory).</li>
+<li><strong><code>IFileService.readTextFile()</code></strong> — Reads file contents for inline preview.</li>
+<li><strong>Breadcrumb navigation</strong> — Navigate up/down the directory tree.</li>
+<li><strong>File preview panel</strong> — Split-view with text file content rendering.</li>
+</ul>
+<p><strong>Bridge interface:</strong></p>
+<pre><code class="lang-csharp">[JsExport]
+public interface IFileService
+{
+    Task&lt;string&gt; GetUserDocumentsPath();
+    Task&lt;FileEntry[]&gt; ListFiles(string path);
+    Task&lt;string&gt; ReadTextFile(string path);
+}
+</code></pre>
+<blockquote>
+<p>This demonstrates a key advantage of hybrid apps: web UI can access native file system APIs that are restricted in browsers.</p>
+</blockquote>
+<hr>
+<h2 id="settings--persistent-configuration">Settings — Persistent Configuration</h2>
+<p><img src="images/settings.jpg" alt="Settings"></p>
+<p>The Settings page demonstrates <strong>persistent state management</strong> and <strong>real-time UI updates</strong> via the bridge.</p>
+<p><strong>Key capabilities shown:</strong></p>
+<ul>
+<li><strong><code>ISettingsService.getSettings()</code></strong> / <strong><code>ISettingsService.updateSettings()</code></strong> — Read/write user preferences persisted as JSON in the native app data directory.</li>
+<li><strong>Theme switching</strong> — Light / Dark / System, applied via CSS class toggling with Tailwind CSS v4.</li>
+<li><strong>Multi-language support (i18n)</strong> — English, Chinese (中文), Japanese (日本語), Korean (한국어) — UI text updates immediately on language change.</li>
+<li><strong>Font size control</strong> — Dynamic root font-size via CSS custom properties, scaling all rem-based Tailwind styles.</li>
+<li><strong>Sidebar state persistence</strong> — Compact/expanded sidebar state saved across sessions.</li>
+<li><strong>Cross-component synchronization</strong> — Settings changes propagate to the Layout component via custom DOM events.</li>
+</ul>
+<p><strong>Bridge interface:</strong></p>
+<pre><code class="lang-csharp">[JsExport]
+public interface ISettingsService
+{
+    Task&lt;AppSettings&gt; GetSettings();
+    Task&lt;AppSettings&gt; UpdateSettings(AppSettings settings);
+}
+</code></pre>
+<hr>
+<h2 id="running-the-demo">Running the Demo</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>.NET 10 SDK</li>
+<li>Node.js 18+</li>
+</ul>
+<h3 id="steps">Steps</h3>
+<pre><code class="lang-bash"># 1. Install frontend dependencies
+cd samples/avalonia-react/AvaloniReact.Web
+npm install
+
+# 2. Start the Vite dev server (HMR enabled)
+npm run dev
+
+# 3. In another terminal, run the Avalonia desktop app
+cd samples/avalonia-react/AvaloniReact.Desktop
+dotnet run
+</code></pre>
+<p>The app will open a native window with the React SPA loaded inside the WebView, with full bridge connectivity.</p>
+<h3 id="standalone-browser-mode">Standalone Browser Mode</h3>
+<p>You can also open <code>http://localhost:5173</code> directly in a browser for frontend development. A mock bridge stub is provided so the SPA renders without the Avalonia host (bridge calls return placeholder data).</p>
+<hr>
+<h2 id="project-structure">Project Structure</h2>
+<pre><code>samples/avalonia-react/
+├── AvaloniReact.Bridge/          # Shared bridge contracts (C# interfaces + models)
+│   ├── Services/                 # [JsExport] / [JsImport] interfaces
+│   └── Models/                   # Data transfer objects (records)
+├── AvaloniReact.Desktop/         # Avalonia desktop host
+│   ├── MainWindow.axaml          # WebView control layout
+│   ├── MainWindow.axaml.cs       # Bridge service wiring
+│   └── Services/                 # C# service implementations
+└── AvaloniReact.Web/             # React frontend (Vite + TypeScript + Tailwind)
+    └── src/
+        ├── bridge/               # Auto-generated JS bridge client stubs
+        ├── components/           # Layout, navigation
+        ├── pages/                # Dashboard, Chat, Files, Settings
+        ├── i18n/                 # Internationalization (4 languages)
+        └── hooks/                # useBridge, usePageRegistry
+</code></pre>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Demo Page</th>
+<th>Bridge Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read-only data fetching</td>
+<td>Dashboard</td>
+<td>C# → JS (<code>[JsExport]</code>)</td>
+</tr>
+<tr>
+<td>Request/response RPC</td>
+<td>Chat</td>
+<td>C# ↔ JS (bidirectional)</td>
+</tr>
+<tr>
+<td>Native OS API access</td>
+<td>Files</td>
+<td>C# → JS (<code>[JsExport]</code>)</td>
+</tr>
+<tr>
+<td>Persistent state management</td>
+<td>Settings</td>
+<td>C# ↔ JS (bidirectional)</td>
+</tr>
+<tr>
+<td>Push notifications to UI</td>
+<td>Layout (toast)</td>
+<td>JS → C# (<code>[JsImport]</code>)</td>
+</tr>
+<tr>
+<td>Theme control from C#</td>
+<td>Layout</td>
+<td>JS → C# (<code>[JsImport]</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="../articles/getting-started.html">Getting Started</a> — Set up your own hybrid app</li>
+<li><a href="../articles/bridge-guide.html">Bridge Guide</a> — Advanced bridge patterns</li>
+<li><a href="../articles/spa-hosting.html">SPA Hosting</a> — Embedded resource serving &amp; dev server proxy</li>
+<li><a href="../articles/architecture.html">Architecture</a> — Framework internals</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/docs/demo/index.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Agibuild.Fulora — Cross-platform Hybrid App Framework
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

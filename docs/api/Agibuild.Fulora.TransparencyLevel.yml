@@ -1,0 +1,217 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.TransparencyLevel
+  commentId: T:Agibuild.Fulora.TransparencyLevel
+  id: TransparencyLevel
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.TransparencyLevel.AcrylicBlur
+  - Agibuild.Fulora.TransparencyLevel.Blur
+  - Agibuild.Fulora.TransparencyLevel.Mica
+  - Agibuild.Fulora.TransparencyLevel.None
+  - Agibuild.Fulora.TransparencyLevel.Transparent
+  langs:
+  - csharp
+  - vb
+  name: TransparencyLevel
+  nameWithType: TransparencyLevel
+  fullName: Agibuild.Fulora.TransparencyLevel
+  type: Enum
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/TransparencyLevel.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TransparencyLevel
+    path: ../src/Agibuild.Fulora.Core/TransparencyLevel.cs
+    startLine: 7
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Platform transparency composition levels.
+  example: []
+  syntax:
+    content: >-
+      [JsonConverter(typeof(JsonStringEnumConverter<TransparencyLevel>))]
+
+      public enum TransparencyLevel
+    content.vb: >-
+      <JsonConverter(GetType(JsonStringEnumConverter(Of TransparencyLevel)))>
+
+      Public Enum TransparencyLevel
+  attributes:
+  - type: System.Text.Json.Serialization.JsonConverterAttribute
+    ctor: System.Text.Json.Serialization.JsonConverterAttribute.#ctor(System.Type)
+    arguments:
+    - type: System.Type
+      value: System.Text.Json.Serialization.JsonStringEnumConverter{Agibuild.Fulora.TransparencyLevel}
+- uid: Agibuild.Fulora.TransparencyLevel.None
+  commentId: F:Agibuild.Fulora.TransparencyLevel.None
+  id: None
+  parent: Agibuild.Fulora.TransparencyLevel
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: TransparencyLevel.None
+  fullName: Agibuild.Fulora.TransparencyLevel.None
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/TransparencyLevel.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: None
+    path: ../src/Agibuild.Fulora.Core/TransparencyLevel.cs
+    startLine: 11
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: No transparency; fully opaque window.
+  example: []
+  syntax:
+    content: None = 0
+    return:
+      type: Agibuild.Fulora.TransparencyLevel
+- uid: Agibuild.Fulora.TransparencyLevel.Transparent
+  commentId: F:Agibuild.Fulora.TransparencyLevel.Transparent
+  id: Transparent
+  parent: Agibuild.Fulora.TransparencyLevel
+  langs:
+  - csharp
+  - vb
+  name: Transparent
+  nameWithType: TransparencyLevel.Transparent
+  fullName: Agibuild.Fulora.TransparencyLevel.Transparent
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/TransparencyLevel.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Transparent
+    path: ../src/Agibuild.Fulora.Core/TransparencyLevel.cs
+    startLine: 13
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Simple transparent background (no blur).
+  example: []
+  syntax:
+    content: Transparent = 1
+    return:
+      type: Agibuild.Fulora.TransparencyLevel
+- uid: Agibuild.Fulora.TransparencyLevel.Blur
+  commentId: F:Agibuild.Fulora.TransparencyLevel.Blur
+  id: Blur
+  parent: Agibuild.Fulora.TransparencyLevel
+  langs:
+  - csharp
+  - vb
+  name: Blur
+  nameWithType: TransparencyLevel.Blur
+  fullName: Agibuild.Fulora.TransparencyLevel.Blur
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/TransparencyLevel.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Blur
+    path: ../src/Agibuild.Fulora.Core/TransparencyLevel.cs
+    startLine: 15
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Background blur effect.
+  example: []
+  syntax:
+    content: Blur = 2
+    return:
+      type: Agibuild.Fulora.TransparencyLevel
+- uid: Agibuild.Fulora.TransparencyLevel.AcrylicBlur
+  commentId: F:Agibuild.Fulora.TransparencyLevel.AcrylicBlur
+  id: AcrylicBlur
+  parent: Agibuild.Fulora.TransparencyLevel
+  langs:
+  - csharp
+  - vb
+  name: AcrylicBlur
+  nameWithType: TransparencyLevel.AcrylicBlur
+  fullName: Agibuild.Fulora.TransparencyLevel.AcrylicBlur
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/TransparencyLevel.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: AcrylicBlur
+    path: ../src/Agibuild.Fulora.Core/TransparencyLevel.cs
+    startLine: 17
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Acrylic blur (Windows DWM acrylic composition).
+  example: []
+  syntax:
+    content: AcrylicBlur = 3
+    return:
+      type: Agibuild.Fulora.TransparencyLevel
+- uid: Agibuild.Fulora.TransparencyLevel.Mica
+  commentId: F:Agibuild.Fulora.TransparencyLevel.Mica
+  id: Mica
+  parent: Agibuild.Fulora.TransparencyLevel
+  langs:
+  - csharp
+  - vb
+  name: Mica
+  nameWithType: TransparencyLevel.Mica
+  fullName: Agibuild.Fulora.TransparencyLevel.Mica
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/TransparencyLevel.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Mica
+    path: ../src/Agibuild.Fulora.Core/TransparencyLevel.cs
+    startLine: 19
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Mica material (Windows 11+).
+  example: []
+  syntax:
+    content: Mica = 4
+    return:
+      type: Agibuild.Fulora.TransparencyLevel
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.TransparencyLevel
+  commentId: T:Agibuild.Fulora.TransparencyLevel
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.TransparencyLevel.html
+  name: TransparencyLevel
+  nameWithType: TransparencyLevel
+  fullName: Agibuild.Fulora.TransparencyLevel

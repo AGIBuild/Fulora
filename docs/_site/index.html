@@ -73,37 +73,121 @@
         <article data-uid="">
 <h1 id="fulora">Fulora</h1>
 
-<p>Web-first product velocity with Avalonia-native performance, control, and security.</p>
-<h2 id="documentation-hub">Documentation Hub</h2>
-<p>This project targets a <strong>framework-grade C# + web development model</strong> while preserving <strong>standalone WebView control integration flexibility</strong>.
-One runtime core supports both paths.</p>
-<p>Use this page as the entry point based on what you want to do next.</p>
-<h2 id="start-here">Start Here</h2>
+<p><strong>Ship web apps as native desktop products</strong> — with real OS integration, not just a wrapper.</p>
+<p>Fulora lets you write your UI in React, Vue, or any web framework, then deliver it inside an Avalonia-powered native window with full access to file systems, system APIs, AI models, and more — all through a type-safe C# ↔ JavaScript bridge that generates code at compile time.</p>
+<blockquote>
+<p>One runtime core. Five platforms. Zero reflection.</p>
+</blockquote>
+<hr>
+<h2 id="why-fulora">Why Fulora?</h2>
+<p>Most hybrid frameworks give you a browser in a box. Fulora gives you a <strong>product-grade application shell</strong> where the web frontend and the native host are equal partners:</p>
 <ul>
-<li><strong>Build your first app</strong>: <a href="articles/getting-started.html">Getting Started</a></li>
-<li><strong>Understand architecture decisions</strong>: <a href="articles/architecture.html">Architecture</a></li>
-<li><strong>See a real sample experience</strong>: <a href="demo/index.md">Demo: Avalonia + React Hybrid App</a></li>
-<li><strong>Check product direction and phases</strong>: <a href="../openspec/ROADMAP.md">Roadmap</a></li>
-<li><strong>Review goals and positioning</strong>: <a href="../openspec/PROJECT.md">Project Vision &amp; Goals</a></li>
+<li>Your React component calls <code>AiChatService.streamCompletion(prompt)</code> and gets back an <code>AsyncIterable</code> of tokens — streamed from a local Ollama model running on the user's machine.</li>
+<li>Your settings page calls <code>WindowShellService.updateWindowShellSettings({ theme: 'dark', enableTransparency: true })</code> and the native window responds instantly with Mica/Acrylic effects.</li>
+<li>Your file browser calls <code>FileService.listFiles(path)</code> and navigates the real file system — something browsers will never allow.</li>
 </ul>
-<h2 id="features">Features</h2>
+<p>All of this is type-checked at compile time, AOT-safe, and works the same on Windows, macOS, Linux, iOS, and Android.</p>
+<hr>
+<h2 id="start-building">Start Building</h2>
+<table>
+<thead>
+<tr>
+<th>What you want to do</th>
+<th>Where to go</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build your first hybrid app in 5 minutes</td>
+<td><a href="articles/getting-started.html">Getting Started</a></td>
+</tr>
+<tr>
+<td>See a full working sample</td>
+<td><a href="demo/index.html">Demo: Avalonia + React Hybrid App</a></td>
+</tr>
+<tr>
+<td>Build an AI chat app with streaming</td>
+<td><a href="ai-integration-guide.html">AI Integration Guide</a></td>
+</tr>
+<tr>
+<td>Understand how the runtime works</td>
+<td><a href="articles/architecture.html">Architecture</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="developer-resources">Developer Resources</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="articles/bridge-guide.html">Bridge Guide</a></td>
+<td><code>[JsExport]</code>, <code>[JsImport]</code>, streaming, cancellation, error handling</td>
+</tr>
+<tr>
+<td><a href="articles/spa-hosting.html">SPA Hosting</a></td>
+<td>Embedded resources, <code>app://</code> scheme, dev server proxy, HMR</td>
+</tr>
+<tr>
+<td><a href="cli.html">CLI Reference</a></td>
+<td><code>fulora new</code>, <code>dev</code>, <code>generate types</code>, <code>add service</code></td>
+</tr>
+<tr>
+<td><a href="plugin-authoring-guide.html">Plugin Authoring</a></td>
+<td>Create bridge plugins that ship as NuGet + npm packages</td>
+</tr>
+<tr>
+<td><a href="bridge-devtools-panel.html">Bridge DevTools</a></td>
+<td>In-app debug overlay for bridge call inspection</td>
+</tr>
+<tr>
+<td><a href="nativeaot.html">Native AOT</a></td>
+<td>Trim-safe publishing and AOT compilation guidance</td>
+</tr>
+<tr>
+<td><a href="hybrid-e2e-testing-guide.html">E2E Testing</a></td>
+<td>End-to-end testing patterns for hybrid apps</td>
+</tr>
+<tr>
+<td><a href="shipping-your-app.html">Shipping Your App</a></td>
+<td>Packaging, distribution, and auto-update strategies</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operations">Operations</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="release-checklist.html">Release Checklist</a></td>
+<td>How to publish a new release via the unified CI/Release pipeline</td>
+</tr>
+<tr>
+<td><a href="docs-site-deploy.html">Documentation Deployment</a></td>
+<td>How the docs site is built and deployed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="whats-inside">What's Inside</h2>
 <ul>
-<li><strong>Type-Safe Bridge</strong>: <code>[JsExport]</code> / <code>[JsImport]</code> attributes with Roslyn Source Generator for AOT-compatible C# ↔ JS interop</li>
-<li><strong>SPA Hosting</strong>: Embedded resource serving with custom <code>app://</code> scheme, SPA router fallback, dev server proxy</li>
-<li><strong>Cross-Platform</strong>: Windows (WebView2), macOS/iOS (WKWebView), Android (WebView), Linux (WebKitGTK)</li>
-<li><strong>Testable</strong>: <code>MockBridgeService</code> for unit testing without a real browser</li>
-<li><strong>Secure</strong>: Origin-based policy, rate limiting, protocol versioning</li>
+<li><strong>Type-Safe Bridge</strong> — <code>[JsExport]</code> / <code>[JsImport]</code> attributes with Roslyn source generation. No reflection, no runtime proxies, fully AOT-compatible.</li>
+<li><strong>Streaming</strong> — <code>IAsyncEnumerable&lt;T&gt;</code> on C# maps to <code>AsyncIterable</code> in JavaScript. Stream AI tokens, file contents, or sensor data with backpressure and cancellation.</li>
+<li><strong>5 Platforms</strong> — Windows (WebView2), macOS/iOS (WKWebView), Android (WebView), Linux (WebKitGTK). One codebase, native WebView on each OS.</li>
+<li><strong>Plugin Ecosystem</strong> — Database (SQLite), HTTP Client, File System, Notifications, Auth Token, Local Storage — ship as paired NuGet + npm packages.</li>
+<li><strong>Window Shell</strong> — Theme control, transparency, custom chrome, drag regions — all driven from the web frontend.</li>
+<li><strong>OpenTelemetry</strong> — Bridge call spans and metrics export to any OTLP backend. See exactly what crosses the bridge and how long it takes.</li>
+<li><strong>HMR Preservation</strong> — Bridge state survives hot module replacement. No more losing connections during frontend development.</li>
 </ul>
-<h2 id="current-product-objective">Current Product Objective</h2>
-<p>Current roadmap focus is <strong>Phase 5: Framework Positioning Foundation</strong>:</p>
-<ul>
-<li>Turn C# + web into a default-ready product architecture, not just a rendering choice</li>
-<li>Consolidate host/system operations behind one typed capability gateway</li>
-<li>Enforce policy-first execution with deterministic <code>allow/deny/failure</code> semantics</li>
-<li>Emit machine-checkable diagnostics for CI and AI-agent automation</li>
-<li>Provide a web-first template flow while retaining control-level integration freedom</li>
-</ul>
-<h2 id="roadmap-snapshot">Roadmap Snapshot</h2>
+<h2 id="roadmap">Roadmap</h2>
 <table>
 <thead>
 <tr>
@@ -114,37 +198,38 @@ One runtime core supports both paths.</p>
 </thead>
 <tbody>
 <tr>
-<td>Phase 0</td>
-<td>Foundation</td>
-<td>✅ Done</td>
+<td>Phase 0–3</td>
+<td>Foundation, Bridge, SPA, Polish</td>
+<td>Done</td>
 </tr>
 <tr>
-<td>Phase 1</td>
-<td>Type-Safe Bridge</td>
-<td>✅ Done</td>
+<td>Phase 4–6</td>
+<td>Application Shell, Framework Positioning, Governance</td>
+<td>Done</td>
 </tr>
 <tr>
-<td>Phase 2</td>
-<td>SPA Hosting</td>
-<td>✅ Core Done</td>
+<td>Phase 7–8</td>
+<td>Release Orchestration, Bridge V2 &amp; Platform Parity</td>
+<td>Done</td>
 </tr>
 <tr>
-<td>Phase 3</td>
-<td>Polish &amp; GA</td>
-<td>✅ Done</td>
+<td>Phase 9</td>
+<td>GA Release (1.0.0)</td>
+<td>Done</td>
 </tr>
 <tr>
-<td>Phase 4</td>
-<td>Application Shell</td>
-<td>✅ Done</td>
+<td>Phase 10–11</td>
+<td>Production Operations, Ecosystem &amp; DX</td>
+<td>Done</td>
 </tr>
 <tr>
-<td>Phase 5</td>
-<td>Framework Positioning Foundation</td>
-<td>✅ Completed</td>
+<td>Phase 12</td>
+<td>Enterprise &amp; Advanced Scenarios</td>
+<td>Planned</td>
 </tr>
 </tbody>
 </table>
+<p><a href="../openspec/ROADMAP.md">Full Roadmap</a> · <a href="../openspec/PROJECT.md">Project Vision</a></p>
 
 </article>
 

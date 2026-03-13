@@ -19,17 +19,15 @@ items:
   type: Struct
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageEnvelope
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 356
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 47
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Envelope for a WebMessage bridge message.
-  example: []
   syntax:
     content: 'public readonly record struct WebMessageEnvelope : IEquatable<WebMessageEnvelope>'
     content.vb: Public Structure WebMessageEnvelope Implements IEquatable(Of WebMessageEnvelope)
@@ -55,32 +53,26 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 356
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 47
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Envelope for a WebMessage bridge message.
-  example: []
   syntax:
     content: public WebMessageEnvelope(string Body, string Origin, Guid ChannelId, int ProtocolVersion)
     parameters:
     - id: Body
       type: System.String
-      description: The raw message body.
     - id: Origin
       type: System.String
-      description: The message origin.
     - id: ChannelId
       type: System.Guid
-      description: The channel id.
     - id: ProtocolVersion
       type: System.Int32
-      description: The protocol version.
     content.vb: Public Sub New(Body As String, Origin As String, ChannelId As Guid, ProtocolVersion As Integer)
   overload: Agibuild.Fulora.WebMessageEnvelope.#ctor*
   nameWithType.vb: WebMessageEnvelope.New(String, String, Guid, Integer)
@@ -99,17 +91,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Body
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 357
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 48
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The raw message body.
-  example: []
   syntax:
     content: public string Body { get; init; }
     parameters: []
@@ -130,17 +120,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Origin
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 358
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 49
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The message origin.
-  example: []
   syntax:
     content: public string Origin { get; init; }
     parameters: []
@@ -161,17 +149,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 359
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 50
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The channel id.
-  example: []
   syntax:
     content: public Guid ChannelId { get; init; }
     parameters: []
@@ -192,17 +178,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ProtocolVersion
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 360
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 51
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The protocol version.
-  example: []
   syntax:
     content: public int ProtocolVersion { get; init; }
     parameters: []

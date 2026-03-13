@@ -770,19 +770,16 @@ references:
   commentId: T:System.Nullable{Agibuild.Fulora.WebViewPermissionKind}
   parent: System
   definition: System.Nullable`1
-  href: Agibuild.Fulora.WebViewPermissionKind.html
   name: WebViewPermissionKind?
   nameWithType: WebViewPermissionKind?
   fullName: Agibuild.Fulora.WebViewPermissionKind?
   spec.csharp:
   - uid: Agibuild.Fulora.WebViewPermissionKind
     name: WebViewPermissionKind
-    href: Agibuild.Fulora.WebViewPermissionKind.html
   - name: '?'
   spec.vb:
   - uid: Agibuild.Fulora.WebViewPermissionKind
     name: WebViewPermissionKind
-    href: Agibuild.Fulora.WebViewPermissionKind.html
   - name: '?'
 - uid: Agibuild.Fulora.Shell.WebViewPermissionProfileDecision
   commentId: T:Agibuild.Fulora.Shell.WebViewPermissionProfileDecision

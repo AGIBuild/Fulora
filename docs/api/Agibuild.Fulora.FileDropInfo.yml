@@ -1,0 +1,556 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.FileDropInfo
+  commentId: T:Agibuild.Fulora.FileDropInfo
+  id: FileDropInfo
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.FileDropInfo.#ctor(System.String,System.String,System.Nullable{System.Int64})
+  - Agibuild.Fulora.FileDropInfo.MimeType
+  - Agibuild.Fulora.FileDropInfo.Path
+  - Agibuild.Fulora.FileDropInfo.Size
+  langs:
+  - csharp
+  - vb
+  name: FileDropInfo
+  nameWithType: FileDropInfo
+  fullName: Agibuild.Fulora.FileDropInfo
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: FileDropInfo
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 38
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Metadata for a file in a drag-drop payload.
+  example: []
+  syntax:
+    content: 'public sealed record FileDropInfo : IEquatable<FileDropInfo>'
+    content.vb: Public NotInheritable Class FileDropInfo Implements IEquatable(Of FileDropInfo)
+  inheritance:
+  - System.Object
+  implements:
+  - System.IEquatable{Agibuild.Fulora.FileDropInfo}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.FileDropInfo.#ctor(System.String,System.String,System.Nullable{System.Int64})
+  commentId: M:Agibuild.Fulora.FileDropInfo.#ctor(System.String,System.String,System.Nullable{System.Int64})
+  id: '#ctor(System.String,System.String,System.Nullable{System.Int64})'
+  parent: Agibuild.Fulora.FileDropInfo
+  langs:
+  - csharp
+  - vb
+  name: FileDropInfo(string, string?, long?)
+  nameWithType: FileDropInfo.FileDropInfo(string, string?, long?)
+  fullName: Agibuild.Fulora.FileDropInfo.FileDropInfo(string, string?, long?)
+  type: Constructor
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: .ctor
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 38
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Metadata for a file in a drag-drop payload.
+  example: []
+  syntax:
+    content: public FileDropInfo(string Path, string? MimeType = null, long? Size = null)
+    parameters:
+    - id: Path
+      type: System.String
+    - id: MimeType
+      type: System.String
+    - id: Size
+      type: System.Nullable{System.Int64}
+    content.vb: Public Sub New(Path As String, MimeType As String = Nothing, Size As Long? = Nothing)
+  overload: Agibuild.Fulora.FileDropInfo.#ctor*
+  nameWithType.vb: FileDropInfo.New(String, String, Long?)
+  fullName.vb: Agibuild.Fulora.FileDropInfo.New(String, String, Long?)
+  name.vb: New(String, String, Long?)
+- uid: Agibuild.Fulora.FileDropInfo.Path
+  commentId: P:Agibuild.Fulora.FileDropInfo.Path
+  id: Path
+  parent: Agibuild.Fulora.FileDropInfo
+  langs:
+  - csharp
+  - vb
+  name: Path
+  nameWithType: FileDropInfo.Path
+  fullName: Agibuild.Fulora.FileDropInfo.Path
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Path
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 38
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: public string Path { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Path As String
+  overload: Agibuild.Fulora.FileDropInfo.Path*
+- uid: Agibuild.Fulora.FileDropInfo.MimeType
+  commentId: P:Agibuild.Fulora.FileDropInfo.MimeType
+  id: MimeType
+  parent: Agibuild.Fulora.FileDropInfo
+  langs:
+  - csharp
+  - vb
+  name: MimeType
+  nameWithType: FileDropInfo.MimeType
+  fullName: Agibuild.Fulora.FileDropInfo.MimeType
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: MimeType
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 38
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: public string? MimeType { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property MimeType As String
+  overload: Agibuild.Fulora.FileDropInfo.MimeType*
+- uid: Agibuild.Fulora.FileDropInfo.Size
+  commentId: P:Agibuild.Fulora.FileDropInfo.Size
+  id: Size
+  parent: Agibuild.Fulora.FileDropInfo
+  langs:
+  - csharp
+  - vb
+  name: Size
+  nameWithType: FileDropInfo.Size
+  fullName: Agibuild.Fulora.FileDropInfo.Size
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Size
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 38
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: public long? Size { get; init; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Int64}
+    content.vb: Public Property Size As Long?
+  overload: Agibuild.Fulora.FileDropInfo.Size*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IEquatable{Agibuild.Fulora.FileDropInfo}
+  commentId: T:System.IEquatable{Agibuild.Fulora.FileDropInfo}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<FileDropInfo>
+  nameWithType: IEquatable<FileDropInfo>
+  fullName: System.IEquatable<Agibuild.Fulora.FileDropInfo>
+  nameWithType.vb: IEquatable(Of FileDropInfo)
+  fullName.vb: System.IEquatable(Of Agibuild.Fulora.FileDropInfo)
+  name.vb: IEquatable(Of FileDropInfo)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: Agibuild.Fulora.FileDropInfo
+    name: FileDropInfo
+    href: Agibuild.Fulora.FileDropInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.FileDropInfo
+    name: FileDropInfo
+    href: Agibuild.Fulora.FileDropInfo.html
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Agibuild.Fulora.FileDropInfo.#ctor*
+  commentId: Overload:Agibuild.Fulora.FileDropInfo.#ctor
+  href: Agibuild.Fulora.FileDropInfo.html#Agibuild_Fulora_FileDropInfo__ctor_System_String_System_String_System_Nullable_System_Int64__
+  name: FileDropInfo
+  nameWithType: FileDropInfo.FileDropInfo
+  fullName: Agibuild.Fulora.FileDropInfo.FileDropInfo
+  nameWithType.vb: FileDropInfo.New
+  fullName.vb: Agibuild.Fulora.FileDropInfo.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Nullable{System.Int64}
+  commentId: T:System.Nullable{System.Int64}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long?
+  nameWithType: long?
+  fullName: long?
+  nameWithType.vb: Long?
+  fullName.vb: Long?
+  name.vb: Long?
+  spec.csharp:
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '?'
+  spec.vb:
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Agibuild.Fulora.FileDropInfo.Path*
+  commentId: Overload:Agibuild.Fulora.FileDropInfo.Path
+  href: Agibuild.Fulora.FileDropInfo.html#Agibuild_Fulora_FileDropInfo_Path
+  name: Path
+  nameWithType: FileDropInfo.Path
+  fullName: Agibuild.Fulora.FileDropInfo.Path
+- uid: Agibuild.Fulora.FileDropInfo.MimeType*
+  commentId: Overload:Agibuild.Fulora.FileDropInfo.MimeType
+  href: Agibuild.Fulora.FileDropInfo.html#Agibuild_Fulora_FileDropInfo_MimeType
+  name: MimeType
+  nameWithType: FileDropInfo.MimeType
+  fullName: Agibuild.Fulora.FileDropInfo.MimeType
+- uid: Agibuild.Fulora.FileDropInfo.Size*
+  commentId: Overload:Agibuild.Fulora.FileDropInfo.Size
+  href: Agibuild.Fulora.FileDropInfo.html#Agibuild_Fulora_FileDropInfo_Size
+  name: Size
+  nameWithType: FileDropInfo.Size
+  fullName: Agibuild.Fulora.FileDropInfo.Size

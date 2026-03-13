@@ -87,143 +87,91 @@
         <article data-uid="">
 <h1 id="architecture">Architecture</h1>
 
-<h2 id="architectural-north-star">Architectural North Star</h2>
-<p>Architecture is aligned to <strong>Roadmap Phase 5: Framework Positioning Foundation</strong>.
-The goal is not only rendering web content, but delivering a deterministic, policy-governed hybrid app platform that works for both framework-first delivery and control-level integration.</p>
+<h2 id="the-problem-fulora-solves">The Problem Fulora Solves</h2>
+<p>Most hybrid frameworks treat the WebView as a black box — you load a URL and hope for the best. When your frontend needs to read a file, query a database, or call an AI model, you're back to building HTTP APIs, managing ports, and serializing everything by hand.</p>
+<p>Fulora takes a different approach: the web frontend and the native host share a <strong>typed contract layer</strong> that is enforced at compile time. The runtime handles serialization, routing, lifecycle, and error propagation — your code on both sides just calls methods and gets typed results back.</p>
 <h2 id="system-topology">System Topology</h2>
 <pre><code>┌──────────────────────────────────────────────────────────┐
-│                   Consumer Application                  │
-│      Avalonia UI + Web UI + Bridge Contracts           │
-└──────────────────────────────────────────────────────────┘
-                            │
-                            ▼
+│                   Your Application                       │
+│      Avalonia UI + Web Frontend + Bridge Contracts       │
+└──────────────────────────────┬───────────────────────────┘
+                               │
+                               ▼
 ┌──────────────────────────────────────────────────────────┐
-│                         Runtime Core                    │
-│  Typed Bridge · Capability Gateway · Policy Engine      │
-│  Diagnostics Pipeline · Shell Experience · SPA Hosting  │
-└──────────────────────────────────────────────────────────┘
-                            │
-                            ▼
+│                       Runtime Core                       │
+│  Typed Bridge · Capability Gateway · Policy Engine       │
+│  Diagnostics Pipeline · Shell Experience · SPA Hosting   │
+└──────────────────────────────┬───────────────────────────┘
+                               │
+                               ▼
 ┌──────────────────────────────────────────────────────────┐
-│                   Adapter Abstraction Layer             │
-│                    IWebViewAdapter + Facets            │
-└──────────────────────────────────────────────────────────┘
-                            │
-                            ▼
+│                 Adapter Abstraction Layer                 │
+│                  IWebViewAdapter + Facets                 │
+└──────────────────────────────┬───────────────────────────┘
+                               │
+                               ▼
 ┌──────────────────────────────────────────────────────────┐
-│   WebView2 (Win) · WKWebView (macOS/iOS) · Android     │
-│                     WebKitGTK (Linux)                   │
+│   WebView2 (Win) · WKWebView (macOS/iOS) · Android WV   │
+│                    WebKitGTK (Linux)                      │
 └──────────────────────────────────────────────────────────┘
 </code></pre>
-<h2 id="core-invariants">Core Invariants</h2>
+<p>The key insight: <strong>your application code never touches the WebView engine directly</strong>. The runtime core mediates everything — bridge calls, capability requests, SPA hosting, diagnostics — through well-defined abstractions. This is what makes the same app code run on five platforms without <code>#if</code> blocks.</p>
+<h2 id="bridge-model">Bridge Model</h2>
+<p>The bridge is the heart of Fulora. It turns C# interfaces into callable services on both sides of the boundary:</p>
+<ul>
+<li><strong><code>[JsExport]</code></strong> — a C# interface whose implementation lives in the native host, callable from JavaScript</li>
+<li><strong><code>[JsImport]</code></strong> — a C# interface whose implementation lives in JavaScript, callable from C#</li>
+</ul>
+<p>A Roslyn source generator produces all marshalling code at compile time. There is no reflection, no dynamic proxies, no runtime code generation — which means it works with Native AOT out of the box.</p>
+<p>Under the hood, calls travel as JSON-RPC messages over the WebView's message channel. But you never see this — you write <code>await GreeterService.greet(&quot;World&quot;)</code> in JavaScript and get a typed result back.</p>
+<h3 id="streaming">Streaming</h3>
+<p>Methods returning <code>IAsyncEnumerable&lt;T&gt;</code> in C# become <code>AsyncIterable</code> in JavaScript. This powers scenarios like AI token streaming, live sensor data, and file content streaming — with proper backpressure and cancellation (<code>AbortSignal</code> maps to <code>CancellationToken</code>).</p>
+<h2 id="capability-gateway">Capability Gateway</h2>
+<p>Not every bridge call is a simple request-response. Some operations — file access, network requests, system notifications — need governance. The capability gateway provides this:</p>
 <ol>
-<li><p><strong>Contract-first</strong></p>
-<ul>
-<li>Public behavior starts from explicit contracts.</li>
-<li>Runtime is the single semantic owner for contract execution.</li>
-</ul>
-</li>
-<li><p><strong>Single typed capability gateway</strong></p>
-<ul>
-<li>Desktop/system operations converge through one typed capability entry model.</li>
-<li>App-layer code avoids scattered direct host API invocation paths.</li>
-</ul>
-</li>
-<li><p><strong>Policy-first deterministic execution</strong></p>
-<ul>
-<li>Policy evaluation happens before provider execution.</li>
-<li>Every capability request resolves to <code>allow</code>, <code>deny</code>, or <code>failure</code>.</li>
-</ul>
-</li>
-<li><p><strong>Automation-first diagnostics</strong></p>
-<ul>
-<li>Critical runtime paths emit machine-checkable diagnostics.</li>
-<li>CI and AI agents can assert behavior without manual log reading.</li>
-</ul>
-</li>
-<li><p><strong>Web-first template architecture</strong></p>
-<ul>
-<li>Starter projects keep host glue minimal.</li>
-<li>Typed bridge and capability contracts remain first-class from day one.</li>
-</ul>
-</li>
+<li>A capability request enters through the typed gateway</li>
+<li>The <strong>policy engine</strong> evaluates authorization rules before any execution happens</li>
+<li>The provider executes only when policy permits</li>
+<li>A deterministic result is returned: <code>allow</code>, <code>deny</code>, or <code>failure</code></li>
+<li>A diagnostics event is emitted for observability</li>
 </ol>
-<h2 id="bridge-model-c---js">Bridge Model (C# &lt;-&gt; JS)</h2>
-<p>Bridge communication is centered on typed contracts:</p>
+<p>This means your app's security model is declarative and auditable, not scattered across <code>if</code> checks.</p>
+<h2 id="shell-experience">Shell Experience</h2>
+<p>The <code>IWindowShellService</code> gives the web frontend control over native window properties:</p>
 <ul>
-<li><code>[JsExport]</code>: expose C# services to JavaScript</li>
-<li><code>[JsImport]</code>: consume JavaScript services from C#</li>
-<li>Source generation enforces AOT-safe, reflection-free stubs/proxies</li>
-<li>JSON-RPC transport stays internal; contract surface stays typed</li>
+<li><strong>Theme</strong> — light, dark, or follow system</li>
+<li><strong>Transparency</strong> — Mica (Windows 11), Acrylic, Blur, or None</li>
+<li><strong>Custom chrome</strong> — drag regions, interactive exclusion zones</li>
+<li><strong>State streaming</strong> — <code>streamWindowShellState()</code> pushes theme changes, transparency changes, and chrome metrics to the frontend in real time</li>
 </ul>
-<h2 id="capability-execution-semantics">Capability Execution Semantics</h2>
-<p>Capability calls follow the same runtime sequence:</p>
-<ol>
-<li>request enters typed capability gateway</li>
-<li>policy engine evaluates authorization/governance</li>
-<li>provider executes only when policy permits</li>
-<li>deterministic result is returned</li>
-<li>diagnostics event is emitted for automation</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>Outcome</th>
-<th>Meaning</th>
-<th>Expected behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>allow</code></td>
-<td>Policy approved and operation completed</td>
-<td>Return success result + diagnostics</td>
-</tr>
-<tr>
-<td><code>deny</code></td>
-<td>Policy rejected before execution</td>
-<td>Return explicit deny result + diagnostics</td>
-</tr>
-<tr>
-<td><code>failure</code></td>
-<td>Execution attempted but failed deterministically</td>
-<td>Return failure result + diagnostics</td>
-</tr>
-</tbody>
-</table>
-<h2 id="shell-activation--deep-link-architecture-phase-8">Shell Activation &amp; Deep-link Architecture (Phase 8)</h2>
-<p>Shell activation orchestration and deep-link registration extend the runtime with OS-level app lifecycle management:</p>
+<h2 id="deep-link-architecture">Deep-Link Architecture</h2>
+<p>For apps that register OS protocol handlers:</p>
 <pre><code>OS Protocol Handler → DeepLinkPlatformEntrypoint
     → DeepLinkRegistrationService (normalize → policy → idempotency)
         → WebViewShellActivationCoordinator (primary/secondary dispatch)
-            → Application handler
+            → Your handler
 </code></pre>
-<p>Key architectural properties:</p>
+<p>Secondary instances forward activation to the primary. Duplicate activations are suppressed via idempotency keys. Every lifecycle stage emits structured diagnostics.</p>
+<h2 id="security-layers">Security Layers</h2>
 <ul>
-<li><strong>Single-instance ownership</strong>: <code>WebViewShellActivationCoordinator</code> manages primary/secondary instance registration; secondary instances forward activation to the primary</li>
-<li><strong>Policy-first admission</strong>: deep-link activations are evaluated against <code>IDeepLinkAdmissionPolicy</code> before dispatch</li>
-<li><strong>Idempotent delivery</strong>: duplicate activations within a configurable replay window are suppressed using deterministic idempotency keys</li>
-<li><strong>Canonical envelope</strong>: raw platform URIs are normalized into <code>DeepLinkActivationEnvelope</code> with scheme/host/path canonicalization</li>
-<li><strong>Structured diagnostics</strong>: each lifecycle stage emits <code>DeepLinkDiagnosticEventArgs</code> with correlation ID, event type, and outcome</li>
+<li><strong>Origin policy</strong> — only declared origins can send bridge messages</li>
+<li><strong>Capability policy</strong> — explicit evaluation before host operations execute</li>
+<li><strong>Rate limiting</strong> — bounded request pressure on bridge and capability paths</li>
+<li><strong>Explicit exposure</strong> — only registered contracts are reachable from web content</li>
 </ul>
-<h2 id="security-and-governance-layers">Security and Governance Layers</h2>
+<h2 id="testability">Testability</h2>
 <ul>
-<li><strong>WebMessage policy</strong>: origin, channel, and protocol boundaries</li>
-<li><strong>Capability policy</strong>: explicit policy evaluation before host provider execution</li>
-<li><strong>Rate limiting</strong>: bounded request pressure on bridge/capability paths</li>
-<li><strong>Explicit exposure</strong>: only declared contracts are reachable from web content</li>
-</ul>
-<h2 id="testability-and-verification">Testability and Verification</h2>
-<ul>
-<li>Contract tests validate behavior semantics independent of platform engine</li>
-<li>Integration tests validate runtime wiring on real platform adapters</li>
-<li>Automation lanes validate diagnostics/governance expectations for release readiness</li>
+<li><strong>Contract tests</strong> validate bridge behavior independent of any platform WebView engine</li>
+<li><strong>Integration tests</strong> validate runtime wiring on real platform adapters</li>
+<li><strong>Automation lanes</strong> validate governance and diagnostics expectations for release readiness</li>
+<li><strong><code>MockBridgeService</code></strong> enables unit testing without a real browser</li>
 </ul>
 <h2 id="related-documents">Related Documents</h2>
 <ul>
-<li><a href="../../openspec/ROADMAP.md">Roadmap</a></li>
-<li><a href="../../openspec/PROJECT.md">Project Vision &amp; Goals</a></li>
-<li><a href="getting-started.html">Getting Started</a></li>
+<li><a href="getting-started.html">Getting Started</a> — Build your first app</li>
+<li><a href="bridge-guide.html">Bridge Guide</a> — Advanced bridge patterns</li>
+<li><a href="../../openspec/ROADMAP.md">Roadmap</a> — Product direction</li>
+<li><a href="../../openspec/PROJECT.md">Project Vision</a> — Goals and positioning</li>
 </ul>
 
 </article>

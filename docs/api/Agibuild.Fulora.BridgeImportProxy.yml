@@ -20,7 +20,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeImportProxy
     path: ../src/Agibuild.Fulora.Runtime/RuntimeBridgeService.cs
-    startLine: 819
+    startLine: 880
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
@@ -63,7 +63,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Invoke
     path: ../src/Agibuild.Fulora.Runtime/RuntimeBridgeService.cs
-    startLine: 831
+    startLine: 892
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora

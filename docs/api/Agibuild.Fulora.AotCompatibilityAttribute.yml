@@ -21,10 +21,12 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AotCompatibilityAttribute
     path: ../src/Agibuild.Fulora.Core/AotCompatibilityAttribute.cs
-    startLine: 2
+    startLine: 5
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
+  summary: Marks an assembly as validated for NativeAOT compatibility.
+  example: []
   syntax:
     content: >-
       [AttributeUsage(AttributeTargets.Assembly)]
@@ -103,10 +105,12 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsAotCompatible
     path: ../src/Agibuild.Fulora.Core/AotCompatibilityAttribute.cs
-    startLine: 5
+    startLine: 9
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
+  summary: Gets whether the assembly is AOT compatible.
+  example: []
   syntax:
     content: public bool IsAotCompatible { get; }
     parameters: []
@@ -132,10 +136,12 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
     path: ../src/Agibuild.Fulora.Core/AotCompatibilityAttribute.cs
-    startLine: 7
+    startLine: 12
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
+  summary: Initializes a new instance with the specified AOT compatibility flag.
+  example: []
   syntax:
     content: public AotCompatibilityAttribute(bool isAotCompatible = true)
     parameters:

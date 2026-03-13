@@ -18,17 +18,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebAuthStatus
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 23
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 12
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Result status for a web authentication operation.
-  example: []
   syntax:
     content: public enum WebAuthStatus
     content.vb: Public Enum WebAuthStatus
@@ -45,17 +43,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Success
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 26
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 14
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Authentication succeeded.
-  example: []
   syntax:
     content: Success = 0
     return:
@@ -73,17 +69,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: UserCancel
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 28
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 15
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Authentication was canceled by the user.
-  example: []
   syntax:
     content: UserCancel = 1
     return:
@@ -101,17 +95,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Timeout
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 30
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 16
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Authentication timed out.
-  example: []
   syntax:
     content: Timeout = 2
     return:
@@ -129,17 +121,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Error
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 32
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 17
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Authentication failed due to an error.
-  example: []
   syntax:
     content: Error = 3
     return:

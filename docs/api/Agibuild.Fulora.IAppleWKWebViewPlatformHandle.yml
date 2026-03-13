@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IAppleWKWebViewPlatformHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 475
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 142
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Typed platform handle for Apple WKWebView (macOS and iOS).
-  example: []
   syntax:
     content: 'public interface IAppleWKWebViewPlatformHandle : INativeHandle'
     content.vb: Public Interface IAppleWKWebViewPlatformHandle Inherits INativeHandle
@@ -45,17 +43,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WKWebViewHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 478
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 144
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Objective-C pointer to the <code>WKWebView</code> instance.
-  example: []
   syntax:
     content: nint WKWebViewHandle { get; }
     parameters: []

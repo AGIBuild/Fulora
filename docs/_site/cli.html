@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Fulora CLI | Agibuild.Fulora </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Fulora CLI | Agibuild.Fulora ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="articles/toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/docs/cli.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Agibuild.Fulora">
+            Agibuild.Fulora
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="fulora-cli">Fulora CLI</h1>
+
+<p>The <code>fulora</code> CLI is a .NET global tool that streamlines common Fulora hybrid app workflows.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-bash">dotnet tool install -g Agibuild.Fulora.Cli
+</code></pre>
+<h2 id="commands">Commands</h2>
+<h3 id="fulora-new-name"><code>fulora new &lt;name&gt;</code></h3>
+<p>Create a new Fulora hybrid app from the template.</p>
+<pre><code class="lang-bash">fulora new MyApp --frontend react
+fulora new MyApp --frontend vue --preset app-shell
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--frontend</code>, <code>-f</code></td>
+<td><strong>Required.</strong> <code>react</code>, <code>vue</code>, or <code>vanilla</code></td>
+</tr>
+<tr>
+<td><code>--preset</code></td>
+<td>Template preset (e.g. <code>app-shell</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fulora-dev"><code>fulora dev</code></h3>
+<p>Start Vite dev server and Avalonia desktop app together. Run from the solution root.</p>
+<pre><code class="lang-bash">fulora dev
+fulora dev --web ./MyApp.Web.Vite.React --desktop ./MyApp.Desktop/MyApp.Desktop.csproj
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--web</code></td>
+<td>Web project directory (auto-detected)</td>
+</tr>
+<tr>
+<td><code>--desktop</code></td>
+<td>Desktop .csproj path (auto-detected)</td>
+</tr>
+<tr>
+<td><code>--npm-script</code></td>
+<td>npm script name (default: <code>dev</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Press <strong>Ctrl+C</strong> to stop both processes.</p>
+<h3 id="fulora-generate-types"><code>fulora generate types</code></h3>
+<p>Build the Bridge project and extract generated TypeScript declarations.</p>
+<pre><code class="lang-bash">fulora generate types
+fulora gen types --project ./MyApp.Bridge/MyApp.Bridge.csproj --output ./MyApp.Web/src/bridge
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--project</code>, <code>-p</code></td>
+<td>Bridge .csproj path (auto-detected)</td>
+</tr>
+<tr>
+<td><code>--output</code>, <code>-o</code></td>
+<td>Output directory for <code>.d.ts</code> (auto-detected)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fulora-add-service-name"><code>fulora add service &lt;name&gt;</code></h3>
+<p>Scaffold a new bridge service with three files:</p>
+<ol>
+<li>C# interface (<code>[JsExport]</code>) in the Bridge project</li>
+<li>C# implementation in the Desktop project</li>
+<li>TypeScript proxy in the web project</li>
+</ol>
+<pre><code class="lang-bash">fulora add service NotificationService
+fulora add service IAnalyticsService --import
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--import</code></td>
+<td>Generate <code>[JsImport]</code> instead of <code>[JsExport]</code></td>
+</tr>
+<tr>
+<td><code>--bridge-project</code></td>
+<td>Bridge project path (auto-detected)</td>
+</tr>
+<tr>
+<td><code>--web-dir</code></td>
+<td>Web project <code>src/</code> directory (auto-detected)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fulora-add-plugin-package"><code>fulora add plugin &lt;package&gt;</code></h3>
+<p>Install a Fulora bridge plugin NuGet package into the current project.</p>
+<pre><code class="lang-bash">fulora add plugin Agibuild.Fulora.Plugin.Database
+fulora add plugin Agibuild.Fulora.Plugin.HttpClient --version 1.0.0
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--version</code></td>
+<td>Specific package version (default: latest)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fulora-search-query"><code>fulora search &lt;query&gt;</code></h3>
+<p>Search NuGet.org for Fulora bridge plugins (packages tagged <code>fulora-plugin</code>).</p>
+<pre><code class="lang-bash">fulora search database
+fulora search http --take 20
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--take</code></td>
+<td>Maximum results to return (default: 10)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fulora-list-plugins"><code>fulora list plugins</code></h3>
+<p>List all installed Fulora plugin packages in the current project.</p>
+<pre><code class="lang-bash">fulora list plugins
+fulora list plugins --project ./MyApp.Desktop/MyApp.Desktop.csproj
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--project</code></td>
+<td>Project file to inspect (auto-detected)</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/AGIBuild/Agibuild.Fulora/blob/main/docs/cli.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Agibuild.Fulora — Cross-platform Hybrid App Framework
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

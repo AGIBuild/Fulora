@@ -21,14 +21,14 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GlobalShortcutService
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 9
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: >-
     Manages OS-level global hotkey registration with policy governance and lifecycle management.
@@ -63,14 +63,14 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 19
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   syntax:
     content: public GlobalShortcutService(IGlobalShortcutPlatformProvider provider, IWebViewHostCapabilityPolicy? policy = null)
@@ -97,14 +97,14 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ShortcutTriggered
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 28
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: Push event fired when a registered global shortcut is triggered by the user.
   example: []
@@ -130,14 +130,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Register
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 30
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: Registers a global shortcut with the OS.
   example: []
@@ -165,14 +165,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Unregister
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 62
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: Unregisters a previously registered global shortcut.
   example: []
@@ -203,14 +203,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsRegistered
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 77
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: Returns whether a shortcut with the given ID is currently registered.
   example: []
@@ -241,14 +241,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetRegistered
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 85
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: Returns all currently registered shortcut bindings.
   example: []
@@ -273,14 +273,14 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+      path: src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Dispose
-    path: ../src/Agibuild.Fulora.Avalonia/Shell/GlobalShortcutService.cs
+    path: ../src/Agibuild.Fulora.Runtime/Shell/GlobalShortcutService.cs
     startLine: 93
   assemblies:
-  - Agibuild.Fulora
+  - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
   summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
   example: []
@@ -603,7 +603,6 @@ references:
 - uid: Agibuild.Fulora.IGlobalShortcutService.ShortcutTriggered
   commentId: P:Agibuild.Fulora.IGlobalShortcutService.ShortcutTriggered
   parent: Agibuild.Fulora.IGlobalShortcutService
-  href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_ShortcutTriggered
   name: ShortcutTriggered
   nameWithType: IGlobalShortcutService.ShortcutTriggered
   fullName: Agibuild.Fulora.IGlobalShortcutService.ShortcutTriggered
@@ -672,27 +671,22 @@ references:
 - uid: Agibuild.Fulora.IGlobalShortcutService.Register(Agibuild.Fulora.GlobalShortcutBinding)
   commentId: M:Agibuild.Fulora.IGlobalShortcutService.Register(Agibuild.Fulora.GlobalShortcutBinding)
   parent: Agibuild.Fulora.IGlobalShortcutService
-  href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_Register_Agibuild_Fulora_GlobalShortcutBinding_
   name: Register(GlobalShortcutBinding)
   nameWithType: IGlobalShortcutService.Register(GlobalShortcutBinding)
   fullName: Agibuild.Fulora.IGlobalShortcutService.Register(Agibuild.Fulora.GlobalShortcutBinding)
   spec.csharp:
   - uid: Agibuild.Fulora.IGlobalShortcutService.Register(Agibuild.Fulora.GlobalShortcutBinding)
     name: Register
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_Register_Agibuild_Fulora_GlobalShortcutBinding_
   - name: (
   - uid: Agibuild.Fulora.GlobalShortcutBinding
     name: GlobalShortcutBinding
-    href: Agibuild.Fulora.GlobalShortcutBinding.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IGlobalShortcutService.Register(Agibuild.Fulora.GlobalShortcutBinding)
     name: Register
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_Register_Agibuild_Fulora_GlobalShortcutBinding_
   - name: (
   - uid: Agibuild.Fulora.GlobalShortcutBinding
     name: GlobalShortcutBinding
-    href: Agibuild.Fulora.GlobalShortcutBinding.html
   - name: )
 - uid: Agibuild.Fulora.GlobalShortcutBinding
   commentId: T:Agibuild.Fulora.GlobalShortcutBinding
@@ -809,7 +803,7 @@ references:
   commentId: M:Agibuild.Fulora.IGlobalShortcutService.Unregister(System.String)
   parent: Agibuild.Fulora.IGlobalShortcutService
   isExternal: true
-  href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_Unregister_System_String_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: Unregister(string)
   nameWithType: IGlobalShortcutService.Unregister(string)
   fullName: Agibuild.Fulora.IGlobalShortcutService.Unregister(string)
@@ -819,7 +813,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IGlobalShortcutService.Unregister(System.String)
     name: Unregister
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_Unregister_System_String_
   - name: (
   - uid: System.String
     name: string
@@ -829,7 +822,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IGlobalShortcutService.Unregister(System.String)
     name: Unregister
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_Unregister_System_String_
   - name: (
   - uid: System.String
     name: String
@@ -857,7 +849,7 @@ references:
   commentId: M:Agibuild.Fulora.IGlobalShortcutService.IsRegistered(System.String)
   parent: Agibuild.Fulora.IGlobalShortcutService
   isExternal: true
-  href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_IsRegistered_System_String_
+  href: https://learn.microsoft.com/dotnet/api/system.string
   name: IsRegistered(string)
   nameWithType: IGlobalShortcutService.IsRegistered(string)
   fullName: Agibuild.Fulora.IGlobalShortcutService.IsRegistered(string)
@@ -867,7 +859,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IGlobalShortcutService.IsRegistered(System.String)
     name: IsRegistered
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_IsRegistered_System_String_
   - name: (
   - uid: System.String
     name: string
@@ -877,7 +868,6 @@ references:
   spec.vb:
   - uid: Agibuild.Fulora.IGlobalShortcutService.IsRegistered(System.String)
     name: IsRegistered
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_IsRegistered_System_String_
   - name: (
   - uid: System.String
     name: String
@@ -928,20 +918,17 @@ references:
 - uid: Agibuild.Fulora.IGlobalShortcutService.GetRegistered
   commentId: M:Agibuild.Fulora.IGlobalShortcutService.GetRegistered
   parent: Agibuild.Fulora.IGlobalShortcutService
-  href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_GetRegistered
   name: GetRegistered()
   nameWithType: IGlobalShortcutService.GetRegistered()
   fullName: Agibuild.Fulora.IGlobalShortcutService.GetRegistered()
   spec.csharp:
   - uid: Agibuild.Fulora.IGlobalShortcutService.GetRegistered
     name: GetRegistered
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_GetRegistered
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IGlobalShortcutService.GetRegistered
     name: GetRegistered
-    href: Agibuild.Fulora.IGlobalShortcutService.html#Agibuild_Fulora_IGlobalShortcutService_GetRegistered
   - name: (
   - name: )
 - uid: System.Threading.Tasks.Task{Agibuild.Fulora.GlobalShortcutBinding[]}

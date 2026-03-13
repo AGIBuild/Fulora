@@ -20,17 +20,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationCompletedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 694
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 139
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Event args raised when a navigation completes.
-  example: []
   syntax:
     content: 'public sealed class NavigationCompletedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class NavigationCompletedEventArgs Inherits EventArgs
@@ -58,17 +56,15 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 697
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 141
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates default event args.
-  example: []
   syntax:
     content: public NavigationCompletedEventArgs()
     content.vb: Public Sub New()
@@ -89,32 +85,26 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 710
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 149
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates event args for a completed navigation.
-  example: []
   syntax:
     content: public NavigationCompletedEventArgs(Guid navigationId, Uri requestUri, NavigationCompletedStatus status, Exception? error)
     parameters:
     - id: navigationId
       type: System.Guid
-      description: Navigation correlation id.
     - id: requestUri
       type: System.Uri
-      description: The request URI.
     - id: status
       type: Agibuild.Fulora.NavigationCompletedStatus
-      description: Completion status.
     - id: error
       type: System.Exception
-      description: Failure exception when <code class="paramref">status</code> is <xref href="Agibuild.Fulora.NavigationCompletedStatus.Failure" data-throw-if-not-resolved="false"></xref>.
     content.vb: Public Sub New(navigationId As Guid, requestUri As Uri, status As NavigationCompletedStatus, [error] As Exception)
   overload: Agibuild.Fulora.NavigationCompletedEventArgs.#ctor*
   nameWithType.vb: NavigationCompletedEventArgs.New(Guid, Uri, NavigationCompletedStatus, Exception)
@@ -133,17 +123,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationId
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 733
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 167
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Navigation correlation id.
-  example: []
   syntax:
     content: public Guid NavigationId { get; }
     parameters: []
@@ -164,17 +152,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RequestUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 735
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 168
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The requested URI.
-  example: []
   syntax:
     content: public Uri RequestUri { get; }
     parameters: []
@@ -195,17 +181,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Status
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 737
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 169
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Completion status.
-  example: []
   syntax:
     content: public NavigationCompletedStatus Status { get; }
     parameters: []
@@ -226,17 +210,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Error
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 739
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 170
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Failure exception when <xref href="Agibuild.Fulora.NavigationCompletedEventArgs.Status" data-throw-if-not-resolved="false"></xref> is <xref href="Agibuild.Fulora.NavigationCompletedStatus.Failure" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: public Exception? Error { get; }
     parameters: []
@@ -505,12 +487,6 @@ references:
   nameWithType.vb: NavigationCompletedEventArgs.New
   fullName.vb: Agibuild.Fulora.NavigationCompletedEventArgs.New
   name.vb: New
-- uid: Agibuild.Fulora.NavigationCompletedStatus.Failure
-  commentId: F:Agibuild.Fulora.NavigationCompletedStatus.Failure
-  href: Agibuild.Fulora.NavigationCompletedStatus.html#Agibuild_Fulora_NavigationCompletedStatus_Failure
-  name: Failure
-  nameWithType: NavigationCompletedStatus.Failure
-  fullName: Agibuild.Fulora.NavigationCompletedStatus.Failure
 - uid: System.Guid
   commentId: T:System.Guid
   parent: System
@@ -556,12 +532,6 @@ references:
   fullName: Agibuild.Fulora.NavigationCompletedEventArgs.RequestUri
 - uid: Agibuild.Fulora.NavigationCompletedEventArgs.Status*
   commentId: Overload:Agibuild.Fulora.NavigationCompletedEventArgs.Status
-  href: Agibuild.Fulora.NavigationCompletedEventArgs.html#Agibuild_Fulora_NavigationCompletedEventArgs_Status
-  name: Status
-  nameWithType: NavigationCompletedEventArgs.Status
-  fullName: Agibuild.Fulora.NavigationCompletedEventArgs.Status
-- uid: Agibuild.Fulora.NavigationCompletedEventArgs.Status
-  commentId: P:Agibuild.Fulora.NavigationCompletedEventArgs.Status
   href: Agibuild.Fulora.NavigationCompletedEventArgs.html#Agibuild_Fulora_NavigationCompletedEventArgs_Status
   name: Status
   nameWithType: NavigationCompletedEventArgs.Status

@@ -16,17 +16,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWindowsWebView2PlatformHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 465
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 136
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Typed platform handle for Windows WebView2. Cast from <xref href="Agibuild.Fulora.INativeHandle" data-throw-if-not-resolved="false"></xref> returned by <xref href="Agibuild.Fulora.INativeWebViewHandleProvider" data-throw-if-not-resolved="false"></xref>.
-  example: []
   syntax:
     content: 'public interface IWindowsWebView2PlatformHandle : INativeHandle'
     content.vb: Public Interface IWindowsWebView2PlatformHandle Inherits INativeHandle
@@ -46,17 +44,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CoreWebView2Handle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 468
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 138
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Pointer to the <code>ICoreWebView2</code> COM object.
-  example: []
   syntax:
     content: nint CoreWebView2Handle { get; }
     parameters: []
@@ -77,17 +73,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CoreWebView2ControllerHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 471
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 139
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Pointer to the <code>ICoreWebView2Controller</code> COM object.
-  example: []
   syntax:
     content: nint CoreWebView2ControllerHandle { get; }
     parameters: []
@@ -96,19 +90,6 @@ items:
     content.vb: ReadOnly Property CoreWebView2ControllerHandle As IntPtr
   overload: Agibuild.Fulora.IWindowsWebView2PlatformHandle.CoreWebView2ControllerHandle*
 references:
-- uid: Agibuild.Fulora.INativeHandle
-  commentId: T:Agibuild.Fulora.INativeHandle
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.INativeHandle.html
-  name: INativeHandle
-  nameWithType: INativeHandle
-  fullName: Agibuild.Fulora.INativeHandle
-- uid: Agibuild.Fulora.INativeWebViewHandleProvider
-  commentId: T:Agibuild.Fulora.INativeWebViewHandleProvider
-  href: Agibuild.Fulora.INativeWebViewHandleProvider.html
-  name: INativeWebViewHandleProvider
-  nameWithType: INativeWebViewHandleProvider
-  fullName: Agibuild.Fulora.INativeWebViewHandleProvider
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -145,6 +126,13 @@ references:
   name: HandleDescriptor
   nameWithType: INativeHandle.HandleDescriptor
   fullName: Agibuild.Fulora.INativeHandle.HandleDescriptor
+- uid: Agibuild.Fulora.INativeHandle
+  commentId: T:Agibuild.Fulora.INativeHandle
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.INativeHandle.html
+  name: INativeHandle
+  nameWithType: INativeHandle
+  fullName: Agibuild.Fulora.INativeHandle
 - uid: Agibuild.Fulora.IWindowsWebView2PlatformHandle.CoreWebView2Handle*
   commentId: Overload:Agibuild.Fulora.IWindowsWebView2PlatformHandle.CoreWebView2Handle
   href: Agibuild.Fulora.IWindowsWebView2PlatformHandle.html#Agibuild_Fulora_IWindowsWebView2PlatformHandle_CoreWebView2Handle

@@ -117,17 +117,14 @@ items:
   assemblies:
   - Agibuild.Fulora.Runtime
   namespace: Agibuild.Fulora
-  summary: Starts an authentication flow and returns the result.
   example: []
   syntax:
     content: public Task<WebAuthResult> AuthenticateAsync(ITopLevelWindow owner, AuthOptions options)
     parameters:
     - id: owner
       type: Agibuild.Fulora.ITopLevelWindow
-      description: Owner top-level window.
     - id: options
       type: Agibuild.Fulora.AuthOptions
-      description: Authentication options.
     return:
       type: System.Threading.Tasks.Task{Agibuild.Fulora.WebAuthResult}
     content.vb: Public Function AuthenticateAsync(owner As ITopLevelWindow, options As AuthOptions) As Task(Of WebAuthResult)
@@ -158,7 +155,6 @@ references:
   fullName: Agibuild.Fulora.IWebDialogFactory
 - uid: Agibuild.Fulora.AuthOptions.AuthorizeUri
   commentId: P:Agibuild.Fulora.AuthOptions.AuthorizeUri
-  href: Agibuild.Fulora.AuthOptions.html#Agibuild_Fulora_AuthOptions_AuthorizeUri
   name: AuthorizeUri
   nameWithType: AuthOptions.AuthorizeUri
   fullName: Agibuild.Fulora.AuthOptions.AuthorizeUri
@@ -435,37 +431,30 @@ references:
 - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
   commentId: M:Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
   parent: Agibuild.Fulora.IWebAuthBroker
-  href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
   name: AuthenticateAsync(ITopLevelWindow, AuthOptions)
   nameWithType: IWebAuthBroker.AuthenticateAsync(ITopLevelWindow, AuthOptions)
   fullName: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow, Agibuild.Fulora.AuthOptions)
   spec.csharp:
   - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
     name: AuthenticateAsync
-    href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
   - name: (
   - uid: Agibuild.Fulora.ITopLevelWindow
     name: ITopLevelWindow
-    href: Agibuild.Fulora.ITopLevelWindow.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.AuthOptions
     name: AuthOptions
-    href: Agibuild.Fulora.AuthOptions.html
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IWebAuthBroker.AuthenticateAsync(Agibuild.Fulora.ITopLevelWindow,Agibuild.Fulora.AuthOptions)
     name: AuthenticateAsync
-    href: Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_
   - name: (
   - uid: Agibuild.Fulora.ITopLevelWindow
     name: ITopLevelWindow
-    href: Agibuild.Fulora.ITopLevelWindow.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.AuthOptions
     name: AuthOptions
-    href: Agibuild.Fulora.AuthOptions.html
   - name: )
 - uid: Agibuild.Fulora.ITopLevelWindow
   commentId: T:Agibuild.Fulora.ITopLevelWindow

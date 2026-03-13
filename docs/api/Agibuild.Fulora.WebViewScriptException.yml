@@ -15,17 +15,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewScriptException
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1044
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 330
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Exception thrown when script execution fails.
-  example: []
   syntax:
     content: 'public class WebViewScriptException : Exception, ISerializable'
     content.vb: Public Class WebViewScriptException Inherits Exception Implements ISerializable
@@ -65,26 +63,22 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1049
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 332
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public WebViewScriptException(string message, Exception? innerException = null)
     parameters:
     - id: message
       type: System.String
-      description: The exception message.
     - id: innerException
       type: System.Exception
-      description: Optional inner exception.
     content.vb: Public Sub New(message As String, innerException As Exception = Nothing)
   overload: Agibuild.Fulora.WebViewScriptException.#ctor*
   nameWithType.vb: WebViewScriptException.New(String, Exception)

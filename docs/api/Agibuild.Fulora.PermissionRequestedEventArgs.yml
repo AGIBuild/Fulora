@@ -18,17 +18,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PermissionRequestedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 938
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 261
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Raised when web content requests a permission (camera, microphone, geolocation, etc.).
-  example: []
   syntax:
     content: 'public sealed class PermissionRequestedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class PermissionRequestedEventArgs Inherits EventArgs
@@ -56,26 +54,22 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 943
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 263
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public PermissionRequestedEventArgs(WebViewPermissionKind permissionKind, Uri? origin = null)
     parameters:
     - id: permissionKind
       type: Agibuild.Fulora.WebViewPermissionKind
-      description: The permission kind being requested.
     - id: origin
       type: System.Uri
-      description: The origin requesting the permission.
     content.vb: Public Sub New(permissionKind As WebViewPermissionKind, origin As Uri = Nothing)
   overload: Agibuild.Fulora.PermissionRequestedEventArgs.#ctor*
   nameWithType.vb: PermissionRequestedEventArgs.New(WebViewPermissionKind, Uri)
@@ -94,17 +88,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PermissionKind
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 950
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 269
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The type of permission being requested.
-  example: []
   syntax:
     content: public WebViewPermissionKind PermissionKind { get; }
     parameters: []
@@ -125,17 +117,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Origin
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 953
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 270
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The origin (scheme + host) of the page requesting the permission.
-  example: []
   syntax:
     content: public Uri? Origin { get; }
     parameters: []
@@ -156,17 +146,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: State
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 956
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 271
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set by consumer to Allow, Deny, or leave as Default for platform behavior.
-  example: []
   syntax:
     content: public PermissionState State { get; set; }
     parameters: []

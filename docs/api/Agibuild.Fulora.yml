@@ -5,18 +5,27 @@ items:
   id: Agibuild.Fulora
   children:
   - Agibuild.Fulora.AdapterCreatedEventArgs
+  - Agibuild.Fulora.AiMediaPayload
+  - Agibuild.Fulora.AiToolAttribute
   - Agibuild.Fulora.AotCompatibilityAttribute
   - Agibuild.Fulora.AppBuilderExtensions
   - Agibuild.Fulora.AuthOptions
+  - Agibuild.Fulora.AutoUpdateOptions
+  - Agibuild.Fulora.AutoUpdateService
   - Agibuild.Fulora.AvaloniaWebDialog
   - Agibuild.Fulora.AvaloniaWebDialogFactory
   - Agibuild.Fulora.BridgeCallContext
   - Agibuild.Fulora.BridgeCallDelegate
   - Agibuild.Fulora.BridgeCallDirection
   - Agibuild.Fulora.BridgeCallPhase
+  - Agibuild.Fulora.BridgeCallProfiler
+  - Agibuild.Fulora.BridgeDebugServer
+  - Agibuild.Fulora.BridgeDebugServerOptions
   - Agibuild.Fulora.BridgeDevToolsEvent
   - Agibuild.Fulora.BridgeDevToolsOverlay
   - Agibuild.Fulora.BridgeDevToolsService
+  - Agibuild.Fulora.BridgeErrorCode
+  - Agibuild.Fulora.BridgeErrorDiagnostic
   - Agibuild.Fulora.BridgeEventCollector
   - Agibuild.Fulora.BridgeEvent`1
   - Agibuild.Fulora.BridgeImportProxy
@@ -26,14 +35,23 @@ items:
   - Agibuild.Fulora.BridgeProxyAttribute
   - Agibuild.Fulora.BridgeRegistrationAttribute
   - Agibuild.Fulora.BridgeTelemetryTracer
+  - Agibuild.Fulora.CompositeBridgeTracer
   - Agibuild.Fulora.CompositeTelemetryProvider
   - Agibuild.Fulora.ConsoleTelemetryProvider
+  - Agibuild.Fulora.ContentFilterAction
+  - Agibuild.Fulora.ContentFilterResult
   - Agibuild.Fulora.ContextMenuMediaType
   - Agibuild.Fulora.ContextMenuRequestedEventArgs
   - Agibuild.Fulora.CustomSchemeRegistration
   - Agibuild.Fulora.DevToolsPanelTracer
   - Agibuild.Fulora.DownloadRequestedEventArgs
+  - Agibuild.Fulora.DragDropBridgeService
+  - Agibuild.Fulora.DragDropEffects
+  - Agibuild.Fulora.DragDropPayload
+  - Agibuild.Fulora.DragEventArgs
+  - Agibuild.Fulora.DropEventArgs
   - Agibuild.Fulora.EnvironmentRequestedEventArgs
+  - Agibuild.Fulora.FileDropInfo
   - Agibuild.Fulora.FindInPageOptions
   - Agibuild.Fulora.FindInPageResult
   - Agibuild.Fulora.GlobalShortcutBinding
@@ -41,8 +59,11 @@ items:
   - Agibuild.Fulora.GlobalShortcutResultStatus
   - Agibuild.Fulora.GlobalShortcutService
   - Agibuild.Fulora.GlobalShortcutTriggeredEvent
+  - Agibuild.Fulora.IAiContentFilter
   - Agibuild.Fulora.IAndroidWebViewPlatformHandle
   - Agibuild.Fulora.IAppleWKWebViewPlatformHandle
+  - Agibuild.Fulora.IAutoUpdatePlatformProvider
+  - Agibuild.Fulora.IAutoUpdateService
   - Agibuild.Fulora.IBridgeEventCollector
   - Agibuild.Fulora.IBridgeEvent`1
   - Agibuild.Fulora.IBridgeMiddleware
@@ -54,6 +75,7 @@ items:
   - Agibuild.Fulora.IConfigProvider
   - Agibuild.Fulora.ICookieManager
   - Agibuild.Fulora.IDialogHost
+  - Agibuild.Fulora.IDragDropBridgeService
   - Agibuild.Fulora.IGlobalShortcutPlatformProvider
   - Agibuild.Fulora.IGlobalShortcutService
   - Agibuild.Fulora.IGtkWebViewPlatformHandle
@@ -61,6 +83,8 @@ items:
   - Agibuild.Fulora.INativeHandle
   - Agibuild.Fulora.INativeWebViewHandleProvider
   - Agibuild.Fulora.IPlatformThemeProvider
+  - Agibuild.Fulora.ISharedStateStore
+  - Agibuild.Fulora.ISpaHostingWebView
   - Agibuild.Fulora.ITelemetryProvider
   - Agibuild.Fulora.IThemeService
   - Agibuild.Fulora.ITopLevelWindow
@@ -74,12 +98,15 @@ items:
   - Agibuild.Fulora.IWebViewEnvironmentOptions
   - Agibuild.Fulora.IWebViewMessageBus
   - Agibuild.Fulora.IWebViewRpcService
+  - Agibuild.Fulora.IWindowChromeProvider
+  - Agibuild.Fulora.IWindowShellService
   - Agibuild.Fulora.IWindowsWebView2PlatformHandle
   - Agibuild.Fulora.JsExportAttribute
   - Agibuild.Fulora.JsImportAttribute
   - Agibuild.Fulora.JsonFileConfigProvider
   - Agibuild.Fulora.LoggingBridgeTracer
   - Agibuild.Fulora.MauiWebViewHostOptions
+  - Agibuild.Fulora.MethodProfileStats
   - Agibuild.Fulora.MockBridgeService
   - Agibuild.Fulora.NavigationCompletedEventArgs
   - Agibuild.Fulora.NavigationCompletedStatus
@@ -87,23 +114,40 @@ items:
   - Agibuild.Fulora.NewWindowRequestedEventArgs
   - Agibuild.Fulora.NullBridgeTracer
   - Agibuild.Fulora.NullTelemetryProvider
+  - Agibuild.Fulora.OverlayHitTestResult
   - Agibuild.Fulora.PdfPrintOptions
   - Agibuild.Fulora.PermissionRequestedEventArgs
   - Agibuild.Fulora.PermissionState
+  - Agibuild.Fulora.PluginManifest
   - Agibuild.Fulora.RateLimit
   - Agibuild.Fulora.RemoteConfigProvider
   - Agibuild.Fulora.ScriptResultHelper
+  - Agibuild.Fulora.ServiceProfileStats
   - Agibuild.Fulora.ServiceWorkerCacheStrategy
   - Agibuild.Fulora.ServiceWorkerOptions
   - Agibuild.Fulora.ServiceWorkerRegistrar
+  - Agibuild.Fulora.SharedStateStore
   - Agibuild.Fulora.ShortcutKey
   - Agibuild.Fulora.ShortcutModifiers
   - Agibuild.Fulora.SpaAssetHotUpdateResult
   - Agibuild.Fulora.SpaAssetHotUpdateService
+  - Agibuild.Fulora.SpaBootstrapOptions
+  - Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+  - Agibuild.Fulora.SpaBootstrapProfileExtension
+  - Agibuild.Fulora.SpaBootstrapProfileOptions
+  - Agibuild.Fulora.SpaBootstrapProfileTeardown
   - Agibuild.Fulora.SpaHostingExtensions
   - Agibuild.Fulora.SpaHostingOptions
+  - Agibuild.Fulora.StateChangedEventArgs
   - Agibuild.Fulora.ThemeChangedEvent
   - Agibuild.Fulora.ThemeInfo
+  - Agibuild.Fulora.TransparencyEffectiveState
+  - Agibuild.Fulora.TransparencyLevel
+  - Agibuild.Fulora.UpdateDownloadProgress
+  - Agibuild.Fulora.UpdateInfo
+  - Agibuild.Fulora.UpdateResult
+  - Agibuild.Fulora.UpdateStatus
+  - Agibuild.Fulora.VelopackAutoUpdateProvider
   - Agibuild.Fulora.WebAuthBroker
   - Agibuild.Fulora.WebAuthBrokerWithSemantics
   - Agibuild.Fulora.WebAuthCallbackMatcher
@@ -118,6 +162,7 @@ items:
   - Agibuild.Fulora.WebMessageReceivedEventArgs
   - Agibuild.Fulora.WebResourceRequestedEventArgs
   - Agibuild.Fulora.WebView
+  - Agibuild.Fulora.WebViewBootstrapExtensions
   - Agibuild.Fulora.WebViewCommand
   - Agibuild.Fulora.WebViewCookie
   - Agibuild.Fulora.WebViewCore
@@ -129,6 +174,7 @@ items:
   - Agibuild.Fulora.WebViewNetworkException
   - Agibuild.Fulora.WebViewOperationFailure
   - Agibuild.Fulora.WebViewOperationFailureCategory
+  - Agibuild.Fulora.WebViewOverlayHost
   - Agibuild.Fulora.WebViewPermissionKind
   - Agibuild.Fulora.WebViewRpcException
   - Agibuild.Fulora.WebViewScriptException
@@ -139,6 +185,12 @@ items:
   - Agibuild.Fulora.WebViewShortcutRouter
   - Agibuild.Fulora.WebViewSslException
   - Agibuild.Fulora.WebViewTimeoutException
+  - Agibuild.Fulora.WindowAppearanceRequest
+  - Agibuild.Fulora.WindowChromeMetrics
+  - Agibuild.Fulora.WindowSafeInsets
+  - Agibuild.Fulora.WindowShellCapabilities
+  - Agibuild.Fulora.WindowShellSettings
+  - Agibuild.Fulora.WindowShellState
   langs:
   - csharp
   - vb
@@ -173,13 +225,6 @@ references:
   name: BridgeDevToolsOverlay
   nameWithType: BridgeDevToolsOverlay
   fullName: Agibuild.Fulora.BridgeDevToolsOverlay
-- uid: Agibuild.Fulora.GlobalShortcutService
-  commentId: T:Agibuild.Fulora.GlobalShortcutService
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.GlobalShortcutService.html
-  name: GlobalShortcutService
-  nameWithType: GlobalShortcutService
-  fullName: Agibuild.Fulora.GlobalShortcutService
 - uid: Agibuild.Fulora.WebView
   commentId: T:Agibuild.Fulora.WebView
   parent: Agibuild.Fulora
@@ -187,6 +232,19 @@ references:
   name: WebView
   nameWithType: WebView
   fullName: Agibuild.Fulora.WebView
+- uid: Agibuild.Fulora.OverlayHitTestResult
+  commentId: T:Agibuild.Fulora.OverlayHitTestResult
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.OverlayHitTestResult.html
+  name: OverlayHitTestResult
+  nameWithType: OverlayHitTestResult
+  fullName: Agibuild.Fulora.OverlayHitTestResult
+- uid: Agibuild.Fulora.WebViewOverlayHost
+  commentId: T:Agibuild.Fulora.WebViewOverlayHost
+  href: Agibuild.Fulora.WebViewOverlayHost.html
+  name: WebViewOverlayHost
+  nameWithType: WebViewOverlayHost
+  fullName: Agibuild.Fulora.WebViewOverlayHost
 - uid: Agibuild.Fulora.WebViewServiceCollectionExtensions
   commentId: T:Agibuild.Fulora.WebViewServiceCollectionExtensions
   href: Agibuild.Fulora.WebViewServiceCollectionExtensions.html
@@ -219,12 +277,77 @@ references:
   name: WebViewShortcutRouter
   nameWithType: WebViewShortcutRouter
   fullName: Agibuild.Fulora.WebViewShortcutRouter
+- uid: Agibuild.Fulora.IAiContentFilter
+  commentId: T:Agibuild.Fulora.IAiContentFilter
+  href: Agibuild.Fulora.IAiContentFilter.html
+  name: IAiContentFilter
+  nameWithType: IAiContentFilter
+  fullName: Agibuild.Fulora.IAiContentFilter
+- uid: Agibuild.Fulora.ContentFilterResult
+  commentId: T:Agibuild.Fulora.ContentFilterResult
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ContentFilterResult.html
+  name: ContentFilterResult
+  nameWithType: ContentFilterResult
+  fullName: Agibuild.Fulora.ContentFilterResult
+- uid: Agibuild.Fulora.ContentFilterAction
+  commentId: T:Agibuild.Fulora.ContentFilterAction
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ContentFilterAction.html
+  name: ContentFilterAction
+  nameWithType: ContentFilterAction
+  fullName: Agibuild.Fulora.ContentFilterAction
+- uid: Agibuild.Fulora.AiMediaPayload
+  commentId: T:Agibuild.Fulora.AiMediaPayload
+  href: Agibuild.Fulora.AiMediaPayload.html
+  name: AiMediaPayload
+  nameWithType: AiMediaPayload
+  fullName: Agibuild.Fulora.AiMediaPayload
+- uid: Agibuild.Fulora.AiToolAttribute
+  commentId: T:Agibuild.Fulora.AiToolAttribute
+  href: Agibuild.Fulora.AiToolAttribute.html
+  name: AiToolAttribute
+  nameWithType: AiToolAttribute
+  fullName: Agibuild.Fulora.AiToolAttribute
 - uid: Agibuild.Fulora.AotCompatibilityAttribute
   commentId: T:Agibuild.Fulora.AotCompatibilityAttribute
   href: Agibuild.Fulora.AotCompatibilityAttribute.html
   name: AotCompatibilityAttribute
   nameWithType: AotCompatibilityAttribute
   fullName: Agibuild.Fulora.AotCompatibilityAttribute
+- uid: Agibuild.Fulora.UpdateInfo
+  commentId: T:Agibuild.Fulora.UpdateInfo
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.UpdateInfo.html
+  name: UpdateInfo
+  nameWithType: UpdateInfo
+  fullName: Agibuild.Fulora.UpdateInfo
+- uid: Agibuild.Fulora.UpdateResult
+  commentId: T:Agibuild.Fulora.UpdateResult
+  href: Agibuild.Fulora.UpdateResult.html
+  name: UpdateResult
+  nameWithType: UpdateResult
+  fullName: Agibuild.Fulora.UpdateResult
+- uid: Agibuild.Fulora.UpdateStatus
+  commentId: T:Agibuild.Fulora.UpdateStatus
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.UpdateStatus.html
+  name: UpdateStatus
+  nameWithType: UpdateStatus
+  fullName: Agibuild.Fulora.UpdateStatus
+- uid: Agibuild.Fulora.UpdateDownloadProgress
+  commentId: T:Agibuild.Fulora.UpdateDownloadProgress
+  href: Agibuild.Fulora.UpdateDownloadProgress.html
+  name: UpdateDownloadProgress
+  nameWithType: UpdateDownloadProgress
+  fullName: Agibuild.Fulora.UpdateDownloadProgress
+- uid: Agibuild.Fulora.AutoUpdateOptions
+  commentId: T:Agibuild.Fulora.AutoUpdateOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.AutoUpdateOptions.html
+  name: AutoUpdateOptions
+  nameWithType: AutoUpdateOptions
+  fullName: Agibuild.Fulora.AutoUpdateOptions
 - uid: Agibuild.Fulora.BridgeDevToolsEvent
   commentId: T:Agibuild.Fulora.BridgeDevToolsEvent
   href: Agibuild.Fulora.BridgeDevToolsEvent.html
@@ -245,6 +368,52 @@ references:
   name: BridgeCallPhase
   nameWithType: BridgeCallPhase
   fullName: Agibuild.Fulora.BridgeCallPhase
+- uid: Agibuild.Fulora.BridgeErrorCode
+  commentId: T:Agibuild.Fulora.BridgeErrorCode
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.BridgeErrorCode.html
+  name: BridgeErrorCode
+  nameWithType: BridgeErrorCode
+  fullName: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorDiagnostic
+  commentId: T:Agibuild.Fulora.BridgeErrorDiagnostic
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.BridgeErrorDiagnostic.html
+  name: BridgeErrorDiagnostic
+  nameWithType: BridgeErrorDiagnostic
+  fullName: Agibuild.Fulora.BridgeErrorDiagnostic
+- uid: Agibuild.Fulora.DragDropEffects
+  commentId: T:Agibuild.Fulora.DragDropEffects
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.DragDropEffects.html
+  name: DragDropEffects
+  nameWithType: DragDropEffects
+  fullName: Agibuild.Fulora.DragDropEffects
+- uid: Agibuild.Fulora.DragDropPayload
+  commentId: T:Agibuild.Fulora.DragDropPayload
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.DragDropPayload.html
+  name: DragDropPayload
+  nameWithType: DragDropPayload
+  fullName: Agibuild.Fulora.DragDropPayload
+- uid: Agibuild.Fulora.FileDropInfo
+  commentId: T:Agibuild.Fulora.FileDropInfo
+  href: Agibuild.Fulora.FileDropInfo.html
+  name: FileDropInfo
+  nameWithType: FileDropInfo
+  fullName: Agibuild.Fulora.FileDropInfo
+- uid: Agibuild.Fulora.DragEventArgs
+  commentId: T:Agibuild.Fulora.DragEventArgs
+  href: Agibuild.Fulora.DragEventArgs.html
+  name: DragEventArgs
+  nameWithType: DragEventArgs
+  fullName: Agibuild.Fulora.DragEventArgs
+- uid: Agibuild.Fulora.DropEventArgs
+  commentId: T:Agibuild.Fulora.DropEventArgs
+  href: Agibuild.Fulora.DropEventArgs.html
+  name: DropEventArgs
+  nameWithType: DropEventArgs
+  fullName: Agibuild.Fulora.DropEventArgs
 - uid: Agibuild.Fulora.GlobalShortcutBinding
   commentId: T:Agibuild.Fulora.GlobalShortcutBinding
   parent: Agibuild.Fulora
@@ -272,6 +441,20 @@ references:
   name: GlobalShortcutTriggeredEvent
   nameWithType: GlobalShortcutTriggeredEvent
   fullName: Agibuild.Fulora.GlobalShortcutTriggeredEvent
+- uid: Agibuild.Fulora.IAutoUpdatePlatformProvider
+  commentId: T:Agibuild.Fulora.IAutoUpdatePlatformProvider
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IAutoUpdatePlatformProvider.html
+  name: IAutoUpdatePlatformProvider
+  nameWithType: IAutoUpdatePlatformProvider
+  fullName: Agibuild.Fulora.IAutoUpdatePlatformProvider
+- uid: Agibuild.Fulora.IAutoUpdateService
+  commentId: T:Agibuild.Fulora.IAutoUpdateService
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IAutoUpdateService.html
+  name: IAutoUpdateService
+  nameWithType: IAutoUpdateService
+  fullName: Agibuild.Fulora.IAutoUpdateService
 - uid: Agibuild.Fulora.IBridgeEventCollector
   commentId: T:Agibuild.Fulora.IBridgeEventCollector
   parent: Agibuild.Fulora
@@ -448,6 +631,13 @@ references:
   name: IConfigProvider
   nameWithType: IConfigProvider
   fullName: Agibuild.Fulora.IConfigProvider
+- uid: Agibuild.Fulora.IDragDropBridgeService
+  commentId: T:Agibuild.Fulora.IDragDropBridgeService
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IDragDropBridgeService.html
+  name: IDragDropBridgeService
+  nameWithType: IDragDropBridgeService
+  fullName: Agibuild.Fulora.IDragDropBridgeService
 - uid: Agibuild.Fulora.IGlobalShortcutPlatformProvider
   commentId: T:Agibuild.Fulora.IGlobalShortcutPlatformProvider
   parent: Agibuild.Fulora
@@ -482,6 +672,19 @@ references:
   name: IPlatformThemeProvider
   nameWithType: IPlatformThemeProvider
   fullName: Agibuild.Fulora.IPlatformThemeProvider
+- uid: Agibuild.Fulora.ISharedStateStore
+  commentId: T:Agibuild.Fulora.ISharedStateStore
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ISharedStateStore.html
+  name: ISharedStateStore
+  nameWithType: ISharedStateStore
+  fullName: Agibuild.Fulora.ISharedStateStore
+- uid: Agibuild.Fulora.StateChangedEventArgs
+  commentId: T:Agibuild.Fulora.StateChangedEventArgs
+  href: Agibuild.Fulora.StateChangedEventArgs.html
+  name: StateChangedEventArgs
+  nameWithType: StateChangedEventArgs
+  fullName: Agibuild.Fulora.StateChangedEventArgs
 - uid: Agibuild.Fulora.ITelemetryProvider
   commentId: T:Agibuild.Fulora.ITelemetryProvider
   parent: Agibuild.Fulora
@@ -516,6 +719,34 @@ references:
   name: WebViewMessage
   nameWithType: WebViewMessage
   fullName: Agibuild.Fulora.WebViewMessage
+- uid: Agibuild.Fulora.WindowAppearanceRequest
+  commentId: T:Agibuild.Fulora.WindowAppearanceRequest
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowAppearanceRequest.html
+  name: WindowAppearanceRequest
+  nameWithType: WindowAppearanceRequest
+  fullName: Agibuild.Fulora.WindowAppearanceRequest
+- uid: Agibuild.Fulora.TransparencyEffectiveState
+  commentId: T:Agibuild.Fulora.TransparencyEffectiveState
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.TransparencyEffectiveState.html
+  name: TransparencyEffectiveState
+  nameWithType: TransparencyEffectiveState
+  fullName: Agibuild.Fulora.TransparencyEffectiveState
+- uid: Agibuild.Fulora.IWindowChromeProvider
+  commentId: T:Agibuild.Fulora.IWindowChromeProvider
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWindowChromeProvider.html
+  name: IWindowChromeProvider
+  nameWithType: IWindowChromeProvider
+  fullName: Agibuild.Fulora.IWindowChromeProvider
+- uid: Agibuild.Fulora.IWindowShellService
+  commentId: T:Agibuild.Fulora.IWindowShellService
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWindowShellService.html
+  name: IWindowShellService
+  nameWithType: IWindowShellService
+  fullName: Agibuild.Fulora.IWindowShellService
 - uid: Agibuild.Fulora.JsExportAttribute
   commentId: T:Agibuild.Fulora.JsExportAttribute
   href: Agibuild.Fulora.JsExportAttribute.html
@@ -534,6 +765,13 @@ references:
   name: MockBridgeService
   nameWithType: MockBridgeService
   fullName: Agibuild.Fulora.MockBridgeService
+- uid: Agibuild.Fulora.PluginManifest
+  commentId: T:Agibuild.Fulora.PluginManifest
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.PluginManifest.html
+  name: PluginManifest
+  nameWithType: PluginManifest
+  fullName: Agibuild.Fulora.PluginManifest
 - uid: Agibuild.Fulora.ScriptResultHelper
   commentId: T:Agibuild.Fulora.ScriptResultHelper
   href: Agibuild.Fulora.ScriptResultHelper.html
@@ -568,6 +806,39 @@ references:
   name: ShortcutModifiers
   nameWithType: ShortcutModifiers
   fullName: Agibuild.Fulora.ShortcutModifiers
+- uid: Agibuild.Fulora.SpaBootstrapOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapOptions.html
+  name: SpaBootstrapOptions
+  nameWithType: SpaBootstrapOptions
+  fullName: Agibuild.Fulora.SpaBootstrapOptions
+- uid: Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapProfileExceptionScope.html
+  name: SpaBootstrapProfileExceptionScope
+  nameWithType: SpaBootstrapProfileExceptionScope
+  fullName: Agibuild.Fulora.SpaBootstrapProfileExceptionScope
+- uid: Agibuild.Fulora.SpaBootstrapProfileExtension
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileExtension
+  href: Agibuild.Fulora.SpaBootstrapProfileExtension.html
+  name: SpaBootstrapProfileExtension
+  nameWithType: SpaBootstrapProfileExtension
+  fullName: Agibuild.Fulora.SpaBootstrapProfileExtension
+- uid: Agibuild.Fulora.SpaBootstrapProfileTeardown
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileTeardown
+  href: Agibuild.Fulora.SpaBootstrapProfileTeardown.html
+  name: SpaBootstrapProfileTeardown
+  nameWithType: SpaBootstrapProfileTeardown
+  fullName: Agibuild.Fulora.SpaBootstrapProfileTeardown
+- uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+  commentId: T:Agibuild.Fulora.SpaBootstrapProfileOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaBootstrapProfileOptions.html
+  name: SpaBootstrapProfileOptions
+  nameWithType: SpaBootstrapProfileOptions
+  fullName: Agibuild.Fulora.SpaBootstrapProfileOptions
 - uid: Agibuild.Fulora.SpaHostingOptions
   commentId: T:Agibuild.Fulora.SpaHostingOptions
   parent: Agibuild.Fulora
@@ -588,6 +859,13 @@ references:
   name: ThemeChangedEvent
   nameWithType: ThemeChangedEvent
   fullName: Agibuild.Fulora.ThemeChangedEvent
+- uid: Agibuild.Fulora.TransparencyLevel
+  commentId: T:Agibuild.Fulora.TransparencyLevel
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.TransparencyLevel.html
+  name: TransparencyLevel
+  nameWithType: TransparencyLevel
+  fullName: Agibuild.Fulora.TransparencyLevel
 - uid: Agibuild.Fulora.WebAuthCallbackMatcher
   commentId: T:Agibuild.Fulora.WebAuthCallbackMatcher
   href: Agibuild.Fulora.WebAuthCallbackMatcher.html
@@ -622,12 +900,34 @@ references:
   name: WebViewOperationFailureCategory
   nameWithType: WebViewOperationFailureCategory
   fullName: Agibuild.Fulora.WebViewOperationFailureCategory
-- uid: Agibuild.Fulora.WebViewOperationFailure
-  commentId: T:Agibuild.Fulora.WebViewOperationFailure
-  href: Agibuild.Fulora.WebViewOperationFailure.html
-  name: WebViewOperationFailure
-  nameWithType: WebViewOperationFailure
-  fullName: Agibuild.Fulora.WebViewOperationFailure
+- uid: Agibuild.Fulora.ContextMenuMediaType
+  commentId: T:Agibuild.Fulora.ContextMenuMediaType
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ContextMenuMediaType.html
+  name: ContextMenuMediaType
+  nameWithType: ContextMenuMediaType
+  fullName: Agibuild.Fulora.ContextMenuMediaType
+- uid: Agibuild.Fulora.WebViewCommand
+  commentId: T:Agibuild.Fulora.WebViewCommand
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebViewCommand.html
+  name: WebViewCommand
+  nameWithType: WebViewCommand
+  fullName: Agibuild.Fulora.WebViewCommand
+- uid: Agibuild.Fulora.WebViewPermissionKind
+  commentId: T:Agibuild.Fulora.WebViewPermissionKind
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebViewPermissionKind.html
+  name: WebViewPermissionKind
+  nameWithType: WebViewPermissionKind
+  fullName: Agibuild.Fulora.WebViewPermissionKind
+- uid: Agibuild.Fulora.PermissionState
+  commentId: T:Agibuild.Fulora.PermissionState
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.PermissionState.html
+  name: PermissionState
+  nameWithType: PermissionState
+  fullName: Agibuild.Fulora.PermissionState
 - uid: Agibuild.Fulora.IWebView
   commentId: T:Agibuild.Fulora.IWebView
   parent: Agibuild.Fulora
@@ -635,6 +935,13 @@ references:
   name: IWebView
   nameWithType: IWebView
   fullName: Agibuild.Fulora.IWebView
+- uid: Agibuild.Fulora.ISpaHostingWebView
+  commentId: T:Agibuild.Fulora.ISpaHostingWebView
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ISpaHostingWebView.html
+  name: ISpaHostingWebView
+  nameWithType: ISpaHostingWebView
+  fullName: Agibuild.Fulora.ISpaHostingWebView
 - uid: Agibuild.Fulora.IWebDialog
   commentId: T:Agibuild.Fulora.IWebDialog
   parent: Agibuild.Fulora
@@ -656,33 +963,12 @@ references:
   name: IWebViewDispatcher
   nameWithType: IWebViewDispatcher
   fullName: Agibuild.Fulora.IWebViewDispatcher
-- uid: Agibuild.Fulora.WebMessageEnvelope
-  commentId: T:Agibuild.Fulora.WebMessageEnvelope
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebMessageEnvelope.html
-  name: WebMessageEnvelope
-  nameWithType: WebMessageEnvelope
-  fullName: Agibuild.Fulora.WebMessageEnvelope
-- uid: Agibuild.Fulora.WebMessagePolicyDecision
-  commentId: T:Agibuild.Fulora.WebMessagePolicyDecision
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebMessagePolicyDecision.html
-  name: WebMessagePolicyDecision
-  nameWithType: WebMessagePolicyDecision
-  fullName: Agibuild.Fulora.WebMessagePolicyDecision
 - uid: Agibuild.Fulora.IWebMessagePolicy
   commentId: T:Agibuild.Fulora.IWebMessagePolicy
   href: Agibuild.Fulora.IWebMessagePolicy.html
   name: IWebMessagePolicy
   nameWithType: IWebMessagePolicy
   fullName: Agibuild.Fulora.IWebMessagePolicy
-- uid: Agibuild.Fulora.WebMessageDropDiagnostic
-  commentId: T:Agibuild.Fulora.WebMessageDropDiagnostic
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebMessageDropDiagnostic.html
-  name: WebMessageDropDiagnostic
-  nameWithType: WebMessageDropDiagnostic
-  fullName: Agibuild.Fulora.WebMessageDropDiagnostic
 - uid: Agibuild.Fulora.IWebMessageDropDiagnosticsSink
   commentId: T:Agibuild.Fulora.IWebMessageDropDiagnosticsSink
   parent: Agibuild.Fulora
@@ -697,12 +983,6 @@ references:
   name: IWebViewEnvironmentOptions
   nameWithType: IWebViewEnvironmentOptions
   fullName: Agibuild.Fulora.IWebViewEnvironmentOptions
-- uid: Agibuild.Fulora.CustomSchemeRegistration
-  commentId: T:Agibuild.Fulora.CustomSchemeRegistration
-  href: Agibuild.Fulora.CustomSchemeRegistration.html
-  name: CustomSchemeRegistration
-  nameWithType: CustomSchemeRegistration
-  fullName: Agibuild.Fulora.CustomSchemeRegistration
 - uid: Agibuild.Fulora.INativeHandle
   commentId: T:Agibuild.Fulora.INativeHandle
   parent: Agibuild.Fulora
@@ -747,46 +1027,6 @@ references:
   name: ICookieManager
   nameWithType: ICookieManager
   fullName: Agibuild.Fulora.ICookieManager
-- uid: Agibuild.Fulora.PdfPrintOptions
-  commentId: T:Agibuild.Fulora.PdfPrintOptions
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.PdfPrintOptions.html
-  name: PdfPrintOptions
-  nameWithType: PdfPrintOptions
-  fullName: Agibuild.Fulora.PdfPrintOptions
-- uid: Agibuild.Fulora.ContextMenuMediaType
-  commentId: T:Agibuild.Fulora.ContextMenuMediaType
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.ContextMenuMediaType.html
-  name: ContextMenuMediaType
-  nameWithType: ContextMenuMediaType
-  fullName: Agibuild.Fulora.ContextMenuMediaType
-- uid: Agibuild.Fulora.ContextMenuRequestedEventArgs
-  commentId: T:Agibuild.Fulora.ContextMenuRequestedEventArgs
-  href: Agibuild.Fulora.ContextMenuRequestedEventArgs.html
-  name: ContextMenuRequestedEventArgs
-  nameWithType: ContextMenuRequestedEventArgs
-  fullName: Agibuild.Fulora.ContextMenuRequestedEventArgs
-- uid: Agibuild.Fulora.FindInPageOptions
-  commentId: T:Agibuild.Fulora.FindInPageOptions
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.FindInPageOptions.html
-  name: FindInPageOptions
-  nameWithType: FindInPageOptions
-  fullName: Agibuild.Fulora.FindInPageOptions
-- uid: Agibuild.Fulora.FindInPageResult
-  commentId: T:Agibuild.Fulora.FindInPageResult
-  href: Agibuild.Fulora.FindInPageResult.html
-  name: FindInPageResult
-  nameWithType: FindInPageResult
-  fullName: Agibuild.Fulora.FindInPageResult
-- uid: Agibuild.Fulora.WebViewCommand
-  commentId: T:Agibuild.Fulora.WebViewCommand
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebViewCommand.html
-  name: WebViewCommand
-  nameWithType: WebViewCommand
-  fullName: Agibuild.Fulora.WebViewCommand
 - uid: Agibuild.Fulora.ICommandManager
   commentId: T:Agibuild.Fulora.ICommandManager
   parent: Agibuild.Fulora
@@ -808,6 +1048,72 @@ references:
   name: IWebDialogFactory
   nameWithType: IWebDialogFactory
   fullName: Agibuild.Fulora.IWebDialogFactory
+- uid: Agibuild.Fulora.IWebViewRpcService
+  commentId: T:Agibuild.Fulora.IWebViewRpcService
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWebViewRpcService.html
+  name: IWebViewRpcService
+  nameWithType: IWebViewRpcService
+  fullName: Agibuild.Fulora.IWebViewRpcService
+- uid: Agibuild.Fulora.WebViewOperationFailure
+  commentId: T:Agibuild.Fulora.WebViewOperationFailure
+  href: Agibuild.Fulora.WebViewOperationFailure.html
+  name: WebViewOperationFailure
+  nameWithType: WebViewOperationFailure
+  fullName: Agibuild.Fulora.WebViewOperationFailure
+- uid: Agibuild.Fulora.WebMessageEnvelope
+  commentId: T:Agibuild.Fulora.WebMessageEnvelope
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebMessageEnvelope.html
+  name: WebMessageEnvelope
+  nameWithType: WebMessageEnvelope
+  fullName: Agibuild.Fulora.WebMessageEnvelope
+- uid: Agibuild.Fulora.WebMessagePolicyDecision
+  commentId: T:Agibuild.Fulora.WebMessagePolicyDecision
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebMessagePolicyDecision.html
+  name: WebMessagePolicyDecision
+  nameWithType: WebMessagePolicyDecision
+  fullName: Agibuild.Fulora.WebMessagePolicyDecision
+- uid: Agibuild.Fulora.WebMessageDropDiagnostic
+  commentId: T:Agibuild.Fulora.WebMessageDropDiagnostic
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebMessageDropDiagnostic.html
+  name: WebMessageDropDiagnostic
+  nameWithType: WebMessageDropDiagnostic
+  fullName: Agibuild.Fulora.WebMessageDropDiagnostic
+- uid: Agibuild.Fulora.CustomSchemeRegistration
+  commentId: T:Agibuild.Fulora.CustomSchemeRegistration
+  href: Agibuild.Fulora.CustomSchemeRegistration.html
+  name: CustomSchemeRegistration
+  nameWithType: CustomSchemeRegistration
+  fullName: Agibuild.Fulora.CustomSchemeRegistration
+- uid: Agibuild.Fulora.PdfPrintOptions
+  commentId: T:Agibuild.Fulora.PdfPrintOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.PdfPrintOptions.html
+  name: PdfPrintOptions
+  nameWithType: PdfPrintOptions
+  fullName: Agibuild.Fulora.PdfPrintOptions
+- uid: Agibuild.Fulora.ContextMenuRequestedEventArgs
+  commentId: T:Agibuild.Fulora.ContextMenuRequestedEventArgs
+  href: Agibuild.Fulora.ContextMenuRequestedEventArgs.html
+  name: ContextMenuRequestedEventArgs
+  nameWithType: ContextMenuRequestedEventArgs
+  fullName: Agibuild.Fulora.ContextMenuRequestedEventArgs
+- uid: Agibuild.Fulora.FindInPageOptions
+  commentId: T:Agibuild.Fulora.FindInPageOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.FindInPageOptions.html
+  name: FindInPageOptions
+  nameWithType: FindInPageOptions
+  fullName: Agibuild.Fulora.FindInPageOptions
+- uid: Agibuild.Fulora.FindInPageResult
+  commentId: T:Agibuild.Fulora.FindInPageResult
+  href: Agibuild.Fulora.FindInPageResult.html
+  name: FindInPageResult
+  nameWithType: FindInPageResult
+  fullName: Agibuild.Fulora.FindInPageResult
 - uid: Agibuild.Fulora.AuthOptions
   commentId: T:Agibuild.Fulora.AuthOptions
   parent: Agibuild.Fulora
@@ -865,20 +1171,6 @@ references:
   name: DownloadRequestedEventArgs
   nameWithType: DownloadRequestedEventArgs
   fullName: Agibuild.Fulora.DownloadRequestedEventArgs
-- uid: Agibuild.Fulora.WebViewPermissionKind
-  commentId: T:Agibuild.Fulora.WebViewPermissionKind
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.WebViewPermissionKind.html
-  name: WebViewPermissionKind
-  nameWithType: WebViewPermissionKind
-  fullName: Agibuild.Fulora.WebViewPermissionKind
-- uid: Agibuild.Fulora.PermissionState
-  commentId: T:Agibuild.Fulora.PermissionState
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.PermissionState.html
-  name: PermissionState
-  nameWithType: PermissionState
-  fullName: Agibuild.Fulora.PermissionState
 - uid: Agibuild.Fulora.PermissionRequestedEventArgs
   commentId: T:Agibuild.Fulora.PermissionRequestedEventArgs
   parent: Agibuild.Fulora
@@ -930,19 +1222,84 @@ references:
   name: WebViewScriptException
   nameWithType: WebViewScriptException
   fullName: Agibuild.Fulora.WebViewScriptException
-- uid: Agibuild.Fulora.IWebViewRpcService
-  commentId: T:Agibuild.Fulora.IWebViewRpcService
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebViewRpcService.html
-  name: IWebViewRpcService
-  nameWithType: IWebViewRpcService
-  fullName: Agibuild.Fulora.IWebViewRpcService
 - uid: Agibuild.Fulora.WebViewRpcException
   commentId: T:Agibuild.Fulora.WebViewRpcException
   href: Agibuild.Fulora.WebViewRpcException.html
   name: WebViewRpcException
   nameWithType: WebViewRpcException
   fullName: Agibuild.Fulora.WebViewRpcException
+- uid: Agibuild.Fulora.WindowShellSettings
+  commentId: T:Agibuild.Fulora.WindowShellSettings
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowShellSettings.html
+  name: WindowShellSettings
+  nameWithType: WindowShellSettings
+  fullName: Agibuild.Fulora.WindowShellSettings
+- uid: Agibuild.Fulora.WindowShellCapabilities
+  commentId: T:Agibuild.Fulora.WindowShellCapabilities
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowShellCapabilities.html
+  name: WindowShellCapabilities
+  nameWithType: WindowShellCapabilities
+  fullName: Agibuild.Fulora.WindowShellCapabilities
+- uid: Agibuild.Fulora.WindowSafeInsets
+  commentId: T:Agibuild.Fulora.WindowSafeInsets
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowSafeInsets.html
+  name: WindowSafeInsets
+  nameWithType: WindowSafeInsets
+  fullName: Agibuild.Fulora.WindowSafeInsets
+- uid: Agibuild.Fulora.WindowChromeMetrics
+  commentId: T:Agibuild.Fulora.WindowChromeMetrics
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WindowChromeMetrics.html
+  name: WindowChromeMetrics
+  nameWithType: WindowChromeMetrics
+  fullName: Agibuild.Fulora.WindowChromeMetrics
+- uid: Agibuild.Fulora.WindowShellState
+  commentId: T:Agibuild.Fulora.WindowShellState
+  href: Agibuild.Fulora.WindowShellState.html
+  name: WindowShellState
+  nameWithType: WindowShellState
+  fullName: Agibuild.Fulora.WindowShellState
+- uid: Agibuild.Fulora.AutoUpdateService
+  commentId: T:Agibuild.Fulora.AutoUpdateService
+  href: Agibuild.Fulora.AutoUpdateService.html
+  name: AutoUpdateService
+  nameWithType: AutoUpdateService
+  fullName: Agibuild.Fulora.AutoUpdateService
+- uid: Agibuild.Fulora.MethodProfileStats
+  commentId: T:Agibuild.Fulora.MethodProfileStats
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.MethodProfileStats.html
+  name: MethodProfileStats
+  nameWithType: MethodProfileStats
+  fullName: Agibuild.Fulora.MethodProfileStats
+- uid: Agibuild.Fulora.ServiceProfileStats
+  commentId: T:Agibuild.Fulora.ServiceProfileStats
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ServiceProfileStats.html
+  name: ServiceProfileStats
+  nameWithType: ServiceProfileStats
+  fullName: Agibuild.Fulora.ServiceProfileStats
+- uid: Agibuild.Fulora.BridgeCallProfiler
+  commentId: T:Agibuild.Fulora.BridgeCallProfiler
+  href: Agibuild.Fulora.BridgeCallProfiler.html
+  name: BridgeCallProfiler
+  nameWithType: BridgeCallProfiler
+  fullName: Agibuild.Fulora.BridgeCallProfiler
+- uid: Agibuild.Fulora.BridgeDebugServer
+  commentId: T:Agibuild.Fulora.BridgeDebugServer
+  href: Agibuild.Fulora.BridgeDebugServer.html
+  name: BridgeDebugServer
+  nameWithType: BridgeDebugServer
+  fullName: Agibuild.Fulora.BridgeDebugServer
+- uid: Agibuild.Fulora.BridgeDebugServerOptions
+  commentId: T:Agibuild.Fulora.BridgeDebugServerOptions
+  href: Agibuild.Fulora.BridgeDebugServerOptions.html
+  name: BridgeDebugServerOptions
+  nameWithType: BridgeDebugServerOptions
+  fullName: Agibuild.Fulora.BridgeDebugServerOptions
 - uid: Agibuild.Fulora.BridgeDevToolsService
   commentId: T:Agibuild.Fulora.BridgeDevToolsService
   href: Agibuild.Fulora.BridgeDevToolsService.html
@@ -962,6 +1319,12 @@ references:
   name: BridgeTelemetryTracer
   nameWithType: BridgeTelemetryTracer
   fullName: Agibuild.Fulora.BridgeTelemetryTracer
+- uid: Agibuild.Fulora.CompositeBridgeTracer
+  commentId: T:Agibuild.Fulora.CompositeBridgeTracer
+  href: Agibuild.Fulora.CompositeBridgeTracer.html
+  name: CompositeBridgeTracer
+  nameWithType: CompositeBridgeTracer
+  fullName: Agibuild.Fulora.CompositeBridgeTracer
 - uid: Agibuild.Fulora.CompositeTelemetryProvider
   commentId: T:Agibuild.Fulora.CompositeTelemetryProvider
   href: Agibuild.Fulora.CompositeTelemetryProvider.html
@@ -980,6 +1343,12 @@ references:
   name: DevToolsPanelTracer
   nameWithType: DevToolsPanelTracer
   fullName: Agibuild.Fulora.DevToolsPanelTracer
+- uid: Agibuild.Fulora.DragDropBridgeService
+  commentId: T:Agibuild.Fulora.DragDropBridgeService
+  href: Agibuild.Fulora.DragDropBridgeService.html
+  name: DragDropBridgeService
+  nameWithType: DragDropBridgeService
+  fullName: Agibuild.Fulora.DragDropBridgeService
 - uid: Agibuild.Fulora.JsonFileConfigProvider
   commentId: T:Agibuild.Fulora.JsonFileConfigProvider
   href: Agibuild.Fulora.JsonFileConfigProvider.html
@@ -1010,6 +1379,19 @@ references:
   name: ServiceWorkerRegistrar
   nameWithType: ServiceWorkerRegistrar
   fullName: Agibuild.Fulora.ServiceWorkerRegistrar
+- uid: Agibuild.Fulora.SharedStateStore
+  commentId: T:Agibuild.Fulora.SharedStateStore
+  href: Agibuild.Fulora.SharedStateStore.html
+  name: SharedStateStore
+  nameWithType: SharedStateStore
+  fullName: Agibuild.Fulora.SharedStateStore
+- uid: Agibuild.Fulora.GlobalShortcutService
+  commentId: T:Agibuild.Fulora.GlobalShortcutService
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.GlobalShortcutService.html
+  name: GlobalShortcutService
+  nameWithType: GlobalShortcutService
+  fullName: Agibuild.Fulora.GlobalShortcutService
 - uid: Agibuild.Fulora.SpaAssetHotUpdateResult
   commentId: T:Agibuild.Fulora.SpaAssetHotUpdateResult
   parent: Agibuild.Fulora
@@ -1030,6 +1412,12 @@ references:
   name: SpaHostingExtensions
   nameWithType: SpaHostingExtensions
   fullName: Agibuild.Fulora.SpaHostingExtensions
+- uid: Agibuild.Fulora.VelopackAutoUpdateProvider
+  commentId: T:Agibuild.Fulora.VelopackAutoUpdateProvider
+  href: Agibuild.Fulora.VelopackAutoUpdateProvider.html
+  name: VelopackAutoUpdateProvider
+  nameWithType: VelopackAutoUpdateProvider
+  fullName: Agibuild.Fulora.VelopackAutoUpdateProvider
 - uid: Agibuild.Fulora.WebAuthBroker
   commentId: T:Agibuild.Fulora.WebAuthBroker
   href: Agibuild.Fulora.WebAuthBroker.html
@@ -1061,8 +1449,16 @@ references:
   name: WebMessageBridgeOptions
   nameWithType: WebMessageBridgeOptions
   fullName: Agibuild.Fulora.WebMessageBridgeOptions
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions
+  commentId: T:Agibuild.Fulora.WebViewBootstrapExtensions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html
+  name: WebViewBootstrapExtensions
+  nameWithType: WebViewBootstrapExtensions
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions
 - uid: Agibuild.Fulora.WebViewCore
   commentId: T:Agibuild.Fulora.WebViewCore
+  parent: Agibuild.Fulora
   href: Agibuild.Fulora.WebViewCore.html
   name: WebViewCore
   nameWithType: WebViewCore

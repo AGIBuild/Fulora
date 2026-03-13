@@ -1,0 +1,470 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.DropEventArgs
+  commentId: T:Agibuild.Fulora.DropEventArgs
+  id: DropEventArgs
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.DropEventArgs.Effect
+  - Agibuild.Fulora.DropEventArgs.Payload
+  - Agibuild.Fulora.DropEventArgs.X
+  - Agibuild.Fulora.DropEventArgs.Y
+  langs:
+  - csharp
+  - vb
+  name: DropEventArgs
+  nameWithType: DropEventArgs
+  fullName: Agibuild.Fulora.DropEventArgs
+  type: Class
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DropEventArgs
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 60
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Event args for drop completion.
+  example: []
+  syntax:
+    content: 'public sealed class DropEventArgs : EventArgs'
+    content.vb: Public NotInheritable Class DropEventArgs Inherits EventArgs
+  inheritance:
+  - System.Object
+  - System.EventArgs
+  inheritedMembers:
+  - System.EventArgs.Empty
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Agibuild.Fulora.DropEventArgs.Payload
+  commentId: P:Agibuild.Fulora.DropEventArgs.Payload
+  id: Payload
+  parent: Agibuild.Fulora.DropEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Payload
+  nameWithType: DropEventArgs.Payload
+  fullName: Agibuild.Fulora.DropEventArgs.Payload
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Payload
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 63
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The drop payload.
+  example: []
+  syntax:
+    content: public required DragDropPayload Payload { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.DragDropPayload
+    content.vb: Public Property Payload As DragDropPayload
+  overload: Agibuild.Fulora.DropEventArgs.Payload*
+- uid: Agibuild.Fulora.DropEventArgs.Effect
+  commentId: P:Agibuild.Fulora.DropEventArgs.Effect
+  id: Effect
+  parent: Agibuild.Fulora.DropEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Effect
+  nameWithType: DropEventArgs.Effect
+  fullName: Agibuild.Fulora.DropEventArgs.Effect
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Effect
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 65
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The drop effect applied.
+  example: []
+  syntax:
+    content: public DragDropEffects Effect { get; init; }
+    parameters: []
+    return:
+      type: Agibuild.Fulora.DragDropEffects
+    content.vb: Public Property Effect As DragDropEffects
+  overload: Agibuild.Fulora.DropEventArgs.Effect*
+- uid: Agibuild.Fulora.DropEventArgs.X
+  commentId: P:Agibuild.Fulora.DropEventArgs.X
+  id: X
+  parent: Agibuild.Fulora.DropEventArgs
+  langs:
+  - csharp
+  - vb
+  name: X
+  nameWithType: DropEventArgs.X
+  fullName: Agibuild.Fulora.DropEventArgs.X
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: X
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 67
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Horizontal position relative to the WebView.
+  example: []
+  syntax:
+    content: public double X { get; init; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public Property X As Double
+  overload: Agibuild.Fulora.DropEventArgs.X*
+- uid: Agibuild.Fulora.DropEventArgs.Y
+  commentId: P:Agibuild.Fulora.DropEventArgs.Y
+  id: Y
+  parent: Agibuild.Fulora.DropEventArgs
+  langs:
+  - csharp
+  - vb
+  name: Y
+  nameWithType: DropEventArgs.Y
+  fullName: Agibuild.Fulora.DropEventArgs.Y
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/DragDropTypes.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Y
+    path: ../src/Agibuild.Fulora.Core/DragDropTypes.cs
+    startLine: 69
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Vertical position relative to the WebView.
+  example: []
+  syntax:
+    content: public double Y { get; init; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public Property Y As Double
+  overload: Agibuild.Fulora.DropEventArgs.Y*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.EventArgs
+  commentId: T:System.EventArgs
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventargs
+  name: EventArgs
+  nameWithType: EventArgs
+  fullName: System.EventArgs
+- uid: System.EventArgs.Empty
+  commentId: F:System.EventArgs.Empty
+  parent: System.EventArgs
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventargs.empty
+  name: Empty
+  nameWithType: EventArgs.Empty
+  fullName: System.EventArgs.Empty
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.DropEventArgs.Payload*
+  commentId: Overload:Agibuild.Fulora.DropEventArgs.Payload
+  href: Agibuild.Fulora.DropEventArgs.html#Agibuild_Fulora_DropEventArgs_Payload
+  name: Payload
+  nameWithType: DropEventArgs.Payload
+  fullName: Agibuild.Fulora.DropEventArgs.Payload
+- uid: Agibuild.Fulora.DragDropPayload
+  commentId: T:Agibuild.Fulora.DragDropPayload
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.DragDropPayload.html
+  name: DragDropPayload
+  nameWithType: DragDropPayload
+  fullName: Agibuild.Fulora.DragDropPayload
+- uid: Agibuild.Fulora.DropEventArgs.Effect*
+  commentId: Overload:Agibuild.Fulora.DropEventArgs.Effect
+  href: Agibuild.Fulora.DropEventArgs.html#Agibuild_Fulora_DropEventArgs_Effect
+  name: Effect
+  nameWithType: DropEventArgs.Effect
+  fullName: Agibuild.Fulora.DropEventArgs.Effect
+- uid: Agibuild.Fulora.DragDropEffects
+  commentId: T:Agibuild.Fulora.DragDropEffects
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.DragDropEffects.html
+  name: DragDropEffects
+  nameWithType: DragDropEffects
+  fullName: Agibuild.Fulora.DragDropEffects
+- uid: Agibuild.Fulora.DropEventArgs.X*
+  commentId: Overload:Agibuild.Fulora.DropEventArgs.X
+  href: Agibuild.Fulora.DropEventArgs.html#Agibuild_Fulora_DropEventArgs_X
+  name: X
+  nameWithType: DropEventArgs.X
+  fullName: Agibuild.Fulora.DropEventArgs.X
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Agibuild.Fulora.DropEventArgs.Y*
+  commentId: Overload:Agibuild.Fulora.DropEventArgs.Y
+  href: Agibuild.Fulora.DropEventArgs.html#Agibuild_Fulora_DropEventArgs_Y
+  name: Y
+  nameWithType: DropEventArgs.Y
+  fullName: Agibuild.Fulora.DropEventArgs.Y

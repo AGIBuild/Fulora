@@ -481,7 +481,6 @@ references:
   name.vb: New
 - uid: Agibuild.Fulora.ITelemetryProvider[]
   isExternal: true
-  href: Agibuild.Fulora.ITelemetryProvider.html
   name: ITelemetryProvider[]
   nameWithType: ITelemetryProvider[]
   fullName: Agibuild.Fulora.ITelemetryProvider[]
@@ -491,13 +490,11 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.ITelemetryProvider
     name: ITelemetryProvider
-    href: Agibuild.Fulora.ITelemetryProvider.html
   - name: '['
   - name: ']'
   spec.vb:
   - uid: Agibuild.Fulora.ITelemetryProvider
     name: ITelemetryProvider
-    href: Agibuild.Fulora.ITelemetryProvider.html
   - name: (
   - name: )
 - uid: Agibuild.Fulora.CompositeTelemetryProvider.TrackEvent*

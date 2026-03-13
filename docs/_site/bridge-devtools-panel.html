@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="public/docfx.min.css">
       <link rel="stylesheet" href="public/main.css">
       <meta name="docfx:navrel" content="toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <meta name="docfx:tocrel" content="articles/toc.html">
       
       <meta name="docfx:rel" content="">
       
@@ -63,9 +63,23 @@
     </header>
 
     <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
 
       <div class="content">
         <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
 
           <nav id="breadcrumb"></nav>
         </div>
@@ -174,6 +188,29 @@ devTools.Dispose();
 <td>Payload truncation</td>
 <td>4 KB</td>
 <td>Large params/result fields are truncated</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-tools">Related Tools</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BridgeCallProfiler</strong></td>
+<td>Statistical aggregation of bridge call latency (P50/P95/P99), error rates per service/method. See <code>CompositeBridgeTracer</code> to combine with DevTools panel.</td>
+</tr>
+<tr>
+<td><strong>OpenTelemetry Tracer</strong></td>
+<td>Export bridge call spans and metrics to OTLP backends via <code>Agibuild.Fulora.Telemetry.OpenTelemetry</code>.</td>
+</tr>
+<tr>
+<td><strong>VS Code Extension</strong></td>
+<td><code>agibuild-fulora</code> VS Code extension with live bridge call visualization in the IDE sidebar, connected via WebSocket debug protocol (<code>BridgeDebugServer</code>).</td>
 </tr>
 </tbody>
 </table>

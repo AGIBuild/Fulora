@@ -20,7 +20,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IBridgeMiddleware
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 130
+    startLine: 132
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -47,7 +47,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
     path: ../src/Agibuild.Fulora.Core/IBridgeService.cs
-    startLine: 136
+    startLine: 138
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora

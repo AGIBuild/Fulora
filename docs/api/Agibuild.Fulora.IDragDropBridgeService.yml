@@ -1,0 +1,300 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.IDragDropBridgeService
+  commentId: T:Agibuild.Fulora.IDragDropBridgeService
+  id: IDragDropBridgeService
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync(System.Threading.CancellationToken)
+  - Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync(System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IDragDropBridgeService
+  nameWithType: IDragDropBridgeService
+  fullName: Agibuild.Fulora.IDragDropBridgeService
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IDragDropBridgeService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IDragDropBridgeService
+    path: ../src/Agibuild.Fulora.Core/IDragDropBridgeService.cs
+    startLine: 6
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Bridge service that exposes drag-and-drop events to JavaScript.
+
+    Events are delivered as streaming callbacks via bridge import proxies.
+  example: []
+  syntax:
+    content: public interface IDragDropBridgeService
+    content.vb: Public Interface IDragDropBridgeService
+- uid: Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync(System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync(System.Threading.CancellationToken)
+  id: GetLastDropPayloadAsync(System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IDragDropBridgeService
+  langs:
+  - csharp
+  - vb
+  name: GetLastDropPayloadAsync(CancellationToken)
+  nameWithType: IDragDropBridgeService.GetLastDropPayloadAsync(CancellationToken)
+  fullName: Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync(System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IDragDropBridgeService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: GetLastDropPayloadAsync
+    path: ../src/Agibuild.Fulora.Core/IDragDropBridgeService.cs
+    startLine: 9
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: Task<DragDropPayload?> GetLastDropPayloadAsync(CancellationToken ct = default)
+    parameters:
+    - id: ct
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.DragDropPayload}
+    content.vb: Function GetLastDropPayloadAsync(ct As CancellationToken = Nothing) As Task(Of DragDropPayload)
+  overload: Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync*
+- uid: Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync(System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync(System.Threading.CancellationToken)
+  id: IsDragDropSupportedAsync(System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IDragDropBridgeService
+  langs:
+  - csharp
+  - vb
+  name: IsDragDropSupportedAsync(CancellationToken)
+  nameWithType: IDragDropBridgeService.IsDragDropSupportedAsync(CancellationToken)
+  fullName: Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync(System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/IDragDropBridgeService.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IsDragDropSupportedAsync
+    path: ../src/Agibuild.Fulora.Core/IDragDropBridgeService.cs
+    startLine: 10
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: Task<bool> IsDragDropSupportedAsync(CancellationToken ct = default)
+    parameters:
+    - id: ct
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Function IsDragDropSupportedAsync(ct As CancellationToken = Nothing) As Task(Of Boolean)
+  overload: Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync*
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync*
+  commentId: Overload:Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync
+  href: Agibuild.Fulora.IDragDropBridgeService.html#Agibuild_Fulora_IDragDropBridgeService_GetLastDropPayloadAsync_System_Threading_CancellationToken_
+  name: GetLastDropPayloadAsync
+  nameWithType: IDragDropBridgeService.GetLastDropPayloadAsync
+  fullName: Agibuild.Fulora.IDragDropBridgeService.GetLastDropPayloadAsync
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{Agibuild.Fulora.DragDropPayload}
+  commentId: T:System.Threading.Tasks.Task{Agibuild.Fulora.DragDropPayload}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<DragDropPayload>
+  nameWithType: Task<DragDropPayload>
+  fullName: System.Threading.Tasks.Task<Agibuild.Fulora.DragDropPayload>
+  nameWithType.vb: Task(Of DragDropPayload)
+  fullName.vb: System.Threading.Tasks.Task(Of Agibuild.Fulora.DragDropPayload)
+  name.vb: Task(Of DragDropPayload)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Agibuild.Fulora.DragDropPayload
+    name: DragDropPayload
+    href: Agibuild.Fulora.DragDropPayload.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.DragDropPayload
+    name: DragDropPayload
+    href: Agibuild.Fulora.DragDropPayload.html
+  - name: )
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync*
+  commentId: Overload:Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync
+  href: Agibuild.Fulora.IDragDropBridgeService.html#Agibuild_Fulora_IDragDropBridgeService_IsDragDropSupportedAsync_System_Threading_CancellationToken_
+  name: IsDragDropSupportedAsync
+  nameWithType: IDragDropBridgeService.IsDragDropSupportedAsync
+  fullName: Agibuild.Fulora.IDragDropBridgeService.IsDragDropSupportedAsync
+- uid: System.Threading.Tasks.Task{System.Boolean}
+  commentId: T:System.Threading.Tasks.Task{System.Boolean}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<bool>
+  nameWithType: Task<bool>
+  fullName: System.Threading.Tasks.Task<bool>
+  nameWithType.vb: Task(Of Boolean)
+  fullName.vb: System.Threading.Tasks.Task(Of Boolean)
+  name.vb: Task(Of Boolean)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )

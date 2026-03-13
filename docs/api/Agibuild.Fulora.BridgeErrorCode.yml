@@ -1,0 +1,350 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.BridgeErrorCode
+  commentId: T:Agibuild.Fulora.BridgeErrorCode
+  id: BridgeErrorCode
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.BridgeErrorCode.CancellationError
+  - Agibuild.Fulora.BridgeErrorCode.InvocationError
+  - Agibuild.Fulora.BridgeErrorCode.MethodNotFound
+  - Agibuild.Fulora.BridgeErrorCode.ParameterMismatch
+  - Agibuild.Fulora.BridgeErrorCode.PermissionDenied
+  - Agibuild.Fulora.BridgeErrorCode.RateLimitExceeded
+  - Agibuild.Fulora.BridgeErrorCode.SerializationError
+  - Agibuild.Fulora.BridgeErrorCode.ServiceNotFound
+  - Agibuild.Fulora.BridgeErrorCode.TimeoutError
+  - Agibuild.Fulora.BridgeErrorCode.Unknown
+  langs:
+  - csharp
+  - vb
+  name: BridgeErrorCode
+  nameWithType: BridgeErrorCode
+  fullName: Agibuild.Fulora.BridgeErrorCode
+  type: Enum
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: BridgeErrorCode
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 5
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Specific bridge call error codes with actionable diagnostic information.
+  example: []
+  syntax:
+    content: public enum BridgeErrorCode
+    content.vb: Public Enum BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.Unknown
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.Unknown
+  id: Unknown
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: Unknown
+  nameWithType: BridgeErrorCode.Unknown
+  fullName: Agibuild.Fulora.BridgeErrorCode.Unknown
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Unknown
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Unknown or unclassified error.
+  example: []
+  syntax:
+    content: Unknown = -1
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.ServiceNotFound
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.ServiceNotFound
+  id: ServiceNotFound
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: ServiceNotFound
+  nameWithType: BridgeErrorCode.ServiceNotFound
+  fullName: Agibuild.Fulora.BridgeErrorCode.ServiceNotFound
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ServiceNotFound
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 10
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The requested bridge service is not registered.
+  example: []
+  syntax:
+    content: ServiceNotFound = 1001
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.MethodNotFound
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.MethodNotFound
+  id: MethodNotFound
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: MethodNotFound
+  nameWithType: BridgeErrorCode.MethodNotFound
+  fullName: Agibuild.Fulora.BridgeErrorCode.MethodNotFound
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: MethodNotFound
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 12
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The requested method does not exist on the service.
+  example: []
+  syntax:
+    content: MethodNotFound = 1002
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.ParameterMismatch
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.ParameterMismatch
+  id: ParameterMismatch
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: ParameterMismatch
+  nameWithType: BridgeErrorCode.ParameterMismatch
+  fullName: Agibuild.Fulora.BridgeErrorCode.ParameterMismatch
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ParameterMismatch
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 14
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Parameters do not match the expected method signature.
+  example: []
+  syntax:
+    content: ParameterMismatch = 1003
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.SerializationError
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.SerializationError
+  id: SerializationError
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: SerializationError
+  nameWithType: BridgeErrorCode.SerializationError
+  fullName: Agibuild.Fulora.BridgeErrorCode.SerializationError
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: SerializationError
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 16
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: JSON serialization or deserialization failed.
+  example: []
+  syntax:
+    content: SerializationError = 1004
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.InvocationError
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.InvocationError
+  id: InvocationError
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: InvocationError
+  nameWithType: BridgeErrorCode.InvocationError
+  fullName: Agibuild.Fulora.BridgeErrorCode.InvocationError
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: InvocationError
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 18
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: An unhandled exception occurred during method invocation.
+  example: []
+  syntax:
+    content: InvocationError = 1005
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.TimeoutError
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.TimeoutError
+  id: TimeoutError
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: TimeoutError
+  nameWithType: BridgeErrorCode.TimeoutError
+  fullName: Agibuild.Fulora.BridgeErrorCode.TimeoutError
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: TimeoutError
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 20
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The bridge call exceeded the configured timeout.
+  example: []
+  syntax:
+    content: TimeoutError = 1006
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.CancellationError
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.CancellationError
+  id: CancellationError
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: CancellationError
+  nameWithType: BridgeErrorCode.CancellationError
+  fullName: Agibuild.Fulora.BridgeErrorCode.CancellationError
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: CancellationError
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 22
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The bridge call was cancelled via CancellationToken / AbortSignal.
+  example: []
+  syntax:
+    content: CancellationError = 1007
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.PermissionDenied
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.PermissionDenied
+  id: PermissionDenied
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: PermissionDenied
+  nameWithType: BridgeErrorCode.PermissionDenied
+  fullName: Agibuild.Fulora.BridgeErrorCode.PermissionDenied
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: PermissionDenied
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 24
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The caller lacks the required permission for this operation.
+  example: []
+  syntax:
+    content: PermissionDenied = 1008
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+- uid: Agibuild.Fulora.BridgeErrorCode.RateLimitExceeded
+  commentId: F:Agibuild.Fulora.BridgeErrorCode.RateLimitExceeded
+  id: RateLimitExceeded
+  parent: Agibuild.Fulora.BridgeErrorCode
+  langs:
+  - csharp
+  - vb
+  name: RateLimitExceeded
+  nameWithType: BridgeErrorCode.RateLimitExceeded
+  fullName: Agibuild.Fulora.BridgeErrorCode.RateLimitExceeded
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: RateLimitExceeded
+    path: ../src/Agibuild.Fulora.Core/BridgeErrorDiagnostic.cs
+    startLine: 26
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: The caller has exceeded the configured rate limit.
+  example: []
+  syntax:
+    content: RateLimitExceeded = 1009
+    return:
+      type: Agibuild.Fulora.BridgeErrorCode
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.BridgeErrorCode
+  commentId: T:Agibuild.Fulora.BridgeErrorCode
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.BridgeErrorCode.html
+  name: BridgeErrorCode
+  nameWithType: BridgeErrorCode
+  fullName: Agibuild.Fulora.BridgeErrorCode

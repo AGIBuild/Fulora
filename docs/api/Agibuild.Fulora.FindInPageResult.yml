@@ -16,17 +16,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: FindInPageResult
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 579
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 99
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Result of an in-page text search.
-  example: []
   syntax:
     content: 'public sealed class FindInPageResult : EventArgs'
     content.vb: Public NotInheritable Class FindInPageResult Inherits EventArgs
@@ -54,17 +52,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ActiveMatchIndex
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 582
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 101
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Zero-based index of the currently highlighted match.
-  example: []
   syntax:
     content: public int ActiveMatchIndex { get; init; }
     parameters: []
@@ -85,17 +81,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TotalMatches
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 584
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 102
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Total number of matches found on the page.
-  example: []
   syntax:
     content: public int TotalMatches { get; init; }
     parameters: []

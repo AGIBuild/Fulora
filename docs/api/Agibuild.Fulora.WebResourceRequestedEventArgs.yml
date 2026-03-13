@@ -24,24 +24,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebResourceRequestedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 816
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 216
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    Raised when a registered custom-scheme request is intercepted.
-
-    The handler can supply a response body, content type, and status code.
-
-    Custom schemes must be registered via <xref href="Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes" data-throw-if-not-resolved="false"></xref>
-
-    before the WebView is created.
-  example: []
   syntax:
     content: 'public sealed class WebResourceRequestedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class WebResourceRequestedEventArgs Inherits EventArgs
@@ -69,17 +60,15 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 819
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 218
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public WebResourceRequestedEventArgs()
     content.vb: Public Sub New()
@@ -100,29 +89,24 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 825
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 220
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public WebResourceRequestedEventArgs(Uri requestUri, string method, IReadOnlyDictionary<string, string>? requestHeaders = null)
     parameters:
     - id: requestUri
       type: System.Uri
-      description: Intercepted request URI.
     - id: method
       type: System.String
-      description: HTTP method.
     - id: requestHeaders
       type: System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}
-      description: Optional request headers.
     content.vb: Public Sub New(requestUri As Uri, method As String, requestHeaders As IReadOnlyDictionary(Of String, String) = Nothing)
   overload: Agibuild.Fulora.WebResourceRequestedEventArgs.#ctor*
   nameWithType.vb: WebResourceRequestedEventArgs.New(Uri, String, IReadOnlyDictionary(Of String, String))
@@ -141,17 +125,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RequestUri
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 833
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 227
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The URI of the intercepted request.
-  example: []
   syntax:
     content: public Uri? RequestUri { get; init; }
     parameters: []
@@ -172,17 +154,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Method
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 836
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 228
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: HTTP method (GET, POST, etc.).
-  example: []
   syntax:
     content: public string Method { get; init; }
     parameters: []
@@ -203,17 +183,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RequestHeaders
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 839
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 229
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Request headers from the intercepted request. May be null if not available on the platform.
-  example: []
   syntax:
     content: public IReadOnlyDictionary<string, string>? RequestHeaders { get; init; }
     parameters: []
@@ -234,17 +212,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ResponseBody
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 842
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 230
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set by the handler to provide a response body as a stream (supports binary content).
-  example: []
   syntax:
     content: public Stream? ResponseBody { get; set; }
     parameters: []
@@ -265,17 +241,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ResponseContentType
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 845
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 231
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: 'Set by the handler to provide a response content type. Default: text/html.'
-  example: []
   syntax:
     content: public string ResponseContentType { get; set; }
     parameters: []
@@ -296,17 +270,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ResponseStatusCode
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 848
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 232
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: 'Set by the handler to provide an HTTP status code. Default: 200.'
-  example: []
   syntax:
     content: public int ResponseStatusCode { get; set; }
     parameters: []
@@ -327,17 +299,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ResponseHeaders
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 851
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 233
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set by the handler to provide custom response headers.
-  example: []
   syntax:
     content: public IDictionary<string, string>? ResponseHeaders { get; set; }
     parameters: []
@@ -358,17 +328,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handled
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 854
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 234
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Set to true to indicate the request has been handled and a response is provided.
-  example: []
   syntax:
     content: public bool Handled { get; set; }
     parameters: []
@@ -377,13 +345,6 @@ items:
     content.vb: Public Property Handled As Boolean
   overload: Agibuild.Fulora.WebResourceRequestedEventArgs.Handled*
 references:
-- uid: Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes
-  commentId: P:Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes
-  parent: Agibuild.Fulora.IWebViewEnvironmentOptions
-  href: Agibuild.Fulora.IWebViewEnvironmentOptions.html#Agibuild_Fulora_IWebViewEnvironmentOptions_CustomSchemes
-  name: CustomSchemes
-  nameWithType: IWebViewEnvironmentOptions.CustomSchemes
-  fullName: Agibuild.Fulora.IWebViewEnvironmentOptions.CustomSchemes
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -628,13 +589,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
-- uid: Agibuild.Fulora.IWebViewEnvironmentOptions
-  commentId: T:Agibuild.Fulora.IWebViewEnvironmentOptions
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebViewEnvironmentOptions.html
-  name: IWebViewEnvironmentOptions
-  nameWithType: IWebViewEnvironmentOptions
-  fullName: Agibuild.Fulora.IWebViewEnvironmentOptions
 - uid: System
   commentId: N:System
   isExternal: true

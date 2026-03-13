@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebMessagePolicy
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 380
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 105
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Evaluates incoming WebMessage envelopes to determine whether they should be processed or dropped.
-  example: []
   syntax:
     content: public interface IWebMessagePolicy
     content.vb: Public Interface IWebMessagePolicy
@@ -42,17 +40,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Evaluate
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 383
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 107
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Evaluates an envelope and returns the decision.
-  example: []
   syntax:
     content: WebMessagePolicyDecision Evaluate(in WebMessageEnvelope envelope)
     parameters:

@@ -19,17 +19,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebViewDispatcher
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 318
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 90
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Dispatcher abstraction used by WebViewCore to marshal work to the UI thread.
-  example: []
   syntax:
     content: public interface IWebViewDispatcher
     content.vb: Public Interface IWebViewDispatcher
@@ -46,17 +44,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CheckAccess
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 321
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 92
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Returns true when called from the UI thread.
-  example: []
   syntax:
     content: bool CheckAccess()
     return:
@@ -76,17 +72,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 324
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 93
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Invokes an action on the UI thread.
-  example: []
   syntax:
     content: Task InvokeAsync(Action action)
     parameters:
@@ -109,17 +103,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 326
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 94
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Invokes a function on the UI thread.
-  example: []
   syntax:
     content: Task<T> InvokeAsync<T>(Func<T> func)
     parameters:
@@ -147,17 +139,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 328
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 95
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Invokes an async function on the UI thread.
-  example: []
   syntax:
     content: Task InvokeAsync(Func<Task> func)
     parameters:
@@ -183,17 +173,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 330
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 96
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Invokes an async function on the UI thread.
-  example: []
   syntax:
     content: Task<T> InvokeAsync<T>(Func<Task<T>> func)
     parameters:

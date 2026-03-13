@@ -16,17 +16,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewRpcException
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1104
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 338
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Exception thrown when an RPC call fails.
-  example: []
   syntax:
     content: 'public class WebViewRpcException : Exception, ISerializable'
     content.vb: Public Class WebViewRpcException Inherits Exception Implements ISerializable
@@ -66,26 +64,22 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1109
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 340
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public WebViewRpcException(int code, string message)
     parameters:
     - id: code
       type: System.Int32
-      description: JSON-RPC error code.
     - id: message
       type: System.String
-      description: Error message.
     content.vb: Public Sub New(code As Integer, message As String)
   overload: Agibuild.Fulora.WebViewRpcException.#ctor*
   nameWithType.vb: WebViewRpcException.New(Integer, String)
@@ -104,17 +98,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Code
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1115
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 345
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: JSON-RPC error code.
-  example: []
   syntax:
     content: public int Code { get; }
     parameters: []

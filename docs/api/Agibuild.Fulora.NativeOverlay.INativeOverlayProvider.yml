@@ -1,0 +1,390 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  commentId: T:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  id: INativeOverlayProvider
+  parent: Agibuild.Fulora.NativeOverlay
+  children:
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay(System.IntPtr)
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show
+  - Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds(System.Double,System.Double,System.Double,System.Double,System.Double)
+  langs:
+  - csharp
+  - vb
+  name: INativeOverlayProvider
+  nameWithType: INativeOverlayProvider
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: INativeOverlayProvider
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 5
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  summary: Platform-specific provider for creating and managing native overlay windows above WebView.
+  example: []
+  syntax:
+    content: 'public interface INativeOverlayProvider : IDisposable'
+    content.vb: Public Interface INativeOverlayProvider Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay(System.IntPtr)
+  commentId: M:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay(System.IntPtr)
+  id: CreateOverlay(System.IntPtr)
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: CreateOverlay(nint)
+  nameWithType: INativeOverlayProvider.CreateOverlay(nint)
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay(nint)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: CreateOverlay
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 7
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: void CreateOverlay(nint parentHandle)
+    parameters:
+    - id: parentHandle
+      type: System.IntPtr
+    content.vb: Sub CreateOverlay(parentHandle As IntPtr)
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay*
+  nameWithType.vb: INativeOverlayProvider.CreateOverlay(IntPtr)
+  fullName.vb: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay(System.IntPtr)
+  name.vb: CreateOverlay(IntPtr)
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay
+  commentId: M:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay
+  id: DestroyOverlay
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: DestroyOverlay()
+  nameWithType: INativeOverlayProvider.DestroyOverlay()
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DestroyOverlay
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 8
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: void DestroyOverlay()
+    content.vb: Sub DestroyOverlay()
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay*
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds(System.Double,System.Double,System.Double,System.Double,System.Double)
+  commentId: M:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds(System.Double,System.Double,System.Double,System.Double,System.Double)
+  id: UpdateBounds(System.Double,System.Double,System.Double,System.Double,System.Double)
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: UpdateBounds(double, double, double, double, double)
+  nameWithType: INativeOverlayProvider.UpdateBounds(double, double, double, double, double)
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds(double, double, double, double, double)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: UpdateBounds
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 9
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: void UpdateBounds(double x, double y, double width, double height, double dpiScale)
+    parameters:
+    - id: x
+      type: System.Double
+    - id: y
+      type: System.Double
+    - id: width
+      type: System.Double
+    - id: height
+      type: System.Double
+    - id: dpiScale
+      type: System.Double
+    content.vb: Sub UpdateBounds(x As Double, y As Double, width As Double, height As Double, dpiScale As Double)
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds*
+  nameWithType.vb: INativeOverlayProvider.UpdateBounds(Double, Double, Double, Double, Double)
+  fullName.vb: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds(Double, Double, Double, Double, Double)
+  name.vb: UpdateBounds(Double, Double, Double, Double, Double)
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show
+  commentId: M:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show
+  id: Show
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: Show()
+  nameWithType: INativeOverlayProvider.Show()
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Show
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 10
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: void Show()
+    content.vb: Sub Show()
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show*
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide
+  commentId: M:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide
+  id: Hide
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: Hide()
+  nameWithType: INativeOverlayProvider.Hide()
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide()
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: Hide
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 11
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: void Hide()
+    content.vb: Sub Hide()
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide*
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible
+  commentId: P:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible
+  id: IsVisible
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: IsVisible
+  nameWithType: INativeOverlayProvider.IsVisible
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IsVisible
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 12
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: bool IsVisible { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property IsVisible As Boolean
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible*
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle
+  commentId: P:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle
+  id: OverlayHandle
+  parent: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider
+  langs:
+  - csharp
+  - vb
+  name: OverlayHandle
+  nameWithType: INativeOverlayProvider.OverlayHandle
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: OverlayHandle
+    path: ../src/Agibuild.Fulora.Avalonia/INativeOverlayProvider.cs
+    startLine: 13
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora.NativeOverlay
+  syntax:
+    content: nint OverlayHandle { get; }
+    parameters: []
+    return:
+      type: System.IntPtr
+    content.vb: ReadOnly Property OverlayHandle As IntPtr
+  overload: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle*
+references:
+- uid: Agibuild.Fulora.NativeOverlay
+  commentId: N:Agibuild.Fulora.NativeOverlay
+  href: Agibuild.html
+  name: Agibuild.Fulora.NativeOverlay
+  nameWithType: Agibuild.Fulora.NativeOverlay
+  fullName: Agibuild.Fulora.NativeOverlay
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  - name: .
+  - uid: Agibuild.Fulora.NativeOverlay
+    name: NativeOverlay
+    href: Agibuild.Fulora.NativeOverlay.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  - name: .
+  - uid: Agibuild.Fulora.NativeOverlay
+    name: NativeOverlay
+    href: Agibuild.Fulora.NativeOverlay.html
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_CreateOverlay_System_IntPtr_
+  name: CreateOverlay
+  nameWithType: INativeOverlayProvider.CreateOverlay
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.CreateOverlay
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_DestroyOverlay
+  name: DestroyOverlay
+  nameWithType: INativeOverlayProvider.DestroyOverlay
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.DestroyOverlay
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_UpdateBounds_System_Double_System_Double_System_Double_System_Double_System_Double_
+  name: UpdateBounds
+  nameWithType: INativeOverlayProvider.UpdateBounds
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.UpdateBounds
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_Show
+  name: Show
+  nameWithType: INativeOverlayProvider.Show
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Show
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_Hide
+  name: Hide
+  nameWithType: INativeOverlayProvider.Hide
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.Hide
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_IsVisible
+  name: IsVisible
+  nameWithType: INativeOverlayProvider.IsVisible
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.IsVisible
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle*
+  commentId: Overload:Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle
+  href: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.html#Agibuild_Fulora_NativeOverlay_INativeOverlayProvider_OverlayHandle
+  name: OverlayHandle
+  nameWithType: INativeOverlayProvider.OverlayHandle
+  fullName: Agibuild.Fulora.NativeOverlay.INativeOverlayProvider.OverlayHandle

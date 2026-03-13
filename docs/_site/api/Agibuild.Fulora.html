@@ -96,12 +96,23 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.AdapterCreatedEventArgs.html">AdapterCreatedEventArgs</a></dt>
-      <dd><p>Event args for the <a class="xref" href="Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AdapterCreated">AdapterCreated</a> event, carrying the typed native platform handle.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.AiMediaPayload.html">AiMediaPayload</a></dt>
+      <dd><p>Binary payload with MIME type metadata for multimodal AI content.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.AiToolAttribute.html">AiToolAttribute</a></dt>
+      <dd><p>Marks a <a class="xref" href="Agibuild.Fulora.JsExportAttribute.html">JsExportAttribute</a>-decorated interface or method for AI tool schema generation.
+The source generator will emit an OpenAI-compatible function-calling JSON schema.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.AotCompatibilityAttribute.html">AotCompatibilityAttribute</a></dt>
-      <dd></dd>
+      <dd><p>Marks an assembly as validated for NativeAOT compatibility.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.AppBuilderExtensions.html">AppBuilderExtensions</a></dt>
@@ -110,7 +121,18 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.AuthOptions.html">AuthOptions</a></dt>
-      <dd><p>Options for <a class="xref" href="Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_">AuthenticateAsync(ITopLevelWindow, AuthOptions)</a>.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.AutoUpdateOptions.html">AutoUpdateOptions</a></dt>
+      <dd><p>Configuration options for the auto-update service.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.AutoUpdateService.html">AutoUpdateService</a></dt>
+      <dd><p>Runtime implementation of <a class="xref" href="Agibuild.Fulora.IAutoUpdateService.html">IAutoUpdateService</a>.
+Coordinates the update lifecycle (check → download → verify → apply) via an
+<a class="xref" href="Agibuild.Fulora.IAutoUpdatePlatformProvider.html">IAutoUpdatePlatformProvider</a> and exposes bridge events for JS consumers.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -146,6 +168,23 @@ await dialog.NavigateAsync(new Uri("https://example.com"));</code></pre>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.BridgeCallProfiler.html">BridgeCallProfiler</a></dt>
+      <dd><p>An <a class="xref" href="Agibuild.Fulora.IBridgeTracer.html">IBridgeTracer</a> that collects per-method and per-service statistics
+for call counts, errors, and latency percentiles. Optionally delegates to an inner tracer.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.BridgeDebugServer.html">BridgeDebugServer</a></dt>
+      <dd><p>Lightweight WebSocket server that streams IBridgeTracer events to external tools (e.g., VS Code extension).
+Opt-in via BridgeDebugServerOptions.Enabled. Localhost-only.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.BridgeDebugServerOptions.html">BridgeDebugServerOptions</a></dt>
+      <dd><p>Options for the Bridge Debug Server (WebSocket streaming of bridge events).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.BridgeDevToolsEvent.html">BridgeDevToolsEvent</a></dt>
       <dd><p>Represents a single bridge call event captured for the DevTools panel.</p>
 </dd>
@@ -169,6 +208,11 @@ and call <a class="xref" href="Agibuild.Fulora.BridgeDevToolsOverlay.html#Agibui
       <dt><a class="xref" href="Agibuild.Fulora.BridgeDevToolsService.html">BridgeDevToolsService</a></dt>
       <dd><p>Provides the Bridge DevTools overlay for debugging bridge calls.
 Serves the overlay HTML and pushes events to the WebView in real-time.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.BridgeErrorDiagnostic.html">BridgeErrorDiagnostic</a></dt>
+      <dd><p>Rich error diagnostic with error code, message, and optional actionable hint.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -231,6 +275,13 @@ Optionally delegates to an inner tracer.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.CompositeBridgeTracer.html">CompositeBridgeTracer</a></dt>
+      <dd><p>An <a class="xref" href="Agibuild.Fulora.IBridgeTracer.html">IBridgeTracer</a> that holds multiple tracers and forwards each callback to all.
+Exceptions from one tracer are caught and do not prevent other tracers from receiving events.
+<a class="xref" href="Agibuild.Fulora.NullBridgeTracer.html">NullBridgeTracer</a> instances are filtered out and not included.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.CompositeTelemetryProvider.html">CompositeTelemetryProvider</a></dt>
       <dd><p>A telemetry provider that forwards all calls to multiple inner providers.
 Exceptions from one provider do not affect others.</p>
@@ -243,14 +294,17 @@ Serves as a reference implementation for custom providers.</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Agibuild.Fulora.ContextMenuRequestedEventArgs.html">ContextMenuRequestedEventArgs</a></dt>
-      <dd><p>Event args for context menu interception.</p>
+      <dt><a class="xref" href="Agibuild.Fulora.ContentFilterResult.html">ContentFilterResult</a></dt>
+      <dd><p>Result of a content filter operation.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.ContextMenuRequestedEventArgs.html">ContextMenuRequestedEventArgs</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.CustomSchemeRegistration.html">CustomSchemeRegistration</a></dt>
-      <dd><p>Describes a custom URI scheme to register with the WebView.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.DevToolsPanelTracer.html">DevToolsPanelTracer</a></dt>
@@ -261,23 +315,44 @@ Optionally delegates to an inner tracer so that logging/other tracing is preserv
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.DownloadRequestedEventArgs.html">DownloadRequestedEventArgs</a></dt>
-      <dd><p>Raised when a file download is initiated by the web content.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.DragDropBridgeService.html">DragDropBridgeService</a></dt>
+      <dd><p>Bridge service implementation that exposes drag-and-drop events to JavaScript.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.DragDropPayload.html">DragDropPayload</a></dt>
+      <dd><p>Payload for drag-and-drop operations between native and web contexts.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.DragEventArgs.html">DragEventArgs</a></dt>
+      <dd><p>Event args for drag enter/over events. Effect can be set by the handler.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.DropEventArgs.html">DropEventArgs</a></dt>
+      <dd><p>Event args for drop completion.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.EnvironmentRequestedEventArgs.html">EnvironmentRequestedEventArgs</a></dt>
-      <dd><p>Placeholder — environment requested event is not yet implemented.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.FileDropInfo.html">FileDropInfo</a></dt>
+      <dd><p>Metadata for a file in a drag-drop payload.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.FindInPageOptions.html">FindInPageOptions</a></dt>
-      <dd><p>Options for <a class="xref" href="Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_FindInPageAsync_System_String_Agibuild_Fulora_FindInPageOptions_">FindInPageAsync(string, FindInPageOptions?)</a>.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.FindInPageResult.html">FindInPageResult</a></dt>
-      <dd><p>Result of an in-page text search.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.GlobalShortcutBinding.html">GlobalShortcutBinding</a></dt>
@@ -332,6 +407,11 @@ Attach to <span class="xref">Agibuild.Fulora.RuntimeBridgeService</span> for str
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.MethodProfileStats.html">MethodProfileStats</a></dt>
+      <dd><p>Aggregated statistics for a single bridge method.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.MockBridgeService.html">MockBridgeService</a></dt>
       <dd><p>A mock implementation of <a class="xref" href="Agibuild.Fulora.IBridgeService.html">IBridgeService</a> for unit testing.
 Allows testing ViewModels and services that depend on Bridge without a real WebView.</p>
@@ -342,18 +422,15 @@ Deliverable 1.5: MockBridge for consumer unit testing.
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.NavigationCompletedEventArgs.html">NavigationCompletedEventArgs</a></dt>
-      <dd><p>Event args raised when a navigation completes.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.NavigationStartingEventArgs.html">NavigationStartingEventArgs</a></dt>
-      <dd><p>Event args raised when a navigation starts.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.NewWindowRequestedEventArgs.html">NewWindowRequestedEventArgs</a></dt>
-      <dd><p>Event args raised when content requests opening a new window.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.NullBridgeTracer.html">NullBridgeTracer</a></dt>
@@ -367,12 +444,16 @@ Deliverable 1.5: MockBridge for consumer unit testing.
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.PdfPrintOptions.html">PdfPrintOptions</a></dt>
-      <dd><p>Options for PDF printing.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.PermissionRequestedEventArgs.html">PermissionRequestedEventArgs</a></dt>
-      <dd><p>Raised when web content requests a permission (camera, microphone, geolocation, etc.).</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.PluginManifest.html">PluginManifest</a></dt>
+      <dd><p>Represents the <code>fulora-plugin.json</code> manifest embedded in Fulora plugin NuGet packages.
+Provides machine-readable metadata for compatibility checking and plugin discovery.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -395,6 +476,11 @@ This helper decodes such values to raw strings expected by the V1 adapter contra
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.ServiceProfileStats.html">ServiceProfileStats</a></dt>
+      <dd><p>Aggregated statistics for a bridge service (all methods).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ServiceWorkerOptions.html">ServiceWorkerOptions</a></dt>
       <dd></dd>
     </dl>
@@ -405,6 +491,12 @@ for offline support in WebView-hosted SPAs.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.SharedStateStore.html">SharedStateStore</a></dt>
+      <dd><p>Thread-safe shared state store with last-writer-wins (LWW) conflict resolution.
+Each entry tracks a timestamp; stale writes are silently ignored.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.SpaAssetHotUpdateResult.html">SpaAssetHotUpdateResult</a></dt>
       <dd><p>Result for signed SPA asset package operations.</p>
 </dd>
@@ -412,6 +504,36 @@ for offline support in WebView-hosted SPAs.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.SpaAssetHotUpdateService.html">SpaAssetHotUpdateService</a></dt>
       <dd><p>Signed package installer + activation/rollback orchestrator for SPA assets.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.SpaBootstrapOptions.html">SpaBootstrapOptions</a></dt>
+      <dd><p>Options for WebViewBootstrapExtensions.BootstrapSpaAsync.
+Encapsulates dev/prod navigation, bridge service registration, and error handling.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.SpaBootstrapProfileExceptionScope.html">SpaBootstrapProfileExceptionScope</a></dt>
+      <dd><p>Metadata that marks an explicit exception scope for profile-level customization.
+This metadata is consumed by governance and diagnostics to track approved escape-hatch usage.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.SpaBootstrapProfileExtension.html">SpaBootstrapProfileExtension</a></dt>
+      <dd><p>Represents an explicit profile extension hook applied during bridge configuration.
+Extensions are evaluated in declared order.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.SpaBootstrapProfileOptions.html">SpaBootstrapProfileOptions</a></dt>
+      <dd><p>Profile-level bootstrap options that wrap <a class="xref" href="Agibuild.Fulora.SpaBootstrapOptions.html">SpaBootstrapOptions</a>
+and add explicit extension hooks plus governance metadata.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.SpaBootstrapProfileTeardown.html">SpaBootstrapProfileTeardown</a></dt>
+      <dd><p>Represents a lifecycle teardown callback owned by profile bootstrap.
+Teardowns execute in declaration order when the host adapter is destroyed.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -426,6 +548,11 @@ for offline support in WebView-hosted SPAs.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.StateChangedEventArgs.html">StateChangedEventArgs</a></dt>
+      <dd><p>Event arguments for state change notifications.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ThemeChangedEvent.html">ThemeChangedEvent</a></dt>
       <dd><p>Event payload pushed to JS when the OS theme changes.</p>
 </dd>
@@ -433,6 +560,32 @@ for offline support in WebView-hosted SPAs.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ThemeInfo.html">ThemeInfo</a></dt>
       <dd><p>Snapshot of the current OS theme state.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.TransparencyEffectiveState.html">TransparencyEffectiveState</a></dt>
+      <dd><p>Effective transparency state as resolved by the platform provider.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.UpdateDownloadProgress.html">UpdateDownloadProgress</a></dt>
+      <dd><p>Progress information for an ongoing download.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.UpdateInfo.html">UpdateInfo</a></dt>
+      <dd><p>Describes an available application update.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.UpdateResult.html">UpdateResult</a></dt>
+      <dd><p>Result of an update check or lifecycle operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.VelopackAutoUpdateProvider.html">VelopackAutoUpdateProvider</a></dt>
+      <dd><p>Auto-update provider that works with a generic update feed URL.
+Compatible with Velopack-style releases.{channel}.json feeds and simple custom JSON feeds.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -462,8 +615,7 @@ Flow:
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebAuthResult.html">WebAuthResult</a></dt>
-      <dd><p>Result returned by <a class="xref" href="Agibuild.Fulora.IWebAuthBroker.html#Agibuild_Fulora_IWebAuthBroker_AuthenticateAsync_Agibuild_Fulora_ITopLevelWindow_Agibuild_Fulora_AuthOptions_">AuthenticateAsync(ITopLevelWindow, AuthOptions)</a>.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebDialog.html">WebDialog</a></dt>
@@ -478,16 +630,11 @@ Wraps a <a class="xref" href="Agibuild.Fulora.WebViewCore.html">WebViewCore</a> 
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebMessageReceivedEventArgs.html">WebMessageReceivedEventArgs</a></dt>
-      <dd><p>Event args raised when a WebMessage is received from the page.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebResourceRequestedEventArgs.html">WebResourceRequestedEventArgs</a></dt>
-      <dd><p>Raised when a registered custom-scheme request is intercepted.
-The handler can supply a response body, content type, and status code.
-Custom schemes must be registered via <a class="xref" href="Agibuild.Fulora.IWebViewEnvironmentOptions.html#Agibuild_Fulora_IWebViewEnvironmentOptions_CustomSchemes">CustomSchemes</a>
-before the WebView is created.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebView.html">WebView</a></dt>
@@ -499,9 +646,13 @@ Usage in XAML:
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Agibuild.Fulora.WebViewCookie.html">WebViewCookie</a></dt>
-      <dd><p>Represents a cookie associated with a WebView instance.</p>
+      <dt><a class="xref" href="Agibuild.Fulora.WebViewBootstrapExtensions.html">WebViewBootstrapExtensions</a></dt>
+      <dd><p>Extension methods for bootstrapping SPA navigation and bridge registration on <a class="xref" href="Agibuild.Fulora.IWebView.html">IWebView</a>.</p>
 </dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WebViewCookie.html">WebViewCookie</a></dt>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewCore.html">WebViewCore</a></dt>
@@ -535,28 +686,30 @@ Uses <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collect
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewNavigationException.html">WebViewNavigationException</a></dt>
-      <dd><p>Base exception for navigation failures with correlation metadata.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewNetworkException.html">WebViewNetworkException</a></dt>
-      <dd><p>Navigation failed due to a network connectivity issue (DNS, unreachable host, connection lost, no internet).</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewOperationFailure.html">WebViewOperationFailure</a></dt>
-      <dd><p>Helpers to annotate exceptions with <a class="xref" href="Agibuild.Fulora.WebViewOperationFailureCategory.html">WebViewOperationFailureCategory</a> for governance and diagnostics.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WebViewOverlayHost.html">WebViewOverlayHost</a></dt>
+      <dd><p>Manages a transparent companion window for rendering Avalonia controls above a WebView.
+Uses a real borderless Avalonia <span class="xref">Avalonia.Controls.Window</span> as a child of the parent window,
+positioned to exactly cover the WebView bounds.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewRpcException.html">WebViewRpcException</a></dt>
-      <dd><p>Exception thrown when an RPC call fails.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewScriptException.html">WebViewScriptException</a></dt>
-      <dd><p>Exception thrown when script execution fails.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewServiceCollectionExtensions.html">WebViewServiceCollectionExtensions</a></dt>
@@ -580,12 +733,40 @@ take priority over global shortcuts for the same key combination.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewSslException.html">WebViewSslException</a></dt>
-      <dd><p>Navigation failed due to a TLS/certificate issue.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewTimeoutException.html">WebViewTimeoutException</a></dt>
-      <dd><p>Navigation failed due to a request timeout.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WindowAppearanceRequest.html">WindowAppearanceRequest</a></dt>
+      <dd><p>Request payload for applying window appearance changes.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WindowChromeMetrics.html">WindowChromeMetrics</a></dt>
+      <dd><p>Host window chrome metrics relevant for web layout.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WindowSafeInsets.html">WindowSafeInsets</a></dt>
+      <dd><p>Insets required by host chrome/safe-area layout.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WindowShellCapabilities.html">WindowShellCapabilities</a></dt>
+      <dd><p>Host capabilities and effective shell-window composition state.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WindowShellSettings.html">WindowShellSettings</a></dt>
+      <dd><p>Requested shell-window settings from web content.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WindowShellState.html">WindowShellState</a></dt>
+      <dd><p>Applied shell-window state returned to web content.</p>
 </dd>
     </dl>
     <h3 id="structs">
@@ -593,18 +774,15 @@ Structs
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebMessageDropDiagnostic.html">WebMessageDropDiagnostic</a></dt>
-      <dd><p>Diagnostic payload describing a dropped WebMessage.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebMessageEnvelope.html">WebMessageEnvelope</a></dt>
-      <dd><p>Envelope for a WebMessage bridge message.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebMessagePolicyDecision.html">WebMessagePolicyDecision</a></dt>
-      <dd><p>Result of evaluating a <a class="xref" href="Agibuild.Fulora.WebMessageEnvelope.html">WebMessageEnvelope</a> against an <a class="xref" href="Agibuild.Fulora.IWebMessagePolicy.html">IWebMessagePolicy</a>.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewShortcutAction.html">WebViewShortcutAction</a></dt>
@@ -620,13 +798,29 @@ Structs
 Interfaces
 </h3>
     <dl class="jumplist">
-      <dt><a class="xref" href="Agibuild.Fulora.IAndroidWebViewPlatformHandle.html">IAndroidWebViewPlatformHandle</a></dt>
-      <dd><p>Typed platform handle for Android WebView.</p>
+      <dt><a class="xref" href="Agibuild.Fulora.IAiContentFilter.html">IAiContentFilter</a></dt>
+      <dd><p>Pluggable content filter for AI input/output safety.
+Implementations are composed into an ordered pipeline via DI.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.IAndroidWebViewPlatformHandle.html">IAndroidWebViewPlatformHandle</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IAppleWKWebViewPlatformHandle.html">IAppleWKWebViewPlatformHandle</a></dt>
-      <dd><p>Typed platform handle for Apple WKWebView (macOS and iOS).</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.IAutoUpdatePlatformProvider.html">IAutoUpdatePlatformProvider</a></dt>
+      <dd><p>Platform-specific provider for auto-update operations.
+Implement this interface to supply update mechanics for each target platform.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.IAutoUpdateService.html">IAutoUpdateService</a></dt>
+      <dd><p>Provides application auto-update lifecycle: check, download, verify, and apply updates.
+Registered via <code>Bridge.Expose&lt;IAutoUpdateService&gt;(impl)</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -683,8 +877,7 @@ all RPC traffic for debugging, performance monitoring, or visualization.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ICommandManager.html">ICommandManager</a></dt>
-      <dd><p>Provides programmatic access to standard editing commands on a WebView.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IConfigProvider.html">IConfigProvider</a></dt>
@@ -693,13 +886,18 @@ all RPC traffic for debugging, performance monitoring, or visualization.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ICookieManager.html">ICookieManager</a></dt>
-      <dd><p>Cookie management for the WebView instance.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IDialogHost.html">IDialogHost</a></dt>
       <dd><p>Abstraction for the dialog window host (platform window management).
 Kept host-framework-neutral to enable unit testing with mocks.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.IDragDropBridgeService.html">IDragDropBridgeService</a></dt>
+      <dd><p>Bridge service that exposes drag-and-drop events to JavaScript.
+Events are delivered as streaming callbacks via bridge import proxies.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -716,8 +914,7 @@ Registered via <code>Bridge.Expose&lt;IGlobalShortcutService&gt;(impl)</code>.</
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IGtkWebViewPlatformHandle.html">IGtkWebViewPlatformHandle</a></dt>
-      <dd><p>Typed platform handle for GTK WebKitWebView (Linux).</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IMauiWebViewHost.html">IMauiWebViewHost</a></dt>
@@ -726,18 +923,27 @@ Registered via <code>Bridge.Expose&lt;IGlobalShortcutService&gt;(impl)</code>.</
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.INativeHandle.html">INativeHandle</a></dt>
-      <dd><p>Provides access to the native WebView handle for adapter-specific interop scenarios.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.INativeWebViewHandleProvider.html">INativeWebViewHandleProvider</a></dt>
-      <dd><p>Provides access to the native WebView handle for adapter-specific interop scenarios.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IPlatformThemeProvider.html">IPlatformThemeProvider</a></dt>
       <dd><p>Abstracts OS-specific theme detection. Implement per platform for accent color,
 high-contrast detection, and theme change notifications.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.ISharedStateStore.html">ISharedStateStore</a></dt>
+      <dd><p>Cross-WebView reactive key-value state store with last-writer-wins conflict resolution.
+All WebViews sharing the same store instance see a consistent view of state.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.ISpaHostingWebView.html">ISpaHostingWebView</a></dt>
+      <dd><p>Marks an <a class="xref" href="Agibuild.Fulora.IWebView.html">IWebView</a> implementation that can enable framework SPA hosting.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -753,48 +959,39 @@ Registered via <code>Bridge.Expose&lt;IThemeService&gt;(impl)</code>.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ITopLevelWindow.html">ITopLevelWindow</a></dt>
-      <dd><p>Abstraction for a top-level window that can serve as an owner for dialogs.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebAuthBroker.html">IWebAuthBroker</a></dt>
-      <dd><p>Web authentication broker used for platform-specific auth flows (e.g. OAuth via external browser or embedded WebView).</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebDialog.html">IWebDialog</a></dt>
-      <dd><p>Dialog-style WebView contract for displaying web content in a separate top-level window.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebDialogFactory.html">IWebDialogFactory</a></dt>
-      <dd><p>Factory for creating <a class="xref" href="Agibuild.Fulora.IWebDialog.html">IWebDialog</a> instances.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebMessageDropDiagnosticsSink.html">IWebMessageDropDiagnosticsSink</a></dt>
-      <dd><p>Sink for dropped WebMessage diagnostics.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebMessagePolicy.html">IWebMessagePolicy</a></dt>
-      <dd><p>Evaluates incoming WebMessage envelopes to determine whether they should be processed or dropped.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebView.html">IWebView</a></dt>
-      <dd><p>Public WebView contract surface for navigation, scripting, events, and feature adapters.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebViewDispatcher.html">IWebViewDispatcher</a></dt>
-      <dd><p>Dispatcher abstraction used by WebViewCore to marshal work to the UI thread.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebViewEnvironmentOptions.html">IWebViewEnvironmentOptions</a></dt>
-      <dd><p>Options applied to the WebView runtime environment (devtools, user agent, storage, custom schemes, preload scripts).</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebViewMessageBus.html">IWebViewMessageBus</a></dt>
@@ -804,13 +1001,23 @@ across multiple WebView instances, with the host runtime acting as mediator.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWebViewRpcService.html">IWebViewRpcService</a></dt>
-      <dd><p>Bidirectional JSON-RPC 2.0 service for JS ↔ C# method calls over the WebMessage bridge.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.IWindowChromeProvider.html">IWindowChromeProvider</a></dt>
+      <dd><p>Abstracts platform-specific window chrome operations (transparency, metrics, appearance).
+Concrete implementations (e.g. Avalonia) add window tracking on the concrete type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.IWindowShellService.html">IWindowShellService</a></dt>
+      <dd><p>Framework-level shell-window service contract. Provides snapshot, update, and stream
+access to the global shell-window state (theme, transparency, chrome metrics).</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.IWindowsWebView2PlatformHandle.html">IWindowsWebView2PlatformHandle</a></dt>
-      <dd><p>Typed platform handle for Windows WebView2. Cast from <a class="xref" href="Agibuild.Fulora.INativeHandle.html">INativeHandle</a> returned by <a class="xref" href="Agibuild.Fulora.INativeWebViewHandleProvider.html">INativeWebViewHandleProvider</a>.</p>
-</dd>
+      <dd></dd>
     </dl>
     <h3 id="enums">
 Enums
@@ -826,8 +1033,22 @@ Enums
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.BridgeErrorCode.html">BridgeErrorCode</a></dt>
+      <dd><p>Specific bridge call error codes with actionable diagnostic information.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.ContentFilterAction.html">ContentFilterAction</a></dt>
+      <dd><p>The action a content filter takes on content.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ContextMenuMediaType.html">ContextMenuMediaType</a></dt>
-      <dd><p>Media type at the context menu hit-test location.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.DragDropEffects.html">DragDropEffects</a></dt>
+      <dd><p>Drag-and-drop effect flags for native ↔ web interoperability.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -837,13 +1058,16 @@ Enums
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.NavigationCompletedStatus.html">NavigationCompletedStatus</a></dt>
-      <dd><p>Status of a navigation completion.</p>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.OverlayHitTestResult.html">OverlayHitTestResult</a></dt>
+      <dd><p>Result of hit-testing a point against the overlay.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.PermissionState.html">PermissionState</a></dt>
-      <dd><p>The decision for a permission request.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.ServiceWorkerCacheStrategy.html">ServiceWorkerCacheStrategy</a></dt>
@@ -861,29 +1085,34 @@ Subset of commonly used keys across all platforms.</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Agibuild.Fulora.WebAuthStatus.html">WebAuthStatus</a></dt>
-      <dd><p>Result status for a web authentication operation.</p>
+      <dt><a class="xref" href="Agibuild.Fulora.TransparencyLevel.html">TransparencyLevel</a></dt>
+      <dd><p>Platform transparency composition levels.</p>
 </dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.UpdateStatus.html">UpdateStatus</a></dt>
+      <dd><p>Status of an auto-update operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Agibuild.Fulora.WebAuthStatus.html">WebAuthStatus</a></dt>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebMessageDropReason.html">WebMessageDropReason</a></dt>
-      <dd><p>Reason why an incoming WebMessage was dropped.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewCommand.html">WebViewCommand</a></dt>
-      <dd><p>Standard editing commands supported by WebView.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewOperationFailureCategory.html">WebViewOperationFailureCategory</a></dt>
-      <dd><p>Categorizes operational failures to enable consistent error handling across adapters.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewPermissionKind.html">WebViewPermissionKind</a></dt>
-      <dd><p>The type of permission being requested by web content.</p>
-</dd>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Agibuild.Fulora.WebViewShortcutActionKind.html">WebViewShortcutActionKind</a></dt>

@@ -17,17 +17,15 @@ items:
   type: Enum
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PermissionState
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 927
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 67
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: The decision for a permission request.
-  example: []
   syntax:
     content: public enum PermissionState
     content.vb: Public Enum PermissionState
@@ -44,17 +42,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Default
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 930
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 69
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Let the platform handle it (show native dialog or apply default policy).
-  example: []
   syntax:
     content: Default = 0
     return:
@@ -72,17 +68,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Allow
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 932
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 70
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Grant the permission.
-  example: []
   syntax:
     content: Allow = 1
     return:
@@ -100,17 +94,15 @@ items:
   type: Field
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewEnums.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Deny
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 934
+    path: ../src/Agibuild.Fulora.Core/WebViewEnums.cs
+    startLine: 71
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Deny the permission.
-  example: []
   syntax:
     content: Deny = 2
     return:

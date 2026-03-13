@@ -23,6 +23,10 @@ items:
   - Agibuild.Fulora.WebView.DisableWebMessageBridge
   - Agibuild.Fulora.WebView.Dispose
   - Agibuild.Fulora.WebView.DownloadRequested
+  - Agibuild.Fulora.WebView.DragEntered
+  - Agibuild.Fulora.WebView.DragLeft
+  - Agibuild.Fulora.WebView.DragOver
+  - Agibuild.Fulora.WebView.DropCompleted
   - Agibuild.Fulora.WebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
   - Agibuild.Fulora.WebView.EnableWebMessageBridge(Agibuild.Fulora.WebMessageBridgeOptions)
   - Agibuild.Fulora.WebView.EnvironmentOptions
@@ -46,6 +50,8 @@ items:
   - Agibuild.Fulora.WebView.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)
   - Agibuild.Fulora.WebView.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs)
   - Agibuild.Fulora.WebView.OpenDevToolsAsync
+  - Agibuild.Fulora.WebView.OverlayContent
+  - Agibuild.Fulora.WebView.OverlayContentProperty
   - Agibuild.Fulora.WebView.PermissionRequested
   - Agibuild.Fulora.WebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
   - Agibuild.Fulora.WebView.RefreshAsync
@@ -96,8 +102,8 @@ items:
     </p>
   example: []
   syntax:
-    content: 'public class WebView : NativeControlHost, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, INamed, IInputElement, IDataTemplateHost, ISetterValue, IWebView, IDisposable'
-    content.vb: Public Class WebView Inherits NativeControlHost Implements INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, INamed, IInputElement, IDataTemplateHost, ISetterValue, IWebView, IDisposable
+    content: 'public class WebView : NativeControlHost, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, INamed, IInputElement, IDataTemplateHost, ISetterValue, ISpaHostingWebView, IWebView, IDisposable'
+    content.vb: Public Class WebView Inherits NativeControlHost Implements INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, INamed, IInputElement, IDataTemplateHost, ISetterValue, ISpaHostingWebView, IWebView, IDisposable
   inheritance:
   - System.Object
   - Avalonia.AvaloniaObject
@@ -120,11 +126,11 @@ items:
   - Avalonia.Controls.ISetLogicalParent
   - Avalonia.Controls.ISetInheritanceParent
   - System.ComponentModel.ISupportInitialize
-  - Avalonia.Styling.IStyleable
   - Avalonia.INamed
   - Avalonia.Input.IInputElement
   - Avalonia.Controls.Templates.IDataTemplateHost
   - Avalonia.Styling.ISetterValue
+  - Agibuild.Fulora.ISpaHostingWebView
   - Agibuild.Fulora.IWebView
   - System.IDisposable
   inheritedMembers:
@@ -135,7 +141,6 @@ items:
   - Avalonia.Controls.Control.ContextMenuProperty
   - Avalonia.Controls.Control.ContextFlyoutProperty
   - Avalonia.Controls.Control.RequestBringIntoViewEvent
-  - Avalonia.Controls.Control.ContextRequestedEvent
   - Avalonia.Controls.Control.LoadedEvent
   - Avalonia.Controls.Control.UnloadedEvent
   - Avalonia.Controls.Control.SizeChangedEvent
@@ -150,13 +155,13 @@ items:
   - Avalonia.Controls.Control.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs)
   - Avalonia.Controls.Control.OnKeyUp(Avalonia.Input.KeyEventArgs)
   - Avalonia.Controls.Control.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)
+  - Avalonia.Controls.Control.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
   - Avalonia.Controls.Control.FocusAdorner
   - Avalonia.Controls.Control.DataTemplates
   - Avalonia.Controls.Control.ContextMenu
   - Avalonia.Controls.Control.ContextFlyout
   - Avalonia.Controls.Control.IsLoaded
   - Avalonia.Controls.Control.Tag
-  - Avalonia.Controls.Control.ContextRequested
   - Avalonia.Controls.Control.Loaded
   - Avalonia.Controls.Control.Unloaded
   - Avalonia.Controls.Control.SizeChanged
@@ -170,7 +175,9 @@ items:
   - Avalonia.Input.InputElement.IsPointerOverProperty
   - Avalonia.Input.InputElement.IsTabStopProperty
   - Avalonia.Input.InputElement.GotFocusEvent
+  - Avalonia.Input.InputElement.GettingFocusEvent
   - Avalonia.Input.InputElement.LostFocusEvent
+  - Avalonia.Input.InputElement.LosingFocusEvent
   - Avalonia.Input.InputElement.KeyDownEvent
   - Avalonia.Input.InputElement.KeyUpEvent
   - Avalonia.Input.InputElement.TabIndexProperty
@@ -183,20 +190,52 @@ items:
   - Avalonia.Input.InputElement.PointerReleasedEvent
   - Avalonia.Input.InputElement.PointerCaptureLostEvent
   - Avalonia.Input.InputElement.PointerWheelChangedEvent
+  - Avalonia.Input.InputElement.ContextRequestedEvent
+  - Avalonia.Input.InputElement.ContextCanceledEvent
+  - Avalonia.Input.InputElement.IsHoldingEnabledProperty
+  - Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+  - Avalonia.Input.InputElement.PinchEvent
+  - Avalonia.Input.InputElement.PinchEndedEvent
+  - Avalonia.Input.InputElement.PullGestureEvent
+  - Avalonia.Input.InputElement.PullGestureEndedEvent
+  - Avalonia.Input.InputElement.SwipeGestureEvent
+  - Avalonia.Input.InputElement.ScrollGestureEvent
+  - Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+  - Avalonia.Input.InputElement.ScrollGestureEndedEvent
+  - Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+  - Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+  - Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
   - Avalonia.Input.InputElement.TappedEvent
+  - Avalonia.Input.InputElement.RightTappedEvent
   - Avalonia.Input.InputElement.HoldingEvent
   - Avalonia.Input.InputElement.DoubleTappedEvent
   - Avalonia.Input.InputElement.Focus(Avalonia.Input.NavigationMethod,Avalonia.Input.KeyModifiers)
   - Avalonia.Input.InputElement.OnAccessKey(Avalonia.Interactivity.RoutedEventArgs)
+  - Avalonia.Input.InputElement.OnGettingFocus(Avalonia.Input.FocusChangingEventArgs)
+  - Avalonia.Input.InputElement.OnLosingFocus(Avalonia.Input.FocusChangingEventArgs)
   - Avalonia.Input.InputElement.OnKeyDown(Avalonia.Input.KeyEventArgs)
   - Avalonia.Input.InputElement.OnTextInput(Avalonia.Input.TextInputEventArgs)
   - Avalonia.Input.InputElement.OnPointerEntered(Avalonia.Input.PointerEventArgs)
   - Avalonia.Input.InputElement.OnPointerExited(Avalonia.Input.PointerEventArgs)
   - Avalonia.Input.InputElement.OnPointerMoved(Avalonia.Input.PointerEventArgs)
   - Avalonia.Input.InputElement.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs)
+  - Avalonia.Input.InputElement.GetNextTabStopOverride
+  - Avalonia.Input.InputElement.GetPreviousTabStopOverride
+  - Avalonia.Input.InputElement.GetFirstFocusableElementOverride
+  - Avalonia.Input.InputElement.GetLastFocusableElementOverride
   - Avalonia.Input.InputElement.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs)
+  - Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,System.Boolean,Avalonia.Input.IInputElement@)
+  - Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,Avalonia.Input.IInputElement@)
   - Avalonia.Input.InputElement.OnPointerWheelChanged(Avalonia.Input.PointerWheelEventArgs)
+  - Avalonia.Input.InputElement.OnTapped(Avalonia.Input.TappedEventArgs)
+  - Avalonia.Input.InputElement.OnRightTapped(Avalonia.Input.TappedEventArgs)
+  - Avalonia.Input.InputElement.OnDoubleTapped(Avalonia.Input.TappedEventArgs)
+  - Avalonia.Input.InputElement.OnHolding(Avalonia.Input.HoldingRoutedEventArgs)
   - Avalonia.Input.InputElement.UpdateIsEffectivelyEnabled
+  - Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  - Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+  - Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  - Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
   - Avalonia.Input.InputElement.Focusable
   - Avalonia.Input.InputElement.IsEnabled
   - Avalonia.Input.InputElement.Cursor
@@ -211,7 +250,9 @@ items:
   - Avalonia.Input.InputElement.IsEnabledCore
   - Avalonia.Input.InputElement.GestureRecognizers
   - Avalonia.Input.InputElement.GotFocus
+  - Avalonia.Input.InputElement.GettingFocus
   - Avalonia.Input.InputElement.LostFocus
+  - Avalonia.Input.InputElement.LosingFocus
   - Avalonia.Input.InputElement.KeyDown
   - Avalonia.Input.InputElement.KeyUp
   - Avalonia.Input.InputElement.TextInput
@@ -223,7 +264,21 @@ items:
   - Avalonia.Input.InputElement.PointerReleased
   - Avalonia.Input.InputElement.PointerCaptureLost
   - Avalonia.Input.InputElement.PointerWheelChanged
+  - Avalonia.Input.InputElement.ContextRequested
+  - Avalonia.Input.InputElement.ContextCanceled
+  - Avalonia.Input.InputElement.Pinch
+  - Avalonia.Input.InputElement.PinchEnded
+  - Avalonia.Input.InputElement.PullGesture
+  - Avalonia.Input.InputElement.PullGestureEnded
+  - Avalonia.Input.InputElement.ScrollGesture
+  - Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+  - Avalonia.Input.InputElement.ScrollGestureEnded
+  - Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+  - Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+  - Avalonia.Input.InputElement.SwipeGesture
+  - Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
   - Avalonia.Input.InputElement.Tapped
+  - Avalonia.Input.InputElement.RightTapped
   - Avalonia.Input.InputElement.Holding
   - Avalonia.Input.InputElement.DoubleTapped
   - Avalonia.Interactivity.Interactive.AddHandler(Avalonia.Interactivity.RoutedEvent,System.Delegate,Avalonia.Interactivity.RoutingStrategies,System.Boolean)
@@ -278,6 +333,7 @@ items:
   - Avalonia.Visual.IsVisibleProperty
   - Avalonia.Visual.OpacityProperty
   - Avalonia.Visual.OpacityMaskProperty
+  - Avalonia.Visual.CacheModeProperty
   - Avalonia.Visual.EffectProperty
   - Avalonia.Visual.HasMirrorTransformProperty
   - Avalonia.Visual.RenderTransformProperty
@@ -299,6 +355,7 @@ items:
   - Avalonia.Visual.IsVisible
   - Avalonia.Visual.Opacity
   - Avalonia.Visual.OpacityMask
+  - Avalonia.Visual.CacheMode
   - Avalonia.Visual.Effect
   - Avalonia.Visual.HasMirrorTransform
   - Avalonia.Visual.RenderTransform
@@ -368,7 +425,7 @@ items:
   - Avalonia.AvaloniaObject.SetValue``1(Avalonia.DirectPropertyBase{{T}},{T})
   - Avalonia.AvaloniaObject.SetCurrentValue(Avalonia.AvaloniaProperty,System.Object)
   - Avalonia.AvaloniaObject.SetCurrentValue``1(Avalonia.StyledProperty{{T}},{T})
-  - Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+  - Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
   - Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,System.IObservable{System.Object},Avalonia.Data.BindingPriority)
   - Avalonia.AvaloniaObject.Bind``1(Avalonia.StyledProperty{{T}},System.IObservable{System.Object},Avalonia.Data.BindingPriority)
   - Avalonia.AvaloniaObject.Bind``1(Avalonia.StyledProperty{{T}},System.IObservable{{T}},Avalonia.Data.BindingPriority)
@@ -377,18 +434,21 @@ items:
   - Avalonia.AvaloniaObject.Bind``1(Avalonia.DirectPropertyBase{{T}},System.IObservable{{T}})
   - Avalonia.AvaloniaObject.Bind``1(Avalonia.DirectPropertyBase{{T}},System.IObservable{Avalonia.Data.BindingValue{{T}}})
   - Avalonia.AvaloniaObject.CoerceValue(Avalonia.AvaloniaProperty)
-  - Avalonia.AvaloniaObject.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
   - Avalonia.AvaloniaObject.RaisePropertyChanged``1(Avalonia.DirectPropertyBase{{T}},{T},{T})
   - Avalonia.AvaloniaObject.SetAndRaise``1(Avalonia.DirectPropertyBase{{T}},{T}@,{T})
   - Avalonia.AvaloniaObject.InheritanceParent
   - Avalonia.AvaloniaObject.Item(Avalonia.AvaloniaProperty)
   - Avalonia.AvaloniaObject.Item(Avalonia.Data.IndexerDescriptor)
+  - Avalonia.AvaloniaObject.Dispatcher
   - Avalonia.AvaloniaObject.PropertyChanged
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.GetType
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
+  extensionMethods:
+  - Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  - Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
 - uid: Agibuild.Fulora.WebView.SourceProperty
   commentId: F:Agibuild.Fulora.WebView.SourceProperty
   id: SourceProperty
@@ -534,6 +594,38 @@ items:
     return:
       type: Avalonia.StyledProperty{System.Double}
     content.vb: Public Shared ReadOnly ZoomFactorProperty As StyledProperty(Of Double)
+- uid: Agibuild.Fulora.WebView.OverlayContentProperty
+  commentId: F:Agibuild.Fulora.WebView.OverlayContentProperty
+  id: OverlayContentProperty
+  parent: Agibuild.Fulora.WebView
+  langs:
+  - csharp
+  - vb
+  name: OverlayContentProperty
+  nameWithType: WebView.OverlayContentProperty
+  fullName: Agibuild.Fulora.WebView.OverlayContentProperty
+  type: Field
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebView.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: OverlayContentProperty
+    path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
+    startLine: 58
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: >-
+    Styled property backing <xref href="Agibuild.Fulora.WebView.OverlayContent" data-throw-if-not-resolved="false"></xref>.
+
+    When set, creates a companion overlay for rendering Avalonia controls above the WebView.
+  example: []
+  syntax:
+    content: public static readonly StyledProperty<object?> OverlayContentProperty
+    return:
+      type: Avalonia.StyledProperty{System.Object}
+    content.vb: Public Shared ReadOnly OverlayContentProperty As StyledProperty(Of Object)
 - uid: Agibuild.Fulora.WebView.LoggerFactory
   commentId: P:Agibuild.Fulora.WebView.LoggerFactory
   id: LoggerFactory
@@ -552,7 +644,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: LoggerFactory
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 85
+    startLine: 100
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -588,7 +680,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnvironmentOptions
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 96
+    startLine: 111
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -624,7 +716,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Source
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 101
+    startLine: 116
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -655,11 +747,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanGoBack
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 115
+    startLine: 130
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets whether the WebView can navigate back in history.
   example: []
   syntax:
     content: public bool CanGoBack { get; }
@@ -688,11 +779,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CanGoForward
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 118
+    startLine: 133
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets whether the WebView can navigate forward in history.
   example: []
   syntax:
     content: public bool CanGoForward { get; }
@@ -721,7 +811,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsLoading
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 123
+    startLine: 138
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -754,7 +844,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsAvailable
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 129
+    startLine: 144
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -788,7 +878,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ChannelId
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 135
+    startLine: 150
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -824,7 +914,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ZoomFactor
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 141
+    startLine: 156
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -840,6 +930,42 @@ items:
       type: System.Double
     content.vb: Public Property ZoomFactor As Double
   overload: Agibuild.Fulora.WebView.ZoomFactor*
+- uid: Agibuild.Fulora.WebView.OverlayContent
+  commentId: P:Agibuild.Fulora.WebView.OverlayContent
+  id: OverlayContent
+  parent: Agibuild.Fulora.WebView
+  langs:
+  - csharp
+  - vb
+  name: OverlayContent
+  nameWithType: WebView.OverlayContent
+  fullName: Agibuild.Fulora.WebView.OverlayContent
+  type: Property
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebView.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: OverlayContent
+    path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
+    startLine: 167
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: >-
+    Gets or sets the overlay content for rendering Avalonia controls above the WebView.
+
+    When set, a companion overlay host is created; when cleared, it is disposed.
+
+    Bindable via <xref href="Agibuild.Fulora.WebView.OverlayContentProperty" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public object? OverlayContent { get; set; }
+    parameters: []
+    return:
+      type: System.Object
+    content.vb: Public Property OverlayContent As Object
+  overload: Agibuild.Fulora.WebView.OverlayContent*
 - uid: Agibuild.Fulora.WebView.GetZoomFactorAsync
   commentId: M:Agibuild.Fulora.WebView.GetZoomFactorAsync
   id: GetZoomFactorAsync
@@ -858,11 +984,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetZoomFactorAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 148
+    startLine: 174
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Gets or sets the zoom factor. 1.0 = 100%. Returns 1.0 if zoom is not supported.
   example: []
   syntax:
     content: public Task<double> GetZoomFactorAsync()
@@ -890,18 +1015,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SetZoomFactorAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 156
+    startLine: 182
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Sets the zoom factor. 1.0 = 100%.
   example: []
   syntax:
     content: public Task SetZoomFactorAsync(double zoomFactor)
     parameters:
     - id: zoomFactor
       type: System.Double
-      description: The zoom factor to set.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function SetZoomFactorAsync(zoomFactor As Double) As Task
@@ -929,7 +1052,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ZoomFactorChanged
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 164
+    startLine: 190
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -958,18 +1081,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 169
+    startLine: 195
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Navigates to the specified URI.
   example: []
   syntax:
     content: public Task NavigateAsync(Uri uri)
     parameters:
     - id: uri
       type: System.Uri
-      description: The target URI.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function NavigateAsync(uri As Uri) As Task
@@ -994,18 +1115,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateToStringAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 177
+    startLine: 203
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Navigates to a string of HTML.
   example: []
   syntax:
     content: public Task NavigateToStringAsync(string html)
     parameters:
     - id: html
       type: System.String
-      description: The HTML content.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function NavigateToStringAsync(html As String) As Task
@@ -1033,21 +1152,18 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigateToStringAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 185
+    startLine: 211
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Navigates to a string of HTML with an optional base URL.
   example: []
   syntax:
     content: public Task NavigateToStringAsync(string html, Uri? baseUrl)
     parameters:
     - id: html
       type: System.String
-      description: The HTML content.
     - id: baseUrl
       type: System.Uri
-      description: Optional base URI for relative URL resolution.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Public Function NavigateToStringAsync(html As String, baseUrl As Uri) As Task
@@ -1075,7 +1191,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCookieManager
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 195
+    startLine: 221
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1107,7 +1223,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetCommandManager
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 203
+    startLine: 229
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1139,7 +1255,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Rpc
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 212
+    startLine: 238
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1175,7 +1291,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: BridgeTracer
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 218
+    startLine: 244
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1211,7 +1327,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Bridge
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 238
+    startLine: 264
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1253,7 +1369,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OpenDevToolsAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 251
+    startLine: 277
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1288,7 +1404,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CloseDevToolsAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 261
+    startLine: 287
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1323,7 +1439,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsDevToolsOpenAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 271
+    startLine: 297
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1358,7 +1474,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CaptureScreenshotAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 281
+    startLine: 307
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1393,7 +1509,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PrintToPdfAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 292
+    startLine: 318
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1434,7 +1550,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: FindInPageAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 302
+    startLine: 328
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1474,7 +1590,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: StopFindInPageAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 312
+    startLine: 338
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1512,7 +1628,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AddPreloadScriptAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 322
+    startLine: 348
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1550,7 +1666,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RemovePreloadScriptAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 332
+    startLine: 358
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1588,7 +1704,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ContextMenuRequested
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 343
+    startLine: 369
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1604,6 +1720,122 @@ items:
     content.vb: Public Event ContextMenuRequested As EventHandler(Of ContextMenuRequestedEventArgs)
   implements:
   - Agibuild.Fulora.IWebView.ContextMenuRequested
+- uid: Agibuild.Fulora.WebView.DragEntered
+  commentId: E:Agibuild.Fulora.WebView.DragEntered
+  id: DragEntered
+  parent: Agibuild.Fulora.WebView
+  langs:
+  - csharp
+  - vb
+  name: DragEntered
+  nameWithType: WebView.DragEntered
+  fullName: Agibuild.Fulora.WebView.DragEntered
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebView.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DragEntered
+    path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
+    startLine: 390
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Raised when a drag operation enters the WebView bounds.
+  example: []
+  syntax:
+    content: public event EventHandler<DragEventArgs>? DragEntered
+    return:
+      type: System.EventHandler{Agibuild.Fulora.DragEventArgs}
+    content.vb: Public Event DragEntered As EventHandler(Of DragEventArgs)
+- uid: Agibuild.Fulora.WebView.DragOver
+  commentId: E:Agibuild.Fulora.WebView.DragOver
+  id: DragOver
+  parent: Agibuild.Fulora.WebView
+  langs:
+  - csharp
+  - vb
+  name: DragOver
+  nameWithType: WebView.DragOver
+  fullName: Agibuild.Fulora.WebView.DragOver
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebView.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DragOver
+    path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
+    startLine: 411
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Raised when a drag operation moves over the WebView.
+  example: []
+  syntax:
+    content: public event EventHandler<DragEventArgs>? DragOver
+    return:
+      type: System.EventHandler{Agibuild.Fulora.DragEventArgs}
+    content.vb: Public Event DragOver As EventHandler(Of DragEventArgs)
+- uid: Agibuild.Fulora.WebView.DragLeft
+  commentId: E:Agibuild.Fulora.WebView.DragLeft
+  id: DragLeft
+  parent: Agibuild.Fulora.WebView
+  langs:
+  - csharp
+  - vb
+  name: DragLeft
+  nameWithType: WebView.DragLeft
+  fullName: Agibuild.Fulora.WebView.DragLeft
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebView.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DragLeft
+    path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
+    startLine: 432
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Raised when a drag operation leaves the WebView bounds.
+  example: []
+  syntax:
+    content: public event EventHandler<EventArgs>? DragLeft
+    return:
+      type: System.EventHandler{System.EventArgs}
+    content.vb: Public Event DragLeft As EventHandler(Of EventArgs)
+- uid: Agibuild.Fulora.WebView.DropCompleted
+  commentId: E:Agibuild.Fulora.WebView.DropCompleted
+  id: DropCompleted
+  parent: Agibuild.Fulora.WebView
+  langs:
+  - csharp
+  - vb
+  name: DropCompleted
+  nameWithType: WebView.DropCompleted
+  fullName: Agibuild.Fulora.WebView.DropCompleted
+  type: Event
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Avalonia/WebView.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: DropCompleted
+    path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
+    startLine: 453
+  assemblies:
+  - Agibuild.Fulora
+  namespace: Agibuild.Fulora
+  summary: Raised when a drop operation completes on the WebView.
+  example: []
+  syntax:
+    content: public event EventHandler<DropEventArgs>? DropCompleted
+    return:
+      type: System.EventHandler{Agibuild.Fulora.DropEventArgs}
+    content.vb: Public Event DropCompleted As EventHandler(Of DropEventArgs)
 - uid: Agibuild.Fulora.WebView.TryGetWebViewHandle
   commentId: M:Agibuild.Fulora.WebView.TryGetWebViewHandle
   id: TryGetWebViewHandle
@@ -1622,7 +1854,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetWebViewHandle
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 366
+    startLine: 476
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1652,7 +1884,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: TryGetWebViewHandleAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 374
+    startLine: 484
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1684,7 +1916,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SetCustomUserAgent
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 388
+    startLine: 498
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1721,7 +1953,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnableWebMessageBridge
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 398
+    startLine: 508
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1757,7 +1989,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DisableWebMessageBridge
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 409
+    startLine: 519
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1788,7 +2020,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnableSpaHosting
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 419
+    startLine: 529
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -1804,6 +2036,8 @@ items:
       type: Agibuild.Fulora.SpaHostingOptions
     content.vb: Public Sub EnableSpaHosting(options As SpaHostingOptions)
   overload: Agibuild.Fulora.WebView.EnableSpaHosting*
+  implements:
+  - Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
 - uid: Agibuild.Fulora.WebView.InvokeScriptAsync(System.String)
   commentId: M:Agibuild.Fulora.WebView.InvokeScriptAsync(System.String)
   id: InvokeScriptAsync(System.String)
@@ -1822,18 +2056,16 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: InvokeScriptAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 427
+    startLine: 537
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Executes JavaScript in the context of the current document.
   example: []
   syntax:
     content: public Task<string?> InvokeScriptAsync(string script)
     parameters:
     - id: script
       type: System.String
-      description: The JavaScript source.
     return:
       type: System.Threading.Tasks.Task{System.String}
     content.vb: Public Function InvokeScriptAsync(script As String) As Task(Of String)
@@ -1861,11 +2093,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GoBackAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 435
+    startLine: 545
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Attempts to navigate back.
   example: []
   syntax:
     content: public Task<bool> GoBackAsync()
@@ -1893,11 +2124,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GoForwardAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 442
+    startLine: 552
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Attempts to navigate forward.
   example: []
   syntax:
     content: public Task<bool> GoForwardAsync()
@@ -1925,11 +2155,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: RefreshAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 449
+    startLine: 559
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Reloads the current page.
   example: []
   syntax:
     content: public Task<bool> RefreshAsync()
@@ -1957,11 +2186,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: StopAsync
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 456
+    startLine: 566
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Stops an active navigation, if any.
   example: []
   syntax:
     content: public Task<bool> StopAsync()
@@ -1989,11 +2217,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationStarted
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 465
+    startLine: 575
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a navigation starts. Handlers may cancel the navigation.
   example: []
   syntax:
     content: public event EventHandler<NavigationStartingEventArgs>? NavigationStarted
@@ -2020,11 +2247,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NavigationCompleted
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 467
+    startLine: 577
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a navigation completes (success, failure, canceled, superseded).
   example: []
   syntax:
     content: public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted
@@ -2051,11 +2277,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: NewWindowRequested
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 469
+    startLine: 579
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when content requests opening a new window.
   example: []
   syntax:
     content: public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested
@@ -2082,11 +2307,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebMessageReceived
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 471
+    startLine: 581
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a WebMessage is received from the page.
   example: []
   syntax:
     content: public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived
@@ -2113,11 +2337,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebResourceRequested
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 473
+    startLine: 583
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a custom-scheme request is intercepted.
   example: []
   syntax:
     content: public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested
@@ -2144,11 +2367,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: EnvironmentRequested
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 475
+    startLine: 585
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when the environment is requested (placeholder).
   example: []
   syntax:
     content: public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested
@@ -2175,11 +2397,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DownloadRequested
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 477
+    startLine: 587
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when a file download is initiated. The handler can set <code>DownloadPath</code> or <code>Cancel</code>.
   example: []
   syntax:
     content: public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested
@@ -2206,11 +2427,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PermissionRequested
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 479
+    startLine: 589
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised when web content requests a permission (camera, mic, geolocation, etc.).
   example: []
   syntax:
     content: public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested
@@ -2237,11 +2457,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterCreated
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 481
+    startLine: 591
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised after the native adapter is attached and ready. The event args carry the typed platform handle.
   example: []
   syntax:
     content: public event EventHandler<AdapterCreatedEventArgs>? AdapterCreated
@@ -2268,11 +2487,10 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterDestroyed
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 483
+    startLine: 593
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
-  summary: Raised before the native adapter is detached/destroyed. After this event, <xref href="Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle" data-throw-if-not-resolved="false"></xref> returns <code>null</code>.
   example: []
   syntax:
     content: public event EventHandler? AdapterDestroyed
@@ -2299,7 +2517,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnAttachedToVisualTree
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 492
+    startLine: 602
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -2331,7 +2549,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnDetachedFromVisualTree
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 501
+    startLine: 612
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -2363,7 +2581,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: CreateNativeControlCore
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 510
+    startLine: 622
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -2397,7 +2615,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DestroyNativeControlCore
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 565
+    startLine: 677
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -2429,7 +2647,7 @@ items:
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Dispose
     path: ../src/Agibuild.Fulora.Avalonia/WebView.cs
-    startLine: 740
+    startLine: 907
   assemblies:
   - Agibuild.Fulora
   namespace: Agibuild.Fulora
@@ -2610,13 +2828,6 @@ references:
   name: ISupportInitialize
   nameWithType: ISupportInitialize
   fullName: System.ComponentModel.ISupportInitialize
-- uid: Avalonia.Styling.IStyleable
-  commentId: T:Avalonia.Styling.IStyleable
-  parent: Avalonia.Styling
-  isExternal: true
-  name: IStyleable
-  nameWithType: IStyleable
-  fullName: Avalonia.Styling.IStyleable
 - uid: Avalonia.INamed
   commentId: T:Avalonia.INamed
   parent: Avalonia
@@ -2645,6 +2856,13 @@ references:
   name: ISetterValue
   nameWithType: ISetterValue
   fullName: Avalonia.Styling.ISetterValue
+- uid: Agibuild.Fulora.ISpaHostingWebView
+  commentId: T:Agibuild.Fulora.ISpaHostingWebView
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.ISpaHostingWebView.html
+  name: ISpaHostingWebView
+  nameWithType: ISpaHostingWebView
+  fullName: Agibuild.Fulora.ISpaHostingWebView
 - uid: Agibuild.Fulora.IWebView
   commentId: T:Agibuild.Fulora.IWebView
   parent: Agibuild.Fulora
@@ -2733,13 +2951,6 @@ references:
   name: RequestBringIntoViewEvent
   nameWithType: Control.RequestBringIntoViewEvent
   fullName: Avalonia.Controls.Control.RequestBringIntoViewEvent
-- uid: Avalonia.Controls.Control.ContextRequestedEvent
-  commentId: F:Avalonia.Controls.Control.ContextRequestedEvent
-  parent: Avalonia.Controls.Control
-  isExternal: true
-  name: ContextRequestedEvent
-  nameWithType: Control.ContextRequestedEvent
-  fullName: Avalonia.Controls.Control.ContextRequestedEvent
 - uid: Avalonia.Controls.Control.LoadedEvent
   commentId: F:Avalonia.Controls.Control.LoadedEvent
   parent: Avalonia.Controls.Control
@@ -3030,6 +3241,54 @@ references:
     name: AvaloniaPropertyChangedEventArgs
     isExternal: true
   - name: )
+- uid: Avalonia.Controls.Control.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
+  commentId: M:Avalonia.Controls.Control.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
+  parent: Avalonia.Controls.Control
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.exception
+  name: UpdateDataValidation(AvaloniaProperty, BindingValueType, Exception)
+  nameWithType: Control.UpdateDataValidation(AvaloniaProperty, BindingValueType, Exception)
+  fullName: Avalonia.Controls.Control.UpdateDataValidation(Avalonia.AvaloniaProperty, Avalonia.Data.BindingValueType, System.Exception)
+  spec.csharp:
+  - uid: Avalonia.Controls.Control.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
+    name: UpdateDataValidation
+    isExternal: true
+  - name: (
+  - uid: Avalonia.AvaloniaProperty
+    name: AvaloniaProperty
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Data.BindingValueType
+    name: BindingValueType
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Controls.Control.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
+    name: UpdateDataValidation
+    isExternal: true
+  - name: (
+  - uid: Avalonia.AvaloniaProperty
+    name: AvaloniaProperty
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Data.BindingValueType
+    name: BindingValueType
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: )
 - uid: Avalonia.Controls.Control.FocusAdorner
   commentId: P:Avalonia.Controls.Control.FocusAdorner
   parent: Avalonia.Controls.Control
@@ -3072,13 +3331,6 @@ references:
   name: Tag
   nameWithType: Control.Tag
   fullName: Avalonia.Controls.Control.Tag
-- uid: Avalonia.Controls.Control.ContextRequested
-  commentId: E:Avalonia.Controls.Control.ContextRequested
-  parent: Avalonia.Controls.Control
-  isExternal: true
-  name: ContextRequested
-  nameWithType: Control.ContextRequested
-  fullName: Avalonia.Controls.Control.ContextRequested
 - uid: Avalonia.Controls.Control.Loaded
   commentId: E:Avalonia.Controls.Control.Loaded
   parent: Avalonia.Controls.Control
@@ -3170,6 +3422,13 @@ references:
   name: GotFocusEvent
   nameWithType: InputElement.GotFocusEvent
   fullName: Avalonia.Input.InputElement.GotFocusEvent
+- uid: Avalonia.Input.InputElement.GettingFocusEvent
+  commentId: F:Avalonia.Input.InputElement.GettingFocusEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GettingFocusEvent
+  nameWithType: InputElement.GettingFocusEvent
+  fullName: Avalonia.Input.InputElement.GettingFocusEvent
 - uid: Avalonia.Input.InputElement.LostFocusEvent
   commentId: F:Avalonia.Input.InputElement.LostFocusEvent
   parent: Avalonia.Input.InputElement
@@ -3177,6 +3436,13 @@ references:
   name: LostFocusEvent
   nameWithType: InputElement.LostFocusEvent
   fullName: Avalonia.Input.InputElement.LostFocusEvent
+- uid: Avalonia.Input.InputElement.LosingFocusEvent
+  commentId: F:Avalonia.Input.InputElement.LosingFocusEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: LosingFocusEvent
+  nameWithType: InputElement.LosingFocusEvent
+  fullName: Avalonia.Input.InputElement.LosingFocusEvent
 - uid: Avalonia.Input.InputElement.KeyDownEvent
   commentId: F:Avalonia.Input.InputElement.KeyDownEvent
   parent: Avalonia.Input.InputElement
@@ -3261,6 +3527,111 @@ references:
   name: PointerWheelChangedEvent
   nameWithType: InputElement.PointerWheelChangedEvent
   fullName: Avalonia.Input.InputElement.PointerWheelChangedEvent
+- uid: Avalonia.Input.InputElement.ContextRequestedEvent
+  commentId: F:Avalonia.Input.InputElement.ContextRequestedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextRequestedEvent
+  nameWithType: InputElement.ContextRequestedEvent
+  fullName: Avalonia.Input.InputElement.ContextRequestedEvent
+- uid: Avalonia.Input.InputElement.ContextCanceledEvent
+  commentId: F:Avalonia.Input.InputElement.ContextCanceledEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextCanceledEvent
+  nameWithType: InputElement.ContextCanceledEvent
+  fullName: Avalonia.Input.InputElement.ContextCanceledEvent
+- uid: Avalonia.Input.InputElement.IsHoldingEnabledProperty
+  commentId: F:Avalonia.Input.InputElement.IsHoldingEnabledProperty
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: IsHoldingEnabledProperty
+  nameWithType: InputElement.IsHoldingEnabledProperty
+  fullName: Avalonia.Input.InputElement.IsHoldingEnabledProperty
+- uid: Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+  commentId: F:Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: IsHoldWithMouseEnabledProperty
+  nameWithType: InputElement.IsHoldWithMouseEnabledProperty
+  fullName: Avalonia.Input.InputElement.IsHoldWithMouseEnabledProperty
+- uid: Avalonia.Input.InputElement.PinchEvent
+  commentId: F:Avalonia.Input.InputElement.PinchEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PinchEvent
+  nameWithType: InputElement.PinchEvent
+  fullName: Avalonia.Input.InputElement.PinchEvent
+- uid: Avalonia.Input.InputElement.PinchEndedEvent
+  commentId: F:Avalonia.Input.InputElement.PinchEndedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PinchEndedEvent
+  nameWithType: InputElement.PinchEndedEvent
+  fullName: Avalonia.Input.InputElement.PinchEndedEvent
+- uid: Avalonia.Input.InputElement.PullGestureEvent
+  commentId: F:Avalonia.Input.InputElement.PullGestureEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGestureEvent
+  nameWithType: InputElement.PullGestureEvent
+  fullName: Avalonia.Input.InputElement.PullGestureEvent
+- uid: Avalonia.Input.InputElement.PullGestureEndedEvent
+  commentId: F:Avalonia.Input.InputElement.PullGestureEndedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGestureEndedEvent
+  nameWithType: InputElement.PullGestureEndedEvent
+  fullName: Avalonia.Input.InputElement.PullGestureEndedEvent
+- uid: Avalonia.Input.InputElement.SwipeGestureEvent
+  commentId: F:Avalonia.Input.InputElement.SwipeGestureEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: SwipeGestureEvent
+  nameWithType: InputElement.SwipeGestureEvent
+  fullName: Avalonia.Input.InputElement.SwipeGestureEvent
+- uid: Avalonia.Input.InputElement.ScrollGestureEvent
+  commentId: F:Avalonia.Input.InputElement.ScrollGestureEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureEvent
+  nameWithType: InputElement.ScrollGestureEvent
+  fullName: Avalonia.Input.InputElement.ScrollGestureEvent
+- uid: Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+  commentId: F:Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureInertiaStartingEvent
+  nameWithType: InputElement.ScrollGestureInertiaStartingEvent
+  fullName: Avalonia.Input.InputElement.ScrollGestureInertiaStartingEvent
+- uid: Avalonia.Input.InputElement.ScrollGestureEndedEvent
+  commentId: F:Avalonia.Input.InputElement.ScrollGestureEndedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureEndedEvent
+  nameWithType: InputElement.ScrollGestureEndedEvent
+  fullName: Avalonia.Input.InputElement.ScrollGestureEndedEvent
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+  commentId: F:Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureMagnifyEvent
+  nameWithType: InputElement.PointerTouchPadGestureMagnifyEvent
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureMagnifyEvent
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+  commentId: F:Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureRotateEvent
+  nameWithType: InputElement.PointerTouchPadGestureRotateEvent
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureRotateEvent
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
+  commentId: F:Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureSwipeEvent
+  nameWithType: InputElement.PointerTouchPadGestureSwipeEvent
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureSwipeEvent
 - uid: Avalonia.Input.InputElement.TappedEvent
   commentId: F:Avalonia.Input.InputElement.TappedEvent
   parent: Avalonia.Input.InputElement
@@ -3268,6 +3639,13 @@ references:
   name: TappedEvent
   nameWithType: InputElement.TappedEvent
   fullName: Avalonia.Input.InputElement.TappedEvent
+- uid: Avalonia.Input.InputElement.RightTappedEvent
+  commentId: F:Avalonia.Input.InputElement.RightTappedEvent
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: RightTappedEvent
+  nameWithType: InputElement.RightTappedEvent
+  fullName: Avalonia.Input.InputElement.RightTappedEvent
 - uid: Avalonia.Input.InputElement.HoldingEvent
   commentId: F:Avalonia.Input.InputElement.HoldingEvent
   parent: Avalonia.Input.InputElement
@@ -3340,6 +3718,56 @@ references:
   - name: (
   - uid: Avalonia.Interactivity.RoutedEventArgs
     name: RoutedEventArgs
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.OnGettingFocus(Avalonia.Input.FocusChangingEventArgs)
+  commentId: M:Avalonia.Input.InputElement.OnGettingFocus(Avalonia.Input.FocusChangingEventArgs)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: OnGettingFocus(FocusChangingEventArgs)
+  nameWithType: InputElement.OnGettingFocus(FocusChangingEventArgs)
+  fullName: Avalonia.Input.InputElement.OnGettingFocus(Avalonia.Input.FocusChangingEventArgs)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.OnGettingFocus(Avalonia.Input.FocusChangingEventArgs)
+    name: OnGettingFocus
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.FocusChangingEventArgs
+    name: FocusChangingEventArgs
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.OnGettingFocus(Avalonia.Input.FocusChangingEventArgs)
+    name: OnGettingFocus
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.FocusChangingEventArgs
+    name: FocusChangingEventArgs
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.OnLosingFocus(Avalonia.Input.FocusChangingEventArgs)
+  commentId: M:Avalonia.Input.InputElement.OnLosingFocus(Avalonia.Input.FocusChangingEventArgs)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: OnLosingFocus(FocusChangingEventArgs)
+  nameWithType: InputElement.OnLosingFocus(FocusChangingEventArgs)
+  fullName: Avalonia.Input.InputElement.OnLosingFocus(Avalonia.Input.FocusChangingEventArgs)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.OnLosingFocus(Avalonia.Input.FocusChangingEventArgs)
+    name: OnLosingFocus
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.FocusChangingEventArgs
+    name: FocusChangingEventArgs
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.OnLosingFocus(Avalonia.Input.FocusChangingEventArgs)
+    name: OnLosingFocus
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.FocusChangingEventArgs
+    name: FocusChangingEventArgs
     isExternal: true
   - name: )
 - uid: Avalonia.Input.InputElement.OnKeyDown(Avalonia.Input.KeyEventArgs)
@@ -3492,6 +3920,82 @@ references:
     name: PointerPressedEventArgs
     isExternal: true
   - name: )
+- uid: Avalonia.Input.InputElement.GetNextTabStopOverride
+  commentId: M:Avalonia.Input.InputElement.GetNextTabStopOverride
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetNextTabStopOverride()
+  nameWithType: InputElement.GetNextTabStopOverride()
+  fullName: Avalonia.Input.InputElement.GetNextTabStopOverride()
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetNextTabStopOverride
+    name: GetNextTabStopOverride
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetNextTabStopOverride
+    name: GetNextTabStopOverride
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Avalonia.Input.InputElement.GetPreviousTabStopOverride
+  commentId: M:Avalonia.Input.InputElement.GetPreviousTabStopOverride
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetPreviousTabStopOverride()
+  nameWithType: InputElement.GetPreviousTabStopOverride()
+  fullName: Avalonia.Input.InputElement.GetPreviousTabStopOverride()
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetPreviousTabStopOverride
+    name: GetPreviousTabStopOverride
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetPreviousTabStopOverride
+    name: GetPreviousTabStopOverride
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Avalonia.Input.InputElement.GetFirstFocusableElementOverride
+  commentId: M:Avalonia.Input.InputElement.GetFirstFocusableElementOverride
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetFirstFocusableElementOverride()
+  nameWithType: InputElement.GetFirstFocusableElementOverride()
+  fullName: Avalonia.Input.InputElement.GetFirstFocusableElementOverride()
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetFirstFocusableElementOverride
+    name: GetFirstFocusableElementOverride
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetFirstFocusableElementOverride
+    name: GetFirstFocusableElementOverride
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Avalonia.Input.InputElement.GetLastFocusableElementOverride
+  commentId: M:Avalonia.Input.InputElement.GetLastFocusableElementOverride
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetLastFocusableElementOverride()
+  nameWithType: InputElement.GetLastFocusableElementOverride()
+  fullName: Avalonia.Input.InputElement.GetLastFocusableElementOverride()
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetLastFocusableElementOverride
+    name: GetLastFocusableElementOverride
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetLastFocusableElementOverride
+    name: GetLastFocusableElementOverride
+    isExternal: true
+  - name: (
+  - name: )
 - uid: Avalonia.Input.InputElement.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs)
   commentId: M:Avalonia.Input.InputElement.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs)
   parent: Avalonia.Input.InputElement
@@ -3515,6 +4019,154 @@ references:
   - name: (
   - uid: Avalonia.Input.PointerCaptureLostEventArgs
     name: PointerCaptureLostEventArgs
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,System.Boolean,Avalonia.Input.IInputElement@)
+  commentId: M:Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,System.Boolean,Avalonia.Input.IInputElement@)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: ProcessTabStopOverride(IInputElement, IInputElement, bool, bool, ref IInputElement)
+  nameWithType: InputElement.ProcessTabStopOverride(IInputElement, IInputElement, bool, bool, ref IInputElement)
+  fullName: Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement, Avalonia.Input.IInputElement, bool, bool, ref Avalonia.Input.IInputElement)
+  nameWithType.vb: InputElement.ProcessTabStopOverride(IInputElement, IInputElement, Boolean, Boolean, IInputElement)
+  fullName.vb: Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement, Avalonia.Input.IInputElement, Boolean, Boolean, Avalonia.Input.IInputElement)
+  name.vb: ProcessTabStopOverride(IInputElement, IInputElement, Boolean, Boolean, IInputElement)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,System.Boolean,Avalonia.Input.IInputElement@)
+    name: ProcessTabStopOverride
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - name: ref
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.ProcessTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,System.Boolean,Avalonia.Input.IInputElement@)
+    name: ProcessTabStopOverride
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,Avalonia.Input.IInputElement@)
+  commentId: M:Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,Avalonia.Input.IInputElement@)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: ProcessCandidateTabStopOverride(IInputElement, IInputElement, IInputElement, bool, ref IInputElement)
+  nameWithType: InputElement.ProcessCandidateTabStopOverride(IInputElement, IInputElement, IInputElement, bool, ref IInputElement)
+  fullName: Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement, Avalonia.Input.IInputElement, Avalonia.Input.IInputElement, bool, ref Avalonia.Input.IInputElement)
+  nameWithType.vb: InputElement.ProcessCandidateTabStopOverride(IInputElement, IInputElement, IInputElement, Boolean, IInputElement)
+  fullName.vb: Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement, Avalonia.Input.IInputElement, Avalonia.Input.IInputElement, Boolean, Avalonia.Input.IInputElement)
+  name.vb: ProcessCandidateTabStopOverride(IInputElement, IInputElement, IInputElement, Boolean, IInputElement)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,Avalonia.Input.IInputElement@)
+    name: ProcessCandidateTabStopOverride
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - name: ref
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.ProcessCandidateTabStopOverride(Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,Avalonia.Input.IInputElement,System.Boolean,Avalonia.Input.IInputElement@)
+    name: ProcessCandidateTabStopOverride
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: Avalonia.Input.IInputElement
+    name: IInputElement
     isExternal: true
   - name: )
 - uid: Avalonia.Input.InputElement.OnPointerWheelChanged(Avalonia.Input.PointerWheelEventArgs)
@@ -3542,6 +4194,106 @@ references:
     name: PointerWheelEventArgs
     isExternal: true
   - name: )
+- uid: Avalonia.Input.InputElement.OnTapped(Avalonia.Input.TappedEventArgs)
+  commentId: M:Avalonia.Input.InputElement.OnTapped(Avalonia.Input.TappedEventArgs)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: OnTapped(TappedEventArgs)
+  nameWithType: InputElement.OnTapped(TappedEventArgs)
+  fullName: Avalonia.Input.InputElement.OnTapped(Avalonia.Input.TappedEventArgs)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.OnTapped(Avalonia.Input.TappedEventArgs)
+    name: OnTapped
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.TappedEventArgs
+    name: TappedEventArgs
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.OnTapped(Avalonia.Input.TappedEventArgs)
+    name: OnTapped
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.TappedEventArgs
+    name: TappedEventArgs
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.OnRightTapped(Avalonia.Input.TappedEventArgs)
+  commentId: M:Avalonia.Input.InputElement.OnRightTapped(Avalonia.Input.TappedEventArgs)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: OnRightTapped(TappedEventArgs)
+  nameWithType: InputElement.OnRightTapped(TappedEventArgs)
+  fullName: Avalonia.Input.InputElement.OnRightTapped(Avalonia.Input.TappedEventArgs)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.OnRightTapped(Avalonia.Input.TappedEventArgs)
+    name: OnRightTapped
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.TappedEventArgs
+    name: TappedEventArgs
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.OnRightTapped(Avalonia.Input.TappedEventArgs)
+    name: OnRightTapped
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.TappedEventArgs
+    name: TappedEventArgs
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.OnDoubleTapped(Avalonia.Input.TappedEventArgs)
+  commentId: M:Avalonia.Input.InputElement.OnDoubleTapped(Avalonia.Input.TappedEventArgs)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: OnDoubleTapped(TappedEventArgs)
+  nameWithType: InputElement.OnDoubleTapped(TappedEventArgs)
+  fullName: Avalonia.Input.InputElement.OnDoubleTapped(Avalonia.Input.TappedEventArgs)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.OnDoubleTapped(Avalonia.Input.TappedEventArgs)
+    name: OnDoubleTapped
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.TappedEventArgs
+    name: TappedEventArgs
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.OnDoubleTapped(Avalonia.Input.TappedEventArgs)
+    name: OnDoubleTapped
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.TappedEventArgs
+    name: TappedEventArgs
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.OnHolding(Avalonia.Input.HoldingRoutedEventArgs)
+  commentId: M:Avalonia.Input.InputElement.OnHolding(Avalonia.Input.HoldingRoutedEventArgs)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: OnHolding(HoldingRoutedEventArgs)
+  nameWithType: InputElement.OnHolding(HoldingRoutedEventArgs)
+  fullName: Avalonia.Input.InputElement.OnHolding(Avalonia.Input.HoldingRoutedEventArgs)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.OnHolding(Avalonia.Input.HoldingRoutedEventArgs)
+    name: OnHolding
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.HoldingRoutedEventArgs
+    name: HoldingRoutedEventArgs
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.OnHolding(Avalonia.Input.HoldingRoutedEventArgs)
+    name: OnHolding
+    isExternal: true
+  - name: (
+  - uid: Avalonia.Input.HoldingRoutedEventArgs
+    name: HoldingRoutedEventArgs
+    isExternal: true
+  - name: )
 - uid: Avalonia.Input.InputElement.UpdateIsEffectivelyEnabled
   commentId: M:Avalonia.Input.InputElement.UpdateIsEffectivelyEnabled
   parent: Avalonia.Input.InputElement
@@ -3560,6 +4312,138 @@ references:
     name: UpdateIsEffectivelyEnabled
     isExternal: true
   - name: (
+  - name: )
+- uid: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  commentId: M:Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetIsHoldingEnabled(StyledElement)
+  nameWithType: InputElement.GetIsHoldingEnabled(StyledElement)
+  fullName: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+    name: GetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetIsHoldingEnabled(Avalonia.StyledElement)
+    name: GetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+  commentId: M:Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: SetIsHoldingEnabled(StyledElement, bool)
+  nameWithType: InputElement.SetIsHoldingEnabled(StyledElement, bool)
+  fullName: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement, bool)
+  nameWithType.vb: InputElement.SetIsHoldingEnabled(StyledElement, Boolean)
+  fullName.vb: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement, Boolean)
+  name.vb: SetIsHoldingEnabled(StyledElement, Boolean)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.SetIsHoldingEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldingEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  commentId: M:Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GetIsHoldWithMouseEnabled(StyledElement)
+  nameWithType: InputElement.GetIsHoldWithMouseEnabled(StyledElement)
+  fullName: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+    name: GetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.GetIsHoldWithMouseEnabled(Avalonia.StyledElement)
+    name: GetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: )
+- uid: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+  commentId: M:Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: SetIsHoldWithMouseEnabled(StyledElement, bool)
+  nameWithType: InputElement.SetIsHoldWithMouseEnabled(StyledElement, bool)
+  fullName: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement, bool)
+  nameWithType.vb: InputElement.SetIsHoldWithMouseEnabled(StyledElement, Boolean)
+  fullName.vb: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement, Boolean)
+  name.vb: SetIsHoldWithMouseEnabled(StyledElement, Boolean)
+  spec.csharp:
+  - uid: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Avalonia.Input.InputElement.SetIsHoldWithMouseEnabled(Avalonia.StyledElement,System.Boolean)
+    name: SetIsHoldWithMouseEnabled
+    isExternal: true
+  - name: (
+  - uid: Avalonia.StyledElement
+    name: StyledElement
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
   - name: )
 - uid: Avalonia.Input.InputElement.Focusable
   commentId: P:Avalonia.Input.InputElement.Focusable
@@ -3659,6 +4543,13 @@ references:
   name: GotFocus
   nameWithType: InputElement.GotFocus
   fullName: Avalonia.Input.InputElement.GotFocus
+- uid: Avalonia.Input.InputElement.GettingFocus
+  commentId: E:Avalonia.Input.InputElement.GettingFocus
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: GettingFocus
+  nameWithType: InputElement.GettingFocus
+  fullName: Avalonia.Input.InputElement.GettingFocus
 - uid: Avalonia.Input.InputElement.LostFocus
   commentId: E:Avalonia.Input.InputElement.LostFocus
   parent: Avalonia.Input.InputElement
@@ -3666,6 +4557,13 @@ references:
   name: LostFocus
   nameWithType: InputElement.LostFocus
   fullName: Avalonia.Input.InputElement.LostFocus
+- uid: Avalonia.Input.InputElement.LosingFocus
+  commentId: E:Avalonia.Input.InputElement.LosingFocus
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: LosingFocus
+  nameWithType: InputElement.LosingFocus
+  fullName: Avalonia.Input.InputElement.LosingFocus
 - uid: Avalonia.Input.InputElement.KeyDown
   commentId: E:Avalonia.Input.InputElement.KeyDown
   parent: Avalonia.Input.InputElement
@@ -3743,6 +4641,97 @@ references:
   name: PointerWheelChanged
   nameWithType: InputElement.PointerWheelChanged
   fullName: Avalonia.Input.InputElement.PointerWheelChanged
+- uid: Avalonia.Input.InputElement.ContextRequested
+  commentId: E:Avalonia.Input.InputElement.ContextRequested
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextRequested
+  nameWithType: InputElement.ContextRequested
+  fullName: Avalonia.Input.InputElement.ContextRequested
+- uid: Avalonia.Input.InputElement.ContextCanceled
+  commentId: E:Avalonia.Input.InputElement.ContextCanceled
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ContextCanceled
+  nameWithType: InputElement.ContextCanceled
+  fullName: Avalonia.Input.InputElement.ContextCanceled
+- uid: Avalonia.Input.InputElement.Pinch
+  commentId: E:Avalonia.Input.InputElement.Pinch
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: Pinch
+  nameWithType: InputElement.Pinch
+  fullName: Avalonia.Input.InputElement.Pinch
+- uid: Avalonia.Input.InputElement.PinchEnded
+  commentId: E:Avalonia.Input.InputElement.PinchEnded
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PinchEnded
+  nameWithType: InputElement.PinchEnded
+  fullName: Avalonia.Input.InputElement.PinchEnded
+- uid: Avalonia.Input.InputElement.PullGesture
+  commentId: E:Avalonia.Input.InputElement.PullGesture
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGesture
+  nameWithType: InputElement.PullGesture
+  fullName: Avalonia.Input.InputElement.PullGesture
+- uid: Avalonia.Input.InputElement.PullGestureEnded
+  commentId: E:Avalonia.Input.InputElement.PullGestureEnded
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PullGestureEnded
+  nameWithType: InputElement.PullGestureEnded
+  fullName: Avalonia.Input.InputElement.PullGestureEnded
+- uid: Avalonia.Input.InputElement.ScrollGesture
+  commentId: E:Avalonia.Input.InputElement.ScrollGesture
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGesture
+  nameWithType: InputElement.ScrollGesture
+  fullName: Avalonia.Input.InputElement.ScrollGesture
+- uid: Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+  commentId: E:Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureInertiaStarting
+  nameWithType: InputElement.ScrollGestureInertiaStarting
+  fullName: Avalonia.Input.InputElement.ScrollGestureInertiaStarting
+- uid: Avalonia.Input.InputElement.ScrollGestureEnded
+  commentId: E:Avalonia.Input.InputElement.ScrollGestureEnded
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: ScrollGestureEnded
+  nameWithType: InputElement.ScrollGestureEnded
+  fullName: Avalonia.Input.InputElement.ScrollGestureEnded
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+  commentId: E:Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureMagnify
+  nameWithType: InputElement.PointerTouchPadGestureMagnify
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureMagnify
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+  commentId: E:Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureRotate
+  nameWithType: InputElement.PointerTouchPadGestureRotate
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureRotate
+- uid: Avalonia.Input.InputElement.SwipeGesture
+  commentId: E:Avalonia.Input.InputElement.SwipeGesture
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: SwipeGesture
+  nameWithType: InputElement.SwipeGesture
+  fullName: Avalonia.Input.InputElement.SwipeGesture
+- uid: Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
+  commentId: E:Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: PointerTouchPadGestureSwipe
+  nameWithType: InputElement.PointerTouchPadGestureSwipe
+  fullName: Avalonia.Input.InputElement.PointerTouchPadGestureSwipe
 - uid: Avalonia.Input.InputElement.Tapped
   commentId: E:Avalonia.Input.InputElement.Tapped
   parent: Avalonia.Input.InputElement
@@ -3750,6 +4739,13 @@ references:
   name: Tapped
   nameWithType: InputElement.Tapped
   fullName: Avalonia.Input.InputElement.Tapped
+- uid: Avalonia.Input.InputElement.RightTapped
+  commentId: E:Avalonia.Input.InputElement.RightTapped
+  parent: Avalonia.Input.InputElement
+  isExternal: true
+  name: RightTapped
+  nameWithType: InputElement.RightTapped
+  fullName: Avalonia.Input.InputElement.RightTapped
 - uid: Avalonia.Input.InputElement.Holding
   commentId: E:Avalonia.Input.InputElement.Holding
   parent: Avalonia.Input.InputElement
@@ -4659,6 +5655,13 @@ references:
   name: OpacityMaskProperty
   nameWithType: Visual.OpacityMaskProperty
   fullName: Avalonia.Visual.OpacityMaskProperty
+- uid: Avalonia.Visual.CacheModeProperty
+  commentId: F:Avalonia.Visual.CacheModeProperty
+  parent: Avalonia.Visual
+  isExternal: true
+  name: CacheModeProperty
+  nameWithType: Visual.CacheModeProperty
+  fullName: Avalonia.Visual.CacheModeProperty
 - uid: Avalonia.Visual.EffectProperty
   commentId: F:Avalonia.Visual.EffectProperty
   parent: Avalonia.Visual
@@ -4967,6 +5970,13 @@ references:
   name: OpacityMask
   nameWithType: Visual.OpacityMask
   fullName: Avalonia.Visual.OpacityMask
+- uid: Avalonia.Visual.CacheMode
+  commentId: P:Avalonia.Visual.CacheMode
+  parent: Avalonia.Visual
+  isExternal: true
+  name: CacheMode
+  nameWithType: Visual.CacheMode
+  fullName: Avalonia.Visual.CacheMode
 - uid: Avalonia.Visual.Effect
   commentId: P:Avalonia.Visual.Effect
   parent: Avalonia.Visual
@@ -6228,15 +7238,15 @@ references:
   - name: " "
   - name: T
   - name: )
-- uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
-  commentId: M:Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+- uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
+  commentId: M:Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
   parent: Avalonia.AvaloniaObject
   isExternal: true
-  name: Bind(AvaloniaProperty, IBinding)
-  nameWithType: AvaloniaObject.Bind(AvaloniaProperty, IBinding)
-  fullName: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty, Avalonia.Data.IBinding)
+  name: Bind(AvaloniaProperty, BindingBase)
+  nameWithType: AvaloniaObject.Bind(AvaloniaProperty, BindingBase)
+  fullName: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty, Avalonia.Data.BindingBase)
   spec.csharp:
-  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
     name: Bind
     isExternal: true
   - name: (
@@ -6245,12 +7255,12 @@ references:
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Avalonia.Data.IBinding
-    name: IBinding
+  - uid: Avalonia.Data.BindingBase
+    name: BindingBase
     isExternal: true
   - name: )
   spec.vb:
-  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.IBinding)
+  - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,Avalonia.Data.BindingBase)
     name: Bind
     isExternal: true
   - name: (
@@ -6259,8 +7269,8 @@ references:
     isExternal: true
   - name: ','
   - name: " "
-  - uid: Avalonia.Data.IBinding
-    name: IBinding
+  - uid: Avalonia.Data.BindingBase
+    name: BindingBase
     isExternal: true
   - name: )
 - uid: Avalonia.AvaloniaObject.Bind(Avalonia.AvaloniaProperty,System.IObservable{System.Object},Avalonia.Data.BindingPriority)
@@ -6809,54 +7819,6 @@ references:
     name: AvaloniaProperty
     isExternal: true
   - name: )
-- uid: Avalonia.AvaloniaObject.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
-  commentId: M:Avalonia.AvaloniaObject.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
-  parent: Avalonia.AvaloniaObject
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.exception
-  name: UpdateDataValidation(AvaloniaProperty, BindingValueType, Exception)
-  nameWithType: AvaloniaObject.UpdateDataValidation(AvaloniaProperty, BindingValueType, Exception)
-  fullName: Avalonia.AvaloniaObject.UpdateDataValidation(Avalonia.AvaloniaProperty, Avalonia.Data.BindingValueType, System.Exception)
-  spec.csharp:
-  - uid: Avalonia.AvaloniaObject.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
-    name: UpdateDataValidation
-    isExternal: true
-  - name: (
-  - uid: Avalonia.AvaloniaProperty
-    name: AvaloniaProperty
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Avalonia.Data.BindingValueType
-    name: BindingValueType
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.Exception
-    name: Exception
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.exception
-  - name: )
-  spec.vb:
-  - uid: Avalonia.AvaloniaObject.UpdateDataValidation(Avalonia.AvaloniaProperty,Avalonia.Data.BindingValueType,System.Exception)
-    name: UpdateDataValidation
-    isExternal: true
-  - name: (
-  - uid: Avalonia.AvaloniaProperty
-    name: AvaloniaProperty
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: Avalonia.Data.BindingValueType
-    name: BindingValueType
-    isExternal: true
-  - name: ','
-  - name: " "
-  - uid: System.Exception
-    name: Exception
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.exception
-  - name: )
 - uid: Avalonia.AvaloniaObject.RaisePropertyChanged``1(Avalonia.DirectPropertyBase{{T}},{T},{T})
   commentId: M:Avalonia.AvaloniaObject.RaisePropertyChanged``1(Avalonia.DirectPropertyBase{``0},``0,``0)
   parent: Avalonia.AvaloniaObject
@@ -7030,6 +7992,13 @@ references:
     name: IndexerDescriptor
     isExternal: true
   - name: )
+- uid: Avalonia.AvaloniaObject.Dispatcher
+  commentId: P:Avalonia.AvaloniaObject.Dispatcher
+  parent: Avalonia.AvaloniaObject
+  isExternal: true
+  name: Dispatcher
+  nameWithType: AvaloniaObject.Dispatcher
+  fullName: Avalonia.AvaloniaObject.Dispatcher
 - uid: Avalonia.AvaloniaObject.PropertyChanged
   commentId: E:Avalonia.AvaloniaObject.PropertyChanged
   parent: Avalonia.AvaloniaObject
@@ -7198,6 +8167,94 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.WebViewBootstrapExtensions
+  definition: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+- uid: Agibuild.Fulora.IWebView.Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.WebViewBootstrapExtensions
+  definition: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapProfileOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
   - name: )
 - uid: System
   commentId: N:System
@@ -8550,6 +9607,99 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+  isExternal: true
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaAsync(IWebView, SpaBootstrapOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapOptions
+    name: SpaBootstrapOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions
+  commentId: T:Agibuild.Fulora.WebViewBootstrapExtensions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html
+  name: WebViewBootstrapExtensions
+  nameWithType: WebViewBootstrapExtensions
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions
+- uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+  isExternal: true
+  href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  name: BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  nameWithType: WebViewBootstrapExtensions.BootstrapSpaProfileAsync(IWebView, SpaBootstrapProfileOptions, CancellationToken)
+  fullName: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView, Agibuild.Fulora.SpaBootstrapProfileOptions, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.WebViewBootstrapExtensions.BootstrapSpaProfileAsync(Agibuild.Fulora.IWebView,Agibuild.Fulora.SpaBootstrapProfileOptions,System.Threading.CancellationToken)
+    name: BootstrapSpaProfileAsync
+    href: Agibuild.Fulora.WebViewBootstrapExtensions.html#Agibuild_Fulora_WebViewBootstrapExtensions_BootstrapSpaProfileAsync_Agibuild_Fulora_IWebView_Agibuild_Fulora_SpaBootstrapProfileOptions_System_Threading_CancellationToken_
+  - name: (
+  - uid: Agibuild.Fulora.IWebView
+    name: IWebView
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.SpaBootstrapProfileOptions
+    name: SpaBootstrapProfileOptions
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
 - uid: Agibuild.Fulora.WebView.Source
   commentId: P:Agibuild.Fulora.WebView.Source
   href: Agibuild.Fulora.WebView.html#Agibuild_Fulora_WebView_Source
@@ -8745,6 +9895,45 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.double
   - name: )
+- uid: Agibuild.Fulora.WebView.OverlayContent
+  commentId: P:Agibuild.Fulora.WebView.OverlayContent
+  href: Agibuild.Fulora.WebView.html#Agibuild_Fulora_WebView_OverlayContent
+  name: OverlayContent
+  nameWithType: WebView.OverlayContent
+  fullName: Agibuild.Fulora.WebView.OverlayContent
+- uid: Avalonia.StyledProperty{System.Object}
+  commentId: T:Avalonia.StyledProperty{System.Object}
+  parent: Avalonia
+  definition: Avalonia.StyledProperty`1
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: StyledProperty<object>
+  nameWithType: StyledProperty<object>
+  fullName: Avalonia.StyledProperty<object>
+  nameWithType.vb: StyledProperty(Of Object)
+  fullName.vb: Avalonia.StyledProperty(Of Object)
+  name.vb: StyledProperty(Of Object)
+  spec.csharp:
+  - uid: Avalonia.StyledProperty`1
+    name: StyledProperty
+    isExternal: true
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: Avalonia.StyledProperty`1
+    name: StyledProperty
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
 - uid: Microsoft.Extensions.Logging.ILoggerFactory
   commentId: T:Microsoft.Extensions.Logging.ILoggerFactory
   parent: Microsoft.Extensions.Logging
@@ -8929,6 +10118,18 @@ references:
   nameWithType.vb: Double
   fullName.vb: Double
   name.vb: Double
+- uid: Agibuild.Fulora.WebView.OverlayContentProperty
+  commentId: F:Agibuild.Fulora.WebView.OverlayContentProperty
+  href: Agibuild.Fulora.WebView.html#Agibuild_Fulora_WebView_OverlayContentProperty
+  name: OverlayContentProperty
+  nameWithType: WebView.OverlayContentProperty
+  fullName: Agibuild.Fulora.WebView.OverlayContentProperty
+- uid: Agibuild.Fulora.WebView.OverlayContent*
+  commentId: Overload:Agibuild.Fulora.WebView.OverlayContent
+  href: Agibuild.Fulora.WebView.html#Agibuild_Fulora_WebView_OverlayContent
+  name: OverlayContent
+  nameWithType: WebView.OverlayContent
+  fullName: Agibuild.Fulora.WebView.OverlayContent
 - uid: Agibuild.Fulora.WebView.GetZoomFactorAsync*
   commentId: Overload:Agibuild.Fulora.WebView.GetZoomFactorAsync
   href: Agibuild.Fulora.WebView.html#Agibuild_Fulora_WebView_GetZoomFactorAsync
@@ -9928,6 +11129,103 @@ references:
     name: ContextMenuRequestedEventArgs
     href: Agibuild.Fulora.ContextMenuRequestedEventArgs.html
   - name: )
+- uid: System.EventHandler{Agibuild.Fulora.DragEventArgs}
+  commentId: T:System.EventHandler{Agibuild.Fulora.DragEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<DragEventArgs>
+  nameWithType: EventHandler<DragEventArgs>
+  fullName: System.EventHandler<Agibuild.Fulora.DragEventArgs>
+  nameWithType.vb: EventHandler(Of DragEventArgs)
+  fullName.vb: System.EventHandler(Of Agibuild.Fulora.DragEventArgs)
+  name.vb: EventHandler(Of DragEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Agibuild.Fulora.DragEventArgs
+    name: DragEventArgs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.DragEventArgs
+    name: DragEventArgs
+  - name: )
+- uid: System.EventHandler{System.EventArgs}
+  commentId: T:System.EventHandler{System.EventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<EventArgs>
+  nameWithType: EventHandler<EventArgs>
+  fullName: System.EventHandler<System.EventArgs>
+  nameWithType.vb: EventHandler(Of EventArgs)
+  fullName.vb: System.EventHandler(Of System.EventArgs)
+  name.vb: EventHandler(Of EventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: System.EventArgs
+    name: EventArgs
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventargs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.EventArgs
+    name: EventArgs
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventargs
+  - name: )
+- uid: System.EventHandler{Agibuild.Fulora.DropEventArgs}
+  commentId: T:System.EventHandler{Agibuild.Fulora.DropEventArgs}
+  parent: System
+  definition: System.EventHandler`1
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  name: EventHandler<DropEventArgs>
+  nameWithType: EventHandler<DropEventArgs>
+  fullName: System.EventHandler<Agibuild.Fulora.DropEventArgs>
+  nameWithType.vb: EventHandler(Of DropEventArgs)
+  fullName.vb: System.EventHandler(Of Agibuild.Fulora.DropEventArgs)
+  name.vb: EventHandler(Of DropEventArgs)
+  spec.csharp:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: <
+  - uid: Agibuild.Fulora.DropEventArgs
+    name: DropEventArgs
+  - name: '>'
+  spec.vb:
+  - uid: System.EventHandler`1
+    name: EventHandler
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.eventhandler-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.DropEventArgs
+    name: DropEventArgs
+  - name: )
 - uid: Agibuild.Fulora.WebView.TryGetWebViewHandle*
   commentId: Overload:Agibuild.Fulora.WebView.TryGetWebViewHandle
   href: Agibuild.Fulora.WebView.html#Agibuild_Fulora_WebView_TryGetWebViewHandle
@@ -10030,6 +11328,26 @@ references:
   name: EnableSpaHosting
   nameWithType: WebView.EnableSpaHosting
   fullName: Agibuild.Fulora.WebView.EnableSpaHosting
+- uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  commentId: M:Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  parent: Agibuild.Fulora.ISpaHostingWebView
+  name: EnableSpaHosting(SpaHostingOptions)
+  nameWithType: ISpaHostingWebView.EnableSpaHosting(SpaHostingOptions)
+  fullName: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  spec.csharp:
+  - uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+    name: EnableSpaHosting
+  - name: (
+  - uid: Agibuild.Fulora.SpaHostingOptions
+    name: SpaHostingOptions
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+    name: EnableSpaHosting
+  - name: (
+  - uid: Agibuild.Fulora.SpaHostingOptions
+    name: SpaHostingOptions
+  - name: )
 - uid: Agibuild.Fulora.SpaHostingOptions
   commentId: T:Agibuild.Fulora.SpaHostingOptions
   parent: Agibuild.Fulora
@@ -10533,24 +11851,6 @@ references:
   - uid: Agibuild.Fulora.AdapterCreatedEventArgs
     name: AdapterCreatedEventArgs
     href: Agibuild.Fulora.AdapterCreatedEventArgs.html
-  - name: )
-- uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-  commentId: M:Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-  href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  name: TryGetWebViewHandle()
-  nameWithType: INativeWebViewHandleProvider.TryGetWebViewHandle()
-  fullName: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle()
-  spec.csharp:
-  - uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-    name: TryGetWebViewHandle
-    href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  - name: (
-  - name: )
-  spec.vb:
-  - uid: Agibuild.Fulora.INativeWebViewHandleProvider.TryGetWebViewHandle
-    name: TryGetWebViewHandle
-    href: Agibuild.Fulora.INativeWebViewHandleProvider.html#Agibuild_Fulora_INativeWebViewHandleProvider_TryGetWebViewHandle
-  - name: (
   - name: )
 - uid: Agibuild.Fulora.IWebView.AdapterDestroyed
   commentId: E:Agibuild.Fulora.IWebView.AdapterDestroyed

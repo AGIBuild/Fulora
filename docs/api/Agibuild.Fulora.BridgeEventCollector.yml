@@ -561,7 +561,6 @@ references:
 - uid: Agibuild.Fulora.IBridgeEventCollector.Capacity
   commentId: P:Agibuild.Fulora.IBridgeEventCollector.Capacity
   parent: Agibuild.Fulora.IBridgeEventCollector
-  href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Capacity
   name: Capacity
   nameWithType: IBridgeEventCollector.Capacity
   fullName: Agibuild.Fulora.IBridgeEventCollector.Capacity
@@ -574,7 +573,6 @@ references:
 - uid: Agibuild.Fulora.IBridgeEventCollector.Count
   commentId: P:Agibuild.Fulora.IBridgeEventCollector.Count
   parent: Agibuild.Fulora.IBridgeEventCollector
-  href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Count
   name: Count
   nameWithType: IBridgeEventCollector.Count
   fullName: Agibuild.Fulora.IBridgeEventCollector.Count
@@ -587,7 +585,6 @@ references:
 - uid: Agibuild.Fulora.IBridgeEventCollector.DroppedCount
   commentId: P:Agibuild.Fulora.IBridgeEventCollector.DroppedCount
   parent: Agibuild.Fulora.IBridgeEventCollector
-  href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_DroppedCount
   name: DroppedCount
   nameWithType: IBridgeEventCollector.DroppedCount
   fullName: Agibuild.Fulora.IBridgeEventCollector.DroppedCount
@@ -611,20 +608,17 @@ references:
 - uid: Agibuild.Fulora.IBridgeEventCollector.GetEvents
   commentId: M:Agibuild.Fulora.IBridgeEventCollector.GetEvents
   parent: Agibuild.Fulora.IBridgeEventCollector
-  href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_GetEvents
   name: GetEvents()
   nameWithType: IBridgeEventCollector.GetEvents()
   fullName: Agibuild.Fulora.IBridgeEventCollector.GetEvents()
   spec.csharp:
   - uid: Agibuild.Fulora.IBridgeEventCollector.GetEvents
     name: GetEvents
-    href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_GetEvents
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IBridgeEventCollector.GetEvents
     name: GetEvents
-    href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_GetEvents
   - name: (
   - name: )
 - uid: System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.BridgeDevToolsEvent}
@@ -734,20 +728,17 @@ references:
 - uid: Agibuild.Fulora.IBridgeEventCollector.Clear
   commentId: M:Agibuild.Fulora.IBridgeEventCollector.Clear
   parent: Agibuild.Fulora.IBridgeEventCollector
-  href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Clear
   name: Clear()
   nameWithType: IBridgeEventCollector.Clear()
   fullName: Agibuild.Fulora.IBridgeEventCollector.Clear()
   spec.csharp:
   - uid: Agibuild.Fulora.IBridgeEventCollector.Clear
     name: Clear
-    href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Clear
   - name: (
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IBridgeEventCollector.Clear
     name: Clear
-    href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Clear
   - name: (
   - name: )
 - uid: Agibuild.Fulora.BridgeEventCollector.Subscribe*
@@ -760,7 +751,7 @@ references:
   commentId: M:Agibuild.Fulora.IBridgeEventCollector.Subscribe(System.Action{Agibuild.Fulora.BridgeDevToolsEvent})
   parent: Agibuild.Fulora.IBridgeEventCollector
   isExternal: true
-  href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Subscribe_System_Action_Agibuild_Fulora_BridgeDevToolsEvent__
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
   name: Subscribe(Action<BridgeDevToolsEvent>)
   nameWithType: IBridgeEventCollector.Subscribe(Action<BridgeDevToolsEvent>)
   fullName: Agibuild.Fulora.IBridgeEventCollector.Subscribe(System.Action<Agibuild.Fulora.BridgeDevToolsEvent>)
@@ -770,7 +761,6 @@ references:
   spec.csharp:
   - uid: Agibuild.Fulora.IBridgeEventCollector.Subscribe(System.Action{Agibuild.Fulora.BridgeDevToolsEvent})
     name: Subscribe
-    href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Subscribe_System_Action_Agibuild_Fulora_BridgeDevToolsEvent__
   - name: (
   - uid: System.Action`1
     name: Action
@@ -779,13 +769,11 @@ references:
   - name: <
   - uid: Agibuild.Fulora.BridgeDevToolsEvent
     name: BridgeDevToolsEvent
-    href: Agibuild.Fulora.BridgeDevToolsEvent.html
   - name: '>'
   - name: )
   spec.vb:
   - uid: Agibuild.Fulora.IBridgeEventCollector.Subscribe(System.Action{Agibuild.Fulora.BridgeDevToolsEvent})
     name: Subscribe
-    href: Agibuild.Fulora.IBridgeEventCollector.html#Agibuild_Fulora_IBridgeEventCollector_Subscribe_System_Action_Agibuild_Fulora_BridgeDevToolsEvent__
   - name: (
   - uid: System.Action`1
     name: Action
@@ -796,7 +784,6 @@ references:
   - name: " "
   - uid: Agibuild.Fulora.BridgeDevToolsEvent
     name: BridgeDevToolsEvent
-    href: Agibuild.Fulora.BridgeDevToolsEvent.html
   - name: )
   - name: )
 - uid: System.Action{Agibuild.Fulora.BridgeDevToolsEvent}

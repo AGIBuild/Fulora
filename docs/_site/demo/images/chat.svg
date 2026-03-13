@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" rx="8" fill="#1a1a2e"/>
+  <rect x="0" y="0" width="56" height="450" fill="#16213e"/>
+  <rect x="56" y="0" width="744" height="48" fill="#0f3460"/>
+  <text x="80" y="32" fill="#e94560" font-family="system-ui" font-size="18" font-weight="bold">Chat</text>
+  <rect x="80" y="72" width="640" height="310" rx="8" fill="#16213e"/>
+  <rect x="100" y="92" width="280" height="40" rx="16" fill="#0f3460"/>
+  <text x="116" y="118" fill="#94a3b8" font-family="system-ui" font-size="13">Hello! How can I help you?</text>
+  <rect x="340" y="152" width="360" height="40" rx="16" fill="#e94560"/>
+  <text x="356" y="178" fill="#fff" font-family="system-ui" font-size="13">What time is it?</text>
+  <rect x="100" y="212" width="320" height="40" rx="16" fill="#0f3460"/>
+  <text x="116" y="238" fill="#94a3b8" font-family="system-ui" font-size="13">Current time: 2026-03-12 14:30:00</text>
+  <rect x="380" y="272" width="320" height="40" rx="16" fill="#e94560"/>
+  <text x="396" y="298" fill="#fff" font-family="system-ui" font-size="13">Show memory usage</text>
+  <rect x="100" y="332" width="260" height="40" rx="16" fill="#0f3460"/>
+  <text x="116" y="358" fill="#94a3b8" font-family="system-ui" font-size="13">Working set: 128 MB</text>
+  <rect x="80" y="396" width="560" height="36" rx="18" fill="#0f3460" stroke="#e94560" stroke-width="1"/>
+  <text x="100" y="420" fill="#64748b" font-family="system-ui" font-size="13">Type a message...</text>
+  <rect x="650" y="396" width="70" height="36" rx="18" fill="#e94560"/>
+  <text x="685" y="420" fill="#fff" font-family="system-ui" font-size="13" text-anchor="middle">Send</text>
+  <text x="400" y="436" fill="#475569" font-family="system-ui" font-size="10" text-anchor="middle">[ Placeholder  replace with actual screenshot ]</text>
+</svg>

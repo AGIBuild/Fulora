@@ -18,17 +18,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ICookieManager
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 496
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 157
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Cookie management for the WebView instance.
-  example: []
   syntax:
     content: public interface ICookieManager
     content.vb: Public Interface ICookieManager
@@ -45,23 +43,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: GetCookiesAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 501
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 160
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Gets cookies for the given URI.
-  example: []
   syntax:
     content: Task<IReadOnlyList<WebViewCookie>> GetCookiesAsync(Uri uri)
     parameters:
     - id: uri
       type: System.Uri
-      description: The URI to retrieve cookies for.
     return:
       type: System.Threading.Tasks.Task{System.Collections.Generic.IReadOnlyList{Agibuild.Fulora.WebViewCookie}}
     content.vb: Function GetCookiesAsync(uri As Uri) As Task(Of IReadOnlyList(Of WebViewCookie))
@@ -79,23 +74,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: SetCookieAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 504
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 161
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Adds or updates a cookie.
-  example: []
   syntax:
     content: Task SetCookieAsync(WebViewCookie cookie)
     parameters:
     - id: cookie
       type: Agibuild.Fulora.WebViewCookie
-      description: The cookie to set.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Function SetCookieAsync(cookie As WebViewCookie) As Task
@@ -113,23 +105,20 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: DeleteCookieAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 507
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 162
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Deletes a cookie.
-  example: []
   syntax:
     content: Task DeleteCookieAsync(WebViewCookie cookie)
     parameters:
     - id: cookie
       type: Agibuild.Fulora.WebViewCookie
-      description: The cookie to delete.
     return:
       type: System.Threading.Tasks.Task
     content.vb: Function DeleteCookieAsync(cookie As WebViewCookie) As Task
@@ -147,17 +136,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: ClearAllCookiesAsync
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 509
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 163
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Clears all cookies.
-  example: []
   syntax:
     content: Task ClearAllCookiesAsync()
     return:

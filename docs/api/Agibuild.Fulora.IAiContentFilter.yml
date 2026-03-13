@@ -1,0 +1,297 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.IAiContentFilter
+  commentId: T:Agibuild.Fulora.IAiContentFilter
+  id: IAiContentFilter
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.IAiContentFilter.FilterInputAsync(System.String,System.Threading.CancellationToken)
+  - Agibuild.Fulora.IAiContentFilter.FilterOutputAsync(System.String,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IAiContentFilter
+  nameWithType: IAiContentFilter
+  fullName: Agibuild.Fulora.IAiContentFilter
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: IAiContentFilter
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 6
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: >-
+    Pluggable content filter for AI input/output safety.
+
+    Implementations are composed into an ordered pipeline via DI.
+  example: []
+  syntax:
+    content: public interface IAiContentFilter
+    content.vb: Public Interface IAiContentFilter
+- uid: Agibuild.Fulora.IAiContentFilter.FilterInputAsync(System.String,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IAiContentFilter.FilterInputAsync(System.String,System.Threading.CancellationToken)
+  id: FilterInputAsync(System.String,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IAiContentFilter
+  langs:
+  - csharp
+  - vb
+  name: FilterInputAsync(string, CancellationToken)
+  nameWithType: IAiContentFilter.FilterInputAsync(string, CancellationToken)
+  fullName: Agibuild.Fulora.IAiContentFilter.FilterInputAsync(string, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: FilterInputAsync
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 11
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Filters user input before sending to the AI provider.
+  example: []
+  syntax:
+    content: Task<ContentFilterResult> FilterInputAsync(string content, CancellationToken cancellationToken = default)
+    parameters:
+    - id: content
+      type: System.String
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.ContentFilterResult}
+    content.vb: Function FilterInputAsync(content As String, cancellationToken As CancellationToken = Nothing) As Task(Of ContentFilterResult)
+  overload: Agibuild.Fulora.IAiContentFilter.FilterInputAsync*
+  nameWithType.vb: IAiContentFilter.FilterInputAsync(String, CancellationToken)
+  fullName.vb: Agibuild.Fulora.IAiContentFilter.FilterInputAsync(String, System.Threading.CancellationToken)
+  name.vb: FilterInputAsync(String, CancellationToken)
+- uid: Agibuild.Fulora.IAiContentFilter.FilterOutputAsync(System.String,System.Threading.CancellationToken)
+  commentId: M:Agibuild.Fulora.IAiContentFilter.FilterOutputAsync(System.String,System.Threading.CancellationToken)
+  id: FilterOutputAsync(System.String,System.Threading.CancellationToken)
+  parent: Agibuild.Fulora.IAiContentFilter
+  langs:
+  - csharp
+  - vb
+  name: FilterOutputAsync(string, CancellationToken)
+  nameWithType: IAiContentFilter.FilterOutputAsync(string, CancellationToken)
+  fullName: Agibuild.Fulora.IAiContentFilter.FilterOutputAsync(string, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/AiContentFilter.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: FilterOutputAsync
+    path: ../src/Agibuild.Fulora.Core/AiContentFilter.cs
+    startLine: 16
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Filters AI provider output before returning to the caller.
+  example: []
+  syntax:
+    content: Task<ContentFilterResult> FilterOutputAsync(string content, CancellationToken cancellationToken = default)
+    parameters:
+    - id: content
+      type: System.String
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Threading.Tasks.Task{Agibuild.Fulora.ContentFilterResult}
+    content.vb: Function FilterOutputAsync(content As String, cancellationToken As CancellationToken = Nothing) As Task(Of ContentFilterResult)
+  overload: Agibuild.Fulora.IAiContentFilter.FilterOutputAsync*
+  nameWithType.vb: IAiContentFilter.FilterOutputAsync(String, CancellationToken)
+  fullName.vb: Agibuild.Fulora.IAiContentFilter.FilterOutputAsync(String, System.Threading.CancellationToken)
+  name.vb: FilterOutputAsync(String, CancellationToken)
+references:
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IAiContentFilter.FilterInputAsync*
+  commentId: Overload:Agibuild.Fulora.IAiContentFilter.FilterInputAsync
+  href: Agibuild.Fulora.IAiContentFilter.html#Agibuild_Fulora_IAiContentFilter_FilterInputAsync_System_String_System_Threading_CancellationToken_
+  name: FilterInputAsync
+  nameWithType: IAiContentFilter.FilterInputAsync
+  fullName: Agibuild.Fulora.IAiContentFilter.FilterInputAsync
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{Agibuild.Fulora.ContentFilterResult}
+  commentId: T:System.Threading.Tasks.Task{Agibuild.Fulora.ContentFilterResult}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<ContentFilterResult>
+  nameWithType: Task<ContentFilterResult>
+  fullName: System.Threading.Tasks.Task<Agibuild.Fulora.ContentFilterResult>
+  nameWithType.vb: Task(Of ContentFilterResult)
+  fullName.vb: System.Threading.Tasks.Task(Of Agibuild.Fulora.ContentFilterResult)
+  name.vb: Task(Of ContentFilterResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Agibuild.Fulora.ContentFilterResult
+    name: ContentFilterResult
+    href: Agibuild.Fulora.ContentFilterResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Agibuild.Fulora.ContentFilterResult
+    name: ContentFilterResult
+    href: Agibuild.Fulora.ContentFilterResult.html
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Agibuild.Fulora.IAiContentFilter.FilterOutputAsync*
+  commentId: Overload:Agibuild.Fulora.IAiContentFilter.FilterOutputAsync
+  href: Agibuild.Fulora.IAiContentFilter.html#Agibuild_Fulora_IAiContentFilter_FilterOutputAsync_System_String_System_Threading_CancellationToken_
+  name: FilterOutputAsync
+  nameWithType: IAiContentFilter.FilterOutputAsync
+  fullName: Agibuild.Fulora.IAiContentFilter.FilterOutputAsync

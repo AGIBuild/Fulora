@@ -350,12 +350,10 @@ references:
   - name: (
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.NewWindowRequestedEventArgs
     name: NewWindowRequestedEventArgs
-    href: Agibuild.Fulora.NewWindowRequestedEventArgs.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewNewWindowPolicyContext
@@ -369,12 +367,10 @@ references:
   - name: (
   - uid: Agibuild.Fulora.IWebView
     name: IWebView
-    href: Agibuild.Fulora.IWebView.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.NewWindowRequestedEventArgs
     name: NewWindowRequestedEventArgs
-    href: Agibuild.Fulora.NewWindowRequestedEventArgs.html
   - name: ','
   - name: " "
   - uid: Agibuild.Fulora.Shell.WebViewNewWindowPolicyContext

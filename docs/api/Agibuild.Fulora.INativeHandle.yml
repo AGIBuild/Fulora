@@ -16,17 +16,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: INativeHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 446
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 125
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Provides access to the native WebView handle for adapter-specific interop scenarios.
-  example: []
   syntax:
     content: public interface INativeHandle
     content.vb: Public Interface INativeHandle
@@ -43,17 +41,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Handle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 449
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 127
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Native pointer handle.
-  example: []
   syntax:
     content: nint Handle { get; }
     parameters: []
@@ -74,17 +70,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: HandleDescriptor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 452
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 128
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Human-readable native handle descriptor (for example, WebView2 or WKWebView).
-  example: []
   syntax:
     content: string HandleDescriptor { get; }
     parameters: []

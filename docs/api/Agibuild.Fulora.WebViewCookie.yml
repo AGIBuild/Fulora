@@ -22,17 +22,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: WebViewCookie
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1034
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 321
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Represents a cookie associated with a WebView instance.
-  example: []
   syntax:
     content: 'public sealed record WebViewCookie : IEquatable<WebViewCookie>'
     content.vb: Public NotInheritable Class WebViewCookie Implements IEquatable(Of WebViewCookie)
@@ -60,17 +58,15 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1034
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 321
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Represents a cookie associated with a WebView instance.
-  example: []
   syntax:
     content: public WebViewCookie(string Name, string Value, string Domain, string Path, DateTimeOffset? Expires, bool IsSecure, bool IsHttpOnly)
     parameters:
@@ -106,12 +102,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Name
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1035
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 322
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -135,12 +131,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Value
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1036
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 323
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -164,12 +160,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Domain
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1037
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 324
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -193,12 +189,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Path
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1038
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 325
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -222,12 +218,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: Expires
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1039
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 326
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -251,12 +247,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsSecure
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1040
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 327
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
@@ -280,12 +276,12 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IsHttpOnly
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 1041
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 328
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora

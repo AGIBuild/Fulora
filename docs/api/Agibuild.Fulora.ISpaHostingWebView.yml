@@ -1,0 +1,867 @@
+### YamlMime:ManagedReference
+items:
+- uid: Agibuild.Fulora.ISpaHostingWebView
+  commentId: T:Agibuild.Fulora.ISpaHostingWebView
+  id: ISpaHostingWebView
+  parent: Agibuild.Fulora
+  children:
+  - Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  langs:
+  - csharp
+  - vb
+  name: ISpaHostingWebView
+  nameWithType: ISpaHostingWebView
+  fullName: Agibuild.Fulora.ISpaHostingWebView
+  type: Interface
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: ISpaHostingWebView
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 66
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  summary: Marks an <xref href="Agibuild.Fulora.IWebView" data-throw-if-not-resolved="false"></xref> implementation that can enable framework SPA hosting.
+  example: []
+  syntax:
+    content: 'public interface ISpaHostingWebView : IWebView, IDisposable'
+    content.vb: Public Interface ISpaHostingWebView Inherits IWebView, IDisposable
+  inheritedMembers:
+  - Agibuild.Fulora.IWebView.Source
+  - Agibuild.Fulora.IWebView.CanGoBack
+  - Agibuild.Fulora.IWebView.CanGoForward
+  - Agibuild.Fulora.IWebView.IsLoading
+  - Agibuild.Fulora.IWebView.ChannelId
+  - Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)
+  - Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String)
+  - Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String,System.Uri)
+  - Agibuild.Fulora.IWebView.InvokeScriptAsync(System.String)
+  - Agibuild.Fulora.IWebView.GoBackAsync
+  - Agibuild.Fulora.IWebView.GoForwardAsync
+  - Agibuild.Fulora.IWebView.RefreshAsync
+  - Agibuild.Fulora.IWebView.StopAsync
+  - Agibuild.Fulora.IWebView.TryGetCookieManager
+  - Agibuild.Fulora.IWebView.TryGetCommandManager
+  - Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync
+  - Agibuild.Fulora.IWebView.Rpc
+  - Agibuild.Fulora.IWebView.BridgeTracer
+  - Agibuild.Fulora.IWebView.Bridge
+  - Agibuild.Fulora.IWebView.OpenDevToolsAsync
+  - Agibuild.Fulora.IWebView.CloseDevToolsAsync
+  - Agibuild.Fulora.IWebView.IsDevToolsOpenAsync
+  - Agibuild.Fulora.IWebView.CaptureScreenshotAsync
+  - Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
+  - Agibuild.Fulora.IWebView.NavigationStarted
+  - Agibuild.Fulora.IWebView.NavigationCompleted
+  - Agibuild.Fulora.IWebView.NewWindowRequested
+  - Agibuild.Fulora.IWebView.WebMessageReceived
+  - Agibuild.Fulora.IWebView.WebResourceRequested
+  - Agibuild.Fulora.IWebView.EnvironmentRequested
+  - Agibuild.Fulora.IWebView.DownloadRequested
+  - Agibuild.Fulora.IWebView.PermissionRequested
+  - Agibuild.Fulora.IWebView.AdapterCreated
+  - Agibuild.Fulora.IWebView.AdapterDestroyed
+  - Agibuild.Fulora.IWebView.GetZoomFactorAsync
+  - Agibuild.Fulora.IWebView.SetZoomFactorAsync(System.Double)
+  - Agibuild.Fulora.IWebView.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)
+  - Agibuild.Fulora.IWebView.StopFindInPageAsync(System.Boolean)
+  - Agibuild.Fulora.IWebView.AddPreloadScriptAsync(System.String)
+  - Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(System.String)
+  - Agibuild.Fulora.IWebView.ContextMenuRequested
+  - System.IDisposable.Dispose
+- uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  commentId: M:Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  id: EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  parent: Agibuild.Fulora.ISpaHostingWebView
+  langs:
+  - csharp
+  - vb
+  name: EnableSpaHosting(SpaHostingOptions)
+  nameWithType: ISpaHostingWebView.EnableSpaHosting(SpaHostingOptions)
+  fullName: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting(Agibuild.Fulora.SpaHostingOptions)
+  type: Method
+  source:
+    remote:
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+      branch: main
+      repo: https://github.com/AGIBuild/Agibuild.Fulora.git
+    id: EnableSpaHosting
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 68
+  assemblies:
+  - Agibuild.Fulora.Core
+  namespace: Agibuild.Fulora
+  syntax:
+    content: void EnableSpaHosting(SpaHostingOptions options)
+    parameters:
+    - id: options
+      type: Agibuild.Fulora.SpaHostingOptions
+    content.vb: Sub EnableSpaHosting(options As SpaHostingOptions)
+  overload: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting*
+references:
+- uid: Agibuild.Fulora.IWebView
+  commentId: T:Agibuild.Fulora.IWebView
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.IWebView.html
+  name: IWebView
+  nameWithType: IWebView
+  fullName: Agibuild.Fulora.IWebView
+- uid: Agibuild.Fulora
+  commentId: N:Agibuild.Fulora
+  href: Agibuild.html
+  name: Agibuild.Fulora
+  nameWithType: Agibuild.Fulora
+  fullName: Agibuild.Fulora
+  spec.csharp:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+  spec.vb:
+  - uid: Agibuild
+    name: Agibuild
+    href: Agibuild.html
+  - name: .
+  - uid: Agibuild.Fulora
+    name: Fulora
+    href: Agibuild.Fulora.html
+- uid: Agibuild.Fulora.IWebView.Source
+  commentId: P:Agibuild.Fulora.IWebView.Source
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Source
+  name: Source
+  nameWithType: IWebView.Source
+  fullName: Agibuild.Fulora.IWebView.Source
+- uid: Agibuild.Fulora.IWebView.CanGoBack
+  commentId: P:Agibuild.Fulora.IWebView.CanGoBack
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CanGoBack
+  name: CanGoBack
+  nameWithType: IWebView.CanGoBack
+  fullName: Agibuild.Fulora.IWebView.CanGoBack
+- uid: Agibuild.Fulora.IWebView.CanGoForward
+  commentId: P:Agibuild.Fulora.IWebView.CanGoForward
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CanGoForward
+  name: CanGoForward
+  nameWithType: IWebView.CanGoForward
+  fullName: Agibuild.Fulora.IWebView.CanGoForward
+- uid: Agibuild.Fulora.IWebView.IsLoading
+  commentId: P:Agibuild.Fulora.IWebView.IsLoading
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_IsLoading
+  name: IsLoading
+  nameWithType: IWebView.IsLoading
+  fullName: Agibuild.Fulora.IWebView.IsLoading
+- uid: Agibuild.Fulora.IWebView.ChannelId
+  commentId: P:Agibuild.Fulora.IWebView.ChannelId
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_ChannelId
+  name: ChannelId
+  nameWithType: IWebView.ChannelId
+  fullName: Agibuild.Fulora.IWebView.ChannelId
+- uid: Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)
+  commentId: M:Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateAsync_System_Uri_
+  name: NavigateAsync(Uri)
+  nameWithType: IWebView.NavigateAsync(Uri)
+  fullName: Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)
+    name: NavigateAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateAsync_System_Uri_
+  - name: (
+  - uid: System.Uri
+    name: Uri
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uri
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.NavigateAsync(System.Uri)
+    name: NavigateAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateAsync_System_Uri_
+  - name: (
+  - uid: System.Uri
+    name: Uri
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uri
+  - name: )
+- uid: Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String)
+  commentId: M:Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_
+  name: NavigateToStringAsync(string)
+  nameWithType: IWebView.NavigateToStringAsync(string)
+  fullName: Agibuild.Fulora.IWebView.NavigateToStringAsync(string)
+  nameWithType.vb: IWebView.NavigateToStringAsync(String)
+  fullName.vb: Agibuild.Fulora.IWebView.NavigateToStringAsync(String)
+  name.vb: NavigateToStringAsync(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String)
+    name: NavigateToStringAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String)
+    name: NavigateToStringAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String,System.Uri)
+  commentId: M:Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String,System.Uri)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_System_Uri_
+  name: NavigateToStringAsync(string, Uri)
+  nameWithType: IWebView.NavigateToStringAsync(string, Uri)
+  fullName: Agibuild.Fulora.IWebView.NavigateToStringAsync(string, System.Uri)
+  nameWithType.vb: IWebView.NavigateToStringAsync(String, Uri)
+  fullName.vb: Agibuild.Fulora.IWebView.NavigateToStringAsync(String, System.Uri)
+  name.vb: NavigateToStringAsync(String, Uri)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String,System.Uri)
+    name: NavigateToStringAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_System_Uri_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Uri
+    name: Uri
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uri
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.NavigateToStringAsync(System.String,System.Uri)
+    name: NavigateToStringAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigateToStringAsync_System_String_System_Uri_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Uri
+    name: Uri
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uri
+  - name: )
+- uid: Agibuild.Fulora.IWebView.InvokeScriptAsync(System.String)
+  commentId: M:Agibuild.Fulora.IWebView.InvokeScriptAsync(System.String)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_InvokeScriptAsync_System_String_
+  name: InvokeScriptAsync(string)
+  nameWithType: IWebView.InvokeScriptAsync(string)
+  fullName: Agibuild.Fulora.IWebView.InvokeScriptAsync(string)
+  nameWithType.vb: IWebView.InvokeScriptAsync(String)
+  fullName.vb: Agibuild.Fulora.IWebView.InvokeScriptAsync(String)
+  name.vb: InvokeScriptAsync(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.InvokeScriptAsync(System.String)
+    name: InvokeScriptAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_InvokeScriptAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.InvokeScriptAsync(System.String)
+    name: InvokeScriptAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_InvokeScriptAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.IWebView.GoBackAsync
+  commentId: M:Agibuild.Fulora.IWebView.GoBackAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GoBackAsync
+  name: GoBackAsync()
+  nameWithType: IWebView.GoBackAsync()
+  fullName: Agibuild.Fulora.IWebView.GoBackAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.GoBackAsync
+    name: GoBackAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GoBackAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.GoBackAsync
+    name: GoBackAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GoBackAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.GoForwardAsync
+  commentId: M:Agibuild.Fulora.IWebView.GoForwardAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GoForwardAsync
+  name: GoForwardAsync()
+  nameWithType: IWebView.GoForwardAsync()
+  fullName: Agibuild.Fulora.IWebView.GoForwardAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.GoForwardAsync
+    name: GoForwardAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GoForwardAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.GoForwardAsync
+    name: GoForwardAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GoForwardAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.RefreshAsync
+  commentId: M:Agibuild.Fulora.IWebView.RefreshAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_RefreshAsync
+  name: RefreshAsync()
+  nameWithType: IWebView.RefreshAsync()
+  fullName: Agibuild.Fulora.IWebView.RefreshAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.RefreshAsync
+    name: RefreshAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_RefreshAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.RefreshAsync
+    name: RefreshAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_RefreshAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.StopAsync
+  commentId: M:Agibuild.Fulora.IWebView.StopAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_StopAsync
+  name: StopAsync()
+  nameWithType: IWebView.StopAsync()
+  fullName: Agibuild.Fulora.IWebView.StopAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.StopAsync
+    name: StopAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_StopAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.StopAsync
+    name: StopAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_StopAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.TryGetCookieManager
+  commentId: M:Agibuild.Fulora.IWebView.TryGetCookieManager
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetCookieManager
+  name: TryGetCookieManager()
+  nameWithType: IWebView.TryGetCookieManager()
+  fullName: Agibuild.Fulora.IWebView.TryGetCookieManager()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.TryGetCookieManager
+    name: TryGetCookieManager
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetCookieManager
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.TryGetCookieManager
+    name: TryGetCookieManager
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetCookieManager
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.TryGetCommandManager
+  commentId: M:Agibuild.Fulora.IWebView.TryGetCommandManager
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetCommandManager
+  name: TryGetCommandManager()
+  nameWithType: IWebView.TryGetCommandManager()
+  fullName: Agibuild.Fulora.IWebView.TryGetCommandManager()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.TryGetCommandManager
+    name: TryGetCommandManager
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetCommandManager
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.TryGetCommandManager
+    name: TryGetCommandManager
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetCommandManager
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync
+  commentId: M:Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetWebViewHandleAsync
+  name: TryGetWebViewHandleAsync()
+  nameWithType: IWebView.TryGetWebViewHandleAsync()
+  fullName: Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync
+    name: TryGetWebViewHandleAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetWebViewHandleAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.TryGetWebViewHandleAsync
+    name: TryGetWebViewHandleAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_TryGetWebViewHandleAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.Rpc
+  commentId: P:Agibuild.Fulora.IWebView.Rpc
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Rpc
+  name: Rpc
+  nameWithType: IWebView.Rpc
+  fullName: Agibuild.Fulora.IWebView.Rpc
+- uid: Agibuild.Fulora.IWebView.BridgeTracer
+  commentId: P:Agibuild.Fulora.IWebView.BridgeTracer
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_BridgeTracer
+  name: BridgeTracer
+  nameWithType: IWebView.BridgeTracer
+  fullName: Agibuild.Fulora.IWebView.BridgeTracer
+- uid: Agibuild.Fulora.IWebView.Bridge
+  commentId: P:Agibuild.Fulora.IWebView.Bridge
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_Bridge
+  name: Bridge
+  nameWithType: IWebView.Bridge
+  fullName: Agibuild.Fulora.IWebView.Bridge
+- uid: Agibuild.Fulora.IWebView.OpenDevToolsAsync
+  commentId: M:Agibuild.Fulora.IWebView.OpenDevToolsAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_OpenDevToolsAsync
+  name: OpenDevToolsAsync()
+  nameWithType: IWebView.OpenDevToolsAsync()
+  fullName: Agibuild.Fulora.IWebView.OpenDevToolsAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.OpenDevToolsAsync
+    name: OpenDevToolsAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_OpenDevToolsAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.OpenDevToolsAsync
+    name: OpenDevToolsAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_OpenDevToolsAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.CloseDevToolsAsync
+  commentId: M:Agibuild.Fulora.IWebView.CloseDevToolsAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CloseDevToolsAsync
+  name: CloseDevToolsAsync()
+  nameWithType: IWebView.CloseDevToolsAsync()
+  fullName: Agibuild.Fulora.IWebView.CloseDevToolsAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.CloseDevToolsAsync
+    name: CloseDevToolsAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CloseDevToolsAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.CloseDevToolsAsync
+    name: CloseDevToolsAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CloseDevToolsAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.IsDevToolsOpenAsync
+  commentId: M:Agibuild.Fulora.IWebView.IsDevToolsOpenAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_IsDevToolsOpenAsync
+  name: IsDevToolsOpenAsync()
+  nameWithType: IWebView.IsDevToolsOpenAsync()
+  fullName: Agibuild.Fulora.IWebView.IsDevToolsOpenAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.IsDevToolsOpenAsync
+    name: IsDevToolsOpenAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_IsDevToolsOpenAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.IsDevToolsOpenAsync
+    name: IsDevToolsOpenAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_IsDevToolsOpenAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.CaptureScreenshotAsync
+  commentId: M:Agibuild.Fulora.IWebView.CaptureScreenshotAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CaptureScreenshotAsync
+  name: CaptureScreenshotAsync()
+  nameWithType: IWebView.CaptureScreenshotAsync()
+  fullName: Agibuild.Fulora.IWebView.CaptureScreenshotAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.CaptureScreenshotAsync
+    name: CaptureScreenshotAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CaptureScreenshotAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.CaptureScreenshotAsync
+    name: CaptureScreenshotAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_CaptureScreenshotAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
+  commentId: M:Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_PrintToPdfAsync_Agibuild_Fulora_PdfPrintOptions_
+  name: PrintToPdfAsync(PdfPrintOptions)
+  nameWithType: IWebView.PrintToPdfAsync(PdfPrintOptions)
+  fullName: Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
+    name: PrintToPdfAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_PrintToPdfAsync_Agibuild_Fulora_PdfPrintOptions_
+  - name: (
+  - uid: Agibuild.Fulora.PdfPrintOptions
+    name: PdfPrintOptions
+    href: Agibuild.Fulora.PdfPrintOptions.html
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.PrintToPdfAsync(Agibuild.Fulora.PdfPrintOptions)
+    name: PrintToPdfAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_PrintToPdfAsync_Agibuild_Fulora_PdfPrintOptions_
+  - name: (
+  - uid: Agibuild.Fulora.PdfPrintOptions
+    name: PdfPrintOptions
+    href: Agibuild.Fulora.PdfPrintOptions.html
+  - name: )
+- uid: Agibuild.Fulora.IWebView.NavigationStarted
+  commentId: E:Agibuild.Fulora.IWebView.NavigationStarted
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigationStarted
+  name: NavigationStarted
+  nameWithType: IWebView.NavigationStarted
+  fullName: Agibuild.Fulora.IWebView.NavigationStarted
+- uid: Agibuild.Fulora.IWebView.NavigationCompleted
+  commentId: E:Agibuild.Fulora.IWebView.NavigationCompleted
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NavigationCompleted
+  name: NavigationCompleted
+  nameWithType: IWebView.NavigationCompleted
+  fullName: Agibuild.Fulora.IWebView.NavigationCompleted
+- uid: Agibuild.Fulora.IWebView.NewWindowRequested
+  commentId: E:Agibuild.Fulora.IWebView.NewWindowRequested
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_NewWindowRequested
+  name: NewWindowRequested
+  nameWithType: IWebView.NewWindowRequested
+  fullName: Agibuild.Fulora.IWebView.NewWindowRequested
+- uid: Agibuild.Fulora.IWebView.WebMessageReceived
+  commentId: E:Agibuild.Fulora.IWebView.WebMessageReceived
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_WebMessageReceived
+  name: WebMessageReceived
+  nameWithType: IWebView.WebMessageReceived
+  fullName: Agibuild.Fulora.IWebView.WebMessageReceived
+- uid: Agibuild.Fulora.IWebView.WebResourceRequested
+  commentId: E:Agibuild.Fulora.IWebView.WebResourceRequested
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_WebResourceRequested
+  name: WebResourceRequested
+  nameWithType: IWebView.WebResourceRequested
+  fullName: Agibuild.Fulora.IWebView.WebResourceRequested
+- uid: Agibuild.Fulora.IWebView.EnvironmentRequested
+  commentId: E:Agibuild.Fulora.IWebView.EnvironmentRequested
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_EnvironmentRequested
+  name: EnvironmentRequested
+  nameWithType: IWebView.EnvironmentRequested
+  fullName: Agibuild.Fulora.IWebView.EnvironmentRequested
+- uid: Agibuild.Fulora.IWebView.DownloadRequested
+  commentId: E:Agibuild.Fulora.IWebView.DownloadRequested
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_DownloadRequested
+  name: DownloadRequested
+  nameWithType: IWebView.DownloadRequested
+  fullName: Agibuild.Fulora.IWebView.DownloadRequested
+- uid: Agibuild.Fulora.IWebView.PermissionRequested
+  commentId: E:Agibuild.Fulora.IWebView.PermissionRequested
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_PermissionRequested
+  name: PermissionRequested
+  nameWithType: IWebView.PermissionRequested
+  fullName: Agibuild.Fulora.IWebView.PermissionRequested
+- uid: Agibuild.Fulora.IWebView.AdapterCreated
+  commentId: E:Agibuild.Fulora.IWebView.AdapterCreated
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AdapterCreated
+  name: AdapterCreated
+  nameWithType: IWebView.AdapterCreated
+  fullName: Agibuild.Fulora.IWebView.AdapterCreated
+- uid: Agibuild.Fulora.IWebView.AdapterDestroyed
+  commentId: E:Agibuild.Fulora.IWebView.AdapterDestroyed
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AdapterDestroyed
+  name: AdapterDestroyed
+  nameWithType: IWebView.AdapterDestroyed
+  fullName: Agibuild.Fulora.IWebView.AdapterDestroyed
+- uid: Agibuild.Fulora.IWebView.GetZoomFactorAsync
+  commentId: M:Agibuild.Fulora.IWebView.GetZoomFactorAsync
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GetZoomFactorAsync
+  name: GetZoomFactorAsync()
+  nameWithType: IWebView.GetZoomFactorAsync()
+  fullName: Agibuild.Fulora.IWebView.GetZoomFactorAsync()
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.GetZoomFactorAsync
+    name: GetZoomFactorAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GetZoomFactorAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.GetZoomFactorAsync
+    name: GetZoomFactorAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_GetZoomFactorAsync
+  - name: (
+  - name: )
+- uid: Agibuild.Fulora.IWebView.SetZoomFactorAsync(System.Double)
+  commentId: M:Agibuild.Fulora.IWebView.SetZoomFactorAsync(System.Double)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_SetZoomFactorAsync_System_Double_
+  name: SetZoomFactorAsync(double)
+  nameWithType: IWebView.SetZoomFactorAsync(double)
+  fullName: Agibuild.Fulora.IWebView.SetZoomFactorAsync(double)
+  nameWithType.vb: IWebView.SetZoomFactorAsync(Double)
+  fullName.vb: Agibuild.Fulora.IWebView.SetZoomFactorAsync(Double)
+  name.vb: SetZoomFactorAsync(Double)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.SetZoomFactorAsync(System.Double)
+    name: SetZoomFactorAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_SetZoomFactorAsync_System_Double_
+  - name: (
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.SetZoomFactorAsync(System.Double)
+    name: SetZoomFactorAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_SetZoomFactorAsync_System_Double_
+  - name: (
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: )
+- uid: Agibuild.Fulora.IWebView.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)
+  commentId: M:Agibuild.Fulora.IWebView.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_FindInPageAsync_System_String_Agibuild_Fulora_FindInPageOptions_
+  name: FindInPageAsync(string, FindInPageOptions)
+  nameWithType: IWebView.FindInPageAsync(string, FindInPageOptions)
+  fullName: Agibuild.Fulora.IWebView.FindInPageAsync(string, Agibuild.Fulora.FindInPageOptions)
+  nameWithType.vb: IWebView.FindInPageAsync(String, FindInPageOptions)
+  fullName.vb: Agibuild.Fulora.IWebView.FindInPageAsync(String, Agibuild.Fulora.FindInPageOptions)
+  name.vb: FindInPageAsync(String, FindInPageOptions)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)
+    name: FindInPageAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_FindInPageAsync_System_String_Agibuild_Fulora_FindInPageOptions_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.FindInPageOptions
+    name: FindInPageOptions
+    href: Agibuild.Fulora.FindInPageOptions.html
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.FindInPageAsync(System.String,Agibuild.Fulora.FindInPageOptions)
+    name: FindInPageAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_FindInPageAsync_System_String_Agibuild_Fulora_FindInPageOptions_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Agibuild.Fulora.FindInPageOptions
+    name: FindInPageOptions
+    href: Agibuild.Fulora.FindInPageOptions.html
+  - name: )
+- uid: Agibuild.Fulora.IWebView.StopFindInPageAsync(System.Boolean)
+  commentId: M:Agibuild.Fulora.IWebView.StopFindInPageAsync(System.Boolean)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_StopFindInPageAsync_System_Boolean_
+  name: StopFindInPageAsync(bool)
+  nameWithType: IWebView.StopFindInPageAsync(bool)
+  fullName: Agibuild.Fulora.IWebView.StopFindInPageAsync(bool)
+  nameWithType.vb: IWebView.StopFindInPageAsync(Boolean)
+  fullName.vb: Agibuild.Fulora.IWebView.StopFindInPageAsync(Boolean)
+  name.vb: StopFindInPageAsync(Boolean)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.StopFindInPageAsync(System.Boolean)
+    name: StopFindInPageAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_StopFindInPageAsync_System_Boolean_
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.StopFindInPageAsync(System.Boolean)
+    name: StopFindInPageAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_StopFindInPageAsync_System_Boolean_
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Agibuild.Fulora.IWebView.AddPreloadScriptAsync(System.String)
+  commentId: M:Agibuild.Fulora.IWebView.AddPreloadScriptAsync(System.String)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AddPreloadScriptAsync_System_String_
+  name: AddPreloadScriptAsync(string)
+  nameWithType: IWebView.AddPreloadScriptAsync(string)
+  fullName: Agibuild.Fulora.IWebView.AddPreloadScriptAsync(string)
+  nameWithType.vb: IWebView.AddPreloadScriptAsync(String)
+  fullName.vb: Agibuild.Fulora.IWebView.AddPreloadScriptAsync(String)
+  name.vb: AddPreloadScriptAsync(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.AddPreloadScriptAsync(System.String)
+    name: AddPreloadScriptAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AddPreloadScriptAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.AddPreloadScriptAsync(System.String)
+    name: AddPreloadScriptAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AddPreloadScriptAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(System.String)
+  commentId: M:Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(System.String)
+  parent: Agibuild.Fulora.IWebView
+  isExternal: true
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_RemovePreloadScriptAsync_System_String_
+  name: RemovePreloadScriptAsync(string)
+  nameWithType: IWebView.RemovePreloadScriptAsync(string)
+  fullName: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(string)
+  nameWithType.vb: IWebView.RemovePreloadScriptAsync(String)
+  fullName.vb: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(String)
+  name.vb: RemovePreloadScriptAsync(String)
+  spec.csharp:
+  - uid: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(System.String)
+    name: RemovePreloadScriptAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_RemovePreloadScriptAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Agibuild.Fulora.IWebView.RemovePreloadScriptAsync(System.String)
+    name: RemovePreloadScriptAsync
+    href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_RemovePreloadScriptAsync_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Agibuild.Fulora.IWebView.ContextMenuRequested
+  commentId: E:Agibuild.Fulora.IWebView.ContextMenuRequested
+  parent: Agibuild.Fulora.IWebView
+  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_ContextMenuRequested
+  name: ContextMenuRequested
+  nameWithType: IWebView.ContextMenuRequested
+  fullName: Agibuild.Fulora.IWebView.ContextMenuRequested
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting*
+  commentId: Overload:Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting
+  href: Agibuild.Fulora.ISpaHostingWebView.html#Agibuild_Fulora_ISpaHostingWebView_EnableSpaHosting_Agibuild_Fulora_SpaHostingOptions_
+  name: EnableSpaHosting
+  nameWithType: ISpaHostingWebView.EnableSpaHosting
+  fullName: Agibuild.Fulora.ISpaHostingWebView.EnableSpaHosting
+- uid: Agibuild.Fulora.SpaHostingOptions
+  commentId: T:Agibuild.Fulora.SpaHostingOptions
+  parent: Agibuild.Fulora
+  href: Agibuild.Fulora.SpaHostingOptions.html
+  name: SpaHostingOptions
+  nameWithType: SpaHostingOptions
+  fullName: Agibuild.Fulora.SpaHostingOptions

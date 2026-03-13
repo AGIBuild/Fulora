@@ -15,17 +15,15 @@ items:
   type: Interface
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: IWebMessageDropDiagnosticsSink
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 397
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 110
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Sink for dropped WebMessage diagnostics.
-  example: []
   syntax:
     content: public interface IWebMessageDropDiagnosticsSink
     content.vb: Public Interface IWebMessageDropDiagnosticsSink
@@ -42,17 +40,15 @@ items:
   type: Method
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewInterfaces.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: OnMessageDropped
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 400
+    path: ../src/Agibuild.Fulora.Core/WebViewInterfaces.cs
+    startLine: 112
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Called when a message is dropped.
-  example: []
   syntax:
     content: void OnMessageDropped(in WebMessageDropDiagnostic diagnostic)
     parameters:

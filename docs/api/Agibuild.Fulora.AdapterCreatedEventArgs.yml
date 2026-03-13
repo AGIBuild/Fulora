@@ -16,17 +16,15 @@ items:
   type: Class
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: AdapterCreatedEventArgs
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 960
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 274
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Event args for the <xref href="Agibuild.Fulora.IWebView.AdapterCreated" data-throw-if-not-resolved="false"></xref> event, carrying the typed native platform handle.
-  example: []
   syntax:
     content: 'public sealed class AdapterCreatedEventArgs : EventArgs'
     content.vb: Public NotInheritable Class AdapterCreatedEventArgs Inherits EventArgs
@@ -54,23 +52,20 @@ items:
   type: Constructor
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: .ctor
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 964
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 276
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: Creates a new instance.
-  example: []
   syntax:
     content: public AdapterCreatedEventArgs(INativeHandle? platformHandle)
     parameters:
     - id: platformHandle
       type: Agibuild.Fulora.INativeHandle
-      description: The typed native platform handle, when available.
     content.vb: Public Sub New(platformHandle As INativeHandle)
   overload: Agibuild.Fulora.AdapterCreatedEventArgs.#ctor*
   nameWithType.vb: AdapterCreatedEventArgs.New(INativeHandle)
@@ -89,20 +84,15 @@ items:
   type: Property
   source:
     remote:
-      path: src/Agibuild.Fulora.Core/WebViewContracts.cs
+      path: src/Agibuild.Fulora.Core/WebViewRecords.cs
       branch: main
       repo: https://github.com/AGIBuild/Agibuild.Fulora.git
     id: PlatformHandle
-    path: ../src/Agibuild.Fulora.Core/WebViewContracts.cs
-    startLine: 973
+    path: ../src/Agibuild.Fulora.Core/WebViewRecords.cs
+    startLine: 281
   assemblies:
   - Agibuild.Fulora.Core
   namespace: Agibuild.Fulora
-  summary: >-
-    The typed native WebView handle, or <code>null</code> if the adapter does not support handle exposure.
-
-    Cast to a platform-specific interface (e.g. <xref href="Agibuild.Fulora.IWindowsWebView2PlatformHandle" data-throw-if-not-resolved="false"></xref>) for typed access.
-  example: []
   syntax:
     content: public INativeHandle? PlatformHandle { get; }
     parameters: []
@@ -111,13 +101,6 @@ items:
     content.vb: Public ReadOnly Property PlatformHandle As INativeHandle
   overload: Agibuild.Fulora.AdapterCreatedEventArgs.PlatformHandle*
 references:
-- uid: Agibuild.Fulora.IWebView.AdapterCreated
-  commentId: E:Agibuild.Fulora.IWebView.AdapterCreated
-  parent: Agibuild.Fulora.IWebView
-  href: Agibuild.Fulora.IWebView.html#Agibuild_Fulora_IWebView_AdapterCreated
-  name: AdapterCreated
-  nameWithType: IWebView.AdapterCreated
-  fullName: Agibuild.Fulora.IWebView.AdapterCreated
 - uid: Agibuild.Fulora
   commentId: N:Agibuild.Fulora
   href: Agibuild.html
@@ -362,13 +345,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
-- uid: Agibuild.Fulora.IWebView
-  commentId: T:Agibuild.Fulora.IWebView
-  parent: Agibuild.Fulora
-  href: Agibuild.Fulora.IWebView.html
-  name: IWebView
-  nameWithType: IWebView
-  fullName: Agibuild.Fulora.IWebView
 - uid: System
   commentId: N:System
   isExternal: true
@@ -392,12 +368,6 @@ references:
   name: INativeHandle
   nameWithType: INativeHandle
   fullName: Agibuild.Fulora.INativeHandle
-- uid: Agibuild.Fulora.IWindowsWebView2PlatformHandle
-  commentId: T:Agibuild.Fulora.IWindowsWebView2PlatformHandle
-  href: Agibuild.Fulora.IWindowsWebView2PlatformHandle.html
-  name: IWindowsWebView2PlatformHandle
-  nameWithType: IWindowsWebView2PlatformHandle
-  fullName: Agibuild.Fulora.IWindowsWebView2PlatformHandle
 - uid: Agibuild.Fulora.AdapterCreatedEventArgs.PlatformHandle*
   commentId: Overload:Agibuild.Fulora.AdapterCreatedEventArgs.PlatformHandle
   href: Agibuild.Fulora.AdapterCreatedEventArgs.html#Agibuild_Fulora_AdapterCreatedEventArgs_PlatformHandle

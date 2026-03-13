@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="public/docfx.min.css">
       <link rel="stylesheet" href="public/main.css">
       <meta name="docfx:navrel" content="toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <meta name="docfx:tocrel" content="articles/toc.html">
       
       <meta name="docfx:rel" content="">
       
@@ -63,9 +63,23 @@
     </header>
 
     <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
 
       <div class="content">
         <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
 
           <nav id="breadcrumb"></nav>
         </div>
@@ -226,12 +240,124 @@ const keys = await storage.getKeys();
 </tr>
 </tbody>
 </table>
+<h2 id="official-plugins">Official Plugins</h2>
+<p>Fulora ships with the following official plugins, each available as a NuGet + npm package pair:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>NuGet Package</th>
+<th>npm Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LocalStorage</strong></td>
+<td><code>Agibuild.Fulora.Plugin.LocalStorage</code></td>
+<td><code>@agibuild/bridge-plugin-local-storage</code></td>
+<td>Key-value local persistence</td>
+</tr>
+<tr>
+<td><strong>Database</strong></td>
+<td><code>Agibuild.Fulora.Plugin.Database</code></td>
+<td><code>@agibuild/bridge-plugin-database</code></td>
+<td>SQLite embedded database (query, execute, transactions)</td>
+</tr>
+<tr>
+<td><strong>HTTP Client</strong></td>
+<td><code>Agibuild.Fulora.Plugin.HttpClient</code></td>
+<td><code>@agibuild/bridge-plugin-http-client</code></td>
+<td>Host-routed HTTP with base URL, headers, interceptors</td>
+</tr>
+<tr>
+<td><strong>File System</strong></td>
+<td><code>Agibuild.Fulora.Plugin.FileSystem</code></td>
+<td><code>@agibuild/bridge-plugin-file-system</code></td>
+<td>Sandboxed file read/write/list/delete operations</td>
+</tr>
+<tr>
+<td><strong>Notifications</strong></td>
+<td><code>Agibuild.Fulora.Plugin.Notifications</code></td>
+<td><code>@agibuild/bridge-plugin-notifications</code></td>
+<td>Cross-platform system notifications (toast/banner)</td>
+</tr>
+<tr>
+<td><strong>Auth Token</strong></td>
+<td><code>Agibuild.Fulora.Plugin.AuthToken</code></td>
+<td><code>@agibuild/bridge-plugin-auth-token</code></td>
+<td>Platform-secure token storage (Keychain/CredMgr/Keystore)</td>
+</tr>
+<tr>
+<td><strong>Biometric</strong></td>
+<td><code>Agibuild.Fulora.Plugin.Biometric</code></td>
+<td><code>@agibuild/bridge-plugin-biometric</code></td>
+<td>Biometric authentication (Touch ID, Face ID, Windows Hello)</td>
+</tr>
+</tbody>
+</table>
+<p>Use the CLI to discover and install plugins:</p>
+<pre><code class="lang-bash">fulora search database
+fulora add plugin Agibuild.Fulora.Plugin.Database
+</code></pre>
 <h2 id="testing">Testing</h2>
 <ul>
 <li><strong>Unit tests</strong>: Test the service implementation independently</li>
 <li><strong>Contract tests</strong>: Verify <code>UsePlugin</code> registers all declared services</li>
 <li><strong>Integration tests</strong>: Full round-trip: register plugin → call from JS → verify</li>
 </ul>
+<h2 id="example-biometric-authentication-plugin">Example: Biometric Authentication Plugin</h2>
+<p>The <code>Agibuild.Fulora.Plugin.Biometric</code> package provides biometric authentication (Touch ID, Face ID, Windows Hello) as a bridge plugin.</p>
+<h3 id="platform-support">Platform Support</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Provider</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td>Touch ID</td>
+<td><code>LocalAuthentication</code> (LAContext)</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Windows Hello</td>
+<td><code>UserConsentVerifier</code></td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>Face ID / Touch ID</td>
+<td><code>LocalAuthentication</code></td>
+</tr>
+<tr>
+<td>Android</td>
+<td>Fingerprint / Face</td>
+<td><code>BiometricPrompt</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>❌ Not supported</td>
+<td>Returns <code>platform_not_supported</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="usage">Usage</h3>
+<pre><code class="lang-csharp">webView.Bridge.UsePlugin&lt;BiometricPlugin&gt;();
+</code></pre>
+<pre><code class="lang-typescript">import type { IBiometricService } from '@agibuild/bridge-plugin-biometric';
+
+const availability = await BiometricService.checkAvailabilityAsync();
+if (availability.isAvailable) {
+  const result = await BiometricService.authenticateAsync('Confirm payment');
+  if (result.success) {
+    // authenticated
+  }
+}
+</code></pre>
 
 </article>
 
