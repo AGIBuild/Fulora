@@ -15,21 +15,27 @@ public sealed class PluginManifest
         ReadCommentHandling = JsonCommentHandling.Skip,
     };
 
+    /// <summary>Unique identifier for the plugin (e.g. NuGet package id).</summary>
     [JsonPropertyName("id")]
     public string Id { get; set; } = "";
 
+    /// <summary>Human-readable name shown in plugin listings.</summary>
     [JsonPropertyName("displayName")]
     public string DisplayName { get; set; } = "";
 
+    /// <summary>Bridge service type names exported by this plugin.</summary>
     [JsonPropertyName("services")]
     public string[] Services { get; set; } = [];
 
+    /// <summary>Optional npm package name for the plugin's web-side companion.</summary>
     [JsonPropertyName("npmPackage")]
     public string? NpmPackage { get; set; }
 
+    /// <summary>Minimum Fulora framework version required by this plugin.</summary>
     [JsonPropertyName("minFuloraVersion")]
     public string MinFuloraVersion { get; set; } = "0.0.0";
 
+    /// <summary>Optional platform restriction list (e.g. "windows", "macos"). Null means all platforms.</summary>
     [JsonPropertyName("platforms")]
     public string[]? Platforms { get; set; }
 

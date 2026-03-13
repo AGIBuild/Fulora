@@ -5,9 +5,16 @@ namespace Agibuild.Fulora;
 /// </summary>
 public interface IMauiWebViewHost
 {
+    /// <summary>Gets the underlying WebView instance managed by this host.</summary>
     IWebView WebView { get; }
+
+    /// <summary>Gets the bridge service used for C# ↔ JavaScript communication.</summary>
     IBridgeService Bridge { get; }
+
+    /// <summary>Initializes the WebView host with the specified options.</summary>
     Task InitializeAsync(MauiWebViewHostOptions options, CancellationToken ct = default);
+
+    /// <summary>Navigates the hosted WebView to the specified URI.</summary>
     Task NavigateAsync(Uri uri, CancellationToken ct = default);
 }
 

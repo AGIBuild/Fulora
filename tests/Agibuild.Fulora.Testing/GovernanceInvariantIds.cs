@@ -45,4 +45,5 @@ public static class GovernanceInvariantIds
     public const string TestBeforePackOrdering = "GOV-037";
     public const string VersionManagementTarget = "GOV-038";
     public const string DocsWorkflowCallableOnly = "GOV-039";
+    public const string WorkflowNode24Compatibility = "GOV-040";
 }

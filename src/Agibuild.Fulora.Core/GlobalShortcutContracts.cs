@@ -45,20 +45,26 @@ public sealed class GlobalShortcutResult
     /// <summary>Human-readable reason when the operation did not succeed.</summary>
     public string? Reason { get; init; }
 
+    /// <summary>Creates a successful result.</summary>
     public static GlobalShortcutResult Success() => new() { Status = GlobalShortcutResultStatus.Success };
 
+    /// <summary>Creates a result indicating the operation was denied by policy.</summary>
     public static GlobalShortcutResult Denied(string reason) =>
         new() { Status = GlobalShortcutResultStatus.Denied, Reason = reason };
 
+    /// <summary>Creates a result indicating a key combination conflict with an existing registration.</summary>
     public static GlobalShortcutResult Conflict(string reason) =>
         new() { Status = GlobalShortcutResultStatus.Conflict, Reason = reason };
 
+    /// <summary>Creates a result indicating the platform does not support global shortcuts.</summary>
     public static GlobalShortcutResult Unsupported(string? reason = null) =>
         new() { Status = GlobalShortcutResultStatus.Unsupported, Reason = reason ?? "Platform does not support global shortcuts." };
 
+    /// <summary>Creates a result indicating a shortcut with the same ID is already registered.</summary>
     public static GlobalShortcutResult DuplicateId(string id) =>
         new() { Status = GlobalShortcutResultStatus.DuplicateId, Reason = $"Shortcut with ID '{id}' is already registered." };
 
+    /// <summary>Creates a result indicating the specified shortcut ID was not found.</summary>
     public static GlobalShortcutResult NotFound(string id) =>
         new() { Status = GlobalShortcutResultStatus.NotFound, Reason = $"Shortcut with ID '{id}' is not registered." };
 }

@@ -1475,6 +1475,56 @@ public sealed class AutomationLaneGovernanceTests
         AssertSourceContains(ciWorkflow, "deploy-pages", DocsWorkflowCallableOnly, ciWorkflowPath);
     }
 
+    [Fact]
+    public void Workflow_actions_use_node24_compatible_versions_and_force_env()
+    {
+        var repoRoot = FindRepoRoot();
+        var workflowFiles = new[]
+        {
+            Path.Combine(repoRoot, ".github", "workflows", "ci.yml"),
+            Path.Combine(repoRoot, ".github", "workflows", "mutation-testing.yml")
+        };
+
+        var minimumMajorVersions = new Dictionary<string, int>(StringComparer.Ordinal)
+        {
+            ["actions/checkout"] = 5,
+            ["actions/setup-node"] = 6,
+            ["actions/setup-dotnet"] = 5,
+            ["actions/upload-artifact"] = 6,
+            ["actions/download-artifact"] = 7,
+            ["actions/upload-pages-artifact"] = 4,
+            ["actions/deploy-pages"] = 4
+        };
+
+        var actionVersionPattern = new Regex(
+            @"uses:\s*(?<action>actions/[\w-]+)@v(?<major>\d+)",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+        foreach (var workflowPath in workflowFiles)
+        {
+            if (!File.Exists(workflowPath))
+                continue;
+
+            var content = File.ReadAllText(workflowPath);
+            var relativePath = Path.GetRelativePath(repoRoot, workflowPath);
+
+            foreach (Match match in actionVersionPattern.Matches(content))
+            {
+                var action = match.Groups["action"].Value;
+                var major = int.Parse(match.Groups["major"].Value);
+
+                if (!minimumMajorVersions.TryGetValue(action, out var requiredMinimum))
+                    continue;
+
+                Assert.True(major >= requiredMinimum,
+                    $"[{WorkflowNode24Compatibility}] {relativePath}: {action}@v{major} is below minimum v{requiredMinimum}.");
+            }
+
+            Assert.Contains("FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true", content,
+                StringComparison.Ordinal);
+        }
+    }
+
     private static string ReadCombinedBuildSource(string repoRoot)
     {
         var buildDir = Path.Combine(repoRoot, "build");

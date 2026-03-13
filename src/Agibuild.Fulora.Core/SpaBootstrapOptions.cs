@@ -3,7 +3,7 @@ using System.Reflection;
 namespace Agibuild.Fulora;
 
 /// <summary>
-/// Options for <see cref="WebViewBootstrapExtensions.BootstrapSpaAsync"/>.
+/// Options for <c>WebViewBootstrapExtensions.BootstrapSpaAsync</c>.
 /// Encapsulates dev/prod navigation, bridge service registration, and error handling.
 /// </summary>
 public sealed class SpaBootstrapOptions
