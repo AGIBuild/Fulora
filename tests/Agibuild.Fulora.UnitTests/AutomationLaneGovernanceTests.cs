@@ -1460,15 +1460,19 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Docs_deploy_workflow_is_callable_only()
+    public void Docs_deployment_is_inline_in_unified_workflow()
     {
         var repoRoot = FindRepoRoot();
-        var docsWorkflowPath = Path.Combine(repoRoot, ".github", "workflows", "docs-deploy.yml");
-        AssertFileExists(docsWorkflowPath, DocsWorkflowCallableOnly);
+        var ciWorkflowPath = Path.Combine(repoRoot, ".github", "workflows", "ci.yml");
+        var standaloneDocsPath = Path.Combine(repoRoot, ".github", "workflows", "docs-deploy.yml");
 
-        var docsWorkflow = File.ReadAllText(docsWorkflowPath);
-        AssertSourceContains(docsWorkflow, "workflow_call", DocsWorkflowCallableOnly, docsWorkflowPath);
-        Assert.DoesNotContain("push:", docsWorkflow, StringComparison.Ordinal);
+        Assert.False(File.Exists(standaloneDocsPath),
+            $"[{DocsWorkflowCallableOnly}] docs-deploy.yml should be removed; docs deployment is inline in ci.yml.");
+
+        var ciWorkflow = File.ReadAllText(ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "deploy-docs", DocsWorkflowCallableOnly, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "docfx", DocsWorkflowCallableOnly, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "deploy-pages", DocsWorkflowCallableOnly, ciWorkflowPath);
     }
 
     private static string ReadCombinedBuildSource(string repoRoot)

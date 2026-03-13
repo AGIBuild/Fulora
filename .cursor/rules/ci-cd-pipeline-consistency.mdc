@@ -8,7 +8,7 @@ alwaysApply: false
 
 When a change introduces new external tool dependencies into the build chain (e.g., adding `npm`/`node` calls to MSBuild targets, adding Python scripts to build, etc.):
 
-1. **Audit ALL workflows**: Check every `.github/workflows/*.yml` file, not just `ci.yml`. The project has: `ci.yml` (unified CI+Release), `mutation-testing.yml`, `docs-deploy.yml` (callable via workflow_call only).
+1. **Audit ALL workflows**: Check every `.github/workflows/*.yml` file, not just `ci.yml`. The project has: `ci.yml` (unified CI+Release+Docs), `mutation-testing.yml` (weekly schedule).
 
 2. **Environment parity**: If a new tool is required by any `.csproj` or Nuke target, ensure ALL workflows that invoke `dotnet build`/`dotnet test`/Nuke have the corresponding setup step (e.g., `actions/setup-node@v4`).
 
