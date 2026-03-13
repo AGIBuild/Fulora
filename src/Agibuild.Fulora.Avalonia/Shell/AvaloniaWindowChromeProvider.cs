@@ -45,13 +45,16 @@ public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDispo
     private readonly object _gate = new();
     private bool _disposed;
 
+    /// <inheritdoc />
     public string Platform { get; } = DetectPlatform();
 
+    /// <inheritdoc />
     public bool SupportsTransparency =>
         RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
         RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
         RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
+    /// <inheritdoc />
     public event EventHandler? AppearanceChanged;
 
     /// <summary>
@@ -100,6 +103,7 @@ public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDispo
             _windows.RemoveAll(tw => ReferenceEquals(tw.Window, window));
     }
 
+    /// <inheritdoc />
     public async Task ApplyWindowAppearanceAsync(WindowAppearanceRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -317,6 +321,7 @@ public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDispo
         return "Unknown";
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;

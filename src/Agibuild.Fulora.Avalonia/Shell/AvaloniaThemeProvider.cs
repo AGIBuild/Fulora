@@ -52,6 +52,7 @@ public sealed class AvaloniaThemeProvider : IPlatformThemeProvider, IDisposable
             ThemeChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposed) return;
