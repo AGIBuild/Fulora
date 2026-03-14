@@ -17,30 +17,31 @@
       },
       "Microsoft.DotNet.HotReload.WebAssembly.Browser": {
         "type": "Direct",
-        "requested": "[10.0.200, )",
-        "resolved": "10.0.200",
-        "contentHash": "7+FOASnccOSI3JeS9l3Vkjh7+6M8sEHydwuWXNJS7oVTrw4BrGuRcDu4kH91klbZQ0dZ1T15RrbSnDYZeZSxIg=="
+        "requested": "[10.0.201, )",
+        "resolved": "10.0.201",
+        "contentHash": "4EAMH3CqtVwVm7Sx4DnNtZj/J0b+A1YGcTnCL6prhQ8ZHlwbVtZ3RmSyJdi85mSnLl+u94aVr8fElRGkjZkKmw=="
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.4, )",
-        "resolved": "10.0.4",
-        "contentHash": "CCx8ojW3mOL150/LnP0DK7qpMrJEt6xxNCmJFKoX89v1h0FwpsEHqennowGPYDxp6zIkIO4f9PxynjOeLF+1zw=="
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "A+5ZuQ0f449tM+MQrhf6R9ZX7lYpjk/ODEwLYKrnF6111rtARx8fVsm4YznUnQiKnnXfaXNBqgxmil6RW3L3SA=="
       },
       "Microsoft.NET.Sdk.WebAssembly.Pack": {
         "type": "Direct",
-        "requested": "[10.0.4, )",
-        "resolved": "10.0.4",
-        "contentHash": "6PVJDzxzz2gvKLSWKHNrmmHfoDcTNJixKMHXDf2Ztv8bvpLiIsDe4QahFvnVcWtZ74nIlaOKU2sR+nYk+/K2bg=="
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "377VBqkGr00cspqu3dQPtj+mbyIxTBJV40ZAMAIrZXj7M+R6BjRmFMyNvLbGZ+enrsaaQNEKOXxNEhioJmfB5Q=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
-        "requested": "[10.0.102, )",
-        "resolved": "10.0.102",
-        "contentHash": "Oxq3RCIJSdtpIU4hLqO7XaDe/Ra3HS9Wi8rJl838SAg6Zu1iQjerA0+xXWBgUFYbgknUGCLOU0T+lzMLkvY9Qg==",
+        "requested": "[10.0.201, )",
+        "resolved": "10.0.201",
+        "contentHash": "qxYAmO4ktzd9L+HMdnqWucxpu7bI9undPyACXOMqPyhaiMtbpbYL/n0ACyWIJlbyEJrXFwxiOaBOSasLtDvsCg==",
         "dependencies": {
-          "Microsoft.Build.Tasks.Git": "10.0.102",
-          "Microsoft.SourceLink.Common": "10.0.102"
+          "Microsoft.Build.Tasks.Git": "10.0.201",
+          "Microsoft.SourceLink.Common": "10.0.201",
+          "System.IO.Hashing": "10.0.5"
         }
       },
       "Avalonia.BuildServices": {
@@ -103,13 +104,16 @@
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
-        "resolved": "10.0.102",
-        "contentHash": "0i81LYX31U6UiXz4NOLbvc++u+/mVDmOt+PskrM/MygpDxkv9THKQyRUmavBpLK6iBV0abNWnn+CQgSRz//Pwg=="
+        "resolved": "10.0.201",
+        "contentHash": "DMYBnrFZvLnBKn14VavEuuIr31CY6YY2i2L9P8DorS/Qp6ifRR8ZPLdJCFLFfjikNq8DykbYyLd/RP6lSqHcWw==",
+        "dependencies": {
+          "System.IO.Hashing": "10.0.5"
+        }
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
-        "resolved": "10.0.102",
-        "contentHash": "Mk1IMb9q5tahC2NltxYXFkLBtuBvfBoCQ3pIxYQWfzbCE9o1OB9SsHe0hnNGo7lWgTA/ePbFAJLWu6nLL9K17A=="
+        "resolved": "10.0.201",
+        "contentHash": "QbBYhkjgL6rCnBfDbzsAJLlsad13TlBHqYCFDIw56OO2g6ix+9RsmY8uxiQGdWwFKbZXaXyAA6jDCzFYVGCZDw=="
       },
       "SkiaSharp": {
         "type": "Transitive",
@@ -145,10 +149,15 @@
         "resolved": "11.0.0-preview.2.26159.112",
         "contentHash": "53nimBaVbzyZjQfi/hx/mRuqtNBGpu1uk7o8P9esiBVWsWz3+cimhT5pE8exQPYEJMDermE2mv5+HtPSo0TkGg=="
       },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
+      },
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.1, )"
+          "Agibuild.Fulora.Core": "[1.5.2-local, )"
         }
       },
       "agibuild.fulora.avalonia": {
@@ -166,11 +175,11 @@
       "agibuild.fulora.integration.tests": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
-          "Agibuild.Fulora.Avalonia": "[1.5.1, )",
-          "Agibuild.Fulora.Core": "[1.5.1, )",
-          "Agibuild.Fulora.Runtime": "[1.5.1, )",
-          "Agibuild.Fulora.Testing": "[1.5.1, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.2-local, )",
+          "Agibuild.Fulora.Avalonia": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.2-local, )",
+          "Agibuild.Fulora.Testing": "[1.5.2-local, )",
           "Avalonia": "[12.0.0-preview2, )",
           "Avalonia.Fonts.Inter": "[12.0.0-preview2, )",
           "Avalonia.Themes.Fluent": "[12.0.0-preview2, )",
@@ -182,17 +191,17 @@
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
-          "Agibuild.Fulora.Core": "[1.5.1, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.2-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
       "agibuild.fulora.testing": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
-          "Agibuild.Fulora.Core": "[1.5.1, )",
-          "Agibuild.Fulora.Runtime": "[1.5.1, )"
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.2-local, )"
         }
       },
       "Avalonia": {
