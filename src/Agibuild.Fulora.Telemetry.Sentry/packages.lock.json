@@ -14,9 +14,9 @@
       },
       "Sentry": {
         "type": "Direct",
-        "requested": "[6.2.0-alpha.0, )",
-        "resolved": "6.2.0-alpha.0",
-        "contentHash": "mGPIG7SUfHYhrMYLO12GYaL77CvaIpn6C0y36uHfuv6d/9rF6jwHlau6ceJAVOt6sb9khtvdrFPAcB7QFbmukg=="
+        "requested": "[6.2.0, )",
+        "resolved": "6.2.0",
+        "contentHash": "kZkHnj9NvQTjf5e8VmVQUT2HdVSmph9MhSm6U+vGoB4vq2uR1a+ZRHpAksNJNl7EjaGbYp55cOWqx5Nh0jQc8w=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -36,7 +36,7 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.1, )"
+          "Agibuild.Fulora.Core": "[1.5.2-local, )"
         }
       },
       "agibuild.fulora.core": {
@@ -45,8 +45,8 @@
       "agibuild.fulora.dependencyinjection": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.1, )",
-          "Agibuild.Fulora.Runtime": "[1.5.1, )",
+          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.2-local, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
@@ -54,8 +54,8 @@
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
-          "Agibuild.Fulora.Core": "[1.5.1, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.2-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
