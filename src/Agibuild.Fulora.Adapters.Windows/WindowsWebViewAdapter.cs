@@ -8,7 +8,7 @@ using Microsoft.Web.WebView2.Core;
 namespace Agibuild.Fulora.Adapters.Windows;
 
 [SupportedOSPlatform("windows")]
-internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHandleProvider, ICookieAdapter, IWebViewAdapterOptions,
+internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHandleProvider, ICookieAdapter, IWebViewAdapterOptions, IDisposable,
     ICustomSchemeAdapter, IDownloadAdapter, IPermissionAdapter, ICommandAdapter, IScreenshotAdapter, IPrintAdapter,
     IFindInPageAdapter, IZoomAdapter, IPreloadScriptAdapter, IAsyncPreloadScriptAdapter, IContextMenuAdapter, IDevToolsAdapter,
     IDragDropAdapter
@@ -233,6 +233,12 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
         }
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Detach();
+    }
+
     private async Task InitializeWebView2Async(IntPtr parentHwnd, CancellationToken ct)
     {
         try
@@ -247,7 +253,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
             {
                 // Detach requested while initializing: ensure we don't leak WebView2 objects.
                 TearDownWebView2OnInitThread();
-                _readyTcs?.TrySetCanceled();
+                _readyTcs?.TrySetCanceled(ct);
                 return;
             }
 
@@ -260,7 +266,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
             if (_detached || ct.IsCancellationRequested)
             {
                 TearDownWebView2OnInitThread();
-                _readyTcs?.TrySetCanceled();
+                _readyTcs?.TrySetCanceled(ct);
                 return;
             }
 
@@ -301,7 +307,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
             if (_detached || ct.IsCancellationRequested)
             {
                 TearDownWebView2OnInitThread();
-                _readyTcs?.TrySetCanceled();
+                _readyTcs?.TrySetCanceled(ct);
                 return;
             }
 
@@ -337,7 +343,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
             if (_detached || ct.IsCancellationRequested)
             {
                 TearDownWebView2OnInitThread();
-                _readyTcs?.TrySetCanceled();
+                _readyTcs?.TrySetCanceled(ct);
                 return;
             }
 
@@ -1341,7 +1347,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
     private void RaiseNavigationCompleted(Guid navigationId, Uri requestUri, NavigationCompletedStatus status, Exception? error)
         => SafeRaise(() => NavigationCompleted?.Invoke(this, new NavigationCompletedEventArgs(navigationId, requestUri, status, error)));
 
-    private void SafeRaise(Action action)
+    private static void SafeRaise(Action action)
     {
         try
         {
@@ -1365,10 +1371,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
     {
         ThrowIfNotInitialized();
 
-        if (_detached)
-        {
-            throw new ObjectDisposedException(nameof(WindowsWebViewAdapter));
-        }
+        ObjectDisposedException.ThrowIf(_detached, nameof(WindowsWebViewAdapter));
 
         if (!_attached)
         {
@@ -1378,10 +1381,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
 
     private void ThrowIfNotAttachedForCookies()
     {
-        if (_detached)
-        {
-            throw new ObjectDisposedException(nameof(WindowsWebViewAdapter));
-        }
+        ObjectDisposedException.ThrowIf(_detached, nameof(WindowsWebViewAdapter));
 
         if (!_attached || _webView is null)
         {
@@ -1633,7 +1633,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
 
     // ==================== IFindInPageAdapter ====================
 
-    public async Task<FindInPageResult> FindAsync(string text, FindInPageOptions? options)
+    public async Task<FindInPageEventArgs> FindAsync(string text, FindInPageOptions? options)
     {
         ThrowIfNotAttached();
         if (_webView is null)
@@ -1658,7 +1658,7 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
         var findResult = await _webView.ExecuteScriptAsync(findScript);
         var activeIndex = findResult == "true" ? 0 : -1;
 
-        return new FindInPageResult
+        return new FindInPageEventArgs
         {
             ActiveMatchIndex = activeIndex,
             TotalMatches = totalMatches

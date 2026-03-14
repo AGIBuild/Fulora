@@ -39,7 +39,7 @@ public sealed class BridgeTelemetryTracer : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         _provider.TrackMetric(
             MetricPrefix + "export.latency_ms",
@@ -51,14 +51,14 @@ public sealed class BridgeTelemetryTracer : IBridgeTracer
             {
                 ["service"] = serviceName,
                 ["method"] = methodName,
-                ["error"] = error.Message,
+                ["error"] = exception.Message,
             });
-        _provider.TrackException(error, new Dictionary<string, string>
+        _provider.TrackException(exception, new Dictionary<string, string>
         {
             ["service"] = serviceName,
             ["method"] = methodName,
         });
-        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, error);
+        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, exception);
     }
 
     /// <inheritdoc />

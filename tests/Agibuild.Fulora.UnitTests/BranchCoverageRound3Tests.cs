@@ -1215,7 +1215,7 @@ public sealed class BranchCoverageRound3Tests
         public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null) => Task.FromException<byte[]>(new NotSupportedException());
         public Task<double> GetZoomFactorAsync() => Task.FromResult(1.0);
         public Task SetZoomFactorAsync(double zoomFactor) => Task.CompletedTask;
-        public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null) => Task.FromException<FindInPageResult>(new NotSupportedException());
+        public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null) => Task.FromException<FindInPageEventArgs>(new NotSupportedException());
         public Task StopFindInPageAsync(bool clearHighlights = true) => Task.CompletedTask;
         public Task<string> AddPreloadScriptAsync(string javaScript) => Task.FromException<string>(new NotSupportedException());
         public Task RemovePreloadScriptAsync(string scriptId) => Task.FromException(new NotSupportedException());
@@ -1268,7 +1268,7 @@ public sealed class BranchCoverageRound3Tests
 
         public void Handle(string method, Func<JsonElement?, Task<object?>> handler) { }
         public void Handle(string method, Func<JsonElement?, object?> handler) { }
-        public void RemoveHandler(string method) { }
+        public void UnregisterHandler(string method) { }
         public Task<JsonElement> InvokeAsync(string method, object? args = null)
         {
             _invoker(method, args);

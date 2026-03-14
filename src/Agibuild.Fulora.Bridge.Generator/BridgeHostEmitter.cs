@@ -10,6 +10,7 @@ namespace Agibuild.Fulora.Bridge.Generator;
 /// </summary>
 internal static class BridgeHostEmitter
 {
+    private static readonly string[] OptionsParam = ["options"];
     public static string Emit(BridgeInterfaceModel model)
     {
         var sb = new StringBuilder();
@@ -307,13 +308,13 @@ internal static class BridgeHostEmitter
 
         foreach (var method in model.Methods)
         {
-            sb.AppendLine($"{indent}        rpc.RemoveHandler(\"{method.RpcMethodName}\");");
+            sb.AppendLine($"{indent}        rpc.UnregisterHandler(\"{method.RpcMethodName}\");");
         }
 
         foreach (var evt in model.Events)
         {
-            sb.AppendLine($"{indent}        rpc.RemoveHandler(\"{model.ServiceName}.$subscribe.{evt.CamelCaseName}\");");
-            sb.AppendLine($"{indent}        rpc.RemoveHandler(\"{model.ServiceName}.$unsubscribe.{evt.CamelCaseName}\");");
+            sb.AppendLine($"{indent}        rpc.UnregisterHandler(\"{model.ServiceName}.$subscribe.{evt.CamelCaseName}\");");
+            sb.AppendLine($"{indent}        rpc.UnregisterHandler(\"{model.ServiceName}.$unsubscribe.{evt.CamelCaseName}\");");
         }
 
         sb.AppendLine($"{indent}    }}");
@@ -411,7 +412,7 @@ internal static class BridgeHostEmitter
 
             var jb = new StringBuilder();
             jb.Append($"{m.CamelCaseName}: function(");
-            jb.Append(string.Join(", ", rpcParamNames.Concat(new[] { "options" })));
+            jb.Append(string.Join(", ", rpcParamNames.Concat(OptionsParam)));
             jb.Append(") { ");
 
             var paramsObj = rpcParamNames.Count > 0
@@ -484,7 +485,7 @@ internal static class BridgeHostEmitter
             }
         }
 
-        jb.Append("}");
+        jb.Append('}');
         return jb.ToString();
     }
 

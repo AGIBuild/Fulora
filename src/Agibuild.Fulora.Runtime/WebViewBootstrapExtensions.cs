@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text;
+
 namespace Agibuild.Fulora;
 
 /// <summary>
@@ -11,6 +14,8 @@ public static class WebViewBootstrapExtensions
     private const string DefaultErrorHtml =
         "<html><body style='font-family:system-ui;padding:2em;color:#333'>" +
         "<h2>Navigation failed</h2><p>{0}</p></body></html>";
+
+    private static readonly CompositeFormat DefaultErrorHtmlFormat = CompositeFormat.Parse(DefaultErrorHtml);
 
     /// <summary>
     /// Bootstraps WebView using profile options that wrap baseline <see cref="SpaBootstrapOptions"/>
@@ -58,7 +63,7 @@ public static class WebViewBootstrapExtensions
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             var errorHtml = options.ErrorPageFactory?.Invoke(ex)
-                ?? string.Format(DefaultErrorHtml, System.Net.WebUtility.HtmlEncode(ex.Message));
+                ?? string.Format(CultureInfo.InvariantCulture, DefaultErrorHtmlFormat, System.Net.WebUtility.HtmlEncode(ex.Message));
             await webView.NavigateToStringAsync(errorHtml);
             return;
         }

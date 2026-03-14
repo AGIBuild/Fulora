@@ -8,22 +8,22 @@ public class SharedStateStoreTests
     private readonly SharedStateStore _store = new();
 
     [Fact]
-    public void Set_And_Get_ReturnsValue()
+    public void SetValue_And_GetValue_ReturnsValue()
     {
-        _store.Set("theme", "{\"dark\":true}");
-        Assert.Equal("{\"dark\":true}", _store.Get("theme"));
+        _store.SetValue("theme", "{\"dark\":true}");
+        Assert.Equal("{\"dark\":true}", _store.GetValue("theme"));
     }
 
     [Fact]
-    public void Get_NonExistentKey_ReturnsNull()
+    public void GetValue_NonExistentKey_ReturnsNull()
     {
-        Assert.Null(_store.Get("missing"));
+        Assert.Null(_store.GetValue("missing"));
     }
 
     [Fact]
     public void TryGet_ExistingKey_ReturnsTrueWithValue()
     {
-        _store.Set("key", "value");
+        _store.SetValue("key", "value");
         Assert.True(_store.TryGet("key", out var value));
         Assert.Equal("value", value);
     }
@@ -38,9 +38,9 @@ public class SharedStateStoreTests
     [Fact]
     public void Remove_ExistingKey_ReturnsTrue()
     {
-        _store.Set("key", "value");
+        _store.SetValue("key", "value");
         Assert.True(_store.Remove("key"));
-        Assert.Null(_store.Get("key"));
+        Assert.Null(_store.GetValue("key"));
     }
 
     [Fact]
@@ -52,8 +52,8 @@ public class SharedStateStoreTests
     [Fact]
     public void Remove_FiresStateChanged()
     {
-        _store.Set("key", "value");
-        StateChangedEventArgs? args = null;
+        _store.SetValue("key", "value");
+        StateChange? args = null;
         _store.StateChanged += (_, e) => args = e;
 
         _store.Remove("key");
@@ -65,12 +65,12 @@ public class SharedStateStoreTests
     }
 
     [Fact]
-    public void Set_FiresStateChanged()
+    public void SetValue_FiresStateChanged()
     {
-        StateChangedEventArgs? args = null;
+        StateChange? args = null;
         _store.StateChanged += (_, e) => args = e;
 
-        _store.Set("key", "value");
+        _store.SetValue("key", "value");
 
         Assert.NotNull(args);
         Assert.Equal("key", args.Key);
@@ -79,25 +79,25 @@ public class SharedStateStoreTests
     }
 
     [Fact]
-    public void Set_SameValue_DoesNotFireStateChanged()
+    public void SetValue_SameValue_DoesNotFireStateChanged()
     {
-        _store.Set("key", "value");
+        _store.SetValue("key", "value");
         var eventCount = 0;
         _store.StateChanged += (_, _) => eventCount++;
 
-        _store.Set("key", "value");
+        _store.SetValue("key", "value");
 
         Assert.Equal(0, eventCount);
     }
 
     [Fact]
-    public void Set_DifferentValue_FiresStateChanged()
+    public void SetValue_DifferentValue_FiresStateChanged()
     {
-        _store.Set("key", "old");
-        StateChangedEventArgs? args = null;
+        _store.SetValue("key", "old");
+        StateChange? args = null;
         _store.StateChanged += (_, e) => args = e;
 
-        _store.Set("key", "new");
+        _store.SetValue("key", "new");
 
         Assert.NotNull(args);
         Assert.Equal("old", args.OldValue);
@@ -110,10 +110,10 @@ public class SharedStateStoreTests
         var t1 = DateTimeOffset.UtcNow;
         var t2 = t1.AddSeconds(1);
 
-        _store.Set("key", "first", t1);
-        _store.Set("key", "second", t2);
+        _store.SetValue("key", "first", t1);
+        _store.SetValue("key", "second", t2);
 
-        Assert.Equal("second", _store.Get("key"));
+        Assert.Equal("second", _store.GetValue("key"));
     }
 
     [Fact]
@@ -122,22 +122,22 @@ public class SharedStateStoreTests
         var t1 = DateTimeOffset.UtcNow;
         var t2 = t1.AddSeconds(-1);
 
-        _store.Set("key", "fresh", t1);
-        _store.Set("key", "stale", t2);
+        _store.SetValue("key", "fresh", t1);
+        _store.SetValue("key", "stale", t2);
 
-        Assert.Equal("fresh", _store.Get("key"));
+        Assert.Equal("fresh", _store.GetValue("key"));
     }
 
     [Fact]
     public void LWW_StaleWrite_DoesNotFireStateChanged()
     {
         var t1 = DateTimeOffset.UtcNow;
-        _store.Set("key", "fresh", t1);
+        _store.SetValue("key", "fresh", t1);
 
         var eventCount = 0;
         _store.StateChanged += (_, _) => eventCount++;
 
-        _store.Set("key", "stale", t1.AddSeconds(-1));
+        _store.SetValue("key", "stale", t1.AddSeconds(-1));
 
         Assert.Equal(0, eventCount);
     }
@@ -145,9 +145,9 @@ public class SharedStateStoreTests
     [Fact]
     public void GetSnapshot_ReturnsAllEntries()
     {
-        _store.Set("a", "1");
-        _store.Set("b", "2");
-        _store.Set("c", "3");
+        _store.SetValue("a", "1");
+        _store.SetValue("b", "2");
+        _store.SetValue("c", "3");
 
         var snapshot = _store.GetSnapshot();
 
@@ -160,21 +160,21 @@ public class SharedStateStoreTests
     [Fact]
     public void GetSnapshot_IsImmutable()
     {
-        _store.Set("key", "before");
+        _store.SetValue("key", "before");
         var snapshot = _store.GetSnapshot();
 
-        _store.Set("key", "after");
+        _store.SetValue("key", "after");
 
         Assert.Equal("before", snapshot["key"]);
     }
 
     [Fact]
-    public void SetGeneric_And_GetGeneric_RoundTrips()
+    public void SetValueGeneric_And_GetValueGeneric_RoundTrips()
     {
         var prefs = new TestPrefs { Theme = "dark", FontSize = 14 };
-        _store.Set("prefs", prefs);
+        _store.SetValue("prefs", prefs);
 
-        var result = _store.Get<TestPrefs>("prefs");
+        var result = _store.GetValue<TestPrefs>("prefs");
 
         Assert.NotNull(result);
         Assert.Equal("dark", result.Theme);
@@ -182,22 +182,22 @@ public class SharedStateStoreTests
     }
 
     [Fact]
-    public void GetGeneric_NonExistentKey_ReturnsDefault()
+    public void GetValueGeneric_NonExistentKey_ReturnsDefault()
     {
-        var result = _store.Get<TestPrefs>("missing");
+        var result = _store.GetValue<TestPrefs>("missing");
         Assert.Null(result);
     }
 
     [Fact]
-    public void Set_NullKey_ThrowsArgument()
+    public void SetValue_NullKey_ThrowsArgument()
     {
-        Assert.Throws<ArgumentNullException>(() => _store.Set(null!, "value"));
+        Assert.Throws<ArgumentNullException>(() => _store.SetValue(null!, "value"));
     }
 
     [Fact]
-    public void Get_NullKey_ThrowsArgument()
+    public void GetValue_NullKey_ThrowsArgument()
     {
-        Assert.Throws<ArgumentNullException>(() => _store.Get(null!));
+        Assert.Throws<ArgumentNullException>(() => _store.GetValue(null!));
     }
 
     [Fact]
@@ -207,9 +207,9 @@ public class SharedStateStoreTests
     }
 
     [Fact]
-    public void Set_NullValue_Allowed()
+    public void SetValue_NullValue_Allowed()
     {
-        _store.Set("key", (string?)null);
+        _store.SetValue("key", (string?)null);
         Assert.True(_store.TryGet("key", out var val));
         Assert.Null(val);
     }

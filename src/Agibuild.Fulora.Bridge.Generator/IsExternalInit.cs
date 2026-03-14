@@ -1,8 +1,7 @@
 // Polyfill for `init` keyword on netstandard2.0
 // ReSharper disable once CheckNamespace
-namespace System.Runtime.CompilerServices
+namespace System.Runtime.CompilerServices;
+
+internal static class IsExternalInit
 {
-    internal static class IsExternalInit
-    {
-    }
 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Sentry;
 using Sentry.Extensibility;
 
@@ -37,7 +38,7 @@ public sealed class SentryTelemetryProvider : ITelemetryProvider
     /// <inheritdoc />
     public void TrackMetric(string name, double value, IDictionary<string, string>? dimensions = null)
     {
-        var data = new Dictionary<string, string> { ["value"] = value.ToString("G") };
+        var data = new Dictionary<string, string> { ["value"] = value.ToString("G", CultureInfo.InvariantCulture) };
         if (dimensions != null)
         {
             foreach (var (k, v) in dimensions)

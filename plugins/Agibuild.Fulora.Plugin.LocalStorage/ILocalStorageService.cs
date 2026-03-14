@@ -10,10 +10,10 @@ namespace Agibuild.Fulora.Plugin.LocalStorage;
 public interface ILocalStorageService
 {
     /// <summary>Gets the value for a key, or null if not found.</summary>
-    Task<string?> Get(string key);
+    Task<string?> GetValue(string key);
 
     /// <summary>Sets a key-value pair. Overwrites if the key exists.</summary>
-    Task Set(string key, string value);
+    Task SetValue(string key, string value);
 
     /// <summary>Removes a key. No-op if the key does not exist.</summary>
     Task Remove(string key);

@@ -9,7 +9,7 @@ namespace Agibuild.Fulora.Integration.Tests.Automation;
 /// Integration tests for the Find-in-Page feature.
 ///
 /// HOW IT WORKS (for newcomers):
-///   1. We create a MockWebViewAdapterWithFind — it returns a preset FindInPageResult.
+///   1. We create a MockWebViewAdapterWithFind — it returns a preset FindInPageEventArgs.
 ///   2. We wrap it in a WebDialog (same as a real app would).
 ///   3. We call FindInPageAsync("text") and verify the returned result.
 ///   4. We call StopFindInPage() and verify the adapter was notified.

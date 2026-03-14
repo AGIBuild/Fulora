@@ -13,7 +13,7 @@ public interface IBridgeTracer
     void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType);
 
     /// <summary>Called when a JS→C# method invocation fails.</summary>
-    void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error);
+    void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception);
 
     /// <summary>Called when a C#→JS method invocation is sent.</summary>
     void OnImportCallStart(string serviceName, string methodName, string? paramsJson);
@@ -41,7 +41,7 @@ public sealed class NullBridgeTracer : IBridgeTracer
     /// <inheritdoc />
     public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType) { }
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error) { }
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception) { }
     /// <inheritdoc />
     public void OnImportCallStart(string serviceName, string methodName, string? paramsJson) { }
     /// <inheritdoc />

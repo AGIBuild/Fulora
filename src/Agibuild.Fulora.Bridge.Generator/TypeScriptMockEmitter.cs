@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 
@@ -93,9 +94,9 @@ internal static class TypeScriptMockEmitter
         if (tsType == "number") return "0";
         if (tsType == "boolean") return "false";
         if (tsType == "void") return "undefined";
-        if (tsType.EndsWith("[]")) return "[]";
+        if (tsType.EndsWith("[]", StringComparison.Ordinal)) return "[]";
         if (tsType == "Uint8Array") return "new Uint8Array()";
-        if (tsType.StartsWith("Record<")) return "{}";
+        if (tsType.StartsWith("Record<", StringComparison.Ordinal)) return "{}";
 
         return "{} as any";
     }

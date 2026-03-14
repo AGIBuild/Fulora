@@ -825,10 +825,10 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// </summary>
     /// <param name="text">The search text. Must not be null or empty.</param>
     /// <param name="options">Optional search options (case sensitivity, direction).</param>
-    /// <returns>A <see cref="FindInPageResult"/> with match count and active index.</returns>
+    /// <returns>A <see cref="FindInPageEventArgs"/> with match count and active index.</returns>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IFindInPageAdapter"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="text"/> is null or empty.</exception>
-    public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null)
+    public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
     {
         return EnqueueOperationAsync(nameof(FindInPageAsync), () =>
         {
@@ -1046,7 +1046,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
         _spaHostingService?.TryHandle(e);
     }
 
-    private Task EnqueueOperationAsync(string operationType, Func<Task> func)
+    private Task<object?> EnqueueOperationAsync(string operationType, Func<Task> func)
         => EnqueueOperationAsync<object?>(operationType, async () =>
         {
             await func().ConfigureAwait(false);
@@ -1155,7 +1155,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
         return await dispatchedTask.ConfigureAwait(false);
     }
 
-    private Exception ClassifyFailure(
+    private static Exception ClassifyFailure(
         Exception exception,
         string operationType,
         WebViewOperationFailureCategory defaultCategory)
@@ -1311,7 +1311,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
 
         if (status == NavigationCompletedStatus.Failure && error is null)
         {
-            error = new Exception("Navigation failed.");
+            error = new InvalidOperationException("Navigation failed.");
         }
 
         _activeNavigation.UpdateRequestUri(e.RequestUri);
@@ -1576,10 +1576,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
 
     private void ThrowIfDisposed()
     {
-        if (_disposed)
-        {
-            throw new ObjectDisposedException(nameof(WebViewCore));
-        }
+        ObjectDisposedException.ThrowIf(_disposed, nameof(WebViewCore));
     }
 
     private void SetSourceInternal(Uri uri)
@@ -1636,10 +1633,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
 
         private void ThrowIfOwnerDisposed()
         {
-            if (_owner._disposed)
-            {
-                throw new ObjectDisposedException(nameof(WebViewCore));
-            }
+            ObjectDisposedException.ThrowIf(_owner._disposed, nameof(WebViewCore));
         }
     }
 
@@ -1657,19 +1651,25 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
             _owner = owner;
         }
 
-        public Task CopyAsync() => ExecuteAsync(WebViewCommand.Copy);
+        public Task CopyAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.Copy));
 
-        public Task CutAsync() => ExecuteAsync(WebViewCommand.Cut);
+        public Task CutAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.Cut));
 
-        public Task PasteAsync() => ExecuteAsync(WebViewCommand.Paste);
+        public Task PasteAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.Paste));
 
-        public Task SelectAllAsync() => ExecuteAsync(WebViewCommand.SelectAll);
+        public Task SelectAllAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.SelectAll));
 
-        public Task UndoAsync() => ExecuteAsync(WebViewCommand.Undo);
+        public Task UndoAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.Undo));
 
-        public Task RedoAsync() => ExecuteAsync(WebViewCommand.Redo);
+        public Task RedoAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.Redo));
 
-        private Task ExecuteAsync(WebViewCommand command)
+        private static Task ToVoidTask(Task<object?> task) => task.ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+                throw t.Exception!.GetBaseException();
+        }, TaskContinuationOptions.ExecuteSynchronously);
+
+        private Task<object?> ExecuteAsync(WebViewCommand command)
         {
             return _owner.EnqueueOperationAsync($"Command.{command}", () =>
             {

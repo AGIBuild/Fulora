@@ -1,8 +1,8 @@
-namespace Agibuild.Fulora.Telemetry;
-
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+
+namespace Agibuild.Fulora.Telemetry;
 
 /// <summary>
 /// OpenTelemetry implementation of <see cref="ITelemetryProvider"/> that maps events,

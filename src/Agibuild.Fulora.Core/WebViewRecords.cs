@@ -97,7 +97,7 @@ public sealed class FindInPageOptions
     public bool Forward { get; init; } = true;
 }
 
-public sealed class FindInPageResult : EventArgs
+public sealed class FindInPageEventArgs : EventArgs
 {
     public int ActiveMatchIndex { get; init; }
     public int TotalMatches { get; init; }

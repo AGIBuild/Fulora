@@ -235,7 +235,7 @@ public sealed partial class CoverageGapTests
         var request = """{"jsonrpc":"2.0","id":"1","method":"test.method","params":null}""";
         Assert.True(rpc.TryProcessMessage(request));
 
-        rpc.RemoveHandler("test.method");
+        rpc.UnregisterHandler("test.method");
         Assert.True(rpc.TryProcessMessage(request));
     }
 

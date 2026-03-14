@@ -569,8 +569,8 @@ public class BootstrapTests
         public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null) => Task.FromResult(Array.Empty<byte>());
         public Task<double> GetZoomFactorAsync() => Task.FromResult(1.0);
         public Task SetZoomFactorAsync(double zoomFactor) => Task.CompletedTask;
-        public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null)
-            => Task.FromResult(new FindInPageResult());
+        public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
+            => Task.FromResult(new FindInPageEventArgs());
         public Task StopFindInPageAsync(bool clearHighlights = true) => Task.CompletedTask;
         public Task<string> AddPreloadScriptAsync(string javaScript) => Task.FromResult("script-id");
         public Task RemovePreloadScriptAsync(string scriptId) => Task.CompletedTask;
@@ -710,7 +710,7 @@ public class BridgeDisposalTests
         public void Handle(string method, Func<System.Text.Json.JsonElement?, Task<object?>> handler) { }
         public void Handle(string method, Func<System.Text.Json.JsonElement?, object?> handler) { }
         public void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose) { }
-        public void RemoveHandler(string method) { }
+        public void UnregisterHandler(string method) { }
         public Task<System.Text.Json.JsonElement> InvokeAsync(string method, object? args = null) => throw new NotSupportedException();
         public Task<T?> InvokeAsync<T>(string method, object? args = null) => throw new NotSupportedException();
     }

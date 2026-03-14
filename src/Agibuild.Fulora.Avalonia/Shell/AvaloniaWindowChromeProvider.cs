@@ -199,7 +199,7 @@ public sealed class AvaloniaWindowChromeProvider : IWindowChromeProvider, IDispo
         }
     }
 
-    private void OnPointerPressed(TrackedWindow tracked, PointerPressedEventArgs e)
+    private static void OnPointerPressed(TrackedWindow tracked, PointerPressedEventArgs e)
     {
         if (!e.GetCurrentPoint(tracked.Window).Properties.IsLeftButtonPressed)
             return;

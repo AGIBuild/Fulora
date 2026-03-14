@@ -75,8 +75,8 @@ public class BridgeTracerTests
         public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
             => Events.Add($"ExportEnd:{serviceName}.{methodName}:{elapsedMs}ms");
 
-        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
-            => Events.Add($"ExportError:{serviceName}.{methodName}:{error.Message}");
+        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
+            => Events.Add($"ExportError:{serviceName}.{methodName}:{exception.Message}");
 
         public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
             => Events.Add($"ImportStart:{serviceName}.{methodName}");
@@ -262,7 +262,7 @@ public sealed class TracingRpcWrapperTests
     }
 
     [Fact]
-    public void TracingRpcWrapper_RemoveHandler_delegates()
+    public void TracingRpcWrapper_UnregisterHandler_delegates()
     {
         var tracer = new TestTracer();
         var rpc = new StubRpcService();
@@ -295,7 +295,7 @@ public sealed class TracingRpcWrapperTests
         public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
             => Events.Add($"ExportEnd:{serviceName}.{methodName}:{elapsedMs}ms");
 
-        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
             => Events.Add($"ExportError:{serviceName}.{methodName}");
 
         public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
@@ -324,7 +324,7 @@ public sealed class TracingRpcWrapperTests
         public void Handle(string method, Func<System.Text.Json.JsonElement?, object?> handler)
             => Handlers[method] = args => Task.FromResult(handler(args));
 
-        public void RemoveHandler(string method)
+        public void UnregisterHandler(string method)
         {
             RemovedMethods.Add(method);
             Handlers.Remove(method);

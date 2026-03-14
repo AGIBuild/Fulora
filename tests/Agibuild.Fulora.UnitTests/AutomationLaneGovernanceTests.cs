@@ -832,11 +832,11 @@ public sealed class AutomationLaneGovernanceTests
         var ciWorkflow = File.ReadAllText(ciWorkflowPath);
 
         AssertSourceContains(ciWorkflow, "name: CI and Release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
-        AssertSourceContains(ciWorkflow, "needs: [version, build-macos, build-windows, build-linux]", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "needs: [version, build-macos, build-windows, build-linux, build-docs]", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "environment: release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
-        AssertSourceContains(ciWorkflow, "if: github.event_name == 'push' && github.ref == 'refs/heads/main'", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
-        AssertSourceContains(ciWorkflow, "Verify release bundle manifest and hashes", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
-        AssertSourceContains(ciWorkflow, "Create Git tag and GitHub Release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "if: needs.version.outputs.is_release == 'true'", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "Create and push tag", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "Create GitHub Release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "gh release create", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "deploy-docs", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
     }
@@ -1563,7 +1563,27 @@ public sealed class AutomationLaneGovernanceTests
         if (elementMatch.Success)
             return elementMatch.Groups["v"].Value.Trim();
 
+        var refPattern = new Regex(
+            $@"<PackageReference\s+[^>]*Include=""{Regex.Escape(packageId)}""",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        if (refPattern.IsMatch(csprojXml))
+            return ExtractCpmVersion(packageId);
+
         return null;
+    }
+
+    private static string? ExtractCpmVersion(string packageId)
+    {
+        var propsPath = Path.Combine(FindRepoRoot(), "Directory.Packages.props");
+        if (!File.Exists(propsPath))
+            return null;
+
+        var propsXml = File.ReadAllText(propsPath);
+        var pattern = new Regex(
+            $@"<PackageVersion\s+[^>]*Include=""{Regex.Escape(packageId)}""[^>]*\s+Version=""(?<v>[^""]+)""",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        var match = pattern.Match(propsXml);
+        return match.Success ? match.Groups["v"].Value.Trim() : null;
     }
 
     private static void AssertSingleVersion(string packageId, IReadOnlyDictionary<string, string> versionsByProject)

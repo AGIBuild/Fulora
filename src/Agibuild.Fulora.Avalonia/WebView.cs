@@ -326,7 +326,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// <summary>
     /// Searches the current page for the given text.
     /// </summary>
-    public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null)
+    public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
     {
         if (_core is null)
             throw new InvalidOperationException("WebView is not initialized.");
@@ -907,6 +907,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         UnhookHostWindowClosing();
         UnsubscribeCoreEvents();
 

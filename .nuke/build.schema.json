@@ -38,6 +38,7 @@
         "DependencyVulnerabilityGovernance",
         "DistributionReadinessGovernance",
         "E2ETests",
+        "Format",
         "IntegrationTests",
         "MutationTest",
         "NpmPublish",
@@ -48,6 +49,7 @@
         "PackTemplate",
         "Publish",
         "PublishTemplate",
+        "RefreshLockFiles",
         "ReleaseCloseoutSnapshot",
         "ReleaseOrchestrationGovernance",
         "Restore",
@@ -200,13 +202,13 @@
           "type": "string",
           "description": "Target runtime identifier (e.g., win-x64, osx-arm64)"
         },
-        "PackageVersion": {
-          "type": "string",
-          "description": "NuGet package version override for pack/publish targets"
-        },
         "UpdateVersionTo": {
           "type": "string",
           "description": "Target version to set (X.Y.Z format). If omitted, patch is auto-incremented"
+        },
+        "VersionSuffix": {
+          "type": "string",
+          "description": "Version suffix for pack/publish targets (e.g., ci.42, rc.1). Empty = stable release"
         },
         "WarningGovernanceInput": {
           "type": "string",

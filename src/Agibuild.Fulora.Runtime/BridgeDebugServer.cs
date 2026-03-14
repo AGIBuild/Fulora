@@ -1,10 +1,10 @@
-namespace Agibuild.Fulora;
-
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+
+namespace Agibuild.Fulora;
 
 /// <summary>
 /// Lightweight WebSocket server that streams IBridgeTracer events to external tools (e.g., VS Code extension).
@@ -103,16 +103,16 @@ public sealed class BridgeDebugServer : IBridgeTracer, IAsyncDisposable
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
-        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, error);
+        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, exception);
         FireAndForgetBroadcast(new
         {
             type = "call-error",
             serviceName,
             methodName,
             elapsedMs,
-            error = new { message = error.Message, stack = error.StackTrace },
+            error = new { message = exception.Message, stack = exception.StackTrace },
             timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         });
     }

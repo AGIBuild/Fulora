@@ -254,7 +254,7 @@ public sealed class AvaloniaWebDialog : IWebDialog, ISpaHostingWebView
     public Task SetZoomFactorAsync(double zoomFactor) => _webView.SetZoomFactorAsync(zoomFactor);
 
     /// <inheritdoc cref="WebViewCore.FindInPageAsync"/>
-    public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null) => _webView.FindInPageAsync(text, options);
+    public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null) => _webView.FindInPageAsync(text, options);
     /// <inheritdoc cref="WebViewCore.StopFindInPageAsync"/>
     public Task StopFindInPageAsync(bool clearHighlights = true) => _webView.StopFindInPageAsync(clearHighlights);
 

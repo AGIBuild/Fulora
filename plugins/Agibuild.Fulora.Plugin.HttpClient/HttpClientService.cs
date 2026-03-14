@@ -99,7 +99,7 @@ public sealed class HttpClientService : IHttpClientService
     }
 
     /// <summary>Sends an HTTP GET request to the specified URL.</summary>
-    public Task<HttpBridgeResponse> Get(string url, Dictionary<string, string>? headers = null)
+    public Task<HttpBridgeResponse> GetAsync(string url, Dictionary<string, string>? headers = null)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, ResolveUrl(_options.BaseUrl, url));
         return SendAsync(request, headers);

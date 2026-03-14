@@ -9,6 +9,8 @@ namespace Agibuild.Fulora.Plugin.LocalStorage;
 /// </summary>
 public sealed class LocalStorageService : ILocalStorageService
 {
+    private static readonly JsonSerializerOptions s_jsonOptions = new() { WriteIndented = true };
+
     private readonly string _filePath;
     private readonly object _lock = new();
     private Dictionary<string, string> _store;
@@ -32,7 +34,7 @@ public sealed class LocalStorageService : ILocalStorageService
     }
 
     /// <summary>Gets the value for a key, or null if not found.</summary>
-    public Task<string?> Get(string key)
+    public Task<string?> GetValue(string key)
     {
         lock (_lock)
         {
@@ -41,7 +43,7 @@ public sealed class LocalStorageService : ILocalStorageService
     }
 
     /// <summary>Sets a key-value pair. Overwrites if the key exists.</summary>
-    public Task Set(string key, string value)
+    public Task SetValue(string key, string value)
     {
         lock (_lock)
         {
@@ -107,7 +109,7 @@ public sealed class LocalStorageService : ILocalStorageService
             if (dir is not null && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            var json = JsonSerializer.Serialize(_store, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(_store, s_jsonOptions);
             File.WriteAllText(_filePath, json);
         }
         catch

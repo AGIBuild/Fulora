@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Globalization;
 using System.Xml.Linq;
 using Agibuild.Fulora;
 
@@ -61,13 +62,13 @@ internal static class ListPluginsCommand
         var verWidth = Math.Max(7, allPlugins.Max(p => p.Version.Length));
         var projWidth = Math.Max(7, allPlugins.Max(p => p.Project.Length));
 
-        var headerFmt = string.Format("{0,-" + projWidth + "} {1,-" + idWidth + "} {2,-" + verWidth + "}", "Project", "Package", "Version");
+        var headerFmt = string.Format(CultureInfo.InvariantCulture, "{0,-" + projWidth + "} {1,-" + idWidth + "} {2,-" + verWidth + "}", "Project", "Package", "Version");
         Console.WriteLine(headerFmt);
         Console.WriteLine(new string('-', projWidth + idWidth + verWidth + 4));
 
         var rowFmt = "{0,-" + projWidth + "} {1,-" + idWidth + "} {2,-" + verWidth + "}";
         foreach (var (project, pkgId, version) in allPlugins.OrderBy(p => p.Project).ThenBy(p => p.PackageId))
-            Console.WriteLine(string.Format(rowFmt, project, pkgId, version));
+            Console.WriteLine(string.Format(CultureInfo.InvariantCulture, rowFmt, project, pkgId, version));
 
         return 0;
     }

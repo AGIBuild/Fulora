@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -540,7 +541,7 @@ public partial class WebView2SmokeViewModel : ViewModelBase, IWebViewAdapterHost
         var handle = handleProvider.TryGetWebViewHandle();
         if (handle is not null)
         {
-            LogLine($"Handle: descriptor='{handle.HandleDescriptor}', ptr=0x{handle.Handle.ToString("x")}");
+            LogLine($"Handle: descriptor='{handle.HandleDescriptor}', ptr=0x{handle.Handle.ToString("x", CultureInfo.InvariantCulture)}");
             if (string.Equals(handle.HandleDescriptor, "WebView2", StringComparison.Ordinal))
             {
                 LogLine("Handle descriptor 'WebView2' confirmed.");
@@ -605,7 +606,7 @@ public partial class WebView2SmokeViewModel : ViewModelBase, IWebViewAdapterHost
     public void SetHostHandle(IPlatformHandle handle)
     {
         _hostHandle = new AvaloniaNativeHandleAdapter(handle);
-        LogLine($"Native host handle created: {handle.HandleDescriptor} 0x{handle.Handle.ToString("x")}");
+        LogLine($"Native host handle created: {handle.HandleDescriptor} 0x{handle.Handle.ToString("x", CultureInfo.InvariantCulture)}");
 
         if (AutoRun && Interlocked.Exchange(ref _autoRunStarted, 1) == 0)
         {

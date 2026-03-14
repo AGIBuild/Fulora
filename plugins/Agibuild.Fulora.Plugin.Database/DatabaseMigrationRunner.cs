@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 
 namespace Agibuild.Fulora.Plugin.Database;
@@ -85,7 +86,7 @@ internal sealed class DatabaseMigrationRunner
         using var cmd = _connection.CreateCommand();
         cmd.CommandText = "SELECT COALESCE(MAX(version), 0) FROM schema_version";
         var result = cmd.ExecuteScalar();
-        return result is DBNull or null ? 0 : Convert.ToInt32(result);
+        return result is DBNull or null ? 0 : Convert.ToInt32(result, CultureInfo.InvariantCulture);
     }
 
     private static int? ExtractVersion(string path)

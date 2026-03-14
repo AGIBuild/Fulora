@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using Serilog;
 using Serilog.Core;
@@ -47,7 +48,8 @@ internal static class AppLog
                 logPath,
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 7,
-                outputTemplate: "{Message:lj}{NewLine}")
+                outputTemplate: "{Message:lj}{NewLine}",
+                formatProvider: CultureInfo.InvariantCulture)
             .CreateLogger();
     }
 

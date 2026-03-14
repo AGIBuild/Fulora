@@ -80,10 +80,10 @@ public sealed class BridgeCallProfiler : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         RecordLatency(serviceName, methodName, elapsedMs, isError: true);
-        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, error);
+        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, exception);
     }
 
     /// <inheritdoc />

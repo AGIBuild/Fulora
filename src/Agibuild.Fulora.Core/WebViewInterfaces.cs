@@ -52,7 +52,7 @@ public interface IWebView : IDisposable
     Task<double> GetZoomFactorAsync();
     Task SetZoomFactorAsync(double zoomFactor);
 
-    Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null);
+    Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null);
     Task StopFindInPageAsync(bool clearHighlights = true);
 
     Task<string> AddPreloadScriptAsync(string javaScript);
@@ -192,7 +192,7 @@ public interface IWebViewRpcService
         => Handle(method, args => handler(args, CancellationToken.None));
 
     void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose);
-    void RemoveHandler(string method);
+    void UnregisterHandler(string method);
 
     Task<JsonElement> InvokeAsync(string method, object? args = null);
     Task<T?> InvokeAsync<T>(string method, object? args = null);

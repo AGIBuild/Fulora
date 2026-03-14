@@ -131,7 +131,7 @@ public sealed class WebDialog : IWebDialog, ISpaHostingWebView
     public Task SetZoomFactorAsync(double zoomFactor) => _core.SetZoomFactorAsync(zoomFactor);
 
     /// <inheritdoc cref="WebViewCore.FindInPageAsync"/>
-    public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null) => _core.FindInPageAsync(text, options);
+    public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null) => _core.FindInPageAsync(text, options);
     /// <inheritdoc cref="WebViewCore.StopFindInPageAsync"/>
     public Task StopFindInPageAsync(bool clearHighlights = true) => _core.StopFindInPageAsync(clearHighlights);
 

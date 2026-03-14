@@ -127,7 +127,7 @@ internal interface IZoomAdapter
 internal interface IFindInPageAdapter
 {
     /// <summary>Searches the current page for the given text. Returns match info.</summary>
-    Task<FindInPageResult> FindAsync(string text, FindInPageOptions? options);
+    Task<FindInPageEventArgs> FindAsync(string text, FindInPageOptions? options);
     /// <summary>Clears find highlights and resets search state.</summary>
     void StopFind(bool clearHighlights = true);
 }

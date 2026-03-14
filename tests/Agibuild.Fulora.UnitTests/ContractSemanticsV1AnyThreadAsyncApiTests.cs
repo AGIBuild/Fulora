@@ -356,10 +356,10 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
             }
         }
 
-        public Task<FindInPageResult> FindAsync(string text, FindInPageOptions? options)
+        public Task<FindInPageEventArgs> FindAsync(string text, FindInPageOptions? options)
         {
             FindThreadId = Environment.CurrentManagedThreadId;
-            return Task.FromResult(new FindInPageResult
+            return Task.FromResult(new FindInPageEventArgs
             {
                 ActiveMatchIndex = 0,
                 TotalMatches = 3

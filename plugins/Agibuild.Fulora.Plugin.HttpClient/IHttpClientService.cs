@@ -10,7 +10,7 @@ namespace Agibuild.Fulora.Plugin.HttpClient;
 public interface IHttpClientService
 {
     /// <summary>Sends an HTTP GET request to the specified URL.</summary>
-    Task<HttpBridgeResponse> Get(string url, Dictionary<string, string>? headers = null);
+    Task<HttpBridgeResponse> GetAsync(string url, Dictionary<string, string>? headers = null);
     /// <summary>Sends an HTTP POST request to the specified URL.</summary>
     Task<HttpBridgeResponse> Post(string url, string? body = null, Dictionary<string, string>? headers = null);
     /// <summary>Sends an HTTP PUT request to the specified URL.</summary>

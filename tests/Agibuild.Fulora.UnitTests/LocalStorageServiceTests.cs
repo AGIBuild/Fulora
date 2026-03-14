@@ -27,33 +27,33 @@ public class LocalStorageServiceTests : IDisposable
     public async Task Get_NonExistentKey_ReturnsNull()
     {
         var svc = CreateService();
-        Assert.Null(await svc.Get("unknown"));
+        Assert.Null(await svc.GetValue("unknown"));
     }
 
     [Fact]
     public async Task SetAndGet_RoundTrips()
     {
         var svc = CreateService();
-        await svc.Set("theme", "dark");
-        Assert.Equal("dark", await svc.Get("theme"));
+        await svc.SetValue("theme", "dark");
+        Assert.Equal("dark", await svc.GetValue("theme"));
     }
 
     [Fact]
     public async Task Set_OverwritesExistingKey()
     {
         var svc = CreateService();
-        await svc.Set("lang", "en");
-        await svc.Set("lang", "zh");
-        Assert.Equal("zh", await svc.Get("lang"));
+        await svc.SetValue("lang", "en");
+        await svc.SetValue("lang", "zh");
+        Assert.Equal("zh", await svc.GetValue("lang"));
     }
 
     [Fact]
     public async Task Remove_ExistingKey()
     {
         var svc = CreateService();
-        await svc.Set("k", "v");
+        await svc.SetValue("k", "v");
         await svc.Remove("k");
-        Assert.Null(await svc.Get("k"));
+        Assert.Null(await svc.GetValue("k"));
     }
 
     [Fact]
@@ -67,11 +67,11 @@ public class LocalStorageServiceTests : IDisposable
     public async Task Clear_RemovesAll()
     {
         var svc = CreateService();
-        await svc.Set("a", "1");
-        await svc.Set("b", "2");
+        await svc.SetValue("a", "1");
+        await svc.SetValue("b", "2");
         await svc.Clear();
-        Assert.Null(await svc.Get("a"));
-        Assert.Null(await svc.Get("b"));
+        Assert.Null(await svc.GetValue("a"));
+        Assert.Null(await svc.GetValue("b"));
         Assert.Empty(await svc.GetKeys());
     }
 
@@ -79,9 +79,9 @@ public class LocalStorageServiceTests : IDisposable
     public async Task GetKeys_ReturnsAllKeys()
     {
         var svc = CreateService();
-        await svc.Set("x", "1");
-        await svc.Set("y", "2");
-        await svc.Set("z", "3");
+        await svc.SetValue("x", "1");
+        await svc.SetValue("y", "2");
+        await svc.SetValue("z", "3");
         var keys = await svc.GetKeys();
         Assert.Equal(3, keys.Length);
         Assert.Contains("x", keys);
@@ -100,32 +100,32 @@ public class LocalStorageServiceTests : IDisposable
     public async Task Persistence_AcrossServiceRestart()
     {
         var svc1 = CreateService();
-        await svc1.Set("theme", "dark");
-        await svc1.Set("lang", "zh");
+        await svc1.SetValue("theme", "dark");
+        await svc1.SetValue("lang", "zh");
 
         var svc2 = CreateService();
-        Assert.Equal("dark", await svc2.Get("theme"));
-        Assert.Equal("zh", await svc2.Get("lang"));
+        Assert.Equal("dark", await svc2.GetValue("theme"));
+        Assert.Equal("zh", await svc2.GetValue("lang"));
     }
 
     [Fact]
     public async Task Persistence_RemoveThenRestart()
     {
         var svc1 = CreateService();
-        await svc1.Set("a", "1");
-        await svc1.Set("b", "2");
+        await svc1.SetValue("a", "1");
+        await svc1.SetValue("b", "2");
         await svc1.Remove("a");
 
         var svc2 = CreateService();
-        Assert.Null(await svc2.Get("a"));
-        Assert.Equal("2", await svc2.Get("b"));
+        Assert.Null(await svc2.GetValue("a"));
+        Assert.Equal("2", await svc2.GetValue("b"));
     }
 
     [Fact]
     public async Task Persistence_ClearThenRestart()
     {
         var svc1 = CreateService();
-        await svc1.Set("x", "1");
+        await svc1.SetValue("x", "1");
         await svc1.Clear();
 
         var svc2 = CreateService();
@@ -145,17 +145,17 @@ public class LocalStorageServiceTests : IDisposable
     public async Task Set_EmptyValue_Works()
     {
         var svc = CreateService();
-        await svc.Set("empty", "");
-        Assert.Equal("", await svc.Get("empty"));
+        await svc.SetValue("empty", "");
+        Assert.Equal("", await svc.GetValue("empty"));
     }
 
     [Fact]
     public async Task Set_UnicodeValue_Persists()
     {
         var svc = CreateService();
-        await svc.Set("greeting", "你好世界 🌍");
+        await svc.SetValue("greeting", "你好世界 🌍");
 
         var svc2 = CreateService();
-        Assert.Equal("你好世界 🌍", await svc2.Get("greeting"));
+        Assert.Equal("你好世界 🌍", await svc2.GetValue("greeting"));
     }
 }

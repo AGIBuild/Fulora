@@ -7,7 +7,7 @@ namespace Agibuild.Fulora.Benchmarks;
 
 [MemoryDiagnoser]
 [SimpleJob(RuntimeMoniker.Net90)]
-public class BridgeBenchmarks
+public class BridgeBenchmarks : IDisposable
 {
     private WebViewCore _core = null!;
     private Testing.MockWebViewAdapter _adapter = null!;
@@ -68,9 +68,13 @@ public class BridgeBenchmarks
     }
 
     [GlobalCleanup]
-    public void Cleanup()
+    public void Cleanup() => Dispose();
+
+    /// <inheritdoc />
+    public void Dispose()
     {
-        _core.Dispose();
+        _core?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     [Benchmark(Description = "Bridge: JS→C# typed call (Add)")]
@@ -135,7 +139,7 @@ public class BridgeBenchmarks
 /// </summary>
 [MemoryDiagnoser]
 [SimpleJob(RuntimeMoniker.Net90)]
-public class RpcBenchmarks
+public class RpcBenchmarks : IDisposable
 {
     private WebViewCore _core = null!;
     private Testing.MockWebViewAdapter _adapter = null!;
@@ -159,9 +163,13 @@ public class RpcBenchmarks
     }
 
     [GlobalCleanup]
-    public void Cleanup()
+    public void Cleanup() => Dispose();
+
+    /// <inheritdoc />
+    public void Dispose()
     {
-        _core.Dispose();
+        _core?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     [Benchmark(Description = "Raw RPC: JS→C# echo")]

@@ -241,7 +241,7 @@ internal static class GovernanceSyntaxAssertionHelper
         }
     }
 
-    static string? GetAnonymousMemberName(AnonymousObjectMemberDeclaratorSyntax member)
+    private static string? GetAnonymousMemberName(AnonymousObjectMemberDeclaratorSyntax member)
     {
         if (member.NameEquals is not null)
             return member.NameEquals.Name.Identifier.ValueText;

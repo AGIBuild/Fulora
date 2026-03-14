@@ -421,7 +421,7 @@ public sealed partial class GtkWebViewSmokeViewModel : ViewModelBase
             }
         }
 
-        private async Task HandleClientAsync(TcpClient client)
+        private static async Task HandleClientAsync(TcpClient client)
         {
             using (client)
             using (var stream = client.GetStream())

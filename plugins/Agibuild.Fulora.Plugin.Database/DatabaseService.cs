@@ -6,7 +6,7 @@ namespace Agibuild.Fulora.Plugin.Database;
 /// SQLite-backed implementation of <see cref="IDatabaseService"/>.
 /// Thread-safe via a lock on all operations.
 /// </summary>
-public sealed class DatabaseService : IDatabaseService
+public sealed class DatabaseService : IDatabaseService, IDisposable
 {
     private readonly string _connectionString;
     private readonly string[]? _migrationScripts;
@@ -146,7 +146,7 @@ public sealed class DatabaseService : IDatabaseService
         using var cmd = _connection!.CreateCommand();
         cmd.CommandText = "SELECT COALESCE(MAX(version), 0) FROM schema_version";
         var result = cmd.ExecuteScalar();
-        return result is DBNull or null ? 0 : Convert.ToInt32(result);
+        return result is DBNull or null ? 0 : Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture);
     }
 
     private async Task<QueryResult> QueryCore(string sql, Dictionary<string, object?>? parameters)
@@ -226,6 +226,15 @@ public sealed class DatabaseService : IDatabaseService
         return totalAffected;
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        _activeTransaction?.Dispose();
+        _activeTransaction = null;
+        _connection?.Dispose();
+        _connection = null;
+    }
+
     private static void BindParameters(SqliteCommand cmd, Dictionary<string, object?>? parameters)
     {
         if (parameters == null)
@@ -233,7 +242,7 @@ public sealed class DatabaseService : IDatabaseService
 
         foreach (var (key, value) in parameters)
         {
-            var paramName = key.StartsWith("@", StringComparison.Ordinal) ? key : "@" + key;
+            var paramName = key.StartsWith('@') ? key : "@" + key;
             var param = cmd.Parameters.AddWithValue(paramName, value ?? DBNull.Value);
             if (value is long or int or short or byte)
                 param.SqliteType = SqliteType.Integer;

@@ -206,7 +206,7 @@ public sealed class AiBridgeService : IAiBridgeService
         return Task.CompletedTask;
     }
 
-    private IChatClient GetToolCallingClient(string? providerName)
+    private FunctionInvokingChatClient GetToolCallingClient(string? providerName)
     {
         var inner = _providers.GetChatClient(providerName);
         var maxIterations = _toolCallingOptions?.MaxIterations ?? 10;

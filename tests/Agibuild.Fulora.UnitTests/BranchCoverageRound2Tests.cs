@@ -508,7 +508,7 @@ public sealed class BranchCoverageRound2Tests
         public void Handle(string method, Func<JsonElement?, Task<object?>> handler) => _handlers[method] = handler;
         public void Handle(string method, Func<JsonElement?, object?> handler) =>
             _handlers[method] = args => Task.FromResult(handler(args));
-        public void RemoveHandler(string method) => _handlers.Remove(method);
+        public void UnregisterHandler(string method) => _handlers.Remove(method);
 
         public Task<JsonElement> InvokeAsync(string method, object? args = null)
         {

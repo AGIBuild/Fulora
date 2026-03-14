@@ -92,7 +92,7 @@ public sealed class MockBridgeService : IBridgeService
 
     private void ThrowIfDisposed()
     {
-        if (_disposed) throw new ObjectDisposedException(nameof(MockBridgeService));
+        ObjectDisposedException.ThrowIf(_disposed, nameof(MockBridgeService));
     }
 
     /// <summary>Marks the mock as disposed. Subsequent operations throw.</summary>

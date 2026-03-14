@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -87,7 +88,7 @@ internal static class SearchCommand
         idWidth = Math.Min(idWidth, 50);
         versionWidth = Math.Min(versionWidth, 20);
 
-        var header = string.Format("{0,-" + idWidth + "} {1,-" + versionWidth + "} Description", "Package", "Version");
+        var header = string.Format(CultureInfo.InvariantCulture, "{0,-" + idWidth + "} {1,-" + versionWidth + "} Description", "Package", "Version");
         Console.WriteLine(header);
         Console.WriteLine(new string('-', Math.Min(header.Length, 120)));
 
@@ -97,7 +98,7 @@ internal static class SearchCommand
             var ver = Truncate(pkg.Version ?? "", versionWidth);
             var desc = Truncate(pkg.Description ?? "", 60);
             var tags = pkg.Tags?.Length > 0 ? $" [{string.Join(", ", pkg.Tags.Take(3))}]" : "";
-            Console.WriteLine(string.Format("{0,-" + idWidth + "} {1,-" + versionWidth + "} {2}{3}", id, ver, desc, tags));
+            Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0,-" + idWidth + "} {1,-" + versionWidth + "} {2}{3}", id, ver, desc, tags));
         }
     }
 

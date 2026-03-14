@@ -478,8 +478,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandl
 
     private void ThrowIfNotAttachedForCookies()
     {
-        if (_detached)
-            throw new ObjectDisposedException(nameof(MacOSWebViewAdapter));
+        ObjectDisposedException.ThrowIf(_detached, nameof(MacOSWebViewAdapter));
         if (!_attached)
             throw new InvalidOperationException("Adapter is not attached.");
     }
@@ -615,10 +614,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandl
     {
         ThrowIfNotInitialized();
 
-        if (_detached)
-        {
-            throw new ObjectDisposedException(nameof(MacOSWebViewAdapter));
-        }
+        ObjectDisposedException.ThrowIf(_detached, nameof(MacOSWebViewAdapter));
 
         if (!_attached || _native == IntPtr.Zero)
         {
@@ -626,7 +622,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandl
         }
     }
 
-    private void SafeRaise(Action action)
+    private static void SafeRaise(Action action)
     {
         try
         {
@@ -1298,10 +1294,10 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandl
 
     // ==================== IFindInPageAdapter ====================
 
-    public Task<FindInPageResult> FindAsync(string text, FindInPageOptions? options)
+    public Task<FindInPageEventArgs> FindAsync(string text, FindInPageOptions? options)
     {
         ThrowIfNotAttached();
-        var tcs = new TaskCompletionSource<FindInPageResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var tcs = new TaskCompletionSource<FindInPageEventArgs>(TaskCreationOptions.RunContinuationsAsynchronously);
         var handle = GCHandle.Alloc(tcs);
 
         var caseSensitive = options?.CaseSensitive ?? false;
@@ -1314,10 +1310,10 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter, INativeWebViewHandl
     private static void OnFindComplete(IntPtr context, int activeMatchIndex, int totalMatches)
     {
         var handle = GCHandle.FromIntPtr(context);
-        var tcs = (TaskCompletionSource<FindInPageResult>)handle.Target!;
+        var tcs = (TaskCompletionSource<FindInPageEventArgs>)handle.Target!;
         handle.Free();
 
-        tcs.TrySetResult(new FindInPageResult
+        tcs.TrySetResult(new FindInPageEventArgs
         {
             ActiveMatchIndex = activeMatchIndex,
             TotalMatches = totalMatches

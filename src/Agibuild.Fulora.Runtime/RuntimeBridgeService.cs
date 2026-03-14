@@ -148,7 +148,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
         catch
         {
             foreach (var m in registeredMethods)
-                _rpc.RemoveHandler(m);
+                _rpc.UnregisterHandler(m);
             throw;
         }
     }
@@ -192,7 +192,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
             else
             {
                 foreach (var method in service.RegisteredMethods)
-                    _rpc.RemoveHandler(method);
+                    _rpc.UnregisterHandler(method);
             }
 
             service.GeneratedDisconnectEvents?.Invoke();
@@ -254,7 +254,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
         foreach (var kvp in _exportedServices)
         {
             foreach (var method in kvp.Value.RegisteredMethods)
-                _rpc.RemoveHandler(method);
+                _rpc.UnregisterHandler(method);
 
             DisposeImplementation(kvp.Value);
         }
@@ -268,7 +268,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
     [UnconditionalSuppressMessage("Trimming", "IL2075",
         Justification = "Task<T>.Result property is guaranteed to exist by the runtime.")]
-    private Func<JsonElement?, Task<object?>> CreateHandler(MethodInfo method, object target)
+    private static Func<JsonElement?, Task<object?>> CreateHandler(MethodInfo method, object target)
     {
         var parameters = method.GetParameters();
 
@@ -543,13 +543,12 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
     private void ThrowIfDisposed()
     {
-        if (_disposed)
-            throw new ObjectDisposedException(nameof(RuntimeBridgeService));
+        ObjectDisposedException.ThrowIf(_disposed, nameof(RuntimeBridgeService));
     }
 
     // ==================== Middleware ====================
 
-    private static IReadOnlyList<IBridgeMiddleware>? BuildMiddlewarePipeline(BridgeOptions? options)
+    private static List<IBridgeMiddleware>? BuildMiddlewarePipeline(BridgeOptions? options)
     {
         var middlewares = new List<IBridgeMiddleware>();
 
@@ -564,7 +563,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
     private static Func<JsonElement?, Task<object?>> WrapWithMiddleware(
         Func<JsonElement?, Task<object?>> handler,
-        IReadOnlyList<IBridgeMiddleware> middlewares,
+        List<IBridgeMiddleware> middlewares,
         string serviceName,
         string methodName)
     {
@@ -578,7 +577,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
                 CancellationToken = CancellationToken.None,
             };
 
-            BridgeCallDelegate terminal = ctx => handler(ctx.Arguments);
+            BridgeCallHandler terminal = ctx => handler(ctx.Arguments);
 
             var pipeline = terminal;
             for (int i = middlewares.Count - 1; i >= 0; i--)
@@ -631,7 +630,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
             _limit = limit;
         }
 
-        public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next)
+        public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline)
         {
             var now = Environment.TickCount64;
             var windowMs = _limit.Window.Ticks / TimeSpan.TicksPerMillisecond;
@@ -647,7 +646,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
                 _timestamps.Enqueue(now);
             }
 
-            return next(context);
+            return pipeline(context);
         }
     }
 
@@ -715,7 +714,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
         public void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose)
             => _inner.RegisterEnumerator(token, moveNext, dispose);
 
-        public void RemoveHandler(string method) => _inner.RemoveHandler(method);
+        public void UnregisterHandler(string method) => _inner.UnregisterHandler(method);
 
         public async Task<JsonElement> InvokeAsync(string method, object? args = null)
         {
@@ -826,10 +825,10 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
     private sealed class MiddlewareRpcWrapper : IWebViewRpcService
     {
         private readonly IWebViewRpcService _inner;
-        private readonly IReadOnlyList<IBridgeMiddleware> _middlewares;
+        private readonly List<IBridgeMiddleware> _middlewares;
         private readonly string _serviceName;
 
-        public MiddlewareRpcWrapper(IWebViewRpcService inner, IReadOnlyList<IBridgeMiddleware> middlewares, string serviceName)
+        public MiddlewareRpcWrapper(IWebViewRpcService inner, List<IBridgeMiddleware> middlewares, string serviceName)
         {
             _inner = inner;
             _middlewares = middlewares;
@@ -859,7 +858,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
         public void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose)
             => _inner.RegisterEnumerator(token, moveNext, dispose);
 
-        public void RemoveHandler(string method) => _inner.RemoveHandler(method);
+        public void UnregisterHandler(string method) => _inner.UnregisterHandler(method);
         public Task<JsonElement> InvokeAsync(string method, object? args = null) => _inner.InvokeAsync(method, args);
         public Task<T?> InvokeAsync<T>(string method, object? args = null) => _inner.InvokeAsync<T>(method, args);
         public Task<JsonElement> InvokeAsync(string method, object? args, CancellationToken ct) => _inner.InvokeAsync(method, args, ct);

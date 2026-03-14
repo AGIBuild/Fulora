@@ -57,7 +57,7 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         _collector.Add(new BridgeDevToolsEvent
         {
@@ -67,9 +67,9 @@ public sealed class DevToolsPanelTracer : IBridgeTracer
             ServiceName = serviceName,
             MethodName = methodName,
             ElapsedMs = elapsedMs,
-            ErrorMessage = error.Message,
+            ErrorMessage = exception.Message,
         });
-        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, error);
+        _inner?.OnExportCallError(serviceName, methodName, elapsedMs, exception);
     }
 
     /// <inheritdoc />

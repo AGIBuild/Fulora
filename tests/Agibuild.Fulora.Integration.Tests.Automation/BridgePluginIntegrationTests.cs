@@ -45,8 +45,8 @@ public sealed class BridgePluginIntegrationTests
             var svc = new LocalStorageService(storagePath);
             core.Bridge.Expose<ILocalStorageService>(svc);
 
-            await svc.Set("lang", "zh");
-            var val = await svc.Get("lang");
+            await svc.SetValue("lang", "zh");
+            var val = await svc.GetValue("lang");
             Assert.Equal("zh", val);
 
             var keys = await svc.GetKeys();
@@ -54,7 +54,7 @@ public sealed class BridgePluginIntegrationTests
             Assert.Equal("lang", keys[0]);
 
             await svc.Remove("lang");
-            Assert.Null(await svc.Get("lang"));
+            Assert.Null(await svc.GetValue("lang"));
 
             core.Dispose();
         }
@@ -75,10 +75,10 @@ public sealed class BridgePluginIntegrationTests
         try
         {
             var svc1 = new LocalStorageService(storagePath);
-            await svc1.Set("greeting", "hello 🌍");
+            await svc1.SetValue("greeting", "hello 🌍");
 
             var svc2 = new LocalStorageService(storagePath);
-            Assert.Equal("hello 🌍", await svc2.Get("greeting"));
+            Assert.Equal("hello 🌍", await svc2.GetValue("greeting"));
         }
         finally
         {

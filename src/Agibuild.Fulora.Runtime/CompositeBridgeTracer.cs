@@ -48,11 +48,11 @@ public sealed class CompositeBridgeTracer : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         foreach (var t in _tracers)
         {
-            try { t.OnExportCallError(serviceName, methodName, elapsedMs, error); }
+            try { t.OnExportCallError(serviceName, methodName, elapsedMs, exception); }
             catch { /* isolate per-tracer exceptions */ }
         }
     }

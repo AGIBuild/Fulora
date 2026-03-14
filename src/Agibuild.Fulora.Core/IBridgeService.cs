@@ -125,7 +125,7 @@ public sealed class BridgeOptions
 /// <summary>
 /// Delegate representing the next step in the middleware pipeline (or the terminal handler).
 /// </summary>
-public delegate Task<object?> BridgeCallDelegate(BridgeCallContext context);
+public delegate Task<object?> BridgeCallHandler(BridgeCallContext context);
 
 /// <summary>
 /// ASP.NET Core–style middleware for intercepting bridge RPC calls (logging, auth, error transform, etc.).
@@ -133,10 +133,10 @@ public delegate Task<object?> BridgeCallDelegate(BridgeCallContext context);
 public interface IBridgeMiddleware
 {
     /// <summary>
-    /// Processes a bridge call. Call <paramref name="next"/> to continue the pipeline,
+    /// Processes a bridge call. Call <paramref name="pipeline"/> to continue the pipeline,
     /// or short-circuit by returning without calling it.
     /// </summary>
-    Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next);
+    Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline);
 }
 
 /// <summary>

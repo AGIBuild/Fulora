@@ -253,7 +253,7 @@ internal class MockWebViewAdapter : IWebViewAdapter
             navigationId,
             requestUri,
             status,
-            status == NavigationCompletedStatus.Failure ? error ?? new Exception("Navigation failed.") : null);
+            status == NavigationCompletedStatus.Failure ? error ?? new InvalidOperationException("Navigation failed.") : null);
         NavigationCompleted?.Invoke(this, args);
     }
 
@@ -525,7 +525,7 @@ internal sealed class MockWebViewAdapterWithZoom : MockWebViewAdapter, IZoomAdap
 internal sealed class MockWebViewAdapterWithFind : MockWebViewAdapter, IFindInPageAdapter
 {
     /// <summary>The result to return from <see cref="FindAsync"/>.</summary>
-    public FindInPageResult FindResult { get; set; } = new() { ActiveMatchIndex = 0, TotalMatches = 3 };
+    public FindInPageEventArgs FindResult { get; set; } = new() { ActiveMatchIndex = 0, TotalMatches = 3 };
 
     /// <summary>The last search text received.</summary>
     public string? LastSearchText { get; private set; }
@@ -536,7 +536,7 @@ internal sealed class MockWebViewAdapterWithFind : MockWebViewAdapter, IFindInPa
     /// <summary>The clearHighlights parameter from the last StopFind call.</summary>
     public bool LastClearHighlights { get; private set; }
 
-    public Task<FindInPageResult> FindAsync(string text, FindInPageOptions? options)
+    public Task<FindInPageEventArgs> FindAsync(string text, FindInPageOptions? options)
     {
         LastSearchText = text;
         LastOptions = options;

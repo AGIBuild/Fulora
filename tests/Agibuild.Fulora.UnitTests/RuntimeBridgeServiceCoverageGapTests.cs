@@ -146,7 +146,7 @@ public sealed class RuntimeBridgeServiceCoverageGapTests
         var value = await handler!(null);
         Assert.Equal("ok", value);
 
-        proxy.RemoveHandler("sync.echo");
+        proxy.UnregisterHandler("sync.echo");
         Assert.Contains("sync.echo", rpc.RemovedMethods);
 
         await proxy.InvokeAsync("remote.call", null, TestContext.Current.CancellationToken);
@@ -224,7 +224,7 @@ public sealed class RuntimeBridgeServiceCoverageGapTests
             AsyncHandlers[method] = args => Task.FromResult(handler(args));
         }
 
-        public void RemoveHandler(string method)
+        public void UnregisterHandler(string method)
         {
             RemovedMethods.Add(method);
             AsyncHandlers.Remove(method);

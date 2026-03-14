@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -227,28 +228,28 @@ internal static class TypeScriptEmitter
         if (type is "byte[]" or "System.Byte[]") return "Uint8Array";
 
         // IBridgeEvent
-        if (type.StartsWith("Agibuild.Fulora.IBridgeEvent<"))
+        if (type.StartsWith("Agibuild.Fulora.IBridgeEvent<", StringComparison.Ordinal))
         {
             var inner = ExtractGenericArg(type);
             return $"BridgeEvent<{CSharpTypeToTypeScript(inner)}>";
         }
 
         // IAsyncEnumerable
-        if (type.StartsWith("System.Collections.Generic.IAsyncEnumerable<"))
+        if (type.StartsWith("System.Collections.Generic.IAsyncEnumerable<", StringComparison.Ordinal))
         {
             var inner = ExtractGenericArg(type);
             return $"AsyncIterable<{CSharpTypeToTypeScript(inner)}>";
         }
 
         // Collections
-        if (type.StartsWith("System.Collections.Generic.List<") || type.StartsWith("System.Collections.Generic.IList<")
-            || type.StartsWith("System.Collections.Generic.IReadOnlyList<") || type.StartsWith("System.Collections.Generic.IEnumerable<"))
+        if (type.StartsWith("System.Collections.Generic.List<", StringComparison.Ordinal) || type.StartsWith("System.Collections.Generic.IList<", StringComparison.Ordinal)
+            || type.StartsWith("System.Collections.Generic.IReadOnlyList<", StringComparison.Ordinal) || type.StartsWith("System.Collections.Generic.IEnumerable<", StringComparison.Ordinal))
         {
             var inner = ExtractGenericArg(type);
             return $"{CSharpTypeToTypeScript(inner)}[]";
         }
 
-        if (type.StartsWith("System.Collections.Generic.Dictionary<") || type.StartsWith("System.Collections.Generic.IDictionary<"))
+        if (type.StartsWith("System.Collections.Generic.Dictionary<", StringComparison.Ordinal) || type.StartsWith("System.Collections.Generic.IDictionary<", StringComparison.Ordinal))
         {
             var args = ExtractGenericArgs(type);
             if (args.Count >= 2)

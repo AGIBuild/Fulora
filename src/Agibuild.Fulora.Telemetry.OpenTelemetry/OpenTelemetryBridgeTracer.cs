@@ -1,8 +1,8 @@
-namespace Agibuild.Fulora.Telemetry;
-
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+
+namespace Agibuild.Fulora.Telemetry;
 
 /// <summary>
 /// OpenTelemetry implementation of <see cref="IBridgeTracer"/> that creates Activity spans
@@ -88,17 +88,17 @@ public sealed class OpenTelemetryBridgeTracer : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         var key = Key(serviceName, methodName, "export");
         if (_activities.TryRemove(key, out var activity))
         {
-            activity?.SetStatus(ActivityStatusCode.Error, error.Message);
+            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
             activity?.AddEvent(new ActivityEvent("exception", tags: new ActivityTagsCollection
             {
-                { "exception.type", error.GetType().FullName ?? error.GetType().Name },
-                { "exception.message", error.Message },
-                { "exception.stacktrace", error.StackTrace ?? "" }
+                { "exception.type", exception.GetType().FullName ?? exception.GetType().Name },
+                { "exception.message", exception.Message },
+                { "exception.stacktrace", exception.StackTrace ?? "" }
             }));
             activity?.Dispose();
         }

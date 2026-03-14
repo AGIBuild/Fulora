@@ -230,7 +230,7 @@ public sealed partial class RuntimeCoverageTests
             _handlers[method] = args => Task.FromResult(handler(args));
         }
 
-        public void RemoveHandler(string method)
+        public void UnregisterHandler(string method)
         {
             _handlers.Remove(method);
         }

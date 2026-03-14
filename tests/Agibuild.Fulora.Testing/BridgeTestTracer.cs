@@ -48,12 +48,12 @@ public sealed class BridgeTestTracer : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         var (paramsJson, _) = DequeuePending(serviceName, methodName);
         var record = new BridgeCallRecord(
             serviceName, methodName, BridgeCallDirection.Export,
-            paramsJson, null, error?.Message ?? "Unknown error", elapsedMs, DateTimeOffset.UtcNow);
+            paramsJson, null, exception?.Message ?? "Unknown error", elapsedMs, DateTimeOffset.UtcNow);
         lock (_callsLock) { _calls.Add(record); }
     }
 

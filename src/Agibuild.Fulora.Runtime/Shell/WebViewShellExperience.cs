@@ -782,10 +782,7 @@ public sealed class WebViewShellExperience : IDisposable
     /// <summary>
     /// Number of managed windows currently tracked by runtime.
     /// </summary>
-    public int ManagedWindowCount
-    {
-        get => _managedWindowManager.ManagedWindowCount;
-    }
+    public int ManagedWindowCount => _managedWindowManager.ManagedWindowCount;
 
     /// <summary>
     /// Returns a snapshot of active managed window ids.
@@ -1337,7 +1334,7 @@ public sealed class WebViewShellExperience : IDisposable
         };
     }
 
-    private static IReadOnlyList<WebViewMenuItemModel> NormalizeMenuItems(IReadOnlyList<WebViewMenuItemModel> items)
+    private static List<WebViewMenuItemModel> NormalizeMenuItems(IReadOnlyList<WebViewMenuItemModel> items)
     {
         var normalized = new List<WebViewMenuItemModel>(items.Count);
         var seen = new HashSet<string>(StringComparer.Ordinal);
@@ -1370,7 +1367,7 @@ public sealed class WebViewShellExperience : IDisposable
             Items = CloneMenuItems(model.Items)
         };
 
-    private static IReadOnlyList<WebViewMenuItemModel> CloneMenuItems(IReadOnlyList<WebViewMenuItemModel> items)
+    private static WebViewMenuItemModel[] CloneMenuItems(IReadOnlyList<WebViewMenuItemModel> items)
         => items.Select(item => new WebViewMenuItemModel
         {
             Id = item.Id,

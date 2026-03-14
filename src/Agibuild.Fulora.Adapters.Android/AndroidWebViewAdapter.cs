@@ -1538,12 +1538,12 @@ internal sealed class AndroidWebViewAdapter : IWebViewAdapter, INativeWebViewHan
 
     // ==================== IFindInPageAdapter ====================
 
-    public Task<FindInPageResult> FindAsync(string text, FindInPageOptions? options)
+    public Task<FindInPageEventArgs> FindAsync(string text, FindInPageOptions? options)
     {
         if (_webView is null)
             throw new InvalidOperationException("WebView is not initialized.");
 
-        var tcs = new TaskCompletionSource<FindInPageResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var tcs = new TaskCompletionSource<FindInPageEventArgs>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         // Android WebView has built-in findAllAsync + FindListener.
         // All WebView methods must be called on the Android UI thread.
@@ -1563,13 +1563,13 @@ internal sealed class AndroidWebViewAdapter : IWebViewAdapter, INativeWebViewHan
 
     private sealed class FindListener : Java.Lang.Object, AWebView.IFindListener
     {
-        private readonly TaskCompletionSource<FindInPageResult> _tcs;
-        public FindListener(TaskCompletionSource<FindInPageResult> tcs) => _tcs = tcs;
+        private readonly TaskCompletionSource<FindInPageEventArgs> _tcs;
+        public FindListener(TaskCompletionSource<FindInPageEventArgs> tcs) => _tcs = tcs;
 
         public void OnFindResultReceived(int activeMatchOrdinal, int numberOfMatches, bool isDoneCounting)
         {
             if (!isDoneCounting) return;
-            _tcs.TrySetResult(new FindInPageResult
+            _tcs.TrySetResult(new FindInPageEventArgs
             {
                 ActiveMatchIndex = activeMatchOrdinal,
                 TotalMatches = numberOfMatches

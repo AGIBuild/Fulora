@@ -63,7 +63,7 @@ internal sealed class WebViewRpcService : IWebViewRpcService
         _handlers[method] = args => handler(args, CancellationToken.None);
     }
 
-    public void RemoveHandler(string method)
+    public void UnregisterHandler(string method)
     {
         ArgumentException.ThrowIfNullOrEmpty(method);
         _handlers.TryRemove(method, out _);
@@ -421,7 +421,7 @@ internal sealed class WebViewRpcService : IWebViewRpcService
 
     [UnconditionalSuppressMessage("Trimming", "IL2026",
         Justification = "RPC result serialization uses runtime types; the handler is responsible for type safety.")]
-    private string BuildSuccessResponseJson(string? id, object? result)
+    private static string BuildSuccessResponseJson(string? id, object? result)
     {
         var response = new RpcResponse
         {
@@ -431,7 +431,7 @@ internal sealed class WebViewRpcService : IWebViewRpcService
         return JsonSerializer.Serialize(response, RpcJsonContext.Default.RpcResponse);
     }
 
-    private string BuildErrorResponseJson(string? id, int code, string message)
+    private static string BuildErrorResponseJson(string? id, int code, string message)
     {
         var response = new RpcErrorResponse
         {
@@ -562,7 +562,7 @@ internal sealed class WebViewRpcService : IWebViewRpcService
         return false;
     }
 
-    private void ResolvePendingCall(JsonElement root, TaskCompletionSource<JsonElement> tcs)
+    private static void ResolvePendingCall(JsonElement root, TaskCompletionSource<JsonElement> tcs)
     {
         if (root.TryGetProperty("error", out var errorProp))
         {

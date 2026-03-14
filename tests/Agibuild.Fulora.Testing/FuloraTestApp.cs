@@ -52,11 +52,8 @@ public sealed class FuloraTestApp : IAsyncDisposable
     /// </summary>
     public WebViewTestHandle GetWebView()
     {
-        if (_core is null)
-        {
-            throw new ObjectDisposedException(nameof(FuloraTestApp));
-        }
-        return new WebViewTestHandle(_core, _tracer);
+        ObjectDisposedException.ThrowIf(_core is null, this);
+        return new WebViewTestHandle(_core!, _tracer);
     }
 
     /// <summary>

@@ -49,8 +49,8 @@ public sealed class TestWebViewHost : IWebView
     public Task SetZoomFactorAsync(double zoomFactor) => Task.CompletedTask;
 
     // Find in Page
-    public Task<FindInPageResult> FindInPageAsync(string text, FindInPageOptions? options = null)
-        => Task.FromException<FindInPageResult>(new NotSupportedException());
+    public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
+        => Task.FromException<FindInPageEventArgs>(new NotSupportedException());
     public Task StopFindInPageAsync(bool clearHighlights = true) => Task.CompletedTask;
 
     // Preload Scripts

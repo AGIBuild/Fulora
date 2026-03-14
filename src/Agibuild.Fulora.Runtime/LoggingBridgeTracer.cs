@@ -27,8 +27,8 @@ public sealed class LoggingBridgeTracer : IBridgeTracer
             serviceName, methodName, elapsedMs, resultType ?? "void");
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
-        => _logger.LogWarning(error, "Bridge ✗ {Service}.{Method} {Elapsed}ms",
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
+        => _logger.LogWarning(exception, "Bridge ✗ {Service}.{Method} {Elapsed}ms",
             serviceName, methodName, elapsedMs);
 
     /// <inheritdoc />

@@ -104,7 +104,7 @@ public class CompositeBridgeTracerTests
         public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
             => Events.Add($"ExportEnd:{serviceName}.{methodName}:{elapsedMs}ms");
 
-        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
             => Events.Add($"ExportError:{serviceName}.{methodName}");
 
         public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
@@ -128,7 +128,7 @@ public class CompositeBridgeTracerTests
         public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
             => throw new InvalidOperationException("test throw");
 
-        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+        public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
             => throw new InvalidOperationException("test throw");
 
         public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)

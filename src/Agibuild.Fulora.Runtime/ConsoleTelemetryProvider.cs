@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 
 namespace Agibuild.Fulora;
@@ -14,7 +15,7 @@ public sealed class ConsoleTelemetryProvider : ITelemetryProvider
             return string.Empty;
         var sb = new StringBuilder();
         foreach (var kv in props)
-            sb.Append($", {kv.Key}=\"{kv.Value}\"");
+            sb.Append(CultureInfo.InvariantCulture, $", {kv.Key}=\"{kv.Value}\"");
         return sb.ToString();
     }
 

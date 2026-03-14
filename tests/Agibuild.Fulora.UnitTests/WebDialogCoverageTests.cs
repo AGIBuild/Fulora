@@ -296,9 +296,9 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public void FindInPageResult_defaults()
+    public void FindInPageEventArgs_defaults()
     {
-        var result = new FindInPageResult();
+        var result = new FindInPageEventArgs();
         Assert.Equal(0, result.ActiveMatchIndex);
         Assert.Equal(0, result.TotalMatches);
     }

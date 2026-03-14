@@ -10,16 +10,16 @@ public sealed class LoggingMiddleware : IBridgeMiddleware
 {
     public List<string> Calls { get; } = new();
 
-    public async Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next)
+    public async Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline)
     {
         Calls.Add($"{context.ServiceName}.{context.MethodName}");
-        return await next(context);
+        return await pipeline(context);
     }
 }
 
 public sealed class ShortCircuitMiddleware : IBridgeMiddleware
 {
-    public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next)
+    public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline)
     {
         return Task.FromResult<object?>("short-circuited");
     }
@@ -27,11 +27,11 @@ public sealed class ShortCircuitMiddleware : IBridgeMiddleware
 
 public sealed class ErrorTransformMiddleware : IBridgeMiddleware
 {
-    public async Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next)
+    public async Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline)
     {
         try
         {
-            return await next(context);
+            return await pipeline(context);
         }
         catch (Exception)
         {
@@ -254,10 +254,10 @@ public sealed class BridgeMiddlewareTests
 
 internal sealed class PropertySetterMiddleware : IBridgeMiddleware
 {
-    public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next)
+    public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline)
     {
         context.Properties["test-flag"] = true;
-        return next(context);
+        return pipeline(context);
     }
 }
 
@@ -265,9 +265,9 @@ internal sealed class PropertyReaderMiddleware : IBridgeMiddleware
 {
     public bool SawFlag { get; private set; }
 
-    public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallDelegate next)
+    public Task<object?> InvokeAsync(BridgeCallContext context, BridgeCallHandler pipeline)
     {
         SawFlag = context.Properties.TryGetValue("test-flag", out var v) && v is true;
-        return next(context);
+        return pipeline(context);
     }
 }

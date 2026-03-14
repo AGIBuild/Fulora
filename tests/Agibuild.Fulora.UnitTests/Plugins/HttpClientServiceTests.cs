@@ -26,7 +26,7 @@ public class HttpClientServiceTests
         });
 
         var svc = CreateService(handler: handler);
-        var res = await svc.Get("https://api.example.com/users");
+        var res = await svc.GetAsync("https://api.example.com/users");
 
         Assert.Equal(200, res.StatusCode);
         Assert.True(res.IsSuccess);
@@ -79,7 +79,7 @@ public class HttpClientServiceTests
 
         var options = new HttpClientOptions { BaseUrl = "https://api.example.com/v1" };
         var svc = CreateService(options, handler);
-        await svc.Get("/users");
+        await svc.GetAsync("/users");
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class HttpClientServiceTests
 
         var options = new HttpClientOptions { BaseUrl = "https://api.example.com" };
         var svc = CreateService(options, handler);
-        await svc.Get("https://other.example.com/users");
+        await svc.GetAsync("https://other.example.com/users");
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class HttpClientServiceTests
             DefaultHeaders = new Dictionary<string, string> { ["X-Api-Key"] = "secret" }
         };
         var svc = CreateService(options, handler);
-        await svc.Get("https://api.example.com/users");
+        await svc.GetAsync("https://api.example.com/users");
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class HttpClientServiceTests
             DefaultHeaders = new Dictionary<string, string> { ["X-Custom"] = "default" }
         };
         var svc = CreateService(options, handler);
-        await svc.Get("https://api.example.com/users", new Dictionary<string, string> { ["X-Custom"] = "override" });
+        await svc.GetAsync("https://api.example.com/users", new Dictionary<string, string> { ["X-Custom"] = "override" });
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public class HttpClientServiceTests
         var handler = new MockHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
         var options = new HttpClientOptions { Timeout = TimeSpan.FromSeconds(5) };
         var svc = CreateService(options, handler);
-        var res = await svc.Get("https://api.example.com/users");
+        var res = await svc.GetAsync("https://api.example.com/users");
         Assert.Equal(200, res.StatusCode);
     }
 
@@ -155,7 +155,7 @@ public class HttpClientServiceTests
         var interceptor = new AddHeaderInterceptor("X-Intercepted", "yes");
         var options = new HttpClientOptions { Interceptors = [interceptor] };
         var svc = CreateService(options, handler);
-        await svc.Get("https://api.example.com/users");
+        await svc.GetAsync("https://api.example.com/users");
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public class HttpClientServiceTests
         });
 
         var svc = CreateService(handler: handler);
-        var res = await svc.Get("https://api.example.com/users");
+        var res = await svc.GetAsync("https://api.example.com/users");
 
         Assert.True(res.Headers.TryGetValue("X-Request-Id", out var value));
         Assert.Equal("abc-123", value);
@@ -231,7 +231,7 @@ public class HttpClientServiceTests
     {
         var handler = new MockHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
         var svc = CreateService(handler: handler);
-        var res = await svc.Get("https://api.example.com/missing");
+        var res = await svc.GetAsync("https://api.example.com/missing");
 
         Assert.False(res.IsSuccess);
         Assert.Equal(404, res.StatusCode);

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -280,7 +281,7 @@ public partial class WkWebViewSmokeViewModel : ViewModelBase, IWebViewAdapterHos
     public void SetHostHandle(IPlatformHandle handle)
     {
         _hostHandle = new AvaloniaNativeHandleAdapter(handle);
-        LogLine($"Native host handle created: {handle.HandleDescriptor} 0x{handle.Handle.ToString("x")}");
+        LogLine($"Native host handle created: {handle.HandleDescriptor} 0x{handle.Handle.ToString("x", CultureInfo.InvariantCulture)}");
 
         if (AutoRun && Interlocked.Exchange(ref _autoRunStarted, 1) == 0)
         {

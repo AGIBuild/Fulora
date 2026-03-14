@@ -61,7 +61,7 @@ public sealed class WebViewMessageBus : IWebViewMessageBus
         return SubscribeCore(topic, targetWebViewId, handler);
     }
 
-    private IDisposable SubscribeCore(string topic, string? targetWebViewId, Action<WebViewMessage> handler)
+    private DisposableSubscription SubscribeCore(string topic, string? targetWebViewId, Action<WebViewMessage> handler)
     {
         var bag = _subscriptions.GetOrAdd(topic, _ => new ConcurrentBag<Subscription>());
         var sub = new Subscription(handler, targetWebViewId);

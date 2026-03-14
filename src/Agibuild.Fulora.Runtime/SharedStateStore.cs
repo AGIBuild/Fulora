@@ -17,10 +17,10 @@ public sealed class SharedStateStore : ISharedStateStore
     private readonly ConcurrentDictionary<string, StateEntry> _entries = new();
 
     /// <inheritdoc />
-    public event EventHandler<StateChangedEventArgs>? StateChanged;
+    public event EventHandler<StateChange>? StateChanged;
 
     /// <inheritdoc />
-    public void Set(string key, string? value)
+    public void SetValue(string key, string? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         SetInternal(key, value, DateTimeOffset.UtcNow);
@@ -30,7 +30,7 @@ public sealed class SharedStateStore : ISharedStateStore
     /// Sets a value with an explicit timestamp for LWW conflict resolution.
     /// Used internally for replayed/remote writes.
     /// </summary>
-    internal void Set(string key, string? value, DateTimeOffset timestamp)
+    internal void SetValue(string key, string? value, DateTimeOffset timestamp)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         SetInternal(key, value, timestamp);
@@ -62,11 +62,11 @@ public sealed class SharedStateStore : ISharedStateStore
             });
 
         if (changed)
-            StateChanged?.Invoke(this, new StateChangedEventArgs(key, oldValue, value));
+            StateChanged?.Invoke(this, new StateChange(key, oldValue, value));
     }
 
     /// <inheritdoc />
-    public string? Get(string key)
+    public string? GetValue(string key)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         return _entries.TryGetValue(key, out var entry) ? entry.Value : null;
@@ -91,7 +91,7 @@ public sealed class SharedStateStore : ISharedStateStore
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         if (_entries.TryRemove(key, out var removed))
         {
-            StateChanged?.Invoke(this, new StateChangedEventArgs(key, removed.Value, null));
+            StateChanged?.Invoke(this, new StateChange(key, removed.Value, null));
             return true;
         }
         return false;
@@ -107,16 +107,16 @@ public sealed class SharedStateStore : ISharedStateStore
     }
 
     /// <inheritdoc />
-    public void Set<T>(string key, T value)
+    public void SetValue<T>(string key, T value)
     {
         var json = JsonSerializer.Serialize(value, JsonOptions);
-        Set(key, json);
+        SetValue(key, json);
     }
 
     /// <inheritdoc />
-    public T? Get<T>(string key)
+    public T? GetValue<T>(string key)
     {
-        var json = Get(key);
+        var json = GetValue(key);
         if (json is null) return default;
         return JsonSerializer.Deserialize<T>(json, JsonOptions);
     }

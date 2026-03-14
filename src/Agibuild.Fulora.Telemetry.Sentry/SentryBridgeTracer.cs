@@ -1,3 +1,4 @@
+using System.Globalization;
 using Sentry;
 using Sentry.Extensibility;
 
@@ -41,7 +42,7 @@ public sealed class SentryBridgeTracer : IBridgeTracer
         {
             ["service"] = serviceName,
             ["method"] = methodName,
-            ["elapsed_ms"] = elapsedMs.ToString(),
+            ["elapsed_ms"] = elapsedMs.ToString(CultureInfo.InvariantCulture),
         };
         if (resultType != null) data["result_type"] = resultType;
 
@@ -49,9 +50,9 @@ public sealed class SentryBridgeTracer : IBridgeTracer
     }
 
     /// <inheritdoc />
-    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception error)
+    public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
-        _hub.CaptureException(error, scope =>
+        _hub.CaptureException(exception, scope =>
         {
             scope.SetTag("fulora.service_name", serviceName);
             scope.SetTag("fulora.method_name", methodName);
@@ -74,7 +75,7 @@ public sealed class SentryBridgeTracer : IBridgeTracer
         {
             ["service"] = serviceName,
             ["method"] = methodName,
-            ["elapsed_ms"] = elapsedMs.ToString(),
+            ["elapsed_ms"] = elapsedMs.ToString(CultureInfo.InvariantCulture),
         };
         _hub.AddBreadcrumb("bridge.import.end", Category, null, data, BreadcrumbLevel.Info);
     }
@@ -85,7 +86,7 @@ public sealed class SentryBridgeTracer : IBridgeTracer
         var data = new Dictionary<string, string>
         {
             ["service"] = serviceName,
-            ["method_count"] = methodCount.ToString(),
+            ["method_count"] = methodCount.ToString(CultureInfo.InvariantCulture),
             ["source_generated"] = isSourceGenerated.ToString(),
         };
         _hub.AddBreadcrumb("bridge.service.exposed", Category, null, data, BreadcrumbLevel.Info);

@@ -183,17 +183,17 @@ public sealed class RpcIntegrationTests
         core.Dispose();
     }
 
-    // ──────────────────── Test 7: RemoveHandler works ────────────────────
+    // ──────────────────── Test 7: UnregisterHandler works ────────────────────
 
     [AvaloniaFact]
-    public void RemoveHandler_causes_method_not_found()
+    public void UnregisterHandler_causes_method_not_found()
     {
         // Arrange
         var (core, adapter) = CreateCoreWithRpc();
         core.Rpc!.Handle("temp", _ => Task.FromResult<object?>("ok"));
 
         // Remove the handler
-        core.Rpc!.RemoveHandler("temp");
+        core.Rpc!.UnregisterHandler("temp");
 
         var capturedScripts = new List<string>();
         adapter.ScriptCallback = script => { capturedScripts.Add(script); return null; };

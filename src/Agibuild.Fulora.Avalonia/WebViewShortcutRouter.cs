@@ -141,7 +141,7 @@ public sealed class WebViewShortcutRouter
                 await ExecuteCommandAsync(commandManager, action.Command.Value).ConfigureAwait(false);
                 return true;
             default:
-                throw new ArgumentOutOfRangeException(nameof(action.Kind), action.Kind, "Unsupported shortcut action.");
+                throw new ArgumentOutOfRangeException(nameof(action), action.Kind, "Unsupported shortcut action.");
         }
     }
 
