@@ -60,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Data">
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.5" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">
