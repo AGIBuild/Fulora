@@ -50,3 +50,9 @@ dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
 
 [*.md]
 trim_trailing_whitespace = false
+
+# Nuke build orchestration follows its own conventions (no explicit access modifiers,
+# implicit types for targets, etc.). Relax rules that conflict with Nuke patterns.
+[build/**.cs]
+dotnet_style_require_accessibility_modifiers = omit_if_default:silent
+dotnet_diagnostic.IDE0040.severity = silent
