@@ -20,8 +20,8 @@ partial class BuildTask
                     .SetProject(TemplatePackProject)
                     .SetOutputDirectory(PackageOutputDirectory);
 
-                if (!string.IsNullOrEmpty(PackageVersion))
-                    settings = settings.SetProperty("PackageVersion", PackageVersion);
+                if (!string.IsNullOrEmpty(VersionSuffix))
+                    settings = settings.SetVersionSuffix(VersionSuffix);
 
                 return settings;
             });

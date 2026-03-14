@@ -1,0 +1,305 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0-ios26.2": {
+      "Avalonia.iOS": {
+        "type": "Direct",
+        "requested": "[12.0.0-preview2, )",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "Fxg0mEFch2mKDE69KfpuYlHe+WhIqKQedYkrMxEHC7bIcDBSNPkSMH4KjfevigpJxBNkoY/8ite+p7A88ig0Ng==",
+        "dependencies": {
+          "Avalonia": "12.0.0-preview2",
+          "Avalonia.HarfBuzz": "12.0.0-preview2",
+          "Avalonia.Skia": "12.0.0-preview2"
+        }
+      },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Direct",
+        "requested": "[10.0.4, )",
+        "resolved": "10.0.4",
+        "contentHash": "CCx8ojW3mOL150/LnP0DK7qpMrJEt6xxNCmJFKoX89v1h0FwpsEHqennowGPYDxp6zIkIO4f9PxynjOeLF+1zw=="
+      },
+      "Microsoft.SourceLink.GitHub": {
+        "type": "Direct",
+        "requested": "[10.0.102, )",
+        "resolved": "10.0.102",
+        "contentHash": "Oxq3RCIJSdtpIU4hLqO7XaDe/Ra3HS9Wi8rJl838SAg6Zu1iQjerA0+xXWBgUFYbgknUGCLOU0T+lzMLkvY9Qg==",
+        "dependencies": {
+          "Microsoft.Build.Tasks.Git": "10.0.102",
+          "Microsoft.SourceLink.Common": "10.0.102"
+        }
+      },
+      "Avalonia.BuildServices": {
+        "type": "Transitive",
+        "resolved": "11.3.2",
+        "contentHash": "qHDToxto1e3hci5YqbG9n0Ty8mlp3zBUN5wT66wKqaDVzXyQ0do3EnRILd4Ke9jpvsktaPpgE0YjEk7hornryQ=="
+      },
+      "Avalonia.Remote.Protocol": {
+        "type": "Transitive",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "L+Bhi8I2tnwAJBQhRpUEbyK8DZeYRIVcFGVv1lPwodpp+QddF1/GBWGBIWb12xV2Z6Cw2qh2U8zp6ZGrkcYG4w=="
+      },
+      "Avalonia.Skia": {
+        "type": "Transitive",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "4PgUYvVuN7zt+Fc42t2Bk4mrHWpz2AGzLeSX74SaC9/1SsUTZMQUiv4XBvGhrKL3xcPz/ozKUKxQLn2TzAaXeQ==",
+        "dependencies": {
+          "Avalonia": "12.0.0-preview2",
+          "HarfBuzzSharp": "8.3.1.3",
+          "HarfBuzzSharp.NativeAssets.Linux": "8.3.1.3",
+          "HarfBuzzSharp.NativeAssets.WebAssembly": "8.3.1.3",
+          "SkiaSharp": "3.119.3-preview.1.1",
+          "SkiaSharp.NativeAssets.Linux": "3.119.3-preview.1.1",
+          "SkiaSharp.NativeAssets.WebAssembly": "3.119.3-preview.1.1"
+        }
+      },
+      "HarfBuzzSharp": {
+        "type": "Transitive",
+        "resolved": "8.3.1.3",
+        "contentHash": "NGZ2+ZVNPM+NdHB/asW0/ykWngyHWwcqjrbN2nDeH1B/aptPGlCUl8wkQ2cSJxw5fdWgdmIPmNuTPWpLwNVXWg==",
+        "dependencies": {
+          "HarfBuzzSharp.NativeAssets.iOS": "8.3.1.3"
+        }
+      },
+      "HarfBuzzSharp.NativeAssets.iOS": {
+        "type": "Transitive",
+        "resolved": "8.3.1.3",
+        "contentHash": "Qc81kED8LkoY4NrkIemcpezOviUNKo+Ehf1DPRVm4gFCKoPznw+GnZC0jHoRaJvc53hybXwsvwH9iFMA32bPtQ=="
+      },
+      "HarfBuzzSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "8.3.1.3",
+        "contentHash": "RI6A1LgmooU30+4QIyFt5rmBCzP0VzTR+587IJSGvYIsHHWlahFufihYxtraLfsIhW7I8dn6+xX+DZGygOPKWQ=="
+      },
+      "HarfBuzzSharp.NativeAssets.WebAssembly": {
+        "type": "Transitive",
+        "resolved": "8.3.1.3",
+        "contentHash": "w2QfdNm9Uz/sUa0B5D+OnVQhyq3G/fBq6ibQMdWBlQqqwh0g0/5j3RFvYqZAmRZ5+RzvjVe8o8SFFnWYUSkuxA=="
+      },
+      "MicroCom.Runtime": {
+        "type": "Transitive",
+        "resolved": "0.11.0",
+        "contentHash": "MEnrZ3UIiH40hjzMDsxrTyi8dtqB5ziv3iBeeU4bXsL/7NLSal9F1lZKpK+tfBRnUoDSdtcW3KufE4yhATOMCA=="
+      },
+      "Microsoft.Build.Tasks.Git": {
+        "type": "Transitive",
+        "resolved": "10.0.102",
+        "contentHash": "0i81LYX31U6UiXz4NOLbvc++u+/mVDmOt+PskrM/MygpDxkv9THKQyRUmavBpLK6iBV0abNWnn+CQgSRz//Pwg=="
+      },
+      "Microsoft.SourceLink.Common": {
+        "type": "Transitive",
+        "resolved": "10.0.102",
+        "contentHash": "Mk1IMb9q5tahC2NltxYXFkLBtuBvfBoCQ3pIxYQWfzbCE9o1OB9SsHe0hnNGo7lWgTA/ePbFAJLWu6nLL9K17A=="
+      },
+      "SkiaSharp": {
+        "type": "Transitive",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "+3ndwD845G4jfuyhtg5rrjryh2mEOr2QfAPFtncvAsRLzGX0ferSJ0223av6Sbw9zsEL6Wk0sk/DrXtEpJoo5A==",
+        "dependencies": {
+          "SkiaSharp.NativeAssets.iOS": "3.119.3-preview.1.1"
+        }
+      },
+      "SkiaSharp.NativeAssets.iOS": {
+        "type": "Transitive",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "lDfO8YwshaYV43cUWcUFcnzGQSNKMTHm3vtCO94vqTh+7ZuQ3LD36U9dKSlP3Vs3katCDaohLcUiHckfiZ07oA=="
+      },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "ZvpglyfQzhVIUmnPGngliPYcg6ROJNs0BV7XwJ+kktdqY0qe8jifP+UUgaMqTlOTjvuvyCbV7AI4qIBUfRe3Vw=="
+      },
+      "SkiaSharp.NativeAssets.WebAssembly": {
+        "type": "Transitive",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "Gzvr/fcJZODWNoLVBAIiM8NKudvZ9yL6WHb87fk7iadio9BWQR7GS0fUvWvE3kYaRAAutsjPdGAnkDR0ujlVDw=="
+      },
+      "System.Diagnostics.DiagnosticSource": {
+        "type": "Transitive",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "53nimBaVbzyZjQfi/hx/mRuqtNBGpu1uk7o8P9esiBVWsWz3+cimhT5pE8exQPYEJMDermE2mv5+HtPSo0TkGg=="
+      },
+      "agibuild.fulora.adapters.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Core": "[1.5.1, )"
+        }
+      },
+      "agibuild.fulora.adapters.ios": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
+          "Agibuild.Fulora.Core": "[1.5.1, )"
+        }
+      },
+      "agibuild.fulora.avalonia": {
+        "type": "Project",
+        "dependencies": {
+          "Avalonia": "[12.0.0-preview2, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )",
+          "Microsoft.Web.WebView2": "[1.0.3848-prerelease, )",
+          "SharpHook": "[7.1.1, )"
+        }
+      },
+      "agibuild.fulora.core": {
+        "type": "Project"
+      },
+      "agibuild.fulora.integration.tests": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
+          "Agibuild.Fulora.Avalonia": "[1.5.1, )",
+          "Agibuild.Fulora.Core": "[1.5.1, )",
+          "Agibuild.Fulora.Runtime": "[1.5.1, )",
+          "Agibuild.Fulora.Testing": "[1.5.1, )",
+          "Avalonia": "[12.0.0-preview2, )",
+          "Avalonia.Fonts.Inter": "[12.0.0-preview2, )",
+          "Avalonia.Themes.Fluent": "[12.0.0-preview2, )",
+          "CommunityToolkit.Mvvm": "[8.4.0, )",
+          "Serilog": "[4.3.2-dev-02419, )",
+          "Serilog.Sinks.File": "[8.0.0-nblumhardt-02322, )"
+        }
+      },
+      "agibuild.fulora.runtime": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
+          "Agibuild.Fulora.Core": "[1.5.1, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
+        }
+      },
+      "agibuild.fulora.testing": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.1, )",
+          "Agibuild.Fulora.Core": "[1.5.1, )",
+          "Agibuild.Fulora.Runtime": "[1.5.1, )"
+        }
+      },
+      "Avalonia": {
+        "type": "CentralTransitive",
+        "requested": "[12.0.0-preview2, )",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "9sO4VHqXez5auHFtiHFWsSLnhAS9zL4TPOK7EpbcB2psnFDP/Q2zaTO8J/r6C9dlRQkqJYZMbiCUvqBc1G8GOg==",
+        "dependencies": {
+          "Avalonia.BuildServices": "11.3.2",
+          "Avalonia.Remote.Protocol": "12.0.0-preview2",
+          "MicroCom.Runtime": "0.11.0"
+        }
+      },
+      "Avalonia.Fonts.Inter": {
+        "type": "CentralTransitive",
+        "requested": "[12.0.0-preview2, )",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "H/eGLQcP1DcFWYBwU8p6zABqTwIdbzFOhhH0i/uuwxZXfHBPEqRKwN2syRZ4pn7KV5KHmEcGAE7YvwemyJDOCw==",
+        "dependencies": {
+          "Avalonia": "12.0.0-preview2"
+        }
+      },
+      "Avalonia.HarfBuzz": {
+        "type": "CentralTransitive",
+        "requested": "[12.0.0-preview2, )",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "xjuMW8MrxJIV2eAzEiAAa8D9MeSkoMmuPT8zk+pWwCA08tONU57Rk5L9fJ/kygFWBqI9a55lCtCqqNJkg5I0UA==",
+        "dependencies": {
+          "Avalonia": "12.0.0-preview2",
+          "HarfBuzzSharp": "8.3.1.3",
+          "HarfBuzzSharp.NativeAssets.Linux": "8.3.1.3",
+          "HarfBuzzSharp.NativeAssets.WebAssembly": "8.3.1.3"
+        }
+      },
+      "Avalonia.Themes.Fluent": {
+        "type": "CentralTransitive",
+        "requested": "[12.0.0-preview2, )",
+        "resolved": "12.0.0-preview2",
+        "contentHash": "H60ed3Sgx7BXZ+VkLAaHzJyOJ+Xl/m0baqI67UzAh29m5YHcOpvWTlVWM91+sPaM5/3ANqpZEaeEbS0mXtxmEA==",
+        "dependencies": {
+          "Avalonia": "12.0.0-preview2"
+        }
+      },
+      "CommunityToolkit.Mvvm": {
+        "type": "CentralTransitive",
+        "requested": "[8.4.0, )",
+        "resolved": "8.4.0",
+        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[11.0.0-preview.2.26159.112, )",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "OQXAVaAtsf/HNCFzeby//Q7ibYk8Lf+8dgvRna5mmulHyXU0qPMtERY10CuhBkPdkxS69Dsgk1VjD5e3OF/f3w=="
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[11.0.0-preview.2.26159.112, )",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "yE3AafH9H/ybiI5USxYfCEexMM7MogTfziE6dgeT5P09nATl8wfk31clavCRALdoF5pDgxMsKxJ7P0XXhjlbYA==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
+          "System.Diagnostics.DiagnosticSource": "11.0.0-preview.2.26159.112"
+        }
+      },
+      "Microsoft.Web.WebView2": {
+        "type": "CentralTransitive",
+        "requested": "[1.0.3848-prerelease, )",
+        "resolved": "1.0.3848-prerelease",
+        "contentHash": "IByYcoTwyFJXlqR9X8qhmfvPa/GIw+1/9n5Kqt/rFqt4bdxOOFhKedFyllNoft8napeJo9xfBmJ5IwoOky5LPA=="
+      },
+      "Serilog": {
+        "type": "CentralTransitive",
+        "requested": "[4.3.2-dev-02419, )",
+        "resolved": "4.3.2-dev-02419",
+        "contentHash": "W8VlLVjPbjbkr4r88cr8FfkVzvaiguxFK8w2vczUMnSB74pK45g+SRjD5urq/x6gKvGICnv+NVvLP0Q89OdFQw=="
+      },
+      "Serilog.Sinks.File": {
+        "type": "CentralTransitive",
+        "requested": "[8.0.0-nblumhardt-02322, )",
+        "resolved": "8.0.0-nblumhardt-02322",
+        "contentHash": "EA6O7RwYBl52t/SDul6itYPla3wSSm6F+XLGtSiHiqjYlmWH6YGhXL92/FHWhzQglRmXhbgFDK0m9RFKW110/w==",
+        "dependencies": {
+          "Serilog": "4.2.0"
+        }
+      },
+      "SharpHook": {
+        "type": "CentralTransitive",
+        "requested": "[7.1.1, )",
+        "resolved": "7.1.1",
+        "contentHash": "IgzfEVFCVsO2LtMmAR6fAxEsCTJlqJtXGELLFBynGs6mlZwL/u2c+o3UXpQ7Yrc3+57eurKNSRfIKvaYBtccBA=="
+      }
+    },
+    "net10.0-ios26.2/iossimulator-arm64": {
+      "HarfBuzzSharp.NativeAssets.iOS": {
+        "type": "Transitive",
+        "resolved": "8.3.1.3",
+        "contentHash": "Qc81kED8LkoY4NrkIemcpezOviUNKo+Ehf1DPRVm4gFCKoPznw+GnZC0jHoRaJvc53hybXwsvwH9iFMA32bPtQ=="
+      },
+      "HarfBuzzSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "8.3.1.3",
+        "contentHash": "RI6A1LgmooU30+4QIyFt5rmBCzP0VzTR+587IJSGvYIsHHWlahFufihYxtraLfsIhW7I8dn6+xX+DZGygOPKWQ=="
+      },
+      "SkiaSharp.NativeAssets.iOS": {
+        "type": "Transitive",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "lDfO8YwshaYV43cUWcUFcnzGQSNKMTHm3vtCO94vqTh+7ZuQ3LD36U9dKSlP3Vs3katCDaohLcUiHckfiZ07oA=="
+      },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "ZvpglyfQzhVIUmnPGngliPYcg6ROJNs0BV7XwJ+kktdqY0qe8jifP+UUgaMqTlOTjvuvyCbV7AI4qIBUfRe3Vw=="
+      },
+      "Microsoft.Web.WebView2": {
+        "type": "CentralTransitive",
+        "requested": "[1.0.3848-prerelease, )",
+        "resolved": "1.0.3848-prerelease",
+        "contentHash": "IByYcoTwyFJXlqR9X8qhmfvPa/GIw+1/9n5Kqt/rFqt4bdxOOFhKedFyllNoft8napeJo9xfBmJ5IwoOky5LPA=="
+      },
+      "SharpHook": {
+        "type": "CentralTransitive",
+        "requested": "[7.1.1, )",
+        "resolved": "7.1.1",
+        "contentHash": "IgzfEVFCVsO2LtMmAR6fAxEsCTJlqJtXGELLFBynGs6mlZwL/u2c+o3UXpQ7Yrc3+57eurKNSRfIKvaYBtccBA=="
+      }
+    }
+  }
+}

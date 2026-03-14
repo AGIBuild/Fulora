@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Core" Version="*-*" />
+    <PackageReference Include="Agibuild.Fulora.Core" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" Version="*-*" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

@@ -7,10 +7,10 @@
     <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\..\artifacts\packages</RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Core" Version="*-*" />
+    <PackageReference Include="Agibuild.Fulora.Core" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" Version="*-*"
+    <PackageReference Include="Agibuild.Fulora.Bridge.Generator"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false"
                       PrivateAssets="all" />

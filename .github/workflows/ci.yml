@@ -3,13 +3,34 @@ name: CI and Release
 on:
   push:
     branches: [main, develop, "release/**"]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'LICENSE'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'LICENSE'
   workflow_dispatch:
+    inputs:
+      prerelease_suffix:
+        description: 'Pre-release channel suffix (e.g. rc.1, beta.2). Leave empty for standard CI build.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  checks: write
 
 concurrency:
   group: ci-release-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   DOTNET_NOLOGO: true
@@ -21,86 +42,152 @@ jobs:
   version:
     name: Resolve Version
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
-      version_prefix: ${{ steps.compute.outputs.version_prefix }}
-      package_version: ${{ steps.compute.outputs.package_version }}
-      npm_version: ${{ steps.compute.outputs.npm_version }}
-      run_number: ${{ steps.compute.outputs.run_number }}
-      commit_sha: ${{ steps.compute.outputs.commit_sha }}
+      version: ${{ steps.resolve.outputs.version }}
+      full_version: ${{ steps.resolve.outputs.full_version }}
+      version_suffix: ${{ steps.resolve.outputs.version_suffix }}
+      tag: ${{ steps.resolve.outputs.tag }}
+      sha: ${{ steps.resolve.outputs.sha }}
+      is_release: ${{ steps.resolve.outputs.is_release }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-tags: true
 
-      - name: Compute package versions from Directory.Build.props
-        id: compute
+      - name: Resolve version and context
+        id: resolve
         shell: bash
+        env:
+          PRERELEASE_SUFFIX: ${{ inputs.prerelease_suffix }}
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
+          RUN_NUMBER: ${{ github.run_number }}
         run: |
-          set -euo pipefail
-          VERSION_PREFIX="$(python3 - <<'PY'
-          import xml.etree.ElementTree as ET
-          root = ET.parse("Directory.Build.props").getroot()
-          ns = {"msb": root.tag.split("}")[0].strip("{")} if "}" in root.tag else {}
-          if ns:
-            nodes = root.findall(".//msb:VersionPrefix", ns)
-          else:
-            nodes = root.findall(".//VersionPrefix")
-          value = nodes[0].text.strip() if nodes and nodes[0].text else ""
-          print(value)
-          PY
-          )"
-          if [[ -z "${VERSION_PREFIX}" ]]; then
-            echo "VersionPrefix is missing in Directory.Build.props"
+          SEMVER_REGEX='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'
+
+          VERSION=$(perl -0777 -ne 'if (m{<VersionPrefix>\s*([^<]+?)\s*</VersionPrefix>}s) { print $1 }' Directory.Build.props | head -n1 | xargs)
+          if [ -z "$VERSION" ]; then
+            echo "::error::VersionPrefix not found in Directory.Build.props"
             exit 1
           fi
-          RUN_NUMBER="${GITHUB_RUN_NUMBER}"
-          PACKAGE_VERSION="${VERSION_PREFIX}.${RUN_NUMBER}"
-          NPM_VERSION="${VERSION_PREFIX}-${RUN_NUMBER}"
-          echo "version_prefix=${VERSION_PREFIX}" >> "${GITHUB_OUTPUT}"
-          echo "package_version=${PACKAGE_VERSION}" >> "${GITHUB_OUTPUT}"
-          echo "npm_version=${NPM_VERSION}" >> "${GITHUB_OUTPUT}"
-          echo "run_number=${RUN_NUMBER}" >> "${GITHUB_OUTPUT}"
-          echo "commit_sha=${GITHUB_SHA}" >> "${GITHUB_OUTPUT}"
+
+          if ! [[ "$VERSION" =~ $SEMVER_REGEX ]]; then
+            echo "::error::Invalid VersionPrefix: $VERSION"
+            exit 1
+          fi
+
+          SHA="$(git rev-parse HEAD)"
+
+          TAG="v$VERSION"
+
+          IS_RELEASE="false"
+          if [ "$EVENT_NAME" != "pull_request" ] && [ "$GIT_REF" = "refs/heads/main" ]; then
+            git fetch --tags --force
+            if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+              echo "::notice::Tag $TAG already exists. Version not bumped — skipping release."
+            else
+              IS_RELEASE="true"
+            fi
+          fi
+
+          VERSION_SUFFIX=""
+          if [ -n "$PRERELEASE_SUFFIX" ]; then
+            if ! [[ "$PRERELEASE_SUFFIX" =~ ^[0-9A-Za-z.-]+$ ]]; then
+              echo "::error::Invalid prerelease_suffix: must match [0-9A-Za-z.-]+"
+              exit 1
+            fi
+            VERSION_SUFFIX="$PRERELEASE_SUFFIX"
+          elif [ "$IS_RELEASE" != "true" ]; then
+            VERSION_SUFFIX="ci.${RUN_NUMBER}"
+          fi
+
+          if [ -n "$VERSION_SUFFIX" ]; then
+            FULL_VERSION="${VERSION}-${VERSION_SUFFIX}"
+          else
+            FULL_VERSION="${VERSION}"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "full_version=$FULL_VERSION" >> "$GITHUB_OUTPUT"
+          echo "version_suffix=$VERSION_SUFFIX" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "is_release=$IS_RELEASE" >> "$GITHUB_OUTPUT"
+          echo "Resolved: version=$VERSION full_version=$FULL_VERSION tag=$TAG sha=$SHA is_release=$IS_RELEASE"
+
+      - name: Version summary
+        shell: bash
+        run: |
+          VERSION="${{ steps.resolve.outputs.version }}"
+          FULL_VERSION="${{ steps.resolve.outputs.full_version }}"
+          VERSION_SUFFIX="${{ steps.resolve.outputs.version_suffix }}"
+          IS_RELEASE="${{ steps.resolve.outputs.is_release }}"
+          SHA="${{ steps.resolve.outputs.sha }}"
+          TAG="${{ steps.resolve.outputs.tag }}"
+
+          IFS='.' read -r CUR_MAJOR CUR_MINOR CUR_PATCH <<< "$VERSION"
+
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            PREV_VER="${PREV_TAG#v}"
+            IFS='.' read -r PRE_MAJOR PRE_MINOR PRE_PATCH <<< "$PREV_VER"
+            if [ "$CUR_MAJOR" != "$PRE_MAJOR" ]; then
+              BUMP="MAJOR"
+            elif [ "$CUR_MINOR" != "$PRE_MINOR" ]; then
+              BUMP="MINOR"
+            elif [ "$CUR_PATCH" != "$PRE_PATCH" ]; then
+              BUMP="PATCH"
+            else
+              BUMP="NONE (same as $PREV_TAG)"
+            fi
+          else
+            PREV_TAG="(none)"
+            BUMP="INITIAL"
+          fi
+
+          MODE=$( [ "$IS_RELEASE" = "true" ] && echo "Release" || echo "CI" )
+          CHANNEL="stable"
+          if [ -n "$VERSION_SUFFIX" ]; then
+            CHANNEL="$VERSION_SUFFIX"
+          fi
+
+          {
+            echo "## Version Info"
+            echo ""
+            echo "| Property | Value |"
+            echo "|----------|-------|"
+            echo "| **Version** | \`$VERSION\` |"
+            echo "| **Full Version** | \`$FULL_VERSION\` |"
+            echo "| **Channel** | \`$CHANNEL\` |"
+            echo "| **Tag** | \`$TAG\` |"
+            echo "| **Previous Tag** | \`$PREV_TAG\` |"
+            echo "| **Bump Type** | **$BUMP** |"
+            echo "| **Mode** | $MODE |"
+            echo "| **Commit** | \`${SHA::8}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   build-macos:
     name: Build and Test (macOS)
     runs-on: macos-latest
+    timeout-minutes: 45
     needs: version
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup-build-env
         with:
-          node-version: "22"
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "10.0.x"
-          dotnet-quality: "preview"
-
-      - name: Install .NET workloads
-        run: dotnet workload install android ios macos
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
-      - name: Build bridge package
-        run: npm install && npm run build
-        working-directory: packages/bridge
-
-      - name: Install web app dependencies
-        run: npm install
-        working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web
+          dotnet-workloads: android ios macos
 
       - name: Run CI (Compile + Coverage + Pack)
-        run: ./build.sh --target Ci --configuration Release --package-version "${{ needs.version.outputs.package_version }}"
+        run: ./build.sh --target Ci --configuration Release --version-suffix "${{ needs.version.outputs.version_suffix }}"
 
       - name: Build npm release tarball
         run: |
           set -euo pipefail
-          npm version "${{ needs.version.outputs.npm_version }}" --no-git-tag-version --allow-same-version
+          npm version "${{ needs.version.outputs.full_version }}" --no-git-tag-version --allow-same-version
           mkdir -p "../../artifacts/release-bundle/npm"
           npm pack --pack-destination "../../artifacts/release-bundle/npm"
         working-directory: packages/bridge
@@ -119,10 +206,8 @@ jobs:
           bundle = Path("artifacts/release-bundle")
           nuget_dir = bundle / "nuget"
           npm_dir = bundle / "npm"
-          package_version = "${{ needs.version.outputs.package_version }}"
-          npm_version = "${{ needs.version.outputs.npm_version }}"
-          run_number = "${{ needs.version.outputs.run_number }}"
-          commit_sha = "${{ needs.version.outputs.commit_sha }}"
+          full_version = "${{ needs.version.outputs.full_version }}"
+          commit_sha = "${{ needs.version.outputs.sha }}"
           workflow_run_id = "${{ github.run_id }}"
 
           def digest(path: Path) -> str:
@@ -136,10 +221,8 @@ jobs:
           npm_files = sorted([p for p in npm_dir.glob("*.tgz") if p.is_file()])
 
           payload = {
-              "schemaVersion": 1,
-              "packageVersion": package_version,
-              "npmVersion": npm_version,
-              "runNumber": run_number,
+              "schemaVersion": 2,
+              "version": full_version,
               "commitSha": commit_sha,
               "workflowRunId": workflow_run_id,
               "nugetPackages": [
@@ -156,14 +239,14 @@ jobs:
           PY
 
       - name: Upload release bundle
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: release-bundle
           path: artifacts/release-bundle/
           if-no-files-found: error
 
       - name: Upload test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: test-results-macos
@@ -171,53 +254,40 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: coverage-report-macos
           path: artifacts/coverage-report/
           if-no-files-found: ignore
 
+      - name: Report test results
+        if: always() && !cancelled()
+        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        with:
+          name: Tests (macOS)
+          path: artifacts/test-results/**/*.trx
+          reporter: dotnet-trx
+
   build-windows:
     name: Build and Test (Windows)
     runs-on: windows-latest
+    timeout-minutes: 45
     needs: version
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup-build-env
         with:
-          node-version: "22"
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "10.0.x"
-          dotnet-quality: "preview"
-
-      - name: Install .NET workloads
-        run: dotnet workload install android
-        shell: pwsh
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
-      - name: Build bridge package
-        run: npm install && npm run build
-        working-directory: packages/bridge
-
-      - name: Install web app dependencies
-        run: npm install
-        working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web
+          dotnet-workloads: android
 
       - name: Run CI (Compile + Coverage + Pack)
-        run: ./build.ps1 -Target Ci -Configuration Release -PackageVersion "${{ needs.version.outputs.package_version }}"
+        run: ./build.ps1 -Target Ci -Configuration Release -VersionSuffix "${{ needs.version.outputs.version_suffix }}"
 
       - name: Upload test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: test-results-windows
@@ -225,19 +295,28 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: coverage-report-windows
           path: artifacts/coverage-report/
           if-no-files-found: ignore
 
+      - name: Report test results
+        if: always() && !cancelled()
+        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        with:
+          name: Tests (Windows)
+          path: artifacts/test-results/**/*.trx
+          reporter: dotnet-trx
+
   build-linux:
     name: Build and Test (Linux)
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     needs: version
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -246,33 +325,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup-build-env
         with:
-          node-version: "22"
+          dotnet-workloads: android
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "10.0.x"
-          dotnet-quality: "preview"
-
-      - name: Install .NET workloads
-        run: dotnet workload install android
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
-      - name: Build bridge package
-        run: npm install && npm run build
-        working-directory: packages/bridge
-
-      - name: Install web app dependencies
-        run: npm install
-        working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web
+      - name: Check code format
+        run: ./build.sh --target Format --configuration Release
 
       - name: Run CI (Compile + Coverage + Pack)
-        run: ./build.sh --target Ci --configuration Release --package-version "${{ needs.version.outputs.package_version }}"
+        run: ./build.sh --target Ci --configuration Release --version-suffix "${{ needs.version.outputs.version_suffix }}"
 
       - name: Validate NativeAOT publish
         run: |
@@ -282,7 +343,7 @@ jobs:
             -p:AgibuildPackageVersion='*-*'
 
       - name: Upload test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: test-results-linux
@@ -290,40 +351,134 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: coverage-report-linux
           path: artifacts/coverage-report/
           if-no-files-found: ignore
 
-  release:
-    name: Release Promotion
+      - name: Report test results
+        if: always() && !cancelled()
+        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        with:
+          name: Tests (Linux)
+          path: artifacts/test-results/**/*.trx
+          reporter: dotnet-trx
+
+  merge-coverage:
+    name: Merge Coverage Reports
+    needs: [build-macos, build-windows, build-linux]
+    if: always() && !cancelled()
     runs-on: ubuntu-latest
-    needs: [version, build-macos, build-windows, build-linux]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    environment: release
-    permissions:
-      contents: write
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: '10.0.x'
+          dotnet-quality: 'preview'
+
+      - name: Download all coverage reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: coverage-report-*
+          path: artifacts/coverage-reports
+          merge-multiple: false
+
+      - name: Merge coverage reports
+        run: |
+          dotnet tool restore
+          shopt -s nullglob globstar
+          REPORTS=(artifacts/coverage-reports/**/coverage.cobertura.xml)
+          if [ ${#REPORTS[@]} -eq 0 ]; then
+            echo "No coverage reports found — skipping merge."
+            exit 0
+          fi
+          REPORT_ARGS=""
+          for r in "${REPORTS[@]}"; do
+            REPORT_ARGS+="-reports:$r;"
+          done
+          dotnet reportgenerator ${REPORT_ARGS} \
+            -targetdir:artifacts/merged-coverage-report \
+            -reporttypes:"Html;Cobertura;MarkdownSummaryGithub"
+
+      - name: Upload merged coverage report
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: merged-coverage-report
+          path: artifacts/merged-coverage-report/
+          if-no-files-found: ignore
+
+      - name: Write coverage summary
+        if: hashFiles('artifacts/merged-coverage-report/SummaryGithub.md') != ''
+        run: cat artifacts/merged-coverage-report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+  build-docs:
+    name: Build Documentation
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: '10.0.x'
+          dotnet-quality: 'preview'
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      - name: Build docfx site
+        run: dotnet docfx docs/docfx.json
+
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: docs-site
+          path: docs/_site
+          if-no-files-found: error
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [version, build-macos, build-windows, build-linux, build-docs]
+    if: needs.version.outputs.is_release == 'true'
+    environment: release
+    permissions:
+      contents: write
+      attestations: write
+      id-token: write
+    concurrency:
+      group: release-tag-${{ needs.version.outputs.tag }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ needs.version.outputs.sha }}
+          fetch-depth: 0
+
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
         with:
           dotnet-version: "10.0.x"
           dotnet-quality: "preview"
 
       - name: Download release bundle
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: release-bundle
           path: artifacts/release-bundle
@@ -344,9 +499,9 @@ jobs:
               sys.exit(1)
 
           manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-          expected_version = "${{ needs.version.outputs.package_version }}"
-          if manifest.get("packageVersion") != expected_version:
-              print(f"Package version mismatch: expected {expected_version}, actual {manifest.get('packageVersion')}")
+          expected_version = "${{ needs.version.outputs.full_version }}"
+          if manifest.get("version") != expected_version:
+              print(f"Version mismatch: expected {expected_version}, actual {manifest.get('version')}")
               sys.exit(1)
 
           def digest(path: Path) -> str:
@@ -392,28 +547,111 @@ jobs:
             echo "No npm tarball found in release bundle."
             exit 1
           fi
-          npm publish "${tgz_files[0]}" --access public --tag preview
+          VERSION_SUFFIX="${{ needs.version.outputs.version_suffix }}"
+          if [ -z "$VERSION_SUFFIX" ]; then
+            NPM_TAG="latest"
+          else
+            NPM_TAG="next"
+          fi
+          npm publish "${tgz_files[0]}" --access public --tag "$NPM_TAG"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create Git tag and GitHub Release
+      - name: Generate SBOM
+        uses: anchore/sbom-action@57aae528053a48a3f6235f2d9461b05fbcb7366d # v0.23.1
+        with:
+          artifact-name: sbom-spdx.json
+          output-file: sbom-spdx.json
+          format: spdx-json
+
+      - name: Collect attestation subjects
+        id: attest-subjects
+        shell: bash
+        run: |
+          shopt -s nullglob
+          SUBJECTS=""
+          for f in artifacts/release-bundle/nuget/*.nupkg; do
+            SUBJECTS+="$f"$'\n'
+          done
+          for f in artifacts/release-bundle/npm/*.tgz; do
+            SUBJECTS+="$f"$'\n'
+          done
+          SUBJECTS=$(echo "$SUBJECTS" | sed '/^$/d')
+          echo "subjects<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$SUBJECTS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Attest build provenance
+        if: steps.attest-subjects.outputs.subjects != ''
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-path: ${{ steps.attest-subjects.outputs.subjects }}
+
+      - name: Attest SBOM
+        if: steps.attest-subjects.outputs.subjects != '' && hashFiles('sbom-spdx.json') != ''
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-path: ${{ steps.attest-subjects.outputs.subjects }}
+          sbom-path: sbom-spdx.json
+
+      - name: Create and push tag
+        shell: bash
+        run: |
+          TAG="${{ needs.version.outputs.tag }}"
+          SHA="${{ needs.version.outputs.sha }}"
+
+          git fetch --tags --force
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "::error::Tag $TAG already exists locally"
+            exit 1
+          fi
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "::error::Tag $TAG already exists on remote"
+            exit 1
+          fi
+
+          git tag "$TAG" "$SHA"
+          git push origin "$TAG"
+          echo "Created and pushed tag $TAG at $SHA"
+
+      - name: Create GitHub Release
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          TAG="v${{ needs.version.outputs.package_version }}"
-          COMMIT="${{ needs.version.outputs.commit_sha }}"
-          echo "Creating tag ${TAG} at ${COMMIT}"
-          gh release create "${TAG}" \
-            --title "${TAG}" \
+          TAG="${{ needs.version.outputs.tag }}"
+          RELEASE_NAME="Agibuild.Fulora $TAG"
+          FULL_VERSION="${{ needs.version.outputs.full_version }}"
+          VERSION_SUFFIX="${{ needs.version.outputs.version_suffix }}"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Release already exists for tag $TAG"
+            exit 1
+          fi
+
+          shopt -s nullglob
+          RELEASE_ASSETS=()
+          if [ -f "sbom-spdx.json" ]; then
+            RELEASE_ASSETS+=(sbom-spdx.json)
+          fi
+
+          PRERELEASE_FLAG=""
+          if [ -n "$VERSION_SUFFIX" ]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          gh release create "$TAG" "${RELEASE_ASSETS[@]}" \
+            --title "$RELEASE_NAME" \
             --generate-notes \
-            --target "${COMMIT}"
+            $PRERELEASE_FLAG
+          echo "Created release $TAG"
 
   deploy-docs:
     name: Deploy Documentation
-    needs: release
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [version, release, build-docs]
+    if: needs.version.outputs.is_release == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       pages: write
@@ -425,27 +663,17 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v5
+      - name: Download docs artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          fetch-depth: 0
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-          dotnet-quality: 'preview'
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
-      - name: Build docfx site
-        run: dotnet docfx docs/docfx.json
+          name: docs-site
+          path: docs-site
 
       - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
-          path: docs/_site
+          path: docs-site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

@@ -9,12 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Core" Version="*-*" />
+    <PackageReference Include="Agibuild.Fulora.Core" />
   </ItemGroup>
 
   <!-- Source generator for typed bridge -->
   <ItemGroup>
-    <PackageReference Include="Agibuild.Fulora.Bridge.Generator" Version="*-*"
+    <PackageReference Include="Agibuild.Fulora.Bridge.Generator"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false"
                       PrivateAssets="all" />

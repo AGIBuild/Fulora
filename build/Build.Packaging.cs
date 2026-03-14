@@ -75,12 +75,8 @@ partial class BuildTask
                     .SetOutputDirectory(PackageOutputDirectory)
                     .SetProperty("SkipPackInputBuilds", "true");
 
-                if (!string.IsNullOrEmpty(PackageVersion))
-                {
-                    settings = settings
-                        .SetProperty("Version", PackageVersion)
-                        .SetProperty("PackageVersion", PackageVersion);
-                }
+                if (!string.IsNullOrEmpty(VersionSuffix))
+                    settings = settings.SetVersionSuffix(VersionSuffix);
 
                 return settings;
             });
@@ -112,12 +108,8 @@ partial class BuildTask
                         .SetConfiguration(Configuration)
                         .SetOutputDirectory(PackageOutputDirectory);
 
-                    if (!string.IsNullOrEmpty(PackageVersion))
-                    {
-                        settings = settings
-                            .SetProperty("Version", PackageVersion)
-                            .SetProperty("PackageVersion", PackageVersion);
-                    }
+                    if (!string.IsNullOrEmpty(VersionSuffix))
+                        settings = settings.SetVersionSuffix(VersionSuffix);
 
                     return settings;
                 });

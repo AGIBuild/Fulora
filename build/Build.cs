@@ -34,8 +34,8 @@ partial class BuildTask : NukeBuild
     [Parameter("Configuration (Debug / Release). Default: Release on CI, Debug locally.")]
     readonly string Configuration = IsServerBuild ? "Release" : "Debug";
 
-    [Parameter("NuGet package version override for pack/publish targets.")]
-    readonly string? PackageVersion = null;
+    [Parameter("Version suffix for pack/publish targets (e.g., ci.42, rc.1). Empty = stable release.")]
+    readonly string? VersionSuffix = null;
 
     [Parameter("NuGet source URL for publish. Default: https://api.nuget.org/v3/index.json")]
     readonly string NuGetSource = "https://api.nuget.org/v3/index.json";

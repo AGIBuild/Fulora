@@ -12,14 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.0-preview2" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview2" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
-    <PackageReference Include="Agibuild.Fulora.Avalonia" Version="*-*" />
-    <PackageReference Include="Agibuild.Fulora.AI" Version="*-*" />
-    <PackageReference Include="Agibuild.Fulora.AI.Ollama" Version="*-*" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="10.4.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Agibuild.Fulora.Avalonia" />
+    <PackageReference Include="Agibuild.Fulora.AI" />
+    <PackageReference Include="Agibuild.Fulora.AI.Ollama" />
+    <PackageReference Include="Microsoft.Extensions.AI" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" VersionOverride="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>

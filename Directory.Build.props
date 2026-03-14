@@ -1,4 +1,17 @@
 <Project>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>moderate</NuGetAuditLevel>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
   <PropertyGroup>
     <!-- Suppress experimental-API diagnostics for placeholder types defined in this solution. -->
     <NoWarn>$(NoWarn);AGWV001;AGWV002;AGWV003;AGWV004;AGWV005</NoWarn>
@@ -16,23 +29,43 @@
       Remove once `dotnet workload update` ships a matching SDK.
     -->
     <ValidateXcodeVersion>false</ValidateXcodeVersion>
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Generate XML documentation for API reference -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!-- Unified repository version baseline (source of truth for CI version derivation) -->
+    <!-- Explicit version: single source of truth for the entire solution.
+         Bump this value via PR when preparing a new release.
+         Release is triggered only when this version differs from the latest git tag.
+
+         Version channel model:
+           Channel   VersionSuffix         Trigger
+           local     local                 Developer machine (default)
+           ci        ci.{run_number}       PR / main push (non-release)
+           rc        rc.{N}                workflow_dispatch with prerelease_suffix
+           stable    (none)                main push when version is bumped
+
+         To publish an RC: trigger workflow_dispatch with prerelease_suffix=rc.1 -->
     <VersionPrefix>1.5.1</VersionPrefix>
+    <FileVersion Condition="'$(BuildNumber)' != ''">$(VersionPrefix).$(BuildNumber)</FileVersion>
 
     <!-- Shared NuGet package metadata -->
     <Authors>Agibuild</Authors>
     <Company>Agibuild</Company>
-    <Copyright>Copyright (c) 2026 Agibuild</Copyright>
+    <Copyright>Copyright (c) $([System.DateTime]::UtcNow.Year) Agibuild</Copyright>
     <PackageProjectUrl>https://github.com/AGIBuild/Agibuild.Fulora</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AGIBuild/Agibuild.Fulora.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
     <!-- SPDX license expression for all NuGet packages -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
   </PropertyGroup>
+
+  <!-- Local builds default to prerelease to avoid confusion with stable releases.
+       CI passes its own VersionSuffix (e.g., ci.158); release builds omit it. -->
+  <PropertyGroup Condition="'$(CI)' != 'true' AND '$(VersionSuffix)' == ''">
+    <VersionSuffix>local</VersionSuffix>
+  </PropertyGroup>
+
 </Project>

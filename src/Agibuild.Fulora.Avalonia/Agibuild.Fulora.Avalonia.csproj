@@ -18,16 +18,16 @@
 
   <!-- Build-time references — PrivateAssets=all keeps them out of NuGet dependency metadata. -->
   <ItemGroup>
-    <PackageReference Include="SharpHook" Version="7.1.1" />
+    <PackageReference Include="SharpHook" />
     <ProjectReference Include="..\Agibuild.Fulora.Core\Agibuild.Fulora.Core.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Agibuild.Fulora.Adapters.Abstractions\Agibuild.Fulora.Adapters.Abstractions.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Agibuild.Fulora.Runtime\Agibuild.Fulora.Runtime.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Agibuild.Fulora.DependencyInjection\Agibuild.Fulora.DependencyInjection.csproj" PrivateAssets="all" />
-    <PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+    <PackageReference Include="Avalonia" />
     <!-- Transitive dependency from Runtime and DI projects (which use PrivateAssets=all). -->
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-preview.2.26159.112" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <!-- Keep package dependency metadata for consumers, but do not import WebView2 build targets into this pack project. -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3848-prerelease" ExcludeAssets="build;buildTransitive" />
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="build;buildTransitive" />
   </ItemGroup>
 
   <ItemGroup>

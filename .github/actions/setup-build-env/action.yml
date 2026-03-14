@@ -1,0 +1,57 @@
+name: Setup Build Environment
+description: Shared setup for .NET, Node.js, caching, tools, and bridge build.
+
+inputs:
+  dotnet-workloads:
+    description: 'Space-separated list of .NET workloads to install (e.g. "android ios macos")'
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+      with:
+        node-version: "22"
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        dotnet-version: "10.0.x"
+        dotnet-quality: "preview"
+
+    - name: Cache NuGet packages
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: ${{ runner.os }}-nuget-
+
+    - name: Cache npm packages
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+      with:
+        path: |
+          packages/bridge/node_modules
+          samples/avalonia-ai-chat/AvaloniAiChat.Web/node_modules
+        key: ${{ runner.os }}-npm-${{ hashFiles('packages/bridge/package.json', 'samples/avalonia-ai-chat/AvaloniAiChat.Web/package.json') }}
+        restore-keys: ${{ runner.os }}-npm-
+
+    - name: Install .NET workloads
+      if: inputs.dotnet-workloads != ''
+      shell: bash
+      run: dotnet workload install ${{ inputs.dotnet-workloads }}
+
+    - name: Restore .NET tools
+      shell: bash
+      run: dotnet tool restore
+
+    - name: Build bridge package
+      shell: bash
+      run: npm install && npm run build
+      working-directory: packages/bridge
+
+    - name: Install web app dependencies
+      shell: bash
+      run: npm install
+      working-directory: samples/avalonia-ai-chat/AvaloniAiChat.Web

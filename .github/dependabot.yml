@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: nuget
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      avalonia:
+        patterns: ["Avalonia*"]
+      microsoft-extensions:
+        patterns: ["Microsoft.Extensions.*"]
+      testing-infra:
+        patterns: ["coverlet*", "Microsoft.NET.Test.Sdk", "xunit*"]
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/packages/bridge"
+    schedule:
+      interval: weekly
+    groups:
+      bridge-deps:
+        patterns: ["*"]
+    open-pull-requests-limit: 5
