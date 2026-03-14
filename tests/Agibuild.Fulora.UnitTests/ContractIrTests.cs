@@ -598,15 +598,24 @@ public interface ITestService
     {
         var importB = new BridgeInterfaceModel
         {
-            Namespace = "TestNs", InterfaceName = "IImportB", ServiceName = "ImportB", Direction = BridgeDirection.Import,
+            Namespace = "TestNs",
+            InterfaceName = "IImportB",
+            ServiceName = "ImportB",
+            Direction = BridgeDirection.Import,
         };
         var exportA = new BridgeInterfaceModel
         {
-            Namespace = "TestNs", InterfaceName = "IExportA", ServiceName = "ExportA", Direction = BridgeDirection.Export,
+            Namespace = "TestNs",
+            InterfaceName = "IExportA",
+            ServiceName = "ExportA",
+            Direction = BridgeDirection.Export,
         };
         var exportC = new BridgeInterfaceModel
         {
-            Namespace = "TestNs", InterfaceName = "IExportC", ServiceName = "ExportC", Direction = BridgeDirection.Export,
+            Namespace = "TestNs",
+            InterfaceName = "IExportC",
+            ServiceName = "ExportC",
+            Direction = BridgeDirection.Export,
         };
 
         var ir = ContractIrBuilder.Build(
@@ -628,7 +637,10 @@ public interface ITestService
 
         var export = new BridgeInterfaceModel
         {
-            Namespace = "TestNs", InterfaceName = "ISvc", ServiceName = "Svc", Direction = BridgeDirection.Export,
+            Namespace = "TestNs",
+            InterfaceName = "ISvc",
+            ServiceName = "Svc",
+            Direction = BridgeDirection.Export,
             ReferencedDtos = ImmutableArray.Create(dtoZ, dtoA, dtoM),
         };
 
@@ -648,7 +660,10 @@ public interface ITestService
         var dto = new BridgeDtoModel { FullName = "TestNs.Dto", Name = "Dto" };
         var svc = new BridgeInterfaceModel
         {
-            Namespace = "TestNs", InterfaceName = "ISvc", ServiceName = "Svc", Direction = BridgeDirection.Export,
+            Namespace = "TestNs",
+            InterfaceName = "ISvc",
+            ServiceName = "Svc",
+            Direction = BridgeDirection.Export,
             ReferencedDtos = ImmutableArray.Create(dto),
         };
 

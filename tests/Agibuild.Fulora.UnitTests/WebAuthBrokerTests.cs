@@ -1,6 +1,6 @@
+using System.Threading;
 using Agibuild.Fulora;
 using Agibuild.Fulora.Testing;
-using System.Threading;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;

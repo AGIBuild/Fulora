@@ -46,7 +46,9 @@ public sealed class SpaAssetHotUpdateIntegrationTests : IDisposable
         using (var hosting = new SpaHostingService(
             new SpaHostingOptions
             {
-                Scheme = "app", Host = "localhost", FallbackDocument = "index.html",
+                Scheme = "app",
+                Host = "localhost",
+                FallbackDocument = "index.html",
                 ActiveAssetDirectoryProvider = service.GetActiveAssetDirectory
             },
             NullLogger.Instance))
@@ -67,7 +69,9 @@ public sealed class SpaAssetHotUpdateIntegrationTests : IDisposable
         using (var hosting = new SpaHostingService(
             new SpaHostingOptions
             {
-                Scheme = "app", Host = "localhost", FallbackDocument = "index.html",
+                Scheme = "app",
+                Host = "localhost",
+                FallbackDocument = "index.html",
                 ActiveAssetDirectoryProvider = service.GetActiveAssetDirectory
             },
             NullLogger.Instance))
@@ -85,7 +89,9 @@ public sealed class SpaAssetHotUpdateIntegrationTests : IDisposable
         using (var hosting = new SpaHostingService(
             new SpaHostingOptions
             {
-                Scheme = "app", Host = "localhost", FallbackDocument = "index.html",
+                Scheme = "app",
+                Host = "localhost",
+                FallbackDocument = "index.html",
                 ActiveAssetDirectoryProvider = service.GetActiveAssetDirectory
             },
             NullLogger.Instance))

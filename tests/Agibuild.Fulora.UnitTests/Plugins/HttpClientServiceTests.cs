@@ -1,6 +1,6 @@
-using Agibuild.Fulora.Plugin.HttpClient;
 using System.Net;
 using System.Net.Http;
+using Agibuild.Fulora.Plugin.HttpClient;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests.Plugins;

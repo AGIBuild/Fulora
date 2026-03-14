@@ -131,7 +131,7 @@ public sealed partial class CoverageGapTests
     }
 
     /// <summary>Adapter that throws on NavigateAsync to cover the exception catch in StartNavigationCoreAsync.</summary>
-    #pragma warning disable CS0067 // Events never used (by design — this adapter only throws)
+#pragma warning disable CS0067 // Events never used (by design — this adapter only throws)
     private sealed class ThrowingNavigateAdapter : IWebViewAdapter
     {
         public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
@@ -163,7 +163,7 @@ public sealed partial class CoverageGapTests
         public bool Refresh(Guid navigationId) => false;
         public bool Stop() => false;
     }
-    #pragma warning restore CS0067
+#pragma warning restore CS0067
 
     /// <summary>Window with non-null PlatformHandle for WebAuthBroker test.</summary>
     private sealed class NonNullHandleWindow : ITopLevelWindow

@@ -1,7 +1,7 @@
+using System.Text.RegularExpressions;
+using Agibuild.Fulora.Testing;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Agibuild.Fulora.Testing;
-using System.Text.RegularExpressions;
 
 namespace Agibuild.Fulora.UnitTests;
 

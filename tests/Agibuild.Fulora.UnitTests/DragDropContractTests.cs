@@ -116,7 +116,8 @@ public sealed class DragDropContractTests
         {
             Payload = new DragDropPayload(),
             AllowedEffects = DragDropEffects.All,
-            X = 1, Y = 2
+            X = 1,
+            Y = 2
         };
         Assert.Equal(DragDropEffects.Copy, args.Effect);
         args.Effect = DragDropEffects.Move;

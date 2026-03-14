@@ -1,15 +1,15 @@
 using System.Runtime.Versioning;
+using Agibuild.Fulora;
+using Agibuild.Fulora.Adapters.Abstractions;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Webkit;
 using AndroidX.Activity;
-using Agibuild.Fulora;
-using Agibuild.Fulora.Adapters.Abstractions;
 using Java.Interop;
-using JavaObject = Java.Lang.Object;
 using AWebView = Android.Webkit.WebView;
+using JavaObject = Java.Lang.Object;
 
 namespace Agibuild.Fulora.Adapters.Android;
 
@@ -570,10 +570,10 @@ internal sealed class AndroidWebViewAdapter : IWebViewAdapter, INativeWebViewHan
         {
             RunOnUiThread(() =>
             {
-            if (options.EnableDevTools)
-            {
-                AWebView.SetWebContentsDebuggingEnabled(true);
-            }
+                if (options.EnableDevTools)
+                {
+                    AWebView.SetWebContentsDebuggingEnabled(true);
+                }
 
                 if (options.CustomUserAgent is not null)
                 {

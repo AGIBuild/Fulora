@@ -1,7 +1,7 @@
+using System.Threading;
 using Agibuild.Fulora;
 using Agibuild.Fulora.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;

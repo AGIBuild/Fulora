@@ -1,7 +1,7 @@
+using Agibuild.Fulora.Integration.Tests.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Agibuild.Fulora.Integration.Tests.ViewModels;
 
 namespace Agibuild.Fulora.Integration.Tests.Views;
 

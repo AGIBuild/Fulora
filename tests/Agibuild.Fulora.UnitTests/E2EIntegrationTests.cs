@@ -84,8 +84,11 @@ public sealed class E2EIntegrationTests
         var enteredPayload = new DragDropPayload { Text = "dragging" };
         var enterArgs = new DragEventArgs
         {
-            Payload = enteredPayload, AllowedEffects = DragDropEffects.Copy,
-            Effect = DragDropEffects.Copy, X = 10, Y = 20
+            Payload = enteredPayload,
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = 10,
+            Y = 20
         };
 
         var enteredFired = false;
@@ -97,7 +100,10 @@ public sealed class E2EIntegrationTests
         core.DragOver += (_, _) => overFired = true;
         dd.RaiseDragOver(new DragEventArgs
         {
-            Payload = new DragDropPayload(), AllowedEffects = DragDropEffects.Copy, X = 15, Y = 25
+            Payload = new DragDropPayload(),
+            AllowedEffects = DragDropEffects.Copy,
+            X = 15,
+            Y = 25
         });
         Assert.True(overFired);
 
@@ -112,7 +118,10 @@ public sealed class E2EIntegrationTests
         };
         dd.RaiseDropCompleted(new DropEventArgs
         {
-            Payload = dropPayload, Effect = DragDropEffects.Copy, X = 20, Y = 30
+            Payload = dropPayload,
+            Effect = DragDropEffects.Copy,
+            X = 20,
+            Y = 30
         });
 
         var result = await service.GetLastDropPayloadAsync(TestContext.Current.CancellationToken);

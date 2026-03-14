@@ -1,12 +1,12 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Agibuild.Fulora.Integration.Tests.ViewModels;
 using Agibuild.Fulora.Integration.Tests.Views;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Agibuild.Fulora.Integration.Tests;
 

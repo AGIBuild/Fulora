@@ -5,18 +5,17 @@ using Avalonia.Media;
 using Foundation;
 using UIKit;
 
-namespace Agibuild.Fulora.Integration.Tests.iOS
+namespace Agibuild.Fulora.Integration.Tests.iOS;
+
+// The UIApplicationDelegate for the application. This class is responsible for launching the 
+// User Interface of the application, as well as listening (and optionally responding) to 
+// application events from iOS.
+[Register("AppDelegate")]
+public partial class AppDelegate : AvaloniaAppDelegate<App>
 {
-    // The UIApplicationDelegate for the application. This class is responsible for launching the 
-    // User Interface of the application, as well as listening (and optionally responding) to 
-    // application events from iOS.
-    [Register("AppDelegate")]
-    public partial class AppDelegate : AvaloniaAppDelegate<App>
+    protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
-        protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
-        {
-            return base.CustomizeAppBuilder(builder)
-                .WithInterFont();
-        }
+        return base.CustomizeAppBuilder(builder)
+            .WithInterFont();
     }
 }

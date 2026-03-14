@@ -170,10 +170,10 @@ public sealed class HostCapabilityBridgeIntegrationTests
         var bridge = new WebViewHostCapabilityBridge(provider, new IntegrationCapabilityPolicy());
 
         using (var deniedShell = new WebViewShellExperience(core, new WebViewShellExperienceOptions
-               {
-                   HostCapabilityBridge = bridge,
-                   PermissionPolicy = new DelegatePermissionPolicy((_, e) => e.State = PermissionState.Deny)
-               }))
+        {
+            HostCapabilityBridge = bridge,
+            PermissionPolicy = new DelegatePermissionPolicy((_, e) => e.State = PermissionState.Deny)
+        }))
         {
             var open = deniedShell.ShowOpenFileDialog(new WebViewOpenFileDialogRequest { Title = "Open product-flow file" });
             var save = deniedShell.ShowSaveFileDialog(new WebViewSaveFileDialogRequest { SuggestedFileName = "product-flow.txt" });
@@ -198,10 +198,10 @@ public sealed class HostCapabilityBridgeIntegrationTests
         }
 
         using (var recoveredShell = new WebViewShellExperience(core, new WebViewShellExperienceOptions
-               {
-                   HostCapabilityBridge = bridge,
-                   PermissionPolicy = new DelegatePermissionPolicy((_, e) => e.State = PermissionState.Allow)
-               }))
+        {
+            HostCapabilityBridge = bridge,
+            PermissionPolicy = new DelegatePermissionPolicy((_, e) => e.State = PermissionState.Allow)
+        }))
         {
             var open = recoveredShell.ShowOpenFileDialog(new WebViewOpenFileDialogRequest { Title = "Open recovered file" });
             var menu = recoveredShell.ApplyMenuModel(new WebViewMenuModelRequest

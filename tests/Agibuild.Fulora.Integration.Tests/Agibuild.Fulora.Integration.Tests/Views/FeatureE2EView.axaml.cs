@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
+using Agibuild.Fulora.Integration.Tests.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Agibuild.Fulora.Integration.Tests.ViewModels;
 
 namespace Agibuild.Fulora.Integration.Tests.Views;
 

@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Agibuild.Fulora.Integration.Tests.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Agibuild.Fulora.Integration.Tests.ViewModels;
 
 namespace Agibuild.Fulora.Integration.Tests.Views;
 

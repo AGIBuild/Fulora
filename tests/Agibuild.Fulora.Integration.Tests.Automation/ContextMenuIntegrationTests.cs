@@ -33,7 +33,8 @@ public sealed class ContextMenuIntegrationTests
 
         var args = new ContextMenuRequestedEventArgs
         {
-            X = 150, Y = 250,
+            X = 150,
+            Y = 250,
             LinkUri = new Uri("https://example.com/link"),
             SelectionText = "selected text",
             MediaType = ContextMenuMediaType.Image,

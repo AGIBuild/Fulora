@@ -9,7 +9,7 @@ public sealed class WindowsBiometricProvider : IBiometricPlatformProvider
     /// <inheritdoc />
     public Task<BiometricAvailability> CheckAvailabilityAsync(CancellationToken ct = default)
         => Task.FromResult(new BiometricAvailability(
-            OperatingSystem.IsWindows(), "windows_hello",             OperatingSystem.IsWindows() ? null : "wrong_platform"));
+            OperatingSystem.IsWindows(), "windows_hello", OperatingSystem.IsWindows() ? null : "wrong_platform"));
 
     /// <inheritdoc />
     public Task<BiometricResult> AuthenticateAsync(string reason, CancellationToken ct = default)

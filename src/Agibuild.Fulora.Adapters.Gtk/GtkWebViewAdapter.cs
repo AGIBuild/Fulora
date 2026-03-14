@@ -890,7 +890,11 @@ internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
         var payload = ParseGtkDragPayload(filesJsonUtf8, textUtf8);
         adapter.DragEntered?.Invoke(adapter, new DragEventArgs
         {
-            Payload = payload, AllowedEffects = DragDropEffects.Copy, Effect = DragDropEffects.Copy, X = x, Y = y
+            Payload = payload,
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = x,
+            Y = y
         });
     }
 
@@ -899,7 +903,11 @@ internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
         var adapter = NativeMethods.FromUserData(userData);
         adapter?.DragOver?.Invoke(adapter, new DragEventArgs
         {
-            Payload = new DragDropPayload(), AllowedEffects = DragDropEffects.Copy, Effect = DragDropEffects.Copy, X = x, Y = y
+            Payload = new DragDropPayload(),
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = x,
+            Y = y
         });
     }
 
@@ -916,7 +924,10 @@ internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
         var payload = ParseGtkDragPayload(filesJsonUtf8, textUtf8);
         adapter.DropCompleted?.Invoke(adapter, new DropEventArgs
         {
-            Payload = payload, Effect = DragDropEffects.Copy, X = x, Y = y
+            Payload = payload,
+            Effect = DragDropEffects.Copy,
+            X = x,
+            Y = y
         });
     }
 

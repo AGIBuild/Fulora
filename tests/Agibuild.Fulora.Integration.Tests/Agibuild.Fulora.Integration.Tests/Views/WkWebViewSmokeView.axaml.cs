@@ -1,7 +1,7 @@
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Agibuild.Fulora.Integration.Tests.Controls;
 using Agibuild.Fulora.Integration.Tests.ViewModels;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
 namespace Agibuild.Fulora.Integration.Tests.Views;
 

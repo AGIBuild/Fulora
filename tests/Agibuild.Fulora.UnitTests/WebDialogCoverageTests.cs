@@ -454,7 +454,8 @@ public sealed partial class CoverageGapTests
 
         var args = new ContextMenuRequestedEventArgs
         {
-            X = 100, Y = 200,
+            X = 100,
+            Y = 200,
             LinkUri = new Uri("https://example.com"),
             SelectionText = "hello",
             MediaType = ContextMenuMediaType.None,

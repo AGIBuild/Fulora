@@ -240,7 +240,7 @@ public sealed partial class RuntimeCoverageTests
 
     // ==================== Mock DevTools adapter ====================
 
-    #pragma warning disable CS0067 // Events are required by interface but not used in test mock
+#pragma warning disable CS0067 // Events are required by interface but not used in test mock
     private sealed class MockDevToolsAdapter : IWebViewAdapter, IDevToolsAdapter
     {
         public bool DevToolsOpened { get; private set; }
@@ -271,5 +271,5 @@ public sealed partial class RuntimeCoverageTests
         public bool Refresh(Guid navigationId) => false;
         public bool Stop() => false;
     }
-    #pragma warning restore CS0067
+#pragma warning restore CS0067
 }

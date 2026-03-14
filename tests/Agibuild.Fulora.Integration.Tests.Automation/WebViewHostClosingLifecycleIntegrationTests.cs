@@ -1,8 +1,8 @@
 using System;
 using System.Reflection;
-using Agibuild.Fulora.Testing;
 using Agibuild.Fulora.Integration.Tests.ViewModels;
 using Agibuild.Fulora.Integration.Tests.Views;
+using Agibuild.Fulora.Testing;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Xunit;
