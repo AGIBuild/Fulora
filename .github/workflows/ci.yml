@@ -416,6 +416,128 @@ jobs:
         if: hashFiles('artifacts/merged-coverage-report/SummaryGithub.md') != ''
         run: cat artifacts/merged-coverage-report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
 
+  update-badges:
+    name: Update Quality Badges
+    needs: [merge-coverage, build-macos]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download merged coverage report
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: merged-coverage-report
+          path: merged-coverage-report
+
+      - name: Download test results
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: test-results-macos
+          path: test-results
+
+      - name: Extract metrics and update Gist
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_SECRET }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, urllib.request, urllib.error
+          from xml.etree import ElementTree as ET
+          from pathlib import Path
+
+          GIST_ID = "27f5f07abdea4bfb8f7496958ead2a82"
+          TRX_NS = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
+
+          def parse_trx_counters(trx_path):
+              tree = ET.parse(trx_path)
+              counters = tree.find(f".//{{{TRX_NS}}}Counters")
+              if counters is None:
+                  return None
+              return {
+                  "total": int(counters.get("total", "0")),
+                  "passed": int(counters.get("passed", "0")),
+                  "failed": int(counters.get("failed", "0")),
+              }
+
+          def parse_cobertura(cob_path):
+              tree = ET.parse(cob_path)
+              root = tree.getroot()
+              line_rate = float(root.get("line-rate", "0"))
+              branch_rate = float(root.get("branch-rate", "0"))
+              return round(line_rate * 100, 2), round(branch_rate * 100, 2)
+
+          def badge_json(label, message, color):
+              return json.dumps({"schemaVersion": 1, "label": label, "message": message, "color": color})
+
+          def coverage_color(pct):
+              if pct >= 95: return "brightgreen"
+              if pct >= 90: return "green"
+              if pct >= 80: return "yellowgreen"
+              if pct >= 70: return "yellow"
+              return "red"
+
+          def test_color(failed):
+              return "brightgreen" if failed == 0 else "red"
+
+          # Parse test results
+          trx_dir = Path("test-results")
+          unit_trx = trx_dir / "unit-tests.trx"
+          integration_trx = None
+          for name in ["runtime-automation.trx", "integration-tests.trx"]:
+              candidate = trx_dir / name
+              if candidate.exists():
+                  integration_trx = candidate
+                  break
+
+          unit = parse_trx_counters(unit_trx) if unit_trx.exists() else None
+          integration = parse_trx_counters(integration_trx) if integration_trx else None
+
+          # Parse coverage
+          cob_dir = Path("merged-coverage-report")
+          cob_file = cob_dir / "Cobertura.xml"
+          line_pct, branch_pct = parse_cobertura(cob_file) if cob_file.exists() else (0.0, 0.0)
+
+          # Build badge files
+          files = {}
+          if unit:
+              msg = f"{unit['total']} passed" if unit['failed'] == 0 else f"{unit['passed']}/{unit['total']} passed"
+              files["unit-tests.json"] = {"content": badge_json("unit tests", msg, test_color(unit['failed']))}
+          if integration:
+              msg = f"{integration['total']} passed" if integration['failed'] == 0 else f"{integration['passed']}/{integration['total']} passed"
+              files["integration-tests.json"] = {"content": badge_json("integration tests", msg, test_color(integration['failed']))}
+          if cob_file.exists():
+              files["line-coverage.json"] = {"content": badge_json("line coverage", f"{line_pct}%", coverage_color(line_pct))}
+              files["branch-coverage.json"] = {"content": badge_json("branch coverage", f"{branch_pct}%", coverage_color(branch_pct))}
+
+          if not files:
+              print("No metrics found — skipping badge update.")
+              sys.exit(0)
+
+          # Update Gist
+          token = os.environ.get("GIST_TOKEN", "")
+          if not token:
+              print("GIST_SECRET not set — skipping badge update.")
+              sys.exit(0)
+
+          payload = json.dumps({"files": files}).encode()
+          req = urllib.request.Request(
+              f"https://api.github.com/gists/{GIST_ID}",
+              data=payload,
+              method="PATCH",
+              headers={
+                  "Authorization": f"token {token}",
+                  "Accept": "application/vnd.github+json",
+                  "Content-Type": "application/json",
+              },
+          )
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  print(f"Gist updated (HTTP {resp.status})")
+          except urllib.error.HTTPError as e:
+              print(f"Failed to update Gist: HTTP {e.code} — {e.read().decode()}")
+              sys.exit(1)
+          PY
+
   build-docs:
     name: Build Documentation
     needs: version

@@ -844,9 +844,10 @@ public sealed class AutomationLaneGovernanceTests
             Directory.GetFiles(Path.Combine(repoRoot, "tests", "Agibuild.Fulora.Integration.Tests.Automation"), "*Tests.cs", SearchOption.AllDirectories).Length > 0,
             $"[{ReadmeQualitySignals}] No integration test files found");
 
-        Assert.Matches(new Regex(@"\|\s*Unit tests\s*\|\s*\d{3,}\s*\|"), readme);
-        Assert.Matches(new Regex(@"\|\s*Integration tests\s*\|\s*\d{2,}\s*\|"), readme);
-        Assert.Matches(new Regex(@"\|\s*Line coverage\s*\|\s*\*\*\d+\.\d+%\*\*\s*\|"), readme);
+        Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*unit-tests\.json"), readme);
+        Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*integration-tests\.json"), readme);
+        Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*line-coverage\.json"), readme);
+        Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*branch-coverage\.json"), readme);
         AssertSourceContains(readme, "Phase 12", ReadmeQualitySignals, readmePath);
     }
 

@@ -1,0 +1,15 @@
+{
+  "ignorePatterns": [
+    { "pattern": "^https?://img\\.shields\\.io" },
+    { "pattern": "^https?://gist\\.githubusercontent\\.com" },
+    { "pattern": "^https?://localhost" },
+    { "pattern": "^https?://example\\.com" },
+    { "pattern": "^app://" }
+  ],
+  "replacementPatterns": [],
+  "httpHeaders": [],
+  "timeout": "10s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "aliveStatusCodes": [200, 206]
+}
