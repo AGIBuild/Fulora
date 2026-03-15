@@ -1,4 +1,6 @@
+using System;
 using Nuke.Common;
+using Nuke.Common.Tooling;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 internal partial class BuildTask
@@ -9,6 +11,18 @@ internal partial class BuildTask
         .Executes(async () =>
         {
             var filterPath = await BuildPlatformAwareSolutionFilterAsync("format-check");
-            DotNet($"format {filterPath} --verify-no-changes", workingDirectory: RootDirectory);
+            DotNet($"format {filterPath} --verify-no-changes",
+                   workingDirectory: RootDirectory,
+                   logger: (type, message) =>
+                   {
+                       if (type == OutputType.Err
+                           && message.Contains("Warnings were encountered while loading the workspace", StringComparison.Ordinal))
+                       {
+                           Serilog.Log.Warning(message);
+                           return;
+                       }
+
+                       ProcessTasks.DefaultLogger(type, message);
+                   });
         });
 }
