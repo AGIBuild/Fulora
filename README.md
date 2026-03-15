@@ -20,6 +20,13 @@
   <img src="https://img.shields.io/badge/Android-WebView-3DDC84?style=flat-square&logo=android&logoColor=white" />
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Funit-tests.json&style=flat-square" alt="Unit Tests" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fintegration-tests.json&style=flat-square" alt="Integration Tests" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fline-coverage.json&style=flat-square" alt="Line Coverage" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
+</p>
+
 ---
 
 ## Why Fulora
@@ -248,14 +255,7 @@ Unlike wrapper-only solutions, Fulora provides typed host/web contracts, policy-
 
 ## Quality Signals
 
-<p align="center">
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Funit-tests.json&style=flat-square" alt="Unit Tests" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fintegration-tests.json&style=flat-square" alt="Integration Tests" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fline-coverage.json&style=flat-square" alt="Line Coverage" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
-</p>
-
-These badges are updated automatically by CI on every successful build to `main`.
+Quality badges at the top of the page are updated automatically by CI on every successful build to `main`.
 
 ```bash
 nuke Test              # Unit + Integration
