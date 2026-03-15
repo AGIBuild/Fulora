@@ -323,6 +323,7 @@ internal partial class BuildTask
     internal Target NugetPackageTest => _ => _
         .Description("Packs, restores, builds, and runs the NuGet package integration smoke test end-to-end.")
         .DependsOn(ValidatePackage)
+        .OnlyWhenDynamic(() => OperatingSystem.IsMacOS(), "Avalonia GUI smoke test requires a display server (macOS CI only)")
         .Executes(async () =>
         {
             var packedVersion = ResolvePackedAgibuildVersion("Agibuild.Fulora.Avalonia");
