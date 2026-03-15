@@ -29,8 +29,8 @@ permissions:
   checks: write
 
 concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('ci-run-{0}', github.run_id) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('ci-{0}', github.ref) }}
+  cancel-in-progress: true
 
 env:
   DOTNET_NOLOGO: true
