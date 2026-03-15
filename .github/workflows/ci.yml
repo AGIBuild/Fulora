@@ -436,6 +436,7 @@ jobs:
           path: test-results
 
       - name: Extract metrics and update Gist
+        id: badges
         env:
           GIST_TOKEN: ${{ secrets.GIST_SECRET }}
         shell: bash
@@ -445,8 +446,45 @@ jobs:
           from xml.etree import ElementTree as ET
           from pathlib import Path
 
-          GIST_ID = "27f5f07abdea4bfb8f7496958ead2a82"
+          GIST_DESCRIPTION = "Fulora CI quality badges (auto-updated)"
+          API = "https://api.github.com"
           TRX_NS = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
+
+          token = os.environ.get("GIST_TOKEN", "")
+          if not token:
+              print("GIST_SECRET not set — skipping badge update.")
+              sys.exit(0)
+
+          def api(method, path, body=None):
+              data = json.dumps(body).encode() if body else None
+              req = urllib.request.Request(
+                  f"{API}{path}", data=data, method=method,
+                  headers={
+                      "Authorization": f"token {token}",
+                      "Accept": "application/vnd.github+json",
+                      "Content-Type": "application/json",
+                  },
+              )
+              with urllib.request.urlopen(req) as r:
+                  return json.loads(r.read())
+
+          def find_or_create_gist(files):
+              for page in range(1, 11):
+                  gists = api("GET", f"/gists?per_page=100&page={page}")
+                  if not gists:
+                      break
+                  for g in gists:
+                      if g.get("description") == GIST_DESCRIPTION:
+                          gist = api("PATCH", f"/gists/{g['id']}", {"files": files})
+                          print(f"Updated existing Gist {g['id']}")
+                          return gist
+              gist = api("POST", "/gists", {
+                  "description": GIST_DESCRIPTION,
+                  "public": True,
+                  "files": files,
+              })
+              print(f"Created new Gist {gist['id']}")
+              return gist
 
           def parse_trx_counters(trx_path):
               tree = ET.parse(trx_path)
@@ -459,85 +497,77 @@ jobs:
                   "failed": int(counters.get("failed", "0")),
               }
 
-          def find_cobertura(base_dir):
-              for name in ["Cobertura.xml", "coverage.cobertura.xml"]:
-                  for p in base_dir.rglob(name):
+          def find_file(name, dirs):
+              for d in dirs:
+                  for p in d.rglob(name):
                       return p
               return None
 
           def parse_cobertura(cob_path):
               tree = ET.parse(cob_path)
               root = tree.getroot()
-              line_rate = float(root.get("line-rate", "0"))
-              branch_rate = float(root.get("branch-rate", "0"))
-              return round(line_rate * 100, 2), round(branch_rate * 100, 2)
+              return (
+                  round(float(root.get("line-rate", "0")) * 100, 2),
+                  round(float(root.get("branch-rate", "0")) * 100, 2),
+              )
 
-          def badge_json(label, message, color):
+          def badge(label, message, color):
               return json.dumps({"schemaVersion": 1, "label": label, "message": message, "color": color})
 
-          def coverage_color(pct):
+          def cov_color(pct):
               if pct >= 95: return "brightgreen"
               if pct >= 90: return "green"
               if pct >= 80: return "yellowgreen"
               if pct >= 70: return "yellow"
               return "red"
 
-          def test_color(failed):
-              return "brightgreen" if failed == 0 else "red"
-
-          def find_trx(name, dirs):
-              for d in dirs:
-                  for p in d.rglob(name):
-                      return p
-              return None
-
-          search_dirs = [Path("test-results"), Path("coverage-report")]
-          unit_trx = find_trx("unit-tests.trx", search_dirs)
-          integration_trx = find_trx("runtime-automation.trx", search_dirs) or find_trx("integration-tests.trx", search_dirs)
+          search = [Path("test-results"), Path("coverage-report")]
+          unit_trx = find_file("unit-tests.trx", search)
+          int_trx = find_file("runtime-automation.trx", search) or find_file("integration-tests.trx", search)
+          cob = find_file("Cobertura.xml", [Path("coverage-report")]) or find_file("coverage.cobertura.xml", [Path("coverage-report")])
 
           unit = parse_trx_counters(unit_trx) if unit_trx else None
-          integration = parse_trx_counters(integration_trx) if integration_trx else None
-
-          cob_file = find_cobertura(Path("coverage-report"))
-          line_pct, branch_pct = parse_cobertura(cob_file) if cob_file else (0.0, 0.0)
+          integration = parse_trx_counters(int_trx) if int_trx else None
+          line_pct, branch_pct = parse_cobertura(cob) if cob else (0.0, 0.0)
 
           files = {}
           if unit:
-              msg = f"{unit['total']} passed" if unit['failed'] == 0 else f"{unit['passed']}/{unit['total']} passed"
-              files["unit-tests.json"] = {"content": badge_json("unit tests", msg, test_color(unit['failed']))}
+              c = "brightgreen" if unit["failed"] == 0 else "red"
+              m = f"{unit['total']} passed" if unit["failed"] == 0 else f"{unit['passed']}/{unit['total']} passed"
+              files["unit-tests.json"] = {"content": badge("unit tests", m, c)}
           if integration:
-              msg = f"{integration['total']} passed" if integration['failed'] == 0 else f"{integration['passed']}/{integration['total']} passed"
-              files["integration-tests.json"] = {"content": badge_json("integration tests", msg, test_color(integration['failed']))}
-          if cob_file:
-              files["line-coverage.json"] = {"content": badge_json("line coverage", f"{line_pct}%", coverage_color(line_pct))}
-              files["branch-coverage.json"] = {"content": badge_json("branch coverage", f"{branch_pct}%", coverage_color(branch_pct))}
+              c = "brightgreen" if integration["failed"] == 0 else "red"
+              m = f"{integration['total']} passed" if integration["failed"] == 0 else f"{integration['passed']}/{integration['total']} passed"
+              files["integration-tests.json"] = {"content": badge("integration tests", m, c)}
+          if cob:
+              files["line-coverage.json"] = {"content": badge("line coverage", f"{line_pct}%", cov_color(line_pct))}
+              files["branch-coverage.json"] = {"content": badge("branch coverage", f"{branch_pct}%", cov_color(branch_pct))}
 
           if not files:
               print("No metrics found — skipping badge update.")
               sys.exit(0)
 
-          token = os.environ.get("GIST_TOKEN", "")
-          if not token:
-              print("GIST_SECRET not set — skipping badge update.")
-              sys.exit(0)
+          gist = find_or_create_gist(files)
+          owner = gist["owner"]["login"]
+          gist_id = gist["id"]
 
-          payload = json.dumps({"files": files}).encode()
-          req = urllib.request.Request(
-              f"https://api.github.com/gists/{GIST_ID}",
-              data=payload,
-              method="PATCH",
-              headers={
-                  "Authorization": f"token {token}",
-                  "Accept": "application/vnd.github+json",
-                  "Content-Type": "application/json",
-              },
-          )
-          try:
-              with urllib.request.urlopen(req) as resp:
-                  print(f"Gist updated (HTTP {resp.status})")
-          except urllib.error.HTTPError as e:
-              print(f"Failed to update Gist: HTTP {e.code} — {e.read().decode()}")
-              sys.exit(1)
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "")
+          if summary_path:
+              with open(summary_path, "a") as f:
+                  f.write(f"\n## Quality Badge Gist\n\n")
+                  f.write(f"- **Owner:** `{owner}`\n")
+                  f.write(f"- **Gist ID:** `{gist_id}`\n")
+                  f.write(f"- **URL:** {gist['html_url']}\n\n")
+                  for name in ["unit-tests.json", "integration-tests.json", "line-coverage.json", "branch-coverage.json"]:
+                      if name in gist.get("files", {}):
+                          raw = gist["files"][name]["raw_url"]
+                          f.write(f"![{name}](https://img.shields.io/endpoint?url={raw}&style=flat-square)\n")
+
+          out = os.environ.get("GITHUB_OUTPUT", "")
+          if out:
+              with open(out, "a") as f:
+                  f.write(f"gist_owner={owner}\n")
+                  f.write(f"gist_id={gist_id}\n")
           PY
 
   build-docs:
