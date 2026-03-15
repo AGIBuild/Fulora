@@ -14,6 +14,9 @@ public sealed class OAuthPkceClient
     private readonly HttpClient _httpClient;
     private readonly OAuthPkceOptions _options;
 
+    /// <summary>
+    /// Initializes a new <see cref="OAuthPkceClient"/> with the specified HTTP client and options.
+    /// </summary>
     public OAuthPkceClient(HttpClient httpClient, OAuthPkceOptions options)
     {
         ArgumentNullException.ThrowIfNull(httpClient);
