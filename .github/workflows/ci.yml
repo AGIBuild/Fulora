@@ -29,7 +29,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: ci-release-${{ github.ref }}
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('ci-run-{0}', github.run_id) }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
@@ -458,7 +458,7 @@ jobs:
       id-token: write
     concurrency:
       group: release-tag-${{ needs.version.outputs.tag }}
-      cancel-in-progress: false
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
