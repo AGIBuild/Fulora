@@ -418,13 +418,13 @@ internal partial class BuildTask
                 else
                 {
                     var readme = File.ReadAllText(readmePath);
-                    if (!readme.Contains("Roadmap Alignment", StringComparison.Ordinal))
+                    if (!readme.Contains("Vision & Roadmap", StringComparison.Ordinal))
                     {
                         AddBlocking(
                             category: "adoption-docs",
                             invariantId: AdoptionReadinessSchemaInvariantId,
                             sourceArtifact: "README.md",
-                            expected: "Roadmap Alignment section present",
+                            expected: "Vision & Roadmap section present",
                             actual: "section missing");
                     }
 
