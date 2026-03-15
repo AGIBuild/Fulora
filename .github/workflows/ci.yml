@@ -250,7 +250,9 @@ jobs:
         if: always()
         with:
           name: test-results-macos
-          path: artifacts/test-results/
+          path: |
+            artifacts/test-results/
+            artifacts/coverage/**/*.trx
           if-no-files-found: ignore
 
       - name: Upload coverage report
@@ -266,7 +268,9 @@ jobs:
         uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
         with:
           name: Tests (macOS)
-          path: artifacts/test-results/**/*.trx
+          path: |
+            artifacts/test-results/**/*.trx
+            artifacts/coverage/**/*.trx
           reporter: dotnet-trx
 
   build-windows:
