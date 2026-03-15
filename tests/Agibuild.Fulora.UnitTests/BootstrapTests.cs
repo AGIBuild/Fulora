@@ -76,6 +76,22 @@ public class BootstrapTests
     }
 
     [Fact]
+    public async Task BootstrapSpaAsync_throws_when_webview_does_not_support_spa_hosting()
+    {
+        var webView = new NonSpaTrackingWebView();
+
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            webView.BootstrapSpaAsync(new SpaBootstrapOptions
+            {
+                EmbeddedResourcePrefix = "wwwroot",
+                ResourceAssembly = typeof(BootstrapTests).Assembly
+            }, TestContext.Current.CancellationToken));
+
+        Assert.Contains("NonSpaTrackingWebView", ex.Message);
+        Assert.Contains("does not support SPA hosting", ex.Message);
+    }
+
+    [Fact]
     public async Task BootstrapSpaAsync_invokes_ConfigureBridge_after_navigation()
     {
         var webView = new TrackingWebView();
@@ -596,6 +612,56 @@ public class BootstrapTests
             _disposed = true;
             AdapterDestroyed?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    private sealed class NonSpaTrackingWebView : IWebView
+    {
+        public Uri Source { get; set; } = new("about:blank");
+        public bool CanGoBack => false;
+        public bool CanGoForward => false;
+        public bool IsLoading => false;
+        public Guid ChannelId { get; } = Guid.NewGuid();
+        public IWebViewRpcService? Rpc => null;
+        public IBridgeTracer? BridgeTracer { get; set; }
+        public IBridgeService Bridge => new StubBridgeService();
+
+        public Task NavigateAsync(Uri uri) => Task.CompletedTask;
+        public Task NavigateToStringAsync(string html) => Task.CompletedTask;
+        public Task NavigateToStringAsync(string html, Uri? baseUrl) => Task.CompletedTask;
+        public Task<string?> InvokeScriptAsync(string script) => Task.FromResult<string?>(null);
+        public Task<bool> GoBackAsync() => Task.FromResult(false);
+        public Task<bool> GoForwardAsync() => Task.FromResult(false);
+        public Task<bool> RefreshAsync() => Task.FromResult(false);
+        public Task<bool> StopAsync() => Task.FromResult(false);
+        public ICookieManager? TryGetCookieManager() => null;
+        public ICommandManager? TryGetCommandManager() => null;
+        public Task<INativeHandle?> TryGetWebViewHandleAsync() => Task.FromResult<INativeHandle?>(null);
+        public Task OpenDevToolsAsync() => Task.CompletedTask;
+        public Task CloseDevToolsAsync() => Task.CompletedTask;
+        public Task<bool> IsDevToolsOpenAsync() => Task.FromResult(false);
+        public Task<byte[]> CaptureScreenshotAsync() => Task.FromResult(Array.Empty<byte>());
+        public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null) => Task.FromResult(Array.Empty<byte>());
+        public Task<double> GetZoomFactorAsync() => Task.FromResult(1.0);
+        public Task SetZoomFactorAsync(double zoomFactor) => Task.CompletedTask;
+        public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
+            => Task.FromResult(new FindInPageEventArgs());
+        public Task StopFindInPageAsync(bool clearHighlights = true) => Task.CompletedTask;
+        public Task<string> AddPreloadScriptAsync(string javaScript) => Task.FromResult("script-id");
+        public Task RemovePreloadScriptAsync(string scriptId) => Task.CompletedTask;
+
+        public event EventHandler<NavigationStartingEventArgs>? NavigationStarted { add { } remove { } }
+        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted { add { } remove { } }
+        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested { add { } remove { } }
+        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived { add { } remove { } }
+        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested { add { } remove { } }
+        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested { add { } remove { } }
+        public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested { add { } remove { } }
+        public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested { add { } remove { } }
+        public event EventHandler<AdapterCreatedEventArgs>? AdapterCreated { add { } remove { } }
+        public event EventHandler? AdapterDestroyed { add { } remove { } }
+        public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested { add { } remove { } }
+
+        public void Dispose() { }
     }
 
     private sealed class StubBridgeService : IBridgeService
