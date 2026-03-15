@@ -249,10 +249,10 @@ Unlike wrapper-only solutions, Fulora provides typed host/web contracts, policy-
 ## Quality Signals
 
 <p align="center">
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FHongwei-MB%2F27f5f07abdea4bfb8f7496958ead2a82%2Fraw%2Funit-tests.json&style=flat-square" alt="Unit Tests" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FHongwei-MB%2F27f5f07abdea4bfb8f7496958ead2a82%2Fraw%2Fintegration-tests.json&style=flat-square" alt="Integration Tests" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FHongwei-MB%2F27f5f07abdea4bfb8f7496958ead2a82%2Fraw%2Fline-coverage.json&style=flat-square" alt="Line Coverage" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FHongwei-MB%2F27f5f07abdea4bfb8f7496958ead2a82%2Fraw%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Funit-tests.json&style=flat-square" alt="Unit Tests" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fintegration-tests.json&style=flat-square" alt="Integration Tests" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fline-coverage.json&style=flat-square" alt="Line Coverage" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
 </p>
 
 These badges are updated automatically by CI on every successful build to `main`.

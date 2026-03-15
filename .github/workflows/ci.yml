@@ -421,8 +421,12 @@ jobs:
     needs: [build-macos]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
       - name: Download coverage report
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -435,140 +439,91 @@ jobs:
           name: test-results-macos
           path: test-results
 
-      - name: Extract metrics and update Gist
-        id: badges
-        env:
-          GIST_TOKEN: ${{ secrets.GIST_SECRET }}
+      - name: Extract metrics and push to badges branch
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, os, sys, urllib.request, urllib.error
+          import json, sys
           from xml.etree import ElementTree as ET
           from pathlib import Path
 
-          GIST_DESCRIPTION = "Fulora CI quality badges (auto-updated)"
-          API = "https://api.github.com"
           TRX_NS = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
-          token = os.environ.get("GIST_TOKEN", "")
-          if not token:
-              print("GIST_SECRET not set — skipping badge update.")
-              sys.exit(0)
+          def parse_trx(path):
+              tree = ET.parse(path)
+              c = tree.find(f".//{{{TRX_NS}}}Counters")
+              if c is None: return None
+              return {"total": int(c.get("total","0")), "passed": int(c.get("passed","0")), "failed": int(c.get("failed","0"))}
 
-          def api(method, path, body=None):
-              data = json.dumps(body).encode() if body else None
-              req = urllib.request.Request(
-                  f"{API}{path}", data=data, method=method,
-                  headers={
-                      "Authorization": f"token {token}",
-                      "Accept": "application/vnd.github+json",
-                      "Content-Type": "application/json",
-                  },
-              )
-              with urllib.request.urlopen(req) as r:
-                  return json.loads(r.read())
-
-          def find_or_create_gist(files):
-              for page in range(1, 11):
-                  gists = api("GET", f"/gists?per_page=100&page={page}")
-                  if not gists:
-                      break
-                  for g in gists:
-                      if g.get("description") == GIST_DESCRIPTION:
-                          gist = api("PATCH", f"/gists/{g['id']}", {"files": files})
-                          print(f"Updated existing Gist {g['id']}")
-                          return gist
-              gist = api("POST", "/gists", {
-                  "description": GIST_DESCRIPTION,
-                  "public": True,
-                  "files": files,
-              })
-              print(f"Created new Gist {gist['id']}")
-              return gist
-
-          def parse_trx_counters(trx_path):
-              tree = ET.parse(trx_path)
-              counters = tree.find(f".//{{{TRX_NS}}}Counters")
-              if counters is None:
-                  return None
-              return {
-                  "total": int(counters.get("total", "0")),
-                  "passed": int(counters.get("passed", "0")),
-                  "failed": int(counters.get("failed", "0")),
-              }
-
-          def find_file(name, dirs):
+          def find(name, dirs):
               for d in dirs:
                   for p in d.rglob(name):
                       return p
               return None
 
-          def parse_cobertura(cob_path):
-              tree = ET.parse(cob_path)
-              root = tree.getroot()
-              return (
-                  round(float(root.get("line-rate", "0")) * 100, 2),
-                  round(float(root.get("branch-rate", "0")) * 100, 2),
-              )
+          def parse_cob(path):
+              r = ET.parse(path).getroot()
+              return round(float(r.get("line-rate","0"))*100,2), round(float(r.get("branch-rate","0"))*100,2)
 
-          def badge(label, message, color):
-              return json.dumps({"schemaVersion": 1, "label": label, "message": message, "color": color})
+          def badge(label, msg, color):
+              return json.dumps({"schemaVersion":1,"label":label,"message":msg,"color":color}, indent=2)
 
-          def cov_color(pct):
-              if pct >= 95: return "brightgreen"
-              if pct >= 90: return "green"
-              if pct >= 80: return "yellowgreen"
-              if pct >= 70: return "yellow"
+          def cc(pct):
+              if pct>=95: return "brightgreen"
+              if pct>=90: return "green"
+              if pct>=80: return "yellowgreen"
+              if pct>=70: return "yellow"
               return "red"
 
-          search = [Path("test-results"), Path("coverage-report")]
-          unit_trx = find_file("unit-tests.trx", search)
-          int_trx = find_file("runtime-automation.trx", search) or find_file("integration-tests.trx", search)
-          cob = find_file("Cobertura.xml", [Path("coverage-report")]) or find_file("coverage.cobertura.xml", [Path("coverage-report")])
+          s = [Path("test-results"), Path("coverage-report")]
+          ut = find("unit-tests.trx", s)
+          it = find("runtime-automation.trx", s) or find("integration-tests.trx", s)
+          cb = find("Cobertura.xml", [Path("coverage-report")]) or find("coverage.cobertura.xml", [Path("coverage-report")])
 
-          unit = parse_trx_counters(unit_trx) if unit_trx else None
-          integration = parse_trx_counters(int_trx) if int_trx else None
-          line_pct, branch_pct = parse_cobertura(cob) if cob else (0.0, 0.0)
+          u = parse_trx(ut) if ut else None
+          i = parse_trx(it) if it else None
+          lp, bp = parse_cob(cb) if cb else (0.0, 0.0)
 
-          files = {}
-          if unit:
-              c = "brightgreen" if unit["failed"] == 0 else "red"
-              m = f"{unit['total']} passed" if unit["failed"] == 0 else f"{unit['passed']}/{unit['total']} passed"
-              files["unit-tests.json"] = {"content": badge("unit tests", m, c)}
-          if integration:
-              c = "brightgreen" if integration["failed"] == 0 else "red"
-              m = f"{integration['total']} passed" if integration["failed"] == 0 else f"{integration['passed']}/{integration['total']} passed"
-              files["integration-tests.json"] = {"content": badge("integration tests", m, c)}
-          if cob:
-              files["line-coverage.json"] = {"content": badge("line coverage", f"{line_pct}%", cov_color(line_pct))}
-              files["branch-coverage.json"] = {"content": badge("branch coverage", f"{branch_pct}%", cov_color(branch_pct))}
+          out = Path("badge-output")
+          out.mkdir(exist_ok=True)
+          wrote = False
 
-          if not files:
-              print("No metrics found — skipping badge update.")
+          if u:
+              c = "brightgreen" if u["failed"]==0 else "red"
+              m = f"{u['total']} passed" if u["failed"]==0 else f"{u['passed']}/{u['total']} passed"
+              (out/"unit-tests.json").write_text(badge("unit tests", m, c))
+              wrote = True
+          if i:
+              c = "brightgreen" if i["failed"]==0 else "red"
+              m = f"{i['total']} passed" if i["failed"]==0 else f"{i['passed']}/{i['total']} passed"
+              (out/"integration-tests.json").write_text(badge("integration tests", m, c))
+              wrote = True
+          if cb:
+              (out/"line-coverage.json").write_text(badge("line coverage", f"{lp}%", cc(lp)))
+              (out/"branch-coverage.json").write_text(badge("branch coverage", f"{bp}%", cc(bp)))
+              wrote = True
+
+          if not wrote:
+              print("No metrics found — skipping.")
               sys.exit(0)
 
-          gist = find_or_create_gist(files)
-          owner = gist["owner"]["login"]
-          gist_id = gist["id"]
-
-          summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "")
-          if summary_path:
-              with open(summary_path, "a") as f:
-                  f.write(f"\n## Quality Badge Gist\n\n")
-                  f.write(f"- **Owner:** `{owner}`\n")
-                  f.write(f"- **Gist ID:** `{gist_id}`\n")
-                  f.write(f"- **URL:** {gist['html_url']}\n\n")
-                  for name in ["unit-tests.json", "integration-tests.json", "line-coverage.json", "branch-coverage.json"]:
-                      if name in gist.get("files", {}):
-                          raw = gist["files"][name]["raw_url"]
-                          f.write(f"![{name}](https://img.shields.io/endpoint?url={raw}&style=flat-square)\n")
-
-          out = os.environ.get("GITHUB_OUTPUT", "")
-          if out:
-              with open(out, "a") as f:
-                  f.write(f"gist_owner={owner}\n")
-                  f.write(f"gist_id={gist_id}\n")
+          print("Badge JSON files generated.")
+          for f in sorted(out.iterdir()):
+              print(f"  {f.name}: {f.read_text()}")
           PY
+
+      - name: Push badge JSON to badges branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout --orphan badges-tmp
+          git rm -rf .
+          cp badge-output/*.json .
+          git add *.json
+          git commit -m "Update quality badges [skip ci]"
+
+          git push origin badges-tmp:badges --force
 
   build-docs:
     name: Build Documentation

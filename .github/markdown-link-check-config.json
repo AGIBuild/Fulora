@@ -1,7 +1,7 @@
 {
   "ignorePatterns": [
     { "pattern": "^https?://img\\.shields\\.io" },
-    { "pattern": "^https?://gist\\.githubusercontent\\.com" },
+    { "pattern": "^https?://raw\\.githubusercontent\\.com/AGIBuild/Agibuild\\.Fulora/badges/" },
     { "pattern": "^https?://localhost" },
     { "pattern": "^https?://example\\.com" },
     { "pattern": "^app://" }
