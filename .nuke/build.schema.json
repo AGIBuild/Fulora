@@ -24,8 +24,7 @@
     "ExecutableTarget": {
       "type": "string",
       "enum": [
-        "AdoptionReadinessGovernanceCi",
-        "AdoptionReadinessGovernanceCiPublish",
+        "AdoptionReadinessGovernance",
         "AutomationLaneReport",
         "BridgeDistributionGovernance",
         "Build",
@@ -55,10 +54,10 @@
         "ReleaseOrchestrationGovernance",
         "Restore",
         "RuntimeAutomation",
-        "RuntimeCriticalPathExecutionGovernanceCi",
-        "RuntimeCriticalPathExecutionGovernanceCiPublish",
+        "RuntimeCriticalPathExecutionGovernance",
         "SampleTemplatePackageReferenceGovernance",
         "ShowVersion",
+        "SolutionConsistencyGovernance",
         "Start",
         "StartAiChatApp",
         "StartAndroid",

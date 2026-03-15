@@ -381,7 +381,7 @@ internal sealed class WebViewRpcService : IWebViewRpcService
 
             if (!_handlers.TryGetValue(method, out var handler))
             {
-                var (serviceName, methodName) = SplitRpcMethod(method);
+                var (serviceName, methodName) = RpcMethodHelpers.SplitRpcMethod(method);
                 var diagnostic = BridgeErrorDiagnostic.MethodNotFound(serviceName, methodName);
                 return BuildErrorResponseJson(id, diagnostic);
             }
@@ -392,7 +392,7 @@ internal sealed class WebViewRpcService : IWebViewRpcService
         catch (OperationCanceledException)
         {
             _logger.LogDebug("RPC: handler for '{Method}' was cancelled", method);
-            var (serviceName, methodName) = SplitRpcMethod(method);
+            var (serviceName, methodName) = RpcMethodHelpers.SplitRpcMethod(method);
             return BuildErrorResponseJson(id, BridgeErrorDiagnostic.Cancellation(serviceName, methodName));
         }
         catch (WebViewRpcException rpcEx)
@@ -400,21 +400,27 @@ internal sealed class WebViewRpcService : IWebViewRpcService
             _logger.LogDebug(rpcEx, "RPC: handler for '{Method}' threw RPC error {Code}", method, rpcEx.Code);
             if (rpcEx.Code == -32029)
             {
-                var (serviceName, methodName) = SplitRpcMethod(method);
+                var (serviceName, methodName) = RpcMethodHelpers.SplitRpcMethod(method);
                 return BuildErrorResponseJson(id, new BridgeErrorDiagnostic(BridgeErrorCode.RateLimitExceeded, rpcEx.Message, null));
             }
             return BuildErrorResponseJson(id, rpcEx.Code, rpcEx.Message);
         }
+        catch (FuloraException fuloraEx) when (fuloraEx is not WebViewRpcException)
+        {
+            _logger.LogDebug(fuloraEx, "RPC: handler for '{Method}' threw FuloraException [{ErrorCode}]", method, fuloraEx.ErrorCode);
+            var (serviceName, methodName) = RpcMethodHelpers.SplitRpcMethod(method);
+            return BuildErrorResponseJson(id, BridgeErrorDiagnostic.InvocationError(serviceName, methodName, $"[{fuloraEx.ErrorCode}] {fuloraEx.Message}"));
+        }
         catch (JsonException ex)
         {
             _logger.LogDebug(ex, "RPC: handler for '{Method}' failed to deserialize", method);
-            var (serviceName, methodName) = SplitRpcMethod(method);
+            var (serviceName, methodName) = RpcMethodHelpers.SplitRpcMethod(method);
             return BuildErrorResponseJson(id, BridgeErrorDiagnostic.SerializationError(serviceName, methodName, ex.Message));
         }
         catch (Exception ex)
         {
             _logger.LogDebug(ex, "RPC: handler for '{Method}' threw", method);
-            var (serviceName, methodName) = SplitRpcMethod(method);
+            var (serviceName, methodName) = RpcMethodHelpers.SplitRpcMethod(method);
             return BuildErrorResponseJson(id, BridgeErrorDiagnostic.InvocationError(serviceName, methodName, ex.Message));
         }
     }
@@ -453,12 +459,6 @@ internal sealed class WebViewRpcService : IWebViewRpcService
             Error = new RpcError { Code = jsonRpcCode, Message = diagnostic.Message, Data = data }
         };
         return JsonSerializer.Serialize(response, RpcJsonContext.Default.RpcErrorResponse);
-    }
-
-    private static (string serviceName, string methodName) SplitRpcMethod(string rpcMethod)
-    {
-        var dot = rpcMethod.LastIndexOf('.');
-        return dot >= 0 ? (rpcMethod[..dot], rpcMethod[(dot + 1)..]) : (rpcMethod, "");
     }
 
     private async Task SendResponseAsync(string json)

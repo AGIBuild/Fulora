@@ -120,8 +120,8 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         set => SetValue(SourceProperty, value);
     }
 
-    // IWebView requires non-null Uri; the control surface remains nullable for XAML binding.
-    Uri IWebView.Source
+    // IWebViewNavigation requires non-null Uri; the control surface remains nullable for XAML binding.
+    Uri IWebViewNavigation.Source
     {
         get => Source ?? AboutBlankUri;
         set => Source = value;

@@ -282,10 +282,17 @@ public sealed class AdapterCreatedEventArgs : EventArgs
     public INativeHandle? PlatformHandle { get; }
 }
 
-public class WebViewNavigationException : Exception
+public class WebViewNavigationException : FuloraException
 {
     public WebViewNavigationException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
-        : base(message, innerException)
+        : base(FuloraErrorCodes.NavigationFailed, message, innerException)
+    {
+        NavigationId = navigationId;
+        RequestUri = requestUri;
+    }
+
+    protected WebViewNavigationException(string errorCode, string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
+        : base(errorCode, message, innerException)
     {
         NavigationId = navigationId;
         RequestUri = requestUri;
@@ -298,7 +305,7 @@ public class WebViewNavigationException : Exception
 public class WebViewNetworkException : WebViewNavigationException
 {
     public WebViewNetworkException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
-        : base(message, navigationId, requestUri, innerException)
+        : base(FuloraErrorCodes.NavigationNetwork, message, navigationId, requestUri, innerException)
     {
     }
 }
@@ -306,7 +313,7 @@ public class WebViewNetworkException : WebViewNavigationException
 public class WebViewSslException : WebViewNavigationException
 {
     public WebViewSslException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
-        : base(message, navigationId, requestUri, innerException)
+        : base(FuloraErrorCodes.NavigationSsl, message, navigationId, requestUri, innerException)
     {
     }
 }
@@ -314,7 +321,7 @@ public class WebViewSslException : WebViewNavigationException
 public class WebViewTimeoutException : WebViewNavigationException
 {
     public WebViewTimeoutException(string message, Guid navigationId, Uri requestUri, Exception? innerException = null)
-        : base(message, navigationId, requestUri, innerException)
+        : base(FuloraErrorCodes.NavigationTimeout, message, navigationId, requestUri, innerException)
     {
     }
 }
@@ -328,21 +335,23 @@ public sealed record WebViewCookie(
     bool IsSecure,
     bool IsHttpOnly);
 
-public class WebViewScriptException : Exception
+public class WebViewScriptException : FuloraException
 {
     public WebViewScriptException(string message, Exception? innerException = null)
-        : base(message, innerException)
+        : base(FuloraErrorCodes.ScriptError, message, innerException)
     {
     }
 }
 
-public class WebViewRpcException : Exception
+public class WebViewRpcException : FuloraException
 {
-    public WebViewRpcException(int code, string message) : base(message)
+    public WebViewRpcException(int code, string message)
+        : base(FuloraErrorCodes.RpcError, message)
     {
         Code = code;
     }
 
+    /// <summary>JSON-RPC style integer error code.</summary>
     public int Code { get; }
 }
 

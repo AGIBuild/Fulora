@@ -7,7 +7,7 @@ namespace Agibuild.Fulora;
 /// Flow:
 /// 1. Create an ephemeral WebDialog via <see cref="IWebDialogFactory"/>.
 /// 2. Navigate to <see cref="AuthOptions.AuthorizeUri"/>.
-/// 3. Listen for <see cref="IWebView.NavigationStarted"/> to detect the callback URI.
+/// 3. Listen for <see cref="IWebViewNavigation.NavigationStarted"/> to detect the callback URI.
 /// 4. On match: close dialog, return <see cref="WebAuthResult"/> with Success.
 /// 5. On user close: return UserCancel.
 /// 6. On timeout: return Timeout.

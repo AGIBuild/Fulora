@@ -1,16 +1,17 @@
 using Agibuild.Fulora.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
 
 public sealed class AiConversationManagerTests : IDisposable
 {
-    private readonly InMemoryAiConversationManager _manager = new(new AiConversationOptions
+    private readonly InMemoryAiConversationManager _manager = new(Options.Create(new AiConversationOptions
     {
         DefaultMaxTokens = 100,
         SessionTtl = null
-    });
+    }));
 
     public void Dispose() => _manager.Dispose();
 
@@ -69,7 +70,7 @@ public sealed class AiConversationManagerTests : IDisposable
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
 
         var id = manager.CreateConversation("system");
         manager.AddMessage(id, new ChatMessage(ChatRole.User, new string('a', 20)));
@@ -96,7 +97,7 @@ public sealed class AiConversationManagerTests : IDisposable
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
 
         var id = manager.CreateConversation("A long system prompt that exceeds budget");
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "user msg"));
@@ -182,7 +183,7 @@ public sealed class AiConversationManagerTests : IDisposable
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
 
         var id = manager.CreateConversation(); // no system prompt
         manager.AddMessage(id, new ChatMessage(ChatRole.User, new string('a', 20)));
@@ -204,7 +205,7 @@ public sealed class AiConversationManagerTests : IDisposable
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
 
         var id = manager.CreateConversation(); // no system prompt
         manager.AddMessage(id, new ChatMessage(ChatRole.User, new string('a', 20)));
@@ -218,7 +219,7 @@ public sealed class AiConversationManagerTests : IDisposable
     [Fact]
     public void Default_constructor_uses_default_options()
     {
-        using var manager = new InMemoryAiConversationManager();
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions()));
         var id = manager.CreateConversation();
         Assert.NotNull(id);
     }
@@ -232,7 +233,7 @@ public sealed class AiConversationManagerTests : IDisposable
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
 
         var id = manager.CreateConversation();
         manager.AddMessage(id, new ChatMessage(ChatRole.User, (string?)null));

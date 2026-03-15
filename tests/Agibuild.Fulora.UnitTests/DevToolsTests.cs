@@ -8,14 +8,15 @@ public class DevToolsTests
     [Fact]
     public void IWebView_declares_async_DevTools_members()
     {
-        // Compile-time verification: IWebView has the methods
-        var methods = typeof(IWebView).GetMethod("OpenDevToolsAsync");
+        Assert.True(typeof(IWebViewFeatures).IsAssignableFrom(typeof(IWebView)));
+
+        var methods = typeof(IWebViewFeatures).GetMethod("OpenDevToolsAsync");
         Assert.NotNull(methods);
 
-        methods = typeof(IWebView).GetMethod("CloseDevToolsAsync");
+        methods = typeof(IWebViewFeatures).GetMethod("CloseDevToolsAsync");
         Assert.NotNull(methods);
 
-        methods = typeof(IWebView).GetMethod("IsDevToolsOpenAsync");
+        methods = typeof(IWebViewFeatures).GetMethod("IsDevToolsOpenAsync");
         Assert.NotNull(methods);
         Assert.Equal(typeof(Task<bool>), methods!.ReturnType);
     }
@@ -23,15 +24,10 @@ public class DevToolsTests
     [Fact]
     public void IDevToolsAdapter_interface_has_expected_members()
     {
-        // Verify IDevToolsAdapter shape at runtime (internal, so we use reflection)
-        var type = typeof(IWebView).Assembly.GetTypes()
-            .FirstOrDefault(t => t.Name == "IDevToolsAdapter");
-
-        // IDevToolsAdapter is defined in Adapters.Abstractions, may not be visible here.
-        // Instead verify via IWebView which delegates to it.
-        Assert.NotNull(typeof(IWebView).GetMethod("OpenDevToolsAsync"));
-        Assert.NotNull(typeof(IWebView).GetMethod("CloseDevToolsAsync"));
-        Assert.NotNull(typeof(IWebView).GetMethod("IsDevToolsOpenAsync"));
+        Assert.True(typeof(IWebViewFeatures).IsAssignableFrom(typeof(IWebView)));
+        Assert.NotNull(typeof(IWebViewFeatures).GetMethod("OpenDevToolsAsync"));
+        Assert.NotNull(typeof(IWebViewFeatures).GetMethod("CloseDevToolsAsync"));
+        Assert.NotNull(typeof(IWebViewFeatures).GetMethod("IsDevToolsOpenAsync"));
     }
 
     [Fact]

@@ -952,7 +952,11 @@ internal sealed class GtkWebViewAdapter : IWebViewAdapter, INativeWebViewHandleP
                 }
                 payload = payload with { Files = files };
             }
-            catch { }
+            catch (System.Text.Json.JsonException)
+            {
+                // Native layer sent malformed file list JSON; proceed with text-only payload.
+                System.Diagnostics.Trace.TraceWarning("GtkWebViewAdapter: Failed to parse drag-drop files JSON.");
+            }
         }
         return payload;
     }

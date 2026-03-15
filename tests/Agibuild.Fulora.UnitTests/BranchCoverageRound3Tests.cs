@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using Agibuild.Fulora;
 using Agibuild.Fulora.Adapters.Abstractions;
 using Agibuild.Fulora.Shell;
 using Agibuild.Fulora.Testing;
@@ -534,20 +535,11 @@ public sealed class BranchCoverageRound3Tests
     [Fact]
     public void ExtractMethodName_no_dot_returns_full_string()
     {
-        // Line 630: dot >= 0 ? ... : rpcMethod (no dot → returns whole string)
-        // ExtractMethodName is in a private nested class MiddlewareRpcWrapper
-        var wrapperType = typeof(RuntimeBridgeService).GetNestedType(
-            "MiddlewareRpcWrapper", BindingFlags.NonPublic);
-        Assert.NotNull(wrapperType);
-
-        var method = wrapperType!.GetMethod(
-            "ExtractMethodName", BindingFlags.NonPublic | BindingFlags.Static);
-        Assert.NotNull(method);
-
-        var result = (string)method!.Invoke(null, ["NoDotMethodName"])!;
+        // ExtractMethodName is now in RpcMethodHelpers (internal, accessible via InternalsVisibleTo)
+        var result = RpcMethodHelpers.ExtractMethodName("NoDotMethodName");
         Assert.Equal("NoDotMethodName", result);
 
-        var result2 = (string)method.Invoke(null, ["Service.Method"])!;
+        var result2 = RpcMethodHelpers.ExtractMethodName("Service.Method");
         Assert.Equal("Method", result2);
     }
 

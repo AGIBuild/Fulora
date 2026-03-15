@@ -2,6 +2,7 @@ using Agibuild.Fulora;
 using Agibuild.Fulora.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -30,8 +31,8 @@ public sealed class AiIntegrationTests
 
         var registry = sp.GetRequiredService<IAiProviderRegistry>();
         var filters = sp.GetServices<IAiContentFilter>().ToList();
-        var meteringOpts = sp.GetRequiredService<AiMeteringOptions>();
-        var resilienceOpts = sp.GetRequiredService<AiResilienceOptions>();
+        var meteringOpts = sp.GetRequiredService<IOptions<AiMeteringOptions>>().Value;
+        var resilienceOpts = sp.GetRequiredService<IOptions<AiResilienceOptions>>().Value;
 
         var client = registry.GetChatClient("test");
 

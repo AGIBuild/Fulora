@@ -5,60 +5,73 @@ namespace Agibuild.Fulora;
 
 #pragma warning disable CS1591
 
-public interface IWebView : IDisposable
+/// <summary>Navigation, URI, loading state, and history.</summary>
+public interface IWebViewNavigation : IDisposable
 {
     Uri Source { get; set; }
     bool CanGoBack { get; }
     bool CanGoForward { get; }
     bool IsLoading { get; }
-    Guid ChannelId { get; }
 
     Task NavigateAsync(Uri uri);
     Task NavigateToStringAsync(string html);
     Task NavigateToStringAsync(string html, Uri? baseUrl);
-    Task<string?> InvokeScriptAsync(string script);
 
     Task<bool> GoBackAsync();
     Task<bool> GoForwardAsync();
     Task<bool> RefreshAsync();
     Task<bool> StopAsync();
 
-    ICookieManager? TryGetCookieManager();
-    ICommandManager? TryGetCommandManager();
-    Task<INativeHandle?> TryGetWebViewHandleAsync();
+    event EventHandler<NavigationStartingEventArgs>? NavigationStarted;
+    event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
+}
 
+/// <summary>JavaScript execution and preload script management.</summary>
+public interface IWebViewScript
+{
+    Task<string?> InvokeScriptAsync(string script);
+    Task<string> AddPreloadScriptAsync(string javaScript);
+    Task RemovePreloadScriptAsync(string scriptId);
+}
+
+/// <summary>RPC, bridge, cookies, commands, and messaging.</summary>
+public interface IWebViewBridge
+{
+    Guid ChannelId { get; }
     IWebViewRpcService? Rpc { get; }
     IBridgeTracer? BridgeTracer { get; set; }
     IBridgeService Bridge { get; }
+    ICookieManager? TryGetCookieManager();
+    ICommandManager? TryGetCommandManager();
+    event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
+}
 
+/// <summary>DevTools, screenshot, print, zoom, find, native handle, and extended events.</summary>
+public interface IWebViewFeatures
+{
+    Task<INativeHandle?> TryGetWebViewHandleAsync();
     Task OpenDevToolsAsync();
     Task CloseDevToolsAsync();
     Task<bool> IsDevToolsOpenAsync();
-
     Task<byte[]> CaptureScreenshotAsync();
     Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null);
-
-    event EventHandler<NavigationStartingEventArgs>? NavigationStarted;
-    event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
+    Task<double> GetZoomFactorAsync();
+    Task SetZoomFactorAsync(double zoomFactor);
+    Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null);
+    Task StopFindInPageAsync(bool clearHighlights = true);
     event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested;
-    event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
     event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
     event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
     event EventHandler<DownloadRequestedEventArgs>? DownloadRequested;
     event EventHandler<PermissionRequestedEventArgs>? PermissionRequested;
     event EventHandler<AdapterCreatedEventArgs>? AdapterCreated;
     event EventHandler? AdapterDestroyed;
-
-    Task<double> GetZoomFactorAsync();
-    Task SetZoomFactorAsync(double zoomFactor);
-
-    Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null);
-    Task StopFindInPageAsync(bool clearHighlights = true);
-
-    Task<string> AddPreloadScriptAsync(string javaScript);
-    Task RemovePreloadScriptAsync(string scriptId);
-
     event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested;
+}
+
+/// <summary>Composite interface combining all WebView capabilities.</summary>
+public interface IWebView : IWebViewNavigation, IWebViewScript, IWebViewBridge, IWebViewFeatures
+{
 }
 
 /// <summary>

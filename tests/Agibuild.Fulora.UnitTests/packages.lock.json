@@ -178,47 +178,48 @@
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
-        "resolved": "10.0.4",
-        "contentHash": "601B3ha6XvOsOcu9GVd2dVd1KEDuqr49r46GUWhNJkeZDhZ/NI9EYTyoeQjZQEi8ZUvnrv++FbTfGmC8F0vgtg==",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "SxjZFpseC15I/KFuYNIrgjs3nRksgr0WC7Z8KrDZutw2nsdzIpMM+bvXKXU9Dy5MvTCxDCp1xcI/gfmH7nw4Eg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.4",
-          "Microsoft.Extensions.Primitives": "10.0.4"
+          "Microsoft.Extensions.Configuration.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Primitives": "11.0.0-preview.2.26159.112"
         }
       },
       "Microsoft.Extensions.Configuration.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.0.4",
-        "contentHash": "3x9X9SMAMdAoEwWxHfsT2a9dTBqEtfYfbEOFw+UPtBshEH2gHWJeazxrZ1FK1O18MoCbe1NxINg5qciB01pEcg==",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "cv4DpD5pnnaXoI+6pVtaUUwHGv7yVlkWu8nkiIZ0J6dSWYk8SGEqdSvJcASkcShod5cbCUhtzA6nM2KCBrIaKQ==",
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "10.0.4"
+          "Microsoft.Extensions.Primitives": "11.0.0-preview.2.26159.112"
         }
       },
       "Microsoft.Extensions.Configuration.Binder": {
         "type": "Transitive",
-        "resolved": "10.0.4",
-        "contentHash": "ilnL/kQn62Gx3OZCVT7SJrBNi0CRIhS8VEunmE6i/a9lp9l/eos+hpxMvCW4iX2aVc/NWeDhxuQusZL7zvmKIg==",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "cYTRGy3JYivsoHNGOgLidJ69+7ugkF9aPYQubZXzSjQZIKv265fVh4nEB18h29w4+tg64tB9UooCtY2trZUtLw==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "10.0.4",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.4"
+          "Microsoft.Extensions.Configuration": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Configuration.Abstractions": "11.0.0-preview.2.26159.112"
         }
       },
       "Microsoft.Extensions.Diagnostics": {
         "type": "Transitive",
-        "resolved": "10.0.4",
-        "contentHash": "R9W7AttMedwOwJ7wRqTGBoVbX2JmlyWA+LJQUhizmS7Be9f6EJUn/+lvaIYDrOYtA1UzAfrwU871hpvZSPyIkg==",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "i6NUAXHI52o8r8CScT/Z85WFGBeulsNkV+KwB2jS/kZz48ux2rM/5gF/3cJnRoRtHIl/VnciXuWpPHDK3Q4dIQ==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "10.0.4",
-          "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.4",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.4"
+          "Microsoft.Extensions.Configuration": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Diagnostics.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "11.0.0-preview.2.26159.112"
         }
       },
       "Microsoft.Extensions.Diagnostics.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.0.4",
-        "contentHash": "JH2RyevIwJ1E9mBsZRXR+12TnUauptKgzCdOghhk3sE+dqcxB16GoE7x+0IuqTbaixM1ESXTNoqEw/IBnhM7LQ==",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "QyErm+xbF2PRNN9SM2tvqrRGfd1x76lG8rHm7LF3CWyQ30N0Z6hL9FbTK+oopVqaf6cqwJvgMjOCMLlmHzNyqw==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.4",
-          "Microsoft.Extensions.Options": "10.0.4"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Options": "11.0.0-preview.2.26159.112",
+          "System.Diagnostics.DiagnosticSource": "11.0.0-preview.2.26159.112"
         }
       },
       "Microsoft.Extensions.Diagnostics.ExceptionSummarization": {
@@ -254,25 +255,16 @@
         "resolved": "10.0.4",
         "contentHash": "2pufIFOgNl/yWTOoIC9XgBnO9VxgfAjdRCnVwpE2+ICfcroGnjuEAGzJ5lTdZeAe0HvA31vMBWXtcmGB7TOq3g=="
       },
-      "Microsoft.Extensions.Options": {
-        "type": "Transitive",
-        "resolved": "11.0.0-preview.2.26159.112",
-        "contentHash": "j+c3ChsPtHUk125Av2B685t6fJrgKI02zCOacFpWxtHVm3LoWwVsBsu+HfByf3hko39N3gni1ZbrB7NI1VJk3g==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
-          "Microsoft.Extensions.Primitives": "11.0.0-preview.2.26159.112"
-        }
-      },
       "Microsoft.Extensions.Options.ConfigurationExtensions": {
         "type": "Transitive",
-        "resolved": "10.0.4",
-        "contentHash": "amQUITwSnkbMPxh/ngneNykz4UtytEOXo0M/pbwdBiQU57EAVvBV5PFI8r/dRastUj0yxHVwrH64N9ACR5SdGQ==",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "kr/rIDUALfxgKrvCbBJtctKU76Kcq3Rh+RHM7+tI8hPT40mRtVkP2b/ceMhBs7flkKzWMb5weIi/0rXE5yZuuA==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.4",
-          "Microsoft.Extensions.Configuration.Binder": "10.0.4",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.4",
-          "Microsoft.Extensions.Options": "10.0.4",
-          "Microsoft.Extensions.Primitives": "10.0.4"
+          "Microsoft.Extensions.Configuration.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Configuration.Binder": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Options": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Primitives": "11.0.0-preview.2.26159.112"
         }
       },
       "Microsoft.Extensions.Primitives": {
@@ -510,30 +502,31 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.ai": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )",
           "Microsoft.Extensions.AI": "[10.4.0, )",
           "Microsoft.Extensions.AI.Abstractions": "[10.4.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0-preview.2.26159.112, )",
+          "Microsoft.Extensions.Options.DataAnnotations": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Extensions.Resilience": "[10.4.0, )"
         }
       },
       "agibuild.fulora.ai.ollama": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.AI": "[1.5.2-local, )",
+          "Agibuild.Fulora.AI": "[1.5.3-local, )",
           "OllamaSharp": "[5.4.23, )"
         }
       },
       "agibuild.fulora.ai.openai": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.AI": "[1.5.2-local, )",
+          "Agibuild.Fulora.AI": "[1.5.3-local, )",
           "Microsoft.Extensions.AI.OpenAI": "[10.4.0, )"
         }
       },
@@ -552,7 +545,7 @@
       "agibuild.fulora.cli": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )",
           "System.CommandLine": "[3.0.0-preview.2.26159.112, )"
         }
       },
@@ -562,76 +555,77 @@
       "agibuild.fulora.dependencyinjection": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.2-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.2-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.3-local, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0-preview.2.26159.112, )",
+          "Microsoft.Extensions.Http": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
       "agibuild.fulora.plugin.authtoken": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.plugin.biometric": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.plugin.database": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )",
           "Microsoft.Data.Sqlite": "[10.0.5, )"
         }
       },
       "agibuild.fulora.plugin.filesystem": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.plugin.httpclient": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.plugin.localstorage": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.plugin.notifications": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )"
         }
       },
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
       "agibuild.fulora.testing": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.2-local, )",
-          "Agibuild.Fulora.Core": "[1.5.2-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.2-local, )"
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.3-local, )",
+          "Agibuild.Fulora.Core": "[1.5.3-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.3-local, )"
         }
       },
       "Avalonia": {
@@ -684,6 +678,40 @@
         "requested": "[11.0.0-preview.2.26159.112, )",
         "resolved": "11.0.0-preview.2.26159.112",
         "contentHash": "OQXAVaAtsf/HNCFzeby//Q7ibYk8Lf+8dgvRna5mmulHyXU0qPMtERY10CuhBkPdkxS69Dsgk1VjD5e3OF/f3w=="
+      },
+      "Microsoft.Extensions.Http": {
+        "type": "CentralTransitive",
+        "requested": "[11.0.0-preview.2.26159.112, )",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "2PnglmrF9iqJBRsQC1HuvE/BbkfbK5JiMsHJ1k6MIVISq57ZyA3d8bLXeXvMyfOBOBX7U5rpiJf9VTkctf3upQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Diagnostics": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Logging": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Logging.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Options": "11.0.0-preview.2.26159.112"
+        }
+      },
+      "Microsoft.Extensions.Options": {
+        "type": "CentralTransitive",
+        "requested": "[11.0.0-preview.2.26159.112, )",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "j+c3ChsPtHUk125Av2B685t6fJrgKI02zCOacFpWxtHVm3LoWwVsBsu+HfByf3hko39N3gni1ZbrB7NI1VJk3g==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Primitives": "11.0.0-preview.2.26159.112"
+        }
+      },
+      "Microsoft.Extensions.Options.DataAnnotations": {
+        "type": "CentralTransitive",
+        "requested": "[11.0.0-preview.2.26159.112, )",
+        "resolved": "11.0.0-preview.2.26159.112",
+        "contentHash": "mJLtyKt7coI0N06t3JhoTBW4VjJqD6R4zBjQ1girAATQ6D7gvR0hm/ii5H0bTB53Ph1tVjOX/zrRnmBA5qS0Iw==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
+          "Microsoft.Extensions.Options": "11.0.0-preview.2.26159.112"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "CentralTransitive",

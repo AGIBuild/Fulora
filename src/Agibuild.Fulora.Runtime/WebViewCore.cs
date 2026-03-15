@@ -1270,19 +1270,13 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
         _logger.LogDebug("Adapter.NavigationCompleted received: id={NavigationId}, status={Status}, uri={Uri}",
             e.NavigationId, e.Status, e.RequestUri);
 
-        if (_disposed || _adapterDestroyed)
-        {
-            _logger.LogDebug("Adapter.NavigationCompleted: ignored (disposed or destroyed)");
-            return;
-        }
-
-        if (_dispatcher.CheckAccess())
-        {
-            OnAdapterNavigationCompletedOnUiThread(e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => OnAdapterNavigationCompletedOnUiThread(e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => OnAdapterNavigationCompletedOnUiThread(e),
+            _logger,
+            "Adapter.NavigationCompleted: ignored (disposed or destroyed)");
     }
 
     private void OnAdapterNavigationCompletedOnUiThread(NavigationCompletedEventArgs e)
@@ -1322,19 +1316,13 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     {
         _logger.LogDebug("Event NewWindowRequested: uri={Uri}", e.Uri);
 
-        if (_disposed || _adapterDestroyed)
-        {
-            _logger.LogDebug("NewWindowRequested: ignored (disposed or destroyed)");
-            return;
-        }
-
-        if (_dispatcher.CheckAccess())
-        {
-            HandleNewWindowRequestedOnUiThread(e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => HandleNewWindowRequestedOnUiThread(e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => HandleNewWindowRequestedOnUiThread(e),
+            _logger,
+            "NewWindowRequested: ignored (disposed or destroyed)");
     }
 
     private void HandleNewWindowRequestedOnUiThread(NewWindowRequestedEventArgs e)
@@ -1357,19 +1345,13 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     {
         _logger.LogDebug("Event WebMessageReceived: origin={Origin}, channelId={ChannelId}", e.Origin, e.ChannelId);
 
-        if (_disposed || _adapterDestroyed)
-        {
-            _logger.LogDebug("WebMessageReceived: ignored (disposed or destroyed)");
-            return;
-        }
-
-        if (_dispatcher.CheckAccess())
-        {
-            OnAdapterWebMessageReceivedOnUiThread(e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => OnAdapterWebMessageReceivedOnUiThread(e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => OnAdapterWebMessageReceivedOnUiThread(e),
+            _logger,
+            "WebMessageReceived: ignored (disposed or destroyed)");
     }
 
     private void OnAdapterWebMessageReceivedOnUiThread(WebMessageReceivedEventArgs e)
@@ -1422,66 +1404,44 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     {
         _logger.LogDebug("Event WebResourceRequested");
 
-        if (_disposed || _adapterDestroyed)
-        {
-            return;
-        }
-
-        if (_dispatcher.CheckAccess())
-        {
-            WebResourceRequested?.Invoke(this, e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => WebResourceRequested?.Invoke(this, e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => WebResourceRequested?.Invoke(this, e));
     }
 
     private void OnAdapterEnvironmentRequested(object? sender, EnvironmentRequestedEventArgs e)
     {
         _logger.LogDebug("Event EnvironmentRequested");
 
-        if (_disposed || _adapterDestroyed)
-        {
-            return;
-        }
-
-        if (_dispatcher.CheckAccess())
-        {
-            EnvironmentRequested?.Invoke(this, e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => EnvironmentRequested?.Invoke(this, e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => EnvironmentRequested?.Invoke(this, e));
     }
 
     private void OnAdapterDownloadRequested(object? sender, DownloadRequestedEventArgs e)
     {
         _logger.LogDebug("Event DownloadRequested: uri={Uri}, file={File}", e.DownloadUri, e.SuggestedFileName);
 
-        if (_disposed || _adapterDestroyed) return;
-
-        if (_dispatcher.CheckAccess())
-        {
-            DownloadRequested?.Invoke(this, e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => DownloadRequested?.Invoke(this, e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => DownloadRequested?.Invoke(this, e));
     }
 
     private void OnAdapterPermissionRequested(object? sender, PermissionRequestedEventArgs e)
     {
         _logger.LogDebug("Event PermissionRequested: kind={Kind}, origin={Origin}", e.PermissionKind, e.Origin);
 
-        if (_disposed || _adapterDestroyed) return;
-
-        if (_dispatcher.CheckAccess())
-        {
-            PermissionRequested?.Invoke(this, e);
-            return;
-        }
-
-        _ = _dispatcher.InvokeAsync(() => PermissionRequested?.Invoke(this, e));
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _disposed,
+            _adapterDestroyed,
+            () => PermissionRequested?.Invoke(this, e));
     }
 
     private void CompleteActiveNavigation(NavigationCompletedStatus status, Exception? error)

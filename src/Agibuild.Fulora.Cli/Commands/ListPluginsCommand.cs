@@ -142,7 +142,10 @@ internal static class ListPluginsCommand
                 if (ver != null && Version.TryParse(ver, out var parsed))
                     return parsed;
             }
-            catch { }
+            catch (Exception ex) when (ex is System.Xml.XmlException or IOException or UnauthorizedAccessException)
+            {
+                // Malformed or inaccessible csproj; skip and continue scanning.
+            }
         }
         return null;
     }

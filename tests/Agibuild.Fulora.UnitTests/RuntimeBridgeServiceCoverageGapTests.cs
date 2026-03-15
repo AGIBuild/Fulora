@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using Agibuild.Fulora;
 using Agibuild.Fulora.Testing;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -126,19 +127,8 @@ public sealed class RuntimeBridgeServiceCoverageGapTests
     public async Task MiddlewareRpcWrapper_sync_handle_and_forwarding_paths_are_covered()
     {
         var rpc = new RecordingRpcService();
-        var wrapperType = typeof(RuntimeBridgeService).GetNestedType(
-            "MiddlewareRpcWrapper",
-            BindingFlags.NonPublic);
-        Assert.NotNull(wrapperType);
-
         var middlewares = new List<IBridgeMiddleware>();
-        var wrapper = Activator.CreateInstance(
-            wrapperType!,
-            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-            binder: null,
-            args: [rpc, (IReadOnlyList<IBridgeMiddleware>)middlewares, "TestService"],
-            culture: null);
-        var proxy = Assert.IsAssignableFrom<IWebViewRpcService>(wrapper);
+        var proxy = new MiddlewareRpcWrapper(rpc, middlewares, "TestService");
 
         proxy.Handle("sync.echo", _ => "ok");
         Assert.True(rpc.AsyncHandlers.TryGetValue("sync.echo", out var handler));

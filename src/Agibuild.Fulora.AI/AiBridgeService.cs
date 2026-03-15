@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
 
 namespace Agibuild.Fulora.AI;
 
@@ -14,7 +15,7 @@ public sealed class AiBridgeService : IAiBridgeService
     private readonly IAiPayloadStore _payloadStore;
     private readonly IAiToolRegistry _toolRegistry;
     private readonly IAiConversationManager _conversationManager;
-    private readonly AiToolCallingOptions? _toolCallingOptions;
+    private readonly AiToolCallingOptions _toolCallingOptions;
 
     /// <summary>Initializes a new instance.</summary>
     public AiBridgeService(
@@ -22,13 +23,13 @@ public sealed class AiBridgeService : IAiBridgeService
         IAiPayloadStore payloadStore,
         IAiToolRegistry toolRegistry,
         IAiConversationManager conversationManager,
-        AiToolCallingOptions? toolCallingOptions = null)
+        IOptions<AiToolCallingOptions> toolCallingOptions)
     {
         _providers = providers;
         _payloadStore = payloadStore;
         _toolRegistry = toolRegistry;
         _conversationManager = conversationManager;
-        _toolCallingOptions = toolCallingOptions;
+        _toolCallingOptions = toolCallingOptions.Value;
     }
 
     /// <inheritdoc />
@@ -209,7 +210,7 @@ public sealed class AiBridgeService : IAiBridgeService
     private FunctionInvokingChatClient GetToolCallingClient(string? providerName)
     {
         var inner = _providers.GetChatClient(providerName);
-        var maxIterations = _toolCallingOptions?.MaxIterations ?? 10;
+        var maxIterations = _toolCallingOptions.MaxIterations;
         return new FunctionInvokingChatClient(inner) { MaximumIterationsPerRequest = maxIterations };
     }
 

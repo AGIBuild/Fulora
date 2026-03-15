@@ -1,6 +1,7 @@
 using Agibuild.Fulora.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -477,7 +478,7 @@ public sealed class AiCoreMutationKillerTests
         });
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetRequiredService<AiResilienceOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiResilienceOptions>>().Value;
         Assert.Equal(5, opts.MaxRetries);
     }
 
@@ -492,7 +493,7 @@ public sealed class AiCoreMutationKillerTests
         });
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetRequiredService<AiMeteringOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiMeteringOptions>>().Value;
         Assert.Equal(999, opts.PeriodBudgetTokens);
     }
 
@@ -507,7 +508,7 @@ public sealed class AiCoreMutationKillerTests
         });
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetRequiredService<AiConversationOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiConversationOptions>>().Value;
         Assert.Equal(2048, opts.DefaultMaxTokens);
     }
 
@@ -533,19 +534,19 @@ public sealed class AiCoreMutationKillerTests
         });
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetRequiredService<AiToolCallingOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiToolCallingOptions>>().Value;
         Assert.Equal(3, opts.MaxIterations);
     }
 
     [Fact]
-    public void AddFuloraAi_without_tool_calling_does_not_register_options()
+    public void AddFuloraAi_without_tool_calling_uses_default_options()
     {
         var services = new ServiceCollection();
         services.AddFuloraAi(ai => ai.AddChatClient("default", new DummyChatClient("X")));
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetService<AiToolCallingOptions>();
-        Assert.Null(opts);
+        var opts = sp.GetRequiredService<IOptions<AiToolCallingOptions>>().Value;
+        Assert.Equal(10, opts.MaxIterations);
     }
 
     [Fact]

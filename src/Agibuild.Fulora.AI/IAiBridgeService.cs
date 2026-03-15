@@ -2,12 +2,8 @@ using Agibuild.Fulora;
 
 namespace Agibuild.Fulora.AI;
 
-/// <summary>
-/// Bridge service exposing AI capabilities to JavaScript.
-/// Methods are callable from the JS side via the Fulora bridge.
-/// </summary>
-[JsExport]
-public interface IAiBridgeService
+/// <summary>Chat completion operations (single-shot and streaming).</summary>
+public interface IAiChatService
 {
     /// <summary>Sends a chat completion request and returns the full response text.</summary>
     Task<AiChatResult> Complete(AiChatRequest request);
@@ -15,24 +11,33 @@ public interface IAiBridgeService
     /// <summary>Sends a typed chat completion request that returns structured JSON.</summary>
     Task<string> CompleteTyped(AiTypedChatRequest request);
 
-    /// <summary>Lists available AI provider names.</summary>
-    Task<string[]> ListProviders();
-
-    /// <summary>Stores a binary payload and returns a blob ID for later use.</summary>
-    Task<string> UploadBlob(string base64Data, string mimeType, string? name);
-
-    /// <summary>Retrieves a stored blob as Base64.</summary>
-    Task<string?> FetchBlob(string blobId);
-
     /// <summary>Streams chat completion tokens as they are generated.</summary>
     IAsyncEnumerable<string> StreamCompletion(AiChatRequest request, CancellationToken cancellationToken = default);
+}
 
+/// <summary>Tool-calling loop operations.</summary>
+public interface IAiToolService
+{
     /// <summary>Runs a chat completion with registered tools (tool-calling loop).</summary>
     Task<AiChatResult> RunWithTools(AiChatRequest request);
 
     /// <summary>Streams a chat completion with registered tools.</summary>
     IAsyncEnumerable<string> StreamWithTools(AiChatRequest request, CancellationToken cancellationToken = default);
+}
 
+/// <summary>Binary payload storage for AI multimodal inputs.</summary>
+public interface IAiBlobService
+{
+    /// <summary>Stores a binary payload and returns a blob ID for later use.</summary>
+    Task<string> UploadBlob(string base64Data, string mimeType, string? name);
+
+    /// <summary>Retrieves a stored blob as Base64.</summary>
+    Task<string?> FetchBlob(string blobId);
+}
+
+/// <summary>Conversation session management.</summary>
+public interface IAiConversationService
+{
     /// <summary>Creates a new conversation session.</summary>
     Task<string> CreateConversation(AiConversationCreateRequest request);
 
@@ -47,6 +52,22 @@ public interface IAiBridgeService
 
     /// <summary>Deletes a conversation.</summary>
     Task DeleteConversation(string conversationId);
+}
+
+/// <summary>Provider enumeration.</summary>
+public interface IAiProviderService
+{
+    /// <summary>Lists available AI provider names.</summary>
+    Task<string[]> ListProviders();
+}
+
+/// <summary>
+/// Composite bridge service exposing all AI capabilities to JavaScript.
+/// Methods are callable from the JS side via the Fulora bridge.
+/// </summary>
+[JsExport]
+public interface IAiBridgeService : IAiChatService, IAiToolService, IAiBlobService, IAiConversationService, IAiProviderService
+{
 }
 
 /// <summary>Chat completion request from JS.</summary>

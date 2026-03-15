@@ -3,6 +3,7 @@ using Agibuild.Fulora;
 using Agibuild.Fulora.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -20,7 +21,7 @@ public sealed class AiToolCallingAndConversationTests
         });
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetRequiredService<AiToolCallingOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiToolCallingOptions>>().Value;
         Assert.Equal(5, opts.MaxIterations);
     }
 
@@ -38,7 +39,7 @@ public sealed class AiToolCallingAndConversationTests
         var manager = sp.GetRequiredService<IAiConversationManager>();
         Assert.NotNull(manager);
 
-        var opts = sp.GetRequiredService<AiConversationOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiConversationOptions>>().Value;
         Assert.Equal(8192, opts.DefaultMaxTokens);
     }
 
@@ -332,7 +333,7 @@ public sealed class AiToolCallingAndConversationTests
         });
         using var sp = services.BuildServiceProvider();
 
-        var opts = sp.GetRequiredService<AiToolCallingOptions>();
+        var opts = sp.GetRequiredService<IOptions<AiToolCallingOptions>>().Value;
         Assert.Equal(10, opts.MaxIterations);
     }
 

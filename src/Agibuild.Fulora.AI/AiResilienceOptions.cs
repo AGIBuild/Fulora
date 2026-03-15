@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Agibuild.Fulora.AI;
 
 /// <summary>
@@ -6,6 +8,7 @@ namespace Agibuild.Fulora.AI;
 public sealed class AiResilienceOptions
 {
     /// <summary>Maximum number of retry attempts for transient failures. Default: 3.</summary>
+    [Range(0, 10)]
     public int MaxRetries { get; set; } = 3;
 
     /// <summary>Base delay for exponential backoff. Default: 2 seconds.</summary>
@@ -15,12 +18,14 @@ public sealed class AiResilienceOptions
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
     /// <summary>Number of consecutive failures before circuit opens. Default: 5.</summary>
+    [Range(1, 100)]
     public int CircuitBreakerThreshold { get; set; } = 5;
 
     /// <summary>Duration the circuit stays open before allowing a trial call. Default: 60 seconds.</summary>
     public TimeSpan CircuitBreakerBreakDuration { get; set; } = TimeSpan.FromSeconds(60);
 
     /// <summary>Maximum number of AI calls per time window. 0 = no limit. Default: 0.</summary>
+    [Range(0, int.MaxValue)]
     public int RateLimitPermitCount { get; set; }
 
     /// <summary>Time window for rate limiting. Default: 1 minute.</summary>

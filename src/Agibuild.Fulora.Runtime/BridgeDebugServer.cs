@@ -66,8 +66,16 @@ public sealed class BridgeDebugServer : IBridgeTracer, IAsyncDisposable
                     context.Response.Close();
                 }
             }
-            catch (ObjectDisposedException) { break; }
-            catch (HttpListenerException) { break; }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Trace.TraceInformation("BridgeDebugServer: Listener disposed, exiting loop.");
+                break;
+            }
+            catch (HttpListenerException ex)
+            {
+                System.Diagnostics.Trace.TraceInformation($"BridgeDebugServer: Listener error ({ex.ErrorCode}), exiting loop.");
+                break;
+            }
         }
     }
 

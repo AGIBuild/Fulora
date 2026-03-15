@@ -1,6 +1,7 @@
 using Agibuild.Fulora.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -94,7 +95,7 @@ public sealed class AiProviderRegistryTests
         });
 
         using var sp = services.BuildServiceProvider();
-        var options = sp.GetRequiredService<AiResilienceOptions>();
+        var options = sp.GetRequiredService<IOptions<AiResilienceOptions>>().Value;
 
         Assert.Equal(5, options.MaxRetries);
     }

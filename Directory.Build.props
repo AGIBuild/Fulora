@@ -47,7 +47,7 @@
            stable    (none)                main push when version is bumped
 
          To publish an RC: trigger workflow_dispatch with prerelease_suffix=rc.1 -->
-    <VersionPrefix>1.5.3</VersionPrefix>
+    <VersionPrefix>1.5.4</VersionPrefix>
     <FileVersion Condition="'$(BuildNumber)' != ''">$(VersionPrefix).$(BuildNumber)</FileVersion>
 
     <!-- Shared NuGet package metadata -->

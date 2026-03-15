@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
 
 namespace Agibuild.Fulora.AI;
 
@@ -14,9 +15,9 @@ public sealed class InMemoryAiConversationManager : IAiConversationManager, IDis
     private readonly Timer? _evictionTimer;
 
     /// <summary>Initializes a new instance.</summary>
-    public InMemoryAiConversationManager(AiConversationOptions? options = null)
+    public InMemoryAiConversationManager(IOptions<AiConversationOptions> options)
     {
-        _options = options ?? new AiConversationOptions();
+        _options = options.Value;
         if (_options.SessionTtl.HasValue)
         {
             _evictionTimer = new Timer(_ => EvictExpired(), null,

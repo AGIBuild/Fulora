@@ -112,6 +112,7 @@ internal sealed partial class BuildTask : NukeBuild
     private static AbsolutePath ReleaseOrchestrationDecisionReportFile => TestResultsDirectory / "release-orchestration-decision-report.json";
     private static AbsolutePath DistributionReadinessGovernanceReportFile => TestResultsDirectory / "distribution-readiness-governance-report.json";
     private static AbsolutePath AdoptionReadinessGovernanceReportFile => TestResultsDirectory / "adoption-readiness-governance-report.json";
+    private static AbsolutePath SolutionConsistencyGovernanceReportFile => TestResultsDirectory / "solution-consistency-governance-report.json";
     private static AbsolutePath AutomationLaneManifestFile => TestsDirectory / "automation-lanes.json";
     private static AbsolutePath RuntimeCriticalPathManifestFile => TestsDirectory / "runtime-critical-path.manifest.json";
     private static AbsolutePath WarningGovernanceBaselineFile => TestsDirectory / "warning-governance.baseline.json";
@@ -266,7 +267,7 @@ internal sealed partial class BuildTask : NukeBuild
 
     internal Target Ci => _ => _
         .Description("Full CI pipeline: compile → coverage → lane automation → pack → validate.")
-        .DependsOn(Coverage, AutomationLaneReport, RuntimeCriticalPathExecutionGovernance, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, SampleTemplatePackageReferenceGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, NugetPackageTest, BridgeDistributionGovernance, DistributionReadinessGovernance, AdoptionReadinessGovernance, ReleaseOrchestrationGovernance, ValidatePackage, PackTemplate);
+        .DependsOn(Coverage, AutomationLaneReport, RuntimeCriticalPathExecutionGovernance, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, SampleTemplatePackageReferenceGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, NugetPackageTest, BridgeDistributionGovernance, DistributionReadinessGovernance, AdoptionReadinessGovernance, ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, ValidatePackage, PackTemplate);
 
     internal Target CiPublish => _ => _
         .Description("Full release pipeline: Ci + publish.")

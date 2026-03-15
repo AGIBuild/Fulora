@@ -1,5 +1,6 @@
 using Agibuild.Fulora.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -14,7 +15,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void CreateConversation_returns_12_char_hex_string()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation();
 
         Assert.Equal(12, id.Length);
@@ -24,7 +25,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void CreateConversation_stores_system_prompt_exactly()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation("exact-prompt");
 
         var msgs = manager.GetAllMessages(id);
@@ -36,7 +37,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void CreateConversation_null_prompt_has_no_system_message()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation(null);
         Assert.Empty(manager.GetAllMessages(id));
     }
@@ -48,7 +49,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void AddMessage_preserves_role_and_text()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation();
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "hello"));
@@ -65,7 +66,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void GetAllMessages_includes_system_then_messages_in_order()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation("sys");
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "a"));
@@ -94,7 +95,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation("sys");
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "aa"));
@@ -117,7 +118,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation("sys"); // 3 tokens
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "aaaaaa"));     // 6
@@ -142,7 +143,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation(); // no system prompt
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "aaaa"));      // 4
@@ -166,7 +167,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation(); // no system prompt
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "aaaa"));      // 4
@@ -186,7 +187,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation(); // no system prompt
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "aaaa"));      // 4
@@ -207,7 +208,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation("abcde"); // exactly 5 tokens
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "x")); // 1
@@ -227,7 +228,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation("abcdef"); // 6 tokens, exceeds budget
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "x"));
@@ -247,7 +248,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation();
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "aaaa")); // 4
@@ -268,7 +269,7 @@ public sealed class AiConversationManagerMutationKillerTests
             SessionTtl = null,
             EstimateTokens = text => text.Length
         };
-        using var manager = new InMemoryAiConversationManager(opts);
+        using var manager = new InMemoryAiConversationManager(Options.Create(opts));
         var id = manager.CreateConversation();
 
         manager.AddMessage(id, new ChatMessage(ChatRole.User, (string?)null));
@@ -285,7 +286,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void ClearConversation_keeps_system_prompt_removes_messages()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation("prompt");
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "msg1"));
         manager.AddMessage(id, new ChatMessage(ChatRole.Assistant, "msg2"));
@@ -301,7 +302,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void ClearConversation_no_system_prompt_results_empty()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation();
         manager.AddMessage(id, new ChatMessage(ChatRole.User, "msg"));
         manager.ClearConversation(id);
@@ -316,7 +317,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void RemoveConversation_makes_all_ops_throw()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id = manager.CreateConversation();
         manager.RemoveConversation(id);
 
@@ -329,7 +330,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void RemoveConversation_nonexistent_throws_exact_type()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var ex = Assert.Throws<KeyNotFoundException>(() => manager.RemoveConversation("bogus"));
         Assert.Contains("bogus", ex.Message);
     }
@@ -341,14 +342,14 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void ListConversations_empty_initially()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         Assert.Empty(manager.ListConversations());
     }
 
     [Fact]
     public void ListConversations_reflects_creates_and_removes()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var id1 = manager.CreateConversation();
         var id2 = manager.CreateConversation();
 
@@ -371,7 +372,7 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void AddMessage_nonexistent_throws()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         var ex = Assert.Throws<KeyNotFoundException>(
             () => manager.AddMessage("nope", new ChatMessage(ChatRole.User, "x")));
         Assert.Contains("nope", ex.Message);
@@ -380,14 +381,14 @@ public sealed class AiConversationManagerMutationKillerTests
     [Fact]
     public void GetMessages_nonexistent_throws()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         Assert.Throws<KeyNotFoundException>(() => manager.GetMessages("nope"));
     }
 
     [Fact]
     public void GetAllMessages_nonexistent_throws()
     {
-        using var manager = new InMemoryAiConversationManager(new AiConversationOptions { SessionTtl = null });
+        using var manager = new InMemoryAiConversationManager(Options.Create(new AiConversationOptions { SessionTtl = null }));
         Assert.Throws<KeyNotFoundException>(() => manager.GetAllMessages("nope"));
     }
 

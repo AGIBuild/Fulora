@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Agibuild.Fulora.AI;
 
 /// <summary>
@@ -10,6 +12,7 @@ public sealed class AiConversationOptions
     /// Messages beyond this budget are trimmed (oldest first, system prompt always retained).
     /// Default: 4096.
     /// </summary>
+    [Range(1, int.MaxValue)]
     public int DefaultMaxTokens { get; set; } = 4096;
 
     /// <summary>

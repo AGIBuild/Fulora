@@ -1054,7 +1054,7 @@ public sealed class AutomationLaneGovernanceTests
     public void TypeScript_governance_target_emits_single_entry_semantic_diagnostics_and_blocks_violations()
     {
         var repoRoot = FindRepoRoot();
-        var governanceSourcePath = Path.Combine(repoRoot, "build", "Build.Governance.cs");
+        var governanceSourcePath = Path.Combine(repoRoot, "build", "Build.Governance.TypeScript.cs");
         AssertFileExists(governanceSourcePath, BridgeSingleEntryAppLayerPolicy);
 
         var source = File.ReadAllText(governanceSourcePath);
@@ -1183,16 +1183,16 @@ public sealed class AutomationLaneGovernanceTests
         var combinedSource = ReadCombinedBuildSource(repoRoot);
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
 
-        AssertTargetDeclarationExists(combinedSource, "BridgeDistributionGovernance", BridgeDistributionParity, "build/Build.Governance.cs");
+        AssertTargetDeclarationExists(combinedSource, "BridgeDistributionGovernance", BridgeDistributionParity, "build/Build.Governance.Distribution.cs");
         AssertStringLiteralExists(combinedSource, "bridge-distribution-governance-report.json", BridgeDistributionParity, "build/Build*.cs");
         AssertAssignmentValueIn(
             combinedSource,
             "producerTarget",
             ["\"BridgeDistributionGovernance\""],
             BridgeDistributionParity,
-            "build/Build.Governance.cs");
-        AssertStringLiteralExists(combinedSource, "SMOKE_PASSED", BridgeDistributionParity, "build/Build.Governance.cs");
-        AssertStringLiteralExists(combinedSource, "LTS_IMPORT_OK", BridgeDistributionParity, "build/Build.Governance.cs");
+            "build/Build.Governance.Distribution.cs");
+        AssertStringLiteralExists(combinedSource, "SMOKE_PASSED", BridgeDistributionParity, "build/Build.Governance.Distribution.cs");
+        AssertStringLiteralExists(combinedSource, "LTS_IMPORT_OK", BridgeDistributionParity, "build/Build.Governance.Distribution.cs");
         AssertInvocationExists(combinedSource, "IsToolAvailableAsync", BridgeDistributionParity, "build/Build*.cs");
         AssertInvocationFirstArgumentIn(
             combinedSource,
@@ -1215,7 +1215,7 @@ public sealed class AutomationLaneGovernanceTests
     {
         var repoRoot = FindRepoRoot();
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
-        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.cs"));
+        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.Release.cs"));
 
         AssertTargetDependsOnContainsAll(
             mainSource,
@@ -1230,14 +1230,14 @@ public sealed class AutomationLaneGovernanceTests
             ReleaseOrchestrationDecisionGate,
             "build/Build.cs");
 
-        AssertTargetDeclarationExists(governanceSource, "ReleaseOrchestrationGovernance", ReleaseOrchestrationDecisionGate, "build/Build.Governance.cs");
+        AssertTargetDeclarationExists(governanceSource, "ReleaseOrchestrationGovernance", ReleaseOrchestrationDecisionGate, "build/Build.Governance.Release.cs");
         AssertTargetDependsOnContainsAll(
             governanceSource,
             "ReleaseOrchestrationGovernance",
             ["ContinuousTransitionGateGovernance", "ValidatePackage"],
             ReleaseOrchestrationDecisionGate,
-            "build/Build.Governance.cs");
-        AssertSourceContains(governanceSource, "Release orchestration governance blocked publication", ReleaseOrchestrationDecisionGate, "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
+        AssertSourceContains(governanceSource, "Release orchestration governance blocked publication", ReleaseOrchestrationDecisionGate, "build/Build.Governance.Release.cs");
     }
 
     [Fact]
@@ -1303,7 +1303,7 @@ public sealed class AutomationLaneGovernanceTests
     public void Stable_publish_requires_release_orchestration_ready_state()
     {
         var repoRoot = FindRepoRoot();
-        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.cs"));
+        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.Release.cs"));
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
 
         AssertInvocationFirstArgumentIn(
@@ -1311,18 +1311,18 @@ public sealed class AutomationLaneGovernanceTests
             "ResolvePackedAgibuildVersion",
             new HashSet<string>(StringComparer.Ordinal) { "\"Agibuild.Fulora.Avalonia\"", "PrimaryHostPackageId" },
             StablePublishReadiness,
-            "build/Build.Governance.cs");
-        AssertSourceContains(governanceSource, "isStableRelease", StablePublishReadiness, "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
+        AssertSourceContains(governanceSource, "isStableRelease", StablePublishReadiness, "build/Build.Governance.Release.cs");
         AssertAssignmentValueIn(
             governanceSource,
             "decisionState",
             ["blockingReasons.Count == 0 ? \"ready\" : \"blocked\""],
             StablePublishReadiness,
-            "build/Build.Governance.cs");
-        AssertSourceContains(governanceSource, "if (string.Equals(decisionState, \"blocked\", StringComparison.Ordinal))", StablePublishReadiness, "build/Build.Governance.cs");
-        AssertSourceContains(governanceSource, "Release orchestration governance blocked publication", StablePublishReadiness, "build/Build.Governance.cs");
-        AssertSourceContains(governanceSource, "DistributionReadinessGovernanceReportFile", StablePublishReadiness, "build/Build.Governance.cs");
-        AssertSourceContains(governanceSource, "AdoptionReadinessGovernanceReportFile", StablePublishReadiness, "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
+        AssertSourceContains(governanceSource, "if (string.Equals(decisionState, \"blocked\", StringComparison.Ordinal))", StablePublishReadiness, "build/Build.Governance.Release.cs");
+        AssertSourceContains(governanceSource, "Release orchestration governance blocked publication", StablePublishReadiness, "build/Build.Governance.Release.cs");
+        AssertSourceContains(governanceSource, "DistributionReadinessGovernanceReportFile", StablePublishReadiness, "build/Build.Governance.Release.cs");
+        AssertSourceContains(governanceSource, "AdoptionReadinessGovernanceReportFile", StablePublishReadiness, "build/Build.Governance.Release.cs");
 
         AssertTargetDependsOnContainsAll(
             mainSource,

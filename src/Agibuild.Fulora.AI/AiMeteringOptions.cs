@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Agibuild.Fulora.AI;
 
 /// <summary>
@@ -9,9 +11,11 @@ public sealed class AiMeteringOptions
     public Dictionary<string, ModelPricing> ModelPricing { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>Maximum tokens allowed in a single AI call (0 = no limit). Default: 0.</summary>
+    [Range(0, int.MaxValue)]
     public int SingleCallTokenLimit { get; set; }
 
     /// <summary>Maximum total tokens per budget period (0 = no limit). Default: 0.</summary>
+    [Range(0, long.MaxValue)]
     public long PeriodBudgetTokens { get; set; }
 
     /// <summary>Budget period duration. Default: 1 day.</summary>

@@ -629,18 +629,12 @@ jobs:
             exit 1
           fi
 
-          shopt -s nullglob
-          RELEASE_ASSETS=()
-          if [ -f "sbom-spdx.json" ]; then
-            RELEASE_ASSETS+=(sbom-spdx.json)
-          fi
-
           PRERELEASE_FLAG=""
           if [ -n "$VERSION_SUFFIX" ]; then
             PRERELEASE_FLAG="--prerelease"
           fi
 
-          gh release create "$TAG" "${RELEASE_ASSETS[@]}" \
+          gh release create "$TAG" \
             --title "$RELEASE_NAME" \
             --generate-notes \
             $PRERELEASE_FLAG

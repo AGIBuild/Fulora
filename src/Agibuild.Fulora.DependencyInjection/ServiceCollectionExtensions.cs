@@ -4,6 +4,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Agibuild.Fulora.DependencyInjection;
 
+/// <summary>Well-known HttpClient names for Fulora framework components.</summary>
+public static class FuloraHttpClients
+{
+    /// <summary>Named HttpClient for <see cref="RemoteConfigProvider"/>.</summary>
+    public const string RemoteConfig = "FuloraRemoteConfig";
+}
+
 /// <summary>
 /// Dependency injection registrations for Agibuild WebView services.
 /// </summary>
@@ -103,9 +110,12 @@ public sealed class FuloraServiceBuilder
     /// <param name="localFallbackPath">Optional local JSON fallback file path.</param>
     public FuloraServiceBuilder AddRemoteConfig(Uri remoteUri, string? localFallbackPath = null)
     {
+        Services.AddHttpClient(FuloraHttpClients.RemoteConfig);
+
         Services.AddSingleton<IConfigProvider>(sp =>
         {
-            var httpClient = sp.GetService<HttpClient>() ?? new HttpClient();
+            var factory = sp.GetRequiredService<IHttpClientFactory>();
+            var httpClient = factory.CreateClient(FuloraHttpClients.RemoteConfig);
             IConfigProvider? fallback = localFallbackPath != null
                 ? new JsonFileConfigProvider(localFallbackPath)
                 : null;
