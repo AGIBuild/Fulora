@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
 
@@ -20,13 +20,13 @@ internal partial class BuildTask
     {
         TestResultsDirectory.CreateDirectory();
         var result = executeChecks();
-        WriteJsonReport(reportFile, result.ReportPayload);
+        WriteGovernanceReport(reportFile, result.ReportPayload);
         Serilog.Log.Information("{Target} report written to {Path}", targetName, reportFile);
 
         if (result.Failures.Count > 0)
         {
-            var lines = string.Join('\n', result.Failures);
-            Assert.Fail($"{targetName} failed:\n{lines}");
+            var lines = result.Failures.Select(FormatGovernanceFailure);
+            Assert.Fail($"{targetName} failed:\n{string.Join('\n', lines)}");
         }
     }
 
@@ -37,17 +37,20 @@ internal partial class BuildTask
     {
         TestResultsDirectory.CreateDirectory();
         var result = await executeChecks();
-        WriteJsonReport(reportFile, result.ReportPayload);
+        WriteGovernanceReport(reportFile, result.ReportPayload);
         Serilog.Log.Information("{Target} report written to {Path}", targetName, reportFile);
 
         if (result.Failures.Count > 0)
         {
-            var lines = string.Join('\n', result.Failures);
-            Assert.Fail($"{targetName} failed:\n{lines}");
+            var lines = result.Failures.Select(FormatGovernanceFailure);
+            Assert.Fail($"{targetName} failed:\n{string.Join('\n', lines)}");
         }
     }
 
+    private static string FormatGovernanceFailure(GovernanceFailure f) =>
+        $"[{f.InvariantId}] {f.SourceArtifact}: expected {f.Expected}, actual {f.Actual}";
+
     private sealed record GovernanceCheckResult(
-        IReadOnlyList<string> Failures,
+        IReadOnlyList<GovernanceFailure> Failures,
         object ReportPayload);
 }

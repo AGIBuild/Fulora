@@ -6,6 +6,8 @@ using Nuke.Common;
 
 internal partial class BuildTask
 {
+    private const string TypeScriptDeclarationInvariantId = "GOV-038";
+
     private static readonly string[] TypeScriptGovernanceGovernedFiles =
     [
         "templates/agibuild-hybrid/HybridApp.Web.Vite.React/src/bridge/client.ts",
@@ -54,7 +56,7 @@ internal partial class BuildTask
                 TypeScriptGovernanceReportFile,
                 () =>
                 {
-                    var failures = new List<string>();
+                    var failures = new List<GovernanceFailure>();
                     var checks = new List<object>();
                     var semanticDiagnostics = new List<object>();
                     const string strictScope = "official-maintained-app-layer::strict-no-exception";
@@ -70,13 +72,23 @@ internal partial class BuildTask
                             scope = strictScope,
                             decision = "deny"
                         });
-                        failures.Add($"[{BridgeSingleEntryAppLayerPolicyInvariantId}] {artifactPath}: expected {expected}; actual {actual} (scope={strictScope}).");
+                        failures.Add(new GovernanceFailure(
+                            Category: "typescript-semantic",
+                            InvariantId: BridgeSingleEntryAppLayerPolicyInvariantId,
+                            SourceArtifact: artifactPath,
+                            Expected: expected,
+                            Actual: actual));
                     }
 
                     var targetsPath = RootDirectory / "src" / "Agibuild.Fulora.Bridge.Generator" / "build" / "Agibuild.Fulora.Bridge.Generator.targets";
                     if (!File.Exists(targetsPath))
                     {
-                        failures.Add($"Missing bridge generator targets file: {targetsPath}");
+                        failures.Add(new GovernanceFailure(
+                            Category: "typescript-declaration",
+                            InvariantId: TypeScriptDeclarationInvariantId,
+                            SourceArtifact: targetsPath.ToString(),
+                            Expected: "bridge generator targets file exists",
+                            Actual: "missing"));
                     }
                     else
                     {
@@ -94,7 +106,12 @@ internal partial class BuildTask
                         });
 
                         if (!hasGenerateFlag || !hasOutputDir || !hasBridgeDts)
-                            failures.Add("Bridge generator targets are missing required bridge.d.ts generation wiring.");
+                            failures.Add(new GovernanceFailure(
+                                Category: "typescript-declaration",
+                                InvariantId: TypeScriptDeclarationInvariantId,
+                                SourceArtifact: targetsPath.ToString(),
+                                Expected: "bridge.d.ts generation wiring complete",
+                                Actual: "missing required wiring"));
                     }
 
                     var packageEntryPath = RootDirectory / "packages" / "bridge" / "src" / "index.ts";
@@ -110,12 +127,22 @@ internal partial class BuildTask
                         exists = File.Exists(packageConfigPath)
                     });
                     if (!File.Exists(packageEntryPath) || !File.Exists(packageConfigPath))
-                        failures.Add("Bridge npm package source is incomplete.");
+                        failures.Add(new GovernanceFailure(
+                            Category: "typescript-declaration",
+                            InvariantId: TypeScriptDeclarationInvariantId,
+                            SourceArtifact: "packages/bridge",
+                            Expected: "npm package source complete",
+                            Actual: "incomplete"));
 
                     var vueTsconfigPath = RootDirectory / "samples" / "avalonia-vue" / "AvaloniVue.Web" / "tsconfig.json";
                     if (!File.Exists(vueTsconfigPath))
                     {
-                        failures.Add($"Missing Vue sample tsconfig: {vueTsconfigPath}");
+                        failures.Add(new GovernanceFailure(
+                            Category: "typescript-declaration",
+                            InvariantId: TypeScriptDeclarationInvariantId,
+                            SourceArtifact: vueTsconfigPath.ToString(),
+                            Expected: "Vue sample tsconfig exists",
+                            Actual: "missing"));
                     }
                     else
                     {
@@ -127,7 +154,12 @@ internal partial class BuildTask
                             referencesBridgeDeclaration
                         });
                         if (!referencesBridgeDeclaration)
-                            failures.Add("Vue sample tsconfig must include generated bridge.d.ts.");
+                            failures.Add(new GovernanceFailure(
+                                Category: "typescript-declaration",
+                                InvariantId: TypeScriptDeclarationInvariantId,
+                                SourceArtifact: vueTsconfigPath.ToString(),
+                                Expected: "tsconfig includes generated bridge.d.ts",
+                                Actual: "reference missing"));
                     }
 
                     foreach (var relativePath in TypeScriptGovernanceGovernedFiles)

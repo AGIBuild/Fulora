@@ -1147,29 +1147,29 @@ public sealed class AutomationLaneGovernanceTests
             "schemaVersion",
             ["2"],
             EvidenceContractV2Schema,
-            "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
         AssertAssignmentValueIn(
             combinedSource,
             "laneContext",
             ["\"Ci\"", "LaneContextCi"],
             EvidenceContractV2Schema,
-            "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
         AssertAssignmentValueIn(
             combinedSource,
             "producerTarget",
             ["\"ReleaseCloseoutSnapshot\""],
             EvidenceContractV2Schema,
-            "build/Build.Governance.cs");
-        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transition", EvidenceContractV2Schema, "build/Build.Governance.cs");
-        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transitionContinuity", EvidenceContractV2Schema, "build/Build.Governance.cs");
-        AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseDecision", EvidenceContractV2Schema, "build/Build.Governance.cs");
-        AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseBlockingReasons", EvidenceContractV2Schema, "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
+        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transition", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
+        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transitionContinuity", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
+        AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseDecision", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
+        AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseBlockingReasons", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertAnonymousObjectHasMembers(
             combinedSource,
             ["completedPhase", "activePhase", "closeoutArchives", "distributionReadiness", "adoptionReadiness"],
             EvidenceContractV2Schema,
-            "build/Build.Governance.cs");
-        AssertSourceContains(combinedSource, "TransitionLaneProvenanceInvariantId", EvidenceContractV2Schema, "build/Build.Governance.cs");
+            "build/Build.Governance.Release.cs");
+        AssertSourceContains(combinedSource, "TransitionLaneProvenanceInvariantId", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertSourceContains(combinedSource, "closeout-snapshot.json", EvidenceContractV2Schema, "build/Build.cs");
         AssertSourceContains(combinedSource, "distribution-readiness-governance-report.json", EvidenceContractV2Schema, "build/Build.cs");
         AssertSourceContains(combinedSource, "adoption-readiness-governance-report.json", EvidenceContractV2Schema, "build/Build.cs");

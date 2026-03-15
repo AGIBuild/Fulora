@@ -8,6 +8,8 @@ using Nuke.Common;
 
 internal partial class BuildTask
 {
+    private const string DependencyVulnerabilityInvariantId = "GOV-037";
+
     internal Target DependencyVulnerabilityGovernance => _ => _
         .Description("Runs dependency vulnerability scans (NuGet + npm) as a hard governance gate.")
         .Executes(async () =>
@@ -17,7 +19,7 @@ internal partial class BuildTask
                 DependencyGovernanceReportFile,
                 async () =>
                 {
-                    var failures = new List<string>();
+                    var failures = new List<GovernanceFailure>();
                     var scanReports = new List<object>();
 
                     var filterPath = await BuildPlatformAwareSolutionFilterAsync("vuln-scan");
@@ -37,7 +39,12 @@ internal partial class BuildTask
                         output = nugetOutput
                     });
                     if (nugetHasVulnerability)
-                        failures.Add("NuGet vulnerability scan reported vulnerable packages.");
+                        failures.Add(new GovernanceFailure(
+                            Category: "dependency-vulnerability",
+                            InvariantId: DependencyVulnerabilityInvariantId,
+                            SourceArtifact: "dotnet list package --vulnerable",
+                            Expected: "no vulnerable packages",
+                            Actual: "vulnerable packages detected"));
 
                     var npmWorkspaces = new[]
                     {
@@ -68,7 +75,12 @@ internal partial class BuildTask
                         }
                         catch (JsonException)
                         {
-                            failures.Add($"npm audit output is not valid JSON for workspace '{workspace}'.");
+                            failures.Add(new GovernanceFailure(
+                                Category: "dependency-vulnerability",
+                                InvariantId: DependencyVulnerabilityInvariantId,
+                                SourceArtifact: workspace.ToString(),
+                                Expected: "valid JSON audit output",
+                                Actual: "npm audit output is not valid JSON"));
                         }
 
                         scanReports.Add(new
@@ -80,7 +92,12 @@ internal partial class BuildTask
                         });
 
                         if (hasHighOrCritical)
-                            failures.Add($"npm audit found high/critical vulnerabilities in '{workspace}'.");
+                            failures.Add(new GovernanceFailure(
+                                Category: "dependency-vulnerability",
+                                InvariantId: DependencyVulnerabilityInvariantId,
+                                SourceArtifact: workspace.ToString(),
+                                Expected: "no high/critical vulnerabilities",
+                                Actual: "high/critical vulnerabilities detected"));
                     }
 
                     var reportPayload = new

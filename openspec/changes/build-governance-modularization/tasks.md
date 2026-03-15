@@ -1,44 +1,58 @@
-## 1. Infrastructure extraction
+## 1. Infrastructure evolution (Build.Governance.Infrastructure.cs, Build.ProcessHelpers.cs)
 
-- [ ] 1.1 Create `Build.Governance.Infrastructure.cs` with `GovernanceFailure` record, `GovernanceReportPayload<T>` record, and `RunGovernanceCheck` static helper
-- [ ] 1.2 Add `WriteIndentedCamelCaseJsonOptions` for report serialization consistency
-- [ ] 1.3 Verify GovernanceRunner produces identical JSON field semantics as current anonymous objects
+- [x] 1.1 Create `Build.Governance.Infrastructure.cs` with `GovernanceFailure` record and `RunGovernanceCheck`/`RunGovernanceCheckAsync` static helpers
+- [ ] 1.2 Evolve `GovernanceCheckResult.Failures` from `IReadOnlyList<string>` to `IReadOnlyList<GovernanceFailure>`
+- [ ] 1.3 Update `RunGovernanceCheck` assertion message formatting: `[{InvariantId}] {SourceArtifact}: expected {Expected}, actual {Actual}`
+- [ ] 1.4 Add `GovernanceCamelCaseJsonOptions` (`WriteIndented = true`, `PropertyNamingPolicy = CamelCase`) in `Build.ProcessHelpers.cs`
+- [ ] 1.5 Add `WriteGovernanceReport` method (or update `WriteJsonReport` to accept `JsonSerializerOptions` override) to use camelCase options for governance reports
 
-## 2. File decomposition
+## 2. File decomposition (completed)
 
-- [ ] 2.1 Extract `DependencyVulnerabilityGovernance` to `Build.Governance.Dependency.cs`
-- [ ] 2.2 Extract `TypeScriptDeclarationGovernance` to `Build.Governance.TypeScript.cs`
-- [ ] 2.3 Extract `SampleTemplatePackageReferenceGovernance` to `Build.Governance.Sample.cs`
-- [ ] 2.4 Extract `RuntimeCriticalPathExecutionGovernance` to `Build.Governance.RuntimePath.cs`
-- [ ] 2.5 Extract `OpenSpecStrictGovernance` to `Build.Governance.OpenSpec.cs`
-- [ ] 2.6 Extract `BridgeDistributionGovernance`, `DistributionReadinessGovernance`, `AdoptionReadinessGovernance` to `Build.Governance.Distribution.cs`
-- [ ] 2.7 Extract `ReleaseCloseoutSnapshot`, `ContinuousTransitionGateGovernance`, `ReleaseOrchestrationGovernance` to `Build.Governance.Release.cs`
-- [ ] 2.8 Delete the original `Build.Governance.cs` after all targets are migrated
+- [x] 2.1 Extract `DependencyVulnerabilityGovernance` to `Build.Governance.Dependency.cs`
+- [x] 2.2 Extract `TypeScriptDeclarationGovernance` to `Build.Governance.TypeScript.cs`
+- [x] 2.3 Extract `SampleTemplatePackageReferenceGovernance` to `Build.Governance.Sample.cs`
+- [x] 2.4 Extract `RuntimeCriticalPathExecutionGovernance` to `Build.Governance.RuntimePath.cs`
+- [x] 2.5 Extract `OpenSpecStrictGovernance` to `Build.Governance.OpenSpec.cs`
+- [x] 2.6 Extract `BridgeDistributionGovernance`, `DistributionReadinessGovernance`, `AdoptionReadinessGovernance` to `Build.Governance.Distribution.cs`
+- [x] 2.7 Extract `ReleaseCloseoutSnapshot`, `ContinuousTransitionGateGovernance`, `ReleaseOrchestrationGovernance` to `Build.Governance.Release.cs`
+- [x] 2.8 `SolutionConsistencyGovernance` exists in `Build.Governance.Solution.cs`
+- [x] 2.9 Original `Build.Governance.cs` deleted
 
-## 3. Target migration to GovernanceRunner
+## 3. Target migration to GovernanceFailure
 
-- [ ] 3.1 Migrate DependencyVulnerabilityGovernance to use GovernanceRunner + GovernanceFailure
-- [ ] 3.2 Migrate TypeScriptDeclarationGovernance
-- [ ] 3.3 Migrate SampleTemplatePackageReferenceGovernance
-- [ ] 3.4 Migrate RuntimeCriticalPathExecutionGovernance
-- [ ] 3.5 Migrate OpenSpecStrictGovernance
-- [ ] 3.6 Migrate BridgeDistributionGovernance
-- [ ] 3.7 Migrate DistributionReadinessGovernance
-- [ ] 3.8 Migrate AdoptionReadinessGovernance
-- [ ] 3.9 Migrate ReleaseCloseoutSnapshot
-- [ ] 3.10 Migrate ContinuousTransitionGateGovernance
-- [ ] 3.11 Migrate ReleaseOrchestrationGovernance
-- [ ] 3.12 Migrate WarningGovernance (Build.WarningGovernance.cs) to use GovernanceFailure
-- [ ] 3.13 Migrate AutomationLaneReport (Build.Testing.cs) to use GovernanceRunner where applicable
+### 3a. Tier 1 — targets already using RunGovernanceCheck (migrate from string failures to GovernanceFailure)
+
+- [ ] 3.1 Migrate `DependencyVulnerabilityGovernance` — construct GovernanceFailure with Category="dependency-vulnerability", InvariantId from scan context
+- [ ] 3.2 Migrate `TypeScriptDeclarationGovernance` — construct GovernanceFailure with Category="typescript-declaration"
+- [ ] 3.3 Migrate `SampleTemplatePackageReferenceGovernance` — construct GovernanceFailure with Category="sample-template-package"
+- [ ] 3.4 Migrate `SolutionConsistencyGovernance` — construct GovernanceFailure with Category="solution-consistency"
+- [ ] 3.5 Migrate `BridgeDistributionGovernance` — construct GovernanceFailure with Category="bridge-distribution"
+
+### 3b. Tier 2 — targets requiring adoption of RunGovernanceCheck + GovernanceFailure
+
+- [ ] 3.6 Migrate `RuntimeCriticalPathExecutionGovernance` to use RunGovernanceCheck (currently uses direct WriteJsonReport + Assert.Fail)
+- [ ] 3.7 Migrate `ContinuousTransitionGateGovernance` to use RunGovernanceCheck; map `TransitionGateDiagnosticEntry` → GovernanceFailure (Group→Category, ArtifactPath→SourceArtifact, Lane encoded in Expected/Actual)
+
+### 3c. Excluded from migration (no changes needed)
+
+- [x] ~~3.8 WarningGovernance~~ — excluded: specialized classification model (known-baseline/actionable/new-regression), not a standard governance check pattern
+- [x] ~~3.9 AutomationLaneReport~~ — excluded: CI evidence collector, not a governance check
+- [x] ~~3.10 OpenSpecStrictGovernance~~ — excluded: outputs plain text log via npm exec, not structured JSON report
+- [x] ~~3.11 ReleaseCloseoutSnapshot~~ — excluded: complex evidence composite, not a check-and-report target
+- [x] ~~3.12 ReleaseOrchestrationGovernance~~ — excluded: orchestration aggregator that reads other reports; already uses GovernanceFailure internally
+- [x] ~~3.13 DistributionReadinessGovernance~~ — excluded: already uses GovernanceFailure directly, custom schema with summary/provenance
+- [x] ~~3.14 AdoptionReadinessGovernance~~ — excluded: already uses GovernanceFailure directly, custom schema with blocking/advisory tiers
 
 ## 4. Ci target simplification
 
-- [ ] 4.1 Analyze transitive dependency graph of Ci target
-- [ ] 4.2 Remove redundant direct dependencies from Ci.DependsOn that are already transitively required
-- [ ] 4.3 Verify `nuke Ci --plan` shows identical execution order
+- [ ] 4.1 Analyze transitive dependency graph of Ci target via `nuke Ci --plan`
+- [ ] 4.2 Remove redundant direct dependencies from `Ci.DependsOn` that are already transitively required through `ReleaseOrchestrationGovernance`
+- [ ] 4.3 Verify `nuke Ci --plan` shows identical execution order after simplification
 
 ## 5. Verification
 
-- [ ] 5.1 Run `nuke Ci --configuration Release` locally and verify all governance targets pass
-- [ ] 5.2 Compare governance report JSON outputs before and after migration for field-level compatibility
-- [ ] 5.3 Verify build compiles with zero warnings
+- [ ] 5.1 Before/after report JSON comparison: generate governance reports before migration, then after, and diff for field-level compatibility (all camelCase field names, failureCount values, invariant IDs)
+- [ ] 5.2 Downstream consumer contract test: verify ReleaseOrchestrationGovernance can still parse all upstream reports after migration (distribution-readiness, adoption-readiness, transition-gate, closeout-snapshot)
+- [ ] 5.3 Unit test updates: update `AutomationLaneGovernanceTests.cs` file path references from `"build/Build.Governance.cs"` to current file paths
+- [ ] 5.4 Build compilation: `nuke Ci --configuration Release` passes with zero new warnings
+- [ ] 5.5 CI dependency graph validation: `nuke Ci --plan` output matches expected target execution order

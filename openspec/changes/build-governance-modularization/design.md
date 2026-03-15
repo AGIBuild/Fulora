@@ -1,35 +1,147 @@
 ## Context
 
-Build.Governance.cs is 1,907 lines containing 11 governance targets. Each target follows an identical pattern: create failures list, run checks, build anonymous report payload, write JSON, assert. Five separate record types share the same (Category, InvariantId, SourceArtifact, Expected, Actual) shape. This duplication inflates maintenance cost and makes adding new governance targets error-prone.
+The governance layer in build/ was originally a monolithic 1,907-line Build.Governance.cs. The file split into domain-specific partials has already been completed, yielding 9 files:
+
+| File | Targets |
+|------|---------|
+| `Build.Governance.Infrastructure.cs` | GovernanceFailure, GovernanceCheckResult, RunGovernanceCheck/Async |
+| `Build.Governance.Dependency.cs` | DependencyVulnerabilityGovernance |
+| `Build.Governance.TypeScript.cs` | TypeScriptDeclarationGovernance |
+| `Build.Governance.Sample.cs` | SampleTemplatePackageReferenceGovernance |
+| `Build.Governance.RuntimePath.cs` | RuntimeCriticalPathExecutionGovernance |
+| `Build.Governance.OpenSpec.cs` | OpenSpecStrictGovernance |
+| `Build.Governance.Distribution.cs` | BridgeDistributionGovernance, DistributionReadinessGovernance, AdoptionReadinessGovernance |
+| `Build.Governance.Release.cs` | ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, ReleaseOrchestrationGovernance |
+| `Build.Governance.Solution.cs` | SolutionConsistencyGovernance |
+
+Remaining work: unify the failure model, standardize report conventions, and migrate targets that still use ad-hoc patterns to the shared infrastructure.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Extract reusable governance execution infrastructure
-- Unify failure record types into a single GovernanceFailure
-- Replace anonymous report payloads with typed GovernanceReportPayload
-- Split the monolithic file into domain-specific partials
-- Preserve all existing governance semantics and invariant IDs
+- Unify failure representation to GovernanceFailure across all governance targets
+- Migrate GovernanceCheckResult.Failures from `IReadOnlyList<string>` to `IReadOnlyList<GovernanceFailure>`
+- Establish a standard report envelope convention (common fields) without forcing a rigid generic type
+- Add camelCase JSON serialization for governance reports to support GovernanceFailure direct serialization
+- Migrate remaining targets (RuntimeCriticalPath, TransitionGate, DistributionReadiness, AdoptionReadiness) to use RunGovernanceCheck where applicable
+- Simplify Ci target direct dependency list by removing transitively required targets
+- Preserve all existing governance semantics, invariant IDs, and report JSON field compatibility
 
 **Non-Goals:**
 - Changing governance check logic or thresholds
 - Modifying CI workflow files
 - Changing the Ci/CiPublish target graph semantics
+- Migrating WarningGovernance or AutomationLaneReport (these have specialized schemas that do not fit the governance check pattern)
+- Migrating OpenSpecStrictGovernance (outputs plain text log, not JSON governance report)
 
 ## Decisions
 
-1. **GovernanceRunner as a static helper method**: Rather than a base class (which doesn't fit Nuke's partial class model), use a static method `RunGovernanceCheck` that accepts a delegate returning check results and a report path. This avoids inheritance complexity.
+### Decision 1: RunGovernanceCheck as the standard lifecycle helper
 
-2. **GovernanceFailure replaces all domain-specific records**: `TransitionGateDiagnosticEntry`, `ReleaseOrchestrationBlockingReason`, `DistributionReadinessFailure`, `AdoptionReadinessFinding`, and similar records are replaced by a single `GovernanceFailure(string Category, string InvariantId, string SourceArtifact, string Expected, string Actual)`.
+Use the existing static methods `RunGovernanceCheck` (sync) and `RunGovernanceCheckAsync` (async) that accept a delegate returning `GovernanceCheckResult`. This encapsulates: directory creation, delegate invocation, report writing, and assertion on failures.
 
-3. **GovernanceReportPayload<T>**: A generic record `GovernanceReportPayload<T>(string GeneratedAtUtc, string TargetName, string LaneContext, IReadOnlyList<T> Findings, int FailureCount)` replaces anonymous objects.
+**Status**: Already implemented in `Build.Governance.Infrastructure.cs`. 5 targets already use it (Dependency, TypeScript, Sample, Solution, BridgeDistribution).
 
-4. **File split strategy**: One file per governance domain, named `Build.Governance.{Domain}.cs`. Shared infrastructure in `Build.Governance.Infrastructure.cs`.
+### Decision 2: GovernanceFailure as the universal failure record
 
-5. **Ci target dependency simplification**: Remove targets from Ci's DependsOn that are already transitively required through ReleaseOrchestrationGovernance, since Nuke resolves the full graph.
+`GovernanceFailure(string Category, string InvariantId, string SourceArtifact, string Expected, string Actual)` is the single failure representation for all governance targets that use GovernanceCheckResult.
+
+**Mapping rules for existing domain-specific types:**
+
+| Source Type | Mapping to GovernanceFailure |
+|-------------|------------------------------|
+| `string` failures (current GovernanceCheckResult) | Extract InvariantId from `[GOV-XXX]` prefix if present, otherwise use target's default invariant ID. Category from target domain. SourceArtifact from check context. Expected/Actual from message content. |
+| `TransitionGateDiagnosticEntry(InvariantId, Lane, ArtifactPath, Expected, Actual, Group)` | Category = Group, InvariantId = InvariantId, SourceArtifact = ArtifactPath, Expected = `{Lane}:{Expected}`, Actual = `{Lane}:{Actual}` |
+| Inline `GovernanceFailure` in DistributionReadiness/AdoptionReadiness | Already uses GovernanceFailure directly — no mapping needed |
+| `GovernanceFailure` in ReleaseOrchestrationGovernance | Already uses GovernanceFailure directly — no mapping needed |
+
+**Exclusions** (keep separate, do not migrate to GovernanceFailure):
+- `WarningObservation` / `WarningClassification` — WarningGovernance has a distinct classification model (known-baseline/actionable/new-regression) that serves a different purpose than pass/fail governance.
+- `AutomationLaneResult` — AutomationLaneReport is a CI evidence collector, not a governance check.
+- `OpenSpecStrictGovernance` — outputs plain text log, not structured JSON.
+
+### Decision 3: Drop GovernanceReportPayload\<T\> in favor of standard envelope convention
+
+After analysis, `GovernanceReportPayload<T>` is too rigid for the diverse report schemas. 14 governance targets produce reports with 3 distinct structural tiers:
+
+**Tier 1 — Simple check reports** (use RunGovernanceCheck, domain-specific payload with standard fields):
+- DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, SampleTemplatePackageReferenceGovernance, SolutionConsistencyGovernance, BridgeDistributionGovernance
+
+**Tier 2 — Structured governance reports** (use GovernanceFailure internally, custom schema with provenance):
+- DistributionReadinessGovernance, AdoptionReadinessGovernance, ContinuousTransitionGateGovernance, RuntimeCriticalPathExecutionGovernance
+
+**Tier 3 — Composite/orchestration targets** (complex schemas, aggregate other reports):
+- ReleaseCloseoutSnapshot, ReleaseOrchestrationGovernance
+
+**Standard envelope convention** — All governance reports (Tier 1 and 2) MUST include these common top-level fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `generatedAtUtc` | string (ISO 8601) | Timestamp of report generation |
+| `failureCount` | int | Number of failures detected |
+| `failures` | GovernanceFailure[] or string[] | Failure details |
+
+Optional standard fields (recommended for Tier 2+):
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `targetName` | string | Name of the producing governance target |
+| `schemaVersion` | int | Report schema version for forward compatibility |
+| `provenance` | object | `{ laneContext, producerTarget, timestamp }` |
+
+Domain-specific fields (scans, checks, semanticDiagnostics, summary, parityRules, etc.) are additive and unconstrained.
+
+### Decision 4: GovernanceCheckResult evolves to use GovernanceFailure
+
+```
+GovernanceCheckResult(IReadOnlyList<GovernanceFailure> Failures, object ReportPayload)
+```
+
+Changes from current:
+- `Failures` type changes from `IReadOnlyList<string>` to `IReadOnlyList<GovernanceFailure>`
+- `ReportPayload` remains `object` to allow domain-specific report shapes
+- `RunGovernanceCheck` formats GovernanceFailure into assertion messages:
+  `[{InvariantId}] {SourceArtifact}: expected {Expected}, actual {Actual}`
+
+### Decision 5: camelCase JSON serialization for governance reports
+
+Add `GovernanceCamelCaseJsonOptions`:
+```
+new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+```
+
+Rationale:
+- Current anonymous objects already produce camelCase (member names are lowercase by convention)
+- GovernanceFailure record properties are PascalCase — without camelCase policy, direct serialization would break field compatibility
+- Downstream consumers (ReleaseOrchestrationGovernance) read `node["category"]`, `node["invariantId"]` etc. — these expect camelCase
+- Existing `WriteIndentedJsonOptions` (no naming policy) continues to be used by non-governance helpers (solution filter, etc.)
+
+`WriteJsonReport` will use `GovernanceCamelCaseJsonOptions` for governance reports.
+
+### Decision 6: File split is complete — no further structural changes
+
+The split from monolithic Build.Governance.cs into 9 domain files is already done. The original file no longer exists. No additional file moves are needed.
+
+### Decision 7: Ci target dependency simplification
+
+Remove targets from Ci's DependsOn that are already transitively required through ReleaseOrchestrationGovernance. Nuke resolves the full dependency graph, so explicit listing of transitively-covered targets is redundant. Verify with `nuke Ci --plan` before and after.
+
+## Downstream Report Read Contracts
+
+ReleaseOrchestrationGovernance is the primary report consumer. It reads these fields from upstream reports:
+
+| Report File | Fields Read | Access Pattern |
+|-------------|-------------|----------------|
+| `closeout-snapshot.json` | `coverage.linePercent`, `coverage.lineThreshold`, `coverage.branchPercent`, `coverage.branchThreshold`, `governance` section existence | `JsonDocument.GetProperty()` |
+| `transition-gate-governance-report.json` | `failureCount` | `TryGetProperty("failureCount")` |
+| `distribution-readiness-governance-report.json` | `summary.state`, `summary.isStableRelease`, `summary.version`, `summary.failureCount`, `failures[].{category, invariantId, sourceArtifact, expected, actual}` | `JsonNode["summary"]`, `JsonNode["failures"]` |
+| `adoption-readiness-governance-report.json` | `summary.state`, `summary.blockingFindingCount`, `summary.advisoryFindingCount`, `blockingFindings[].{policyTier, category, invariantId, sourceArtifact, expected, actual}`, `advisoryFindings[]` | `JsonNode["summary"]`, `JsonNode["blockingFindings"]` |
+
+All these read paths use camelCase field names. The camelCase serialization policy (Decision 5) ensures GovernanceFailure records serialize compatibly.
 
 ## Risks / Trade-offs
 
-- **Report JSON schema change**: Fields like `generatedAtUtc` become `GeneratedAtUtc` (PascalCase) in typed records. Mitigate by configuring JsonSerializerOptions with camelCase policy for report writing.
-- **Downstream report consumers**: ReleaseOrchestrationGovernance reads other governance reports. The typed payload must remain deserializable. Mitigate by using the same GovernanceReportPayload type for both writing and reading.
-- **Merge conflicts with active change**: `ci-release-unified-readiness-version-1-5` is in progress. Coordinate to avoid conflicting changes to Build.Governance.cs.
+- **GovernanceCheckResult type change**: Changing Failures from string to GovernanceFailure requires updating all 5 targets that currently use RunGovernanceCheck. Mitigate by migrating one target at a time with before/after report comparison.
+- **camelCase serialization scope**: Switching WriteJsonReport to camelCase could affect non-governance callers. Mitigate by introducing a separate method `WriteGovernanceReport` or scoping the options change to governance files only.
+- **TransitionGateDiagnosticEntry Lane encoding**: Encoding Lane into GovernanceFailure fields loses type safety. Mitigate by keeping `TransitionGateDiagnosticEntry` as an internal intermediate type within ContinuousTransitionGateGovernance and converting to GovernanceFailure only for the report output.
+- **Merge conflicts**: `ci-release-unified-readiness-version-1-5` is a parallel change. Coordinate by completing this change first (it only touches build infrastructure, not governance logic) or by rebasing after that change lands.

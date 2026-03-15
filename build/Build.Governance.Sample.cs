@@ -18,7 +18,7 @@ internal partial class BuildTask
                 SampleTemplatePackageReferenceGovernanceReportFile,
                 () =>
                 {
-                    var failures = new List<string>();
+                    var failures = new List<GovernanceFailure>();
                     var checks = new List<object>();
                     var sourceProjectReferencePattern = new Regex(
                         @"<(ProjectReference|Import)\b[^>]*(Include|Project)\s*=\s*""(?<path>[^""]*src[\\/]+Agibuild\.Fulora[^""]*)""[^>]*>",
@@ -51,23 +51,31 @@ internal partial class BuildTask
                     {
                         var relativePath = Path.GetRelativePath(RootDirectory, projectFile).Replace(Path.DirectorySeparatorChar, '/');
                         var source = File.ReadAllText(projectFile);
-                        var sourceReferenceViolations = new List<string>();
-                        var conditionalReferenceViolations = new List<string>();
-                        var packageVersionViolations = new List<string>();
+                        var sourceReferenceViolationCount = 0;
+                        var conditionalReferenceViolationCount = 0;
+                        var packageVersionViolationCount = 0;
 
                         foreach (Match match in sourceProjectReferencePattern.Matches(source))
                         {
                             var path = match.Groups["path"].Value;
-                            sourceReferenceViolations.Add(path);
-                            failures.Add(
-                                $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: source project/import reference is prohibited in samples/templates; found '{path}'.");
+                            sourceReferenceViolationCount++;
+                            failures.Add(new GovernanceFailure(
+                                Category: "sample-template-package",
+                                InvariantId: SampleTemplatePackageReferencePolicyInvariantId,
+                                SourceArtifact: relativePath,
+                                Expected: "no source project/import references to src/Agibuild.Fulora",
+                                Actual: $"source reference found: '{path}'"));
                         }
 
                         foreach (Match _ in conditionalProjectReferencePattern.Matches(source))
                         {
-                            conditionalReferenceViolations.Add("ProjectReference with Condition attribute");
-                            failures.Add(
-                                $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: conditional ProjectReference is prohibited in samples/templates.");
+                            conditionalReferenceViolationCount++;
+                            failures.Add(new GovernanceFailure(
+                                Category: "sample-template-package",
+                                InvariantId: SampleTemplatePackageReferencePolicyInvariantId,
+                                SourceArtifact: relativePath,
+                                Expected: "no conditional ProjectReference",
+                                Actual: "conditional ProjectReference found"));
                         }
 
                         foreach (Match match in packageReferenceWithVersionAttributePattern.Matches(source))
@@ -77,9 +85,13 @@ internal partial class BuildTask
                             if (string.Equals(version, "*-*", StringComparison.Ordinal))
                                 continue;
 
-                            packageVersionViolations.Add($"{packageId}={version}");
-                            failures.Add(
-                                $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: package '{packageId}' must use version '*-*'; actual '{version}'.");
+                            packageVersionViolationCount++;
+                            failures.Add(new GovernanceFailure(
+                                Category: "sample-template-package",
+                                InvariantId: SampleTemplatePackageReferencePolicyInvariantId,
+                                SourceArtifact: relativePath,
+                                Expected: $"package '{packageId}' version '*-*'",
+                                Actual: $"version '{version}'"));
                         }
 
                         foreach (Match match in packageReferenceElementPattern.Matches(source))
@@ -94,17 +106,21 @@ internal partial class BuildTask
                             if (string.Equals(version, "*-*", StringComparison.Ordinal))
                                 continue;
 
-                            packageVersionViolations.Add($"{packageId}={version}");
-                            failures.Add(
-                                $"[{SampleTemplatePackageReferencePolicyInvariantId}] {relativePath}: package '{packageId}' must use version '*-*'; actual '{version}'.");
+                            packageVersionViolationCount++;
+                            failures.Add(new GovernanceFailure(
+                                Category: "sample-template-package",
+                                InvariantId: SampleTemplatePackageReferencePolicyInvariantId,
+                                SourceArtifact: relativePath,
+                                Expected: $"package '{packageId}' version '*-*'",
+                                Actual: $"version '{version}'"));
                         }
 
                         checks.Add(new
                         {
                             file = relativePath,
-                            sourceReferenceViolationCount = sourceReferenceViolations.Count,
-                            conditionalReferenceViolationCount = conditionalReferenceViolations.Count,
-                            packageVersionViolationCount = packageVersionViolations.Count
+                            sourceReferenceViolationCount,
+                            conditionalReferenceViolationCount,
+                            packageVersionViolationCount
                         });
                     }
 

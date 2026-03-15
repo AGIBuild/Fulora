@@ -60,175 +60,119 @@ internal partial class BuildTask
         .DependsOn(ReleaseCloseoutSnapshot)
         .Executes(() =>
         {
-            TestResultsDirectory.CreateDirectory();
-
-            var diagnostics = new List<TransitionGateDiagnosticEntry>();
-            var failures = new List<string>();
-            const string buildArtifactPath = "build/Build.cs";
-
-            var buildSource = File.ReadAllText(RootDirectory / "build" / "Build.cs");
-            var ciDependsOnBlock = ExtractDependsOnBlock(buildSource, LaneContextCi);
-            var ciPublishDependsOnBlock = ExtractDependsOnBlock(buildSource, LaneContextCiPublish);
-
-            foreach (var rule in CloseoutCriticalTransitionGateParityRules)
-            {
-                if (!ciDependsOnBlock.Contains(rule.CiDependency, StringComparison.Ordinal))
+            RunGovernanceCheck(
+                "Continuous transition gate governance",
+                TransitionGateGovernanceReportFile,
+                () =>
                 {
-                    diagnostics.Add(new TransitionGateDiagnosticEntry(
-                        TransitionGateParityInvariantId,
-                        Lane: LaneContextCi,
-                        ArtifactPath: buildArtifactPath,
-                        Expected: rule.CiDependency,
-                        Actual: "missing",
-                        Group: rule.Group));
-                    failures.Add($"[{TransitionGateParityInvariantId}] Missing Ci dependency '{rule.CiDependency}' for group '{rule.Group}'.");
-                }
-            }
+                    var diagnostics = new List<TransitionGateDiagnosticEntry>();
+                    var failures = new List<GovernanceFailure>();
+                    const string buildArtifactPath = "build/Build.cs";
 
-            if (!ciPublishDependsOnBlock.Contains(LaneContextCi, StringComparison.Ordinal))
-            {
-                diagnostics.Add(new TransitionGateDiagnosticEntry(
-                    TransitionGateParityInvariantId,
-                    Lane: LaneContextCiPublish,
-                    ArtifactPath: buildArtifactPath,
-                    Expected: LaneContextCi,
-                    Actual: "missing",
-                    Group: "ci-inheritance"));
-                failures.Add($"[{TransitionGateParityInvariantId}] CiPublish must depend on Ci.");
-            }
+                    var buildSource = File.ReadAllText(RootDirectory / "build" / "Build.cs");
+                    var ciDependsOnBlock = ExtractDependsOnBlock(buildSource, LaneContextCi);
+                    var ciPublishDependsOnBlock = ExtractDependsOnBlock(buildSource, LaneContextCiPublish);
 
-            var roadmapPath = RootDirectory / "openspec" / "ROADMAP.md";
-            var (roadmapCompletedPhase, roadmapActivePhase) = ReadRoadmapTransitionState(File.ReadAllText(roadmapPath));
-            const string closeoutArtifactPath = "artifacts/test-results/closeout-snapshot.json";
+                    foreach (var rule in CloseoutCriticalTransitionGateParityRules)
+                    {
+                        if (!ciDependsOnBlock.Contains(rule.CiDependency, StringComparison.Ordinal))
+                        {
+                            diagnostics.Add(new TransitionGateDiagnosticEntry(
+                                TransitionGateParityInvariantId,
+                                Lane: LaneContextCi,
+                                ArtifactPath: buildArtifactPath,
+                                Expected: rule.CiDependency,
+                                Actual: "missing",
+                                Group: rule.Group));
+                            failures.Add(new GovernanceFailure(
+                                Category: rule.Group,
+                                InvariantId: TransitionGateParityInvariantId,
+                                SourceArtifact: buildArtifactPath,
+                                Expected: $"{LaneContextCi}: {rule.CiDependency}",
+                                Actual: $"{LaneContextCi}: missing"));
+                        }
+                    }
 
-            if (!File.Exists(CloseoutSnapshotFile))
-            {
-                diagnostics.Add(new TransitionGateDiagnosticEntry(
-                    TransitionLaneProvenanceInvariantId,
-                    Lane: LaneContextCi,
-                    ArtifactPath: closeoutArtifactPath,
-                    Expected: "closeout snapshot exists",
-                    Actual: "file missing",
-                    Group: "transition-continuity"));
-                failures.Add($"[{TransitionLaneProvenanceInvariantId}] Closeout snapshot file missing at '{CloseoutSnapshotFile}'.");
-            }
-            else
-            {
-                using var closeoutDoc = JsonDocument.Parse(File.ReadAllText(CloseoutSnapshotFile));
-                var root = closeoutDoc.RootElement;
-                var provenance = root.GetProperty("provenance");
-                var transition = root.GetProperty("transition");
-                var continuity = root.GetProperty("transitionContinuity");
+                    if (!ciPublishDependsOnBlock.Contains(LaneContextCi, StringComparison.Ordinal))
+                    {
+                        diagnostics.Add(new TransitionGateDiagnosticEntry(
+                            TransitionGateParityInvariantId,
+                            Lane: LaneContextCiPublish,
+                            ArtifactPath: buildArtifactPath,
+                            Expected: LaneContextCi,
+                            Actual: "missing",
+                            Group: "ci-inheritance"));
+                        failures.Add(new GovernanceFailure(
+                            Category: "ci-inheritance",
+                            InvariantId: TransitionGateParityInvariantId,
+                            SourceArtifact: buildArtifactPath,
+                            Expected: $"{LaneContextCiPublish}: depends on {LaneContextCi}",
+                            Actual: $"{LaneContextCiPublish}: missing"));
+                    }
 
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: LaneContextCi,
-                    actual: provenance.GetProperty("laneContext").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "provenance.laneContext");
+                    var roadmapPath = RootDirectory / "openspec" / "ROADMAP.md";
+                    var (roadmapCompletedPhase, roadmapActivePhase) = ReadRoadmapTransitionState(File.ReadAllText(roadmapPath));
+                    const string closeoutArtifactPath = "artifacts/test-results/closeout-snapshot.json";
 
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: "ReleaseCloseoutSnapshot",
-                    actual: provenance.GetProperty("producerTarget").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "provenance.producerTarget");
+                    if (!File.Exists(CloseoutSnapshotFile))
+                    {
+                        diagnostics.Add(new TransitionGateDiagnosticEntry(
+                            TransitionLaneProvenanceInvariantId,
+                            Lane: LaneContextCi,
+                            ArtifactPath: closeoutArtifactPath,
+                            Expected: "closeout snapshot exists",
+                            Actual: "file missing",
+                            Group: "transition-continuity"));
+                        failures.Add(new GovernanceFailure(
+                            Category: "transition-continuity",
+                            InvariantId: TransitionLaneProvenanceInvariantId,
+                            SourceArtifact: closeoutArtifactPath,
+                            Expected: $"{LaneContextCi}: closeout snapshot exists",
+                            Actual: $"{LaneContextCi}: file missing"));
+                    }
+                    else
+                    {
+                        using var closeoutDoc = JsonDocument.Parse(File.ReadAllText(CloseoutSnapshotFile));
+                        var root = closeoutDoc.RootElement;
+                        var provenance = root.GetProperty("provenance");
+                        var transition = root.GetProperty("transition");
+                        var continuity = root.GetProperty("transitionContinuity");
 
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: roadmapCompletedPhase,
-                    actual: transition.GetProperty("completedPhase").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "transition.completedPhase");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, LaneContextCi, provenance.GetProperty("laneContext").GetString(), "transition-continuity", "provenance.laneContext");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, "ReleaseCloseoutSnapshot", provenance.GetProperty("producerTarget").GetString(), "transition-continuity", "provenance.producerTarget");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, roadmapCompletedPhase, transition.GetProperty("completedPhase").GetString(), "transition-continuity", "transition.completedPhase");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, roadmapActivePhase, transition.GetProperty("activePhase").GetString(), "transition-continuity", "transition.activePhase");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, LaneContextCi, continuity.GetProperty("laneContext").GetString(), "transition-continuity", "transitionContinuity.laneContext");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, "ReleaseCloseoutSnapshot", continuity.GetProperty("producerTarget").GetString(), "transition-continuity", "transitionContinuity.producerTarget");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, roadmapCompletedPhase, continuity.GetProperty("completedPhase").GetString(), "transition-continuity", "transitionContinuity.completedPhase");
+                        ValidateTransitionField(diagnostics, failures, LaneContextCi, closeoutArtifactPath, roadmapActivePhase, continuity.GetProperty("activePhase").GetString(), "transition-continuity", "transitionContinuity.activePhase");
+                    }
 
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: roadmapActivePhase,
-                    actual: transition.GetProperty("activePhase").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "transition.activePhase");
+                    var reportPayload = new
+                    {
+                        schemaVersion = 1,
+                        generatedAtUtc = DateTime.UtcNow,
+                        parityRules = CloseoutCriticalTransitionGateParityRules.Select(rule => new
+                        {
+                            group = rule.Group,
+                            ciDependency = rule.CiDependency,
+                            ciPublishDependency = rule.CiPublishDependency
+                        }),
+                        diagnostics = diagnostics.Select(x => new
+                        {
+                            invariantId = x.InvariantId,
+                            lane = x.Lane,
+                            artifactPath = x.ArtifactPath,
+                            expected = x.Expected,
+                            actual = x.Actual,
+                            group = x.Group
+                        }),
+                        failureCount = failures.Count,
+                        failures
+                    };
 
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: LaneContextCi,
-                    actual: continuity.GetProperty("laneContext").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "transitionContinuity.laneContext");
-
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: "ReleaseCloseoutSnapshot",
-                    actual: continuity.GetProperty("producerTarget").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "transitionContinuity.producerTarget");
-
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: roadmapCompletedPhase,
-                    actual: continuity.GetProperty("completedPhase").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "transitionContinuity.completedPhase");
-
-                ValidateTransitionField(
-                    diagnostics,
-                    failures,
-                    lane: LaneContextCi,
-                    artifactPath: closeoutArtifactPath,
-                    expected: roadmapActivePhase,
-                    actual: continuity.GetProperty("activePhase").GetString(),
-                    group: "transition-continuity",
-                    fieldName: "transitionContinuity.activePhase");
-            }
-
-            var reportPayload = new
-            {
-                schemaVersion = 1,
-                generatedAtUtc = DateTime.UtcNow,
-                parityRules = CloseoutCriticalTransitionGateParityRules.Select(rule => new
-                {
-                    group = rule.Group,
-                    ciDependency = rule.CiDependency,
-                    ciPublishDependency = rule.CiPublishDependency
-                }),
-                diagnostics = diagnostics.Select(x => new
-                {
-                    invariantId = x.InvariantId,
-                    lane = x.Lane,
-                    artifactPath = x.ArtifactPath,
-                    expected = x.Expected,
-                    actual = x.Actual,
-                    group = x.Group
-                }),
-                failureCount = failures.Count,
-                failures
-            };
-
-            WriteJsonReport(TransitionGateGovernanceReportFile, reportPayload);
-            Serilog.Log.Information("Transition gate governance report written to {Path}", TransitionGateGovernanceReportFile);
-
-            if (failures.Count > 0)
-                Assert.Fail("Continuous transition gate governance failed:\n" + string.Join('\n', failures));
+                    return new GovernanceCheckResult(failures, reportPayload);
+                });
         });
 
     private static string ExtractDependsOnBlock(string buildSource, string targetName)
@@ -257,7 +201,7 @@ internal partial class BuildTask
 
     private static void ValidateTransitionField(
         IList<TransitionGateDiagnosticEntry> diagnostics,
-        List<string> failures,
+        List<GovernanceFailure> failures,
         string lane,
         string artifactPath,
         string expected,
@@ -275,7 +219,12 @@ internal partial class BuildTask
             Expected: $"{fieldName} = {expected}",
             Actual: $"{fieldName} = {actual ?? "<null>"}",
             Group: group));
-        failures.Add($"[{TransitionLaneProvenanceInvariantId}] Transition continuity mismatch for {fieldName}. Expected '{expected}', actual '{actual ?? "<null>"}'.");
+        failures.Add(new GovernanceFailure(
+            Category: group,
+            InvariantId: TransitionLaneProvenanceInvariantId,
+            SourceArtifact: artifactPath,
+            Expected: $"{lane}: {fieldName} = {expected}",
+            Actual: $"{lane}: {fieldName} = {actual ?? "<null>"}"));
     }
 
     internal Target ReleaseCloseoutSnapshot => _ => _

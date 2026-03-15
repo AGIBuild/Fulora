@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Nuke.Common;
 using Nuke.Common.IO;
 
 internal partial class BuildTask
 {
+    private const string SolutionConsistencyInvariantId = "GOV-039";
+
     internal Target SolutionConsistencyGovernance => _ => _
         .Description("Validates that all on-disk projects are included in the solution file.")
         .Executes(() =>
@@ -17,7 +18,7 @@ internal partial class BuildTask
                 SolutionConsistencyGovernanceReportFile,
                 () =>
                 {
-                    var failures = new List<string>();
+                    var failures = new List<GovernanceFailure>();
                     var slnPath = RootDirectory / "Agibuild.Fulora.sln";
 
                     var slnContent = File.ReadAllText(slnPath);
@@ -38,7 +39,12 @@ internal partial class BuildTask
                         if (!slnContent.Contains(projectName, StringComparison.OrdinalIgnoreCase))
                         {
                             missingFromSln.Add(project);
-                            failures.Add($"Project '{project}' exists on disk but is not in Agibuild.Fulora.sln");
+                            failures.Add(new GovernanceFailure(
+                                Category: "solution-consistency",
+                                InvariantId: SolutionConsistencyInvariantId,
+                                SourceArtifact: project,
+                                Expected: "project included in Agibuild.Fulora.sln",
+                                Actual: "missing from solution"));
                         }
                     }
 
