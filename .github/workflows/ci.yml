@@ -287,8 +287,8 @@ jobs:
         with:
           dotnet-workloads: android
 
-      - name: Run CI (Compile + Coverage + Pack)
-        run: ./build.ps1 -Target Ci -Configuration Release -VersionSuffix "${{ needs.version.outputs.version_suffix }}"
+      - name: Run matrix CI validation
+        run: ./build.ps1 -Target CiMatrix -Configuration Release -VersionSuffix "${{ needs.version.outputs.version_suffix }}"
 
       - name: Upload test results
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -336,8 +336,8 @@ jobs:
       - name: Check code format
         run: ./build.sh --target Format --configuration Release
 
-      - name: Run CI (Compile + Coverage + Pack)
-        run: ./build.sh --target Ci --configuration Release --version-suffix "${{ needs.version.outputs.version_suffix }}"
+      - name: Run matrix CI validation
+        run: ./build.sh --target CiMatrix --configuration Release --version-suffix "${{ needs.version.outputs.version_suffix }}"
 
       - name: Validate NativeAOT publish
         run: |
@@ -422,7 +422,7 @@ jobs:
 
   update-badges:
     name: Update Quality Badges
-    needs: [build-macos]
+    needs: [build-macos, merge-coverage]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -434,7 +434,7 @@ jobs:
       - name: Download coverage report
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: coverage-report-macos
+          name: merged-coverage-report
           path: coverage-report
 
       - name: Download test results
@@ -520,14 +520,26 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin badges:badges || true
 
-          git checkout --orphan badges-tmp
-          git rm -rf .
+          if git show-ref --verify --quiet refs/heads/badges; then
+            git checkout badges
+          else
+            git checkout --orphan badges
+            git rm -rf .
+          fi
+
+          rm -f ./*.json
           cp badge-output/*.json .
           git add *.json
-          git commit -m "Update quality badges [skip ci]"
 
-          git push origin badges-tmp:badges --force
+          if git diff --cached --quiet; then
+            echo "No badge changes detected."
+            exit 0
+          fi
+
+          git commit -m "Update quality badges [skip ci]"
+          git push origin badges
 
   build-docs:
     name: Build Documentation
@@ -615,6 +627,14 @@ jobs:
           expected_version = "${{ needs.version.outputs.full_version }}"
           if manifest.get("version") != expected_version:
               print(f"Version mismatch: expected {expected_version}, actual {manifest.get('version')}")
+              sys.exit(1)
+          expected_commit_sha = "${{ needs.version.outputs.sha }}"
+          if manifest.get("commitSha") != expected_commit_sha:
+              print(f"Commit SHA mismatch: expected {expected_commit_sha}, actual {manifest.get('commitSha')}")
+              sys.exit(1)
+          expected_workflow_run_id = "${{ github.run_id }}"
+          if str(manifest.get("workflowRunId")) != expected_workflow_run_id:
+              print(f"Workflow run id mismatch: expected {expected_workflow_run_id}, actual {manifest.get('workflowRunId')}")
               sys.exit(1)
 
           def digest(path: Path) -> str:

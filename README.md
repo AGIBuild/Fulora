@@ -255,12 +255,17 @@ Unlike wrapper-only solutions, Fulora provides typed host/web contracts, policy-
 
 ## Quality Signals
 
-Quality badges at the top of the page are updated automatically by CI on every successful build to `main`.
+Quality badges at the top of the page are updated automatically by CI on every successful build to `main` from these CI gates:
 
 ```bash
 nuke Test              # Unit + Integration
 nuke Coverage          # Coverage report + threshold enforcement
 nuke NugetPackageTest  # Pack → install → run smoke test
+```
+
+For local template validation (not required by the default CI badge pipeline):
+
+```bash
 nuke TemplateE2E       # Template end-to-end test
 ```
 

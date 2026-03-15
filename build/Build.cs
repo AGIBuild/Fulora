@@ -267,7 +267,11 @@ internal sealed partial class BuildTask : NukeBuild
 
     internal Target Ci => _ => _
         .Description("Full CI pipeline: compile → coverage → lane automation → pack → validate.")
-        .DependsOn(Coverage, AutomationLaneReport, RuntimeCriticalPathExecutionGovernance, WarningGovernance, DependencyVulnerabilityGovernance, TypeScriptDeclarationGovernance, SampleTemplatePackageReferenceGovernance, OpenSpecStrictGovernance, ReleaseCloseoutSnapshot, ContinuousTransitionGateGovernance, NugetPackageTest, BridgeDistributionGovernance, DistributionReadinessGovernance, AdoptionReadinessGovernance, ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, ValidatePackage, PackTemplate);
+        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, NugetPackageTest, PackTemplate);
+
+    internal Target CiMatrix => _ => _
+        .Description("Cross-platform CI validation without package smoke/template packing.")
+        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance);
 
     internal Target CiPublish => _ => _
         .Description("Full release pipeline: Ci + publish.")

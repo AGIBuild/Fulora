@@ -51,7 +51,7 @@ Use the existing static methods `RunGovernanceCheck` (sync) and `RunGovernanceCh
 | Source Type | Mapping to GovernanceFailure |
 |-------------|------------------------------|
 | `string` failures (current GovernanceCheckResult) | Extract InvariantId from `[GOV-XXX]` prefix if present, otherwise use target's default invariant ID. Category from target domain. SourceArtifact from check context. Expected/Actual from message content. |
-| `TransitionGateDiagnosticEntry(InvariantId, Lane, ArtifactPath, Expected, Actual, Group)` | Category = Group, InvariantId = InvariantId, SourceArtifact = ArtifactPath, Expected = `{Lane}:{Expected}`, Actual = `{Lane}:{Actual}` |
+| Transition-gate parity/provenance checks | Category from rule group, InvariantId preserved, SourceArtifact = `build/Build*.cs` or closeout artifact path, Expected/Actual encoded with lane context |
 | Inline `GovernanceFailure` in DistributionReadiness/AdoptionReadiness | Already uses GovernanceFailure directly — no mapping needed |
 | `GovernanceFailure` in ReleaseOrchestrationGovernance | Already uses GovernanceFailure directly — no mapping needed |
 
@@ -124,7 +124,7 @@ The split from monolithic Build.Governance.cs into 9 domain files is already don
 
 ### Decision 7: Ci target dependency simplification
 
-Remove targets from Ci's DependsOn that are already transitively required through ReleaseOrchestrationGovernance. Nuke resolves the full dependency graph, so explicit listing of transitively-covered targets is redundant. Verify with `nuke Ci --plan` before and after.
+Remove targets from Ci's DependsOn that are already transitively required through ReleaseOrchestrationGovernance. Nuke resolves the full dependency graph, so explicit listing of transitively-covered targets is redundant. ContinuousTransitionGateGovernance validates parity against Ci transitive closure instead of only direct edges.
 
 ## Downstream Report Read Contracts
 
@@ -143,5 +143,5 @@ All these read paths use camelCase field names. The camelCase serialization poli
 
 - **GovernanceCheckResult type change**: Changing Failures from string to GovernanceFailure requires updating all 5 targets that currently use RunGovernanceCheck. Mitigate by migrating one target at a time with before/after report comparison.
 - **camelCase serialization scope**: Switching WriteJsonReport to camelCase could affect non-governance callers. Mitigate by introducing a separate method `WriteGovernanceReport` or scoping the options change to governance files only.
-- **TransitionGateDiagnosticEntry Lane encoding**: Encoding Lane into GovernanceFailure fields loses type safety. Mitigate by keeping `TransitionGateDiagnosticEntry` as an internal intermediate type within ContinuousTransitionGateGovernance and converting to GovernanceFailure only for the report output.
+- **TransitionGate parity visibility**: Removing the dedicated diagnostics array reduces redundant payloads but can hide direct-edge intent if only raw failures are reported. Mitigate by including lane dependency closure context and preserving invariant IDs in failure payloads.
 - **Merge conflicts**: `ci-release-unified-readiness-version-1-5` is a parallel change. Coordinate by completing this change first (it only touches build infrastructure, not governance logic) or by rebasing after that change lands.

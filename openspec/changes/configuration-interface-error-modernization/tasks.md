@@ -1,3 +1,7 @@
+## 0. Sequencing gate
+
+- [x] 0.1 Confirm this change executes after `runtime-architecture-decomposition` baseline stabilization
+
 ## 1. Options pattern adoption
 
 - [ ] 1.1 Add DataAnnotations validation attributes to AI options types (AiResilienceOptions, AiMeteringOptions, AiToolCallingOptions, AiConversationOptions)

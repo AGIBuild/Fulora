@@ -52,9 +52,9 @@ The Ci target's effective execution graph SHALL remain semantically identical af
 Existing governance unit tests SHALL pass after migration without false positives or false negatives.
 
 #### Scenario: File path references updated
-- **GIVEN** `AutomationLaneGovernanceTests.cs` references file paths like `"build/Build.Governance.cs"`
-- **WHEN** the original file no longer exists
-- **THEN** test assertions referencing that file path MUST be updated to reference the correct current file(s)
+- **GIVEN** `AutomationLaneGovernanceTests.cs` validates governance sources via paths such as `"build/Build*.cs"`
+- **WHEN** governance targets are decomposed into multiple partial files
+- **THEN** test assertions MUST reference the current partial-file layout instead of the removed monolithic file path
 
 #### Scenario: JSON schema assertions remain valid
 - **GIVEN** tests that assert governance report JSON structure (e.g., `Ci_evidence_snapshot_build_target_emits_v2_schema_with_provenance`)

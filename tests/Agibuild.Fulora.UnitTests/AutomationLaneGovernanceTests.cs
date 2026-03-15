@@ -611,6 +611,8 @@ public sealed class AutomationLaneGovernanceTests
         var repoRoot = FindRepoRoot();
         var combinedSource = ReadCombinedBuildSource(repoRoot);
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
+        var dependencyGraph = ReadTargetDependencyGraph(combinedSource);
+        var ciClosure = ReadTargetDependencyClosure(dependencyGraph, "Ci");
 
         var requiredTargets = new[]
         {
@@ -632,17 +634,28 @@ public sealed class AutomationLaneGovernanceTests
         AssertStringLiteralExists(combinedSource, "closeout-snapshot.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "transition-gate-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
 
-        var ciDependencies = new[]
+        var ciDirectDependencies = new[]
+        {
+            "ReleaseOrchestrationGovernance", "SolutionConsistencyGovernance",
+            "NugetPackageTest", "PackTemplate"
+        };
+        AssertTargetDependsOnContainsAll(mainSource, "Ci", ciDirectDependencies, CiTargetOpenSpecGate, "build/Build.cs");
+
+        var ciRequiredClosureDependencies = new[]
         {
             "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
-            "SampleTemplatePackageReferenceGovernance",
-            "TypeScriptDeclarationGovernance", "ReleaseCloseoutSnapshot",
-            "RuntimeCriticalPathExecutionGovernance", "ContinuousTransitionGateGovernance",
-            "NugetPackageTest", "BridgeDistributionGovernance",
+            "SampleTemplatePackageReferenceGovernance", "TypeScriptDeclarationGovernance",
+            "ReleaseCloseoutSnapshot", "RuntimeCriticalPathExecutionGovernance",
+            "ContinuousTransitionGateGovernance", "BridgeDistributionGovernance",
             "DistributionReadinessGovernance", "AdoptionReadinessGovernance",
             "ReleaseOrchestrationGovernance"
         };
-        AssertTargetDependsOnContainsAll(mainSource, "Ci", ciDependencies, CiTargetOpenSpecGate, "build/Build.cs");
+        foreach (var dependency in ciRequiredClosureDependencies)
+        {
+            Assert.True(
+                ciClosure.Contains(dependency),
+                $"[{CiTargetOpenSpecGate}] Missing Ci transitive dependency '{dependency}'.");
+        }
 
         var ciPublishDependencies = new[] { "Ci", "Publish" };
         AssertTargetDependsOnContainsAll(mainSource, "CiPublish", ciPublishDependencies, CiTargetOpenSpecGate, "build/Build.cs");
@@ -652,8 +665,10 @@ public sealed class AutomationLaneGovernanceTests
     public void Continuous_transition_gate_enforces_lane_parity_for_closeout_critical_groups()
     {
         var repoRoot = FindRepoRoot();
+        var combinedSource = ReadCombinedBuildSource(repoRoot);
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
-        var ciDependsOn = ReadTargetDependsOnDependencies(mainSource, "Ci", TransitionGateParityConsistency, "build/Build.cs");
+        var dependencyGraph = ReadTargetDependencyGraph(combinedSource);
+        var ciDependencyClosure = ReadTargetDependencyClosure(dependencyGraph, "Ci");
         var ciPublishDependsOn = ReadTargetDependsOnDependencies(mainSource, "CiPublish", TransitionGateParityConsistency, "build/Build.cs");
 
         var ciRequiredDependencies = new[]
@@ -668,8 +683,8 @@ public sealed class AutomationLaneGovernanceTests
         foreach (var dep in ciRequiredDependencies)
         {
             Assert.True(
-                ciDependsOn.Contains(dep),
-                $"[{TransitionGateParityConsistency}] Missing Ci dependency '{dep}'.");
+                ciDependencyClosure.Contains(dep),
+                $"[{TransitionGateParityConsistency}] Missing Ci transitive dependency '{dep}'.");
         }
 
         Assert.True(
@@ -678,42 +693,41 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Transition_gate_diagnostics_require_lane_and_expected_actual_fields()
+    public void Transition_gate_failures_use_governance_failure_schema()
     {
         const string artifactPath = "artifacts/test-results/transition-gate-governance-report.json";
         using var reportDoc = JsonDocument.Parse(
             """
             {
               "schemaVersion": 1,
-              "diagnostics": [
+              "failures": [
                 {
+                  "category": "release-closeout-snapshot",
                   "invariantId": "GOV-024",
-                  "lane": "Ci",
-                  "artifactPath": "build/Build.cs",
-                  "expected": "ReleaseCloseoutSnapshot",
-                  "actual": "missing",
-                  "group": "release-closeout-snapshot"
+                  "sourceArtifact": "build/Build*.cs",
+                  "expected": "Ci: dependency closure contains ReleaseCloseoutSnapshot",
+                  "actual": "Ci: missing"
                 }
               ]
             }
             """);
 
-        var diagnostics = RequireTransitionGateDiagnostics(reportDoc.RootElement, TransitionGateDiagnosticSchema, artifactPath);
-        Assert.Single(diagnostics.EnumerateArray());
-        AssertTransitionGateDiagnostic(diagnostics.EnumerateArray().First(), TransitionGateDiagnosticSchema, artifactPath);
+        var failures = RequireReadinessFindingsArray(reportDoc.RootElement, "failures", TransitionGateDiagnosticSchema, artifactPath);
+        var failure = Assert.Single(failures.EnumerateArray());
+        AssertDistributionReadinessFailure(failure, TransitionGateDiagnosticSchema, artifactPath);
 
         using var invalidDiagnosticDoc = JsonDocument.Parse(
             """
             {
               "invariantId": "GOV-024",
-              "artifactPath": "build/Build.cs",
-              "expected": "Coverage",
-              "actual": "missing"
+              "sourceArtifact": "build/Build*.cs",
+              "expected": "Ci: dependency closure contains Coverage",
+              "actual": "Ci: missing"
             }
             """);
 
         Assert.Throws<GovernanceInvariantViolationException>(() =>
-            AssertTransitionGateDiagnostic(invalidDiagnosticDoc.RootElement, TransitionGateDiagnosticSchema, artifactPath));
+            AssertDistributionReadinessFailure(invalidDiagnosticDoc.RootElement, TransitionGateDiagnosticSchema, artifactPath));
     }
 
     [Fact]
@@ -1182,7 +1196,8 @@ public sealed class AutomationLaneGovernanceTests
     {
         var repoRoot = FindRepoRoot();
         var combinedSource = ReadCombinedBuildSource(repoRoot);
-        var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
+        var dependencyGraph = ReadTargetDependencyGraph(combinedSource);
+        var ciDependencyClosure = ReadTargetDependencyClosure(dependencyGraph, "Ci");
 
         AssertTargetDeclarationExists(combinedSource, "BridgeDistributionGovernance", BridgeDistributionParity, "build/Build.Governance.Distribution.cs");
         AssertStringLiteralExists(combinedSource, "bridge-distribution-governance-report.json", BridgeDistributionParity, "build/Build*.cs");
@@ -1203,12 +1218,9 @@ public sealed class AutomationLaneGovernanceTests
             "build/Build*.cs");
         AssertSourceContains(combinedSource, "{toolName} --version", BridgeDistributionParity, "build/Build*.cs");
 
-        AssertTargetDependsOnContainsAll(
-            mainSource,
-            "Ci",
-            ["BridgeDistributionGovernance"],
-            BridgeDistributionParity,
-            "build/Build.cs");
+        Assert.True(
+            ciDependencyClosure.Contains("BridgeDistributionGovernance"),
+            $"[{BridgeDistributionParity}] Missing Ci transitive dependency 'BridgeDistributionGovernance'.");
     }
 
     [Fact]
@@ -1532,6 +1544,68 @@ public sealed class AutomationLaneGovernanceTests
         var buildFiles = Directory.GetFiles(buildDir, "Build*.cs");
         Assert.True(buildFiles.Length >= 2, $"Expected multiple Build*.cs partial files in {buildDir}, found {buildFiles.Length}.");
         return string.Join("\n", buildFiles.Select(File.ReadAllText));
+    }
+
+    private static IReadOnlyDictionary<string, IReadOnlySet<string>> ReadTargetDependencyGraph(string source)
+    {
+        var matches = Regex.Matches(
+            source,
+            @"Target\s+(?<target>[A-Za-z_][A-Za-z0-9_]*)\s*=>[\s\S]*?\.DependsOn\((?<deps>[\s\S]*?)\);",
+            RegexOptions.Multiline);
+
+        var graph = new Dictionary<string, IReadOnlySet<string>>(StringComparer.Ordinal);
+        foreach (Match match in matches)
+        {
+            var targetName = match.Groups["target"].Value;
+            var depsBlock = match.Groups["deps"].Value;
+            graph[targetName] = ParseDependencyList(depsBlock);
+        }
+
+        return graph;
+    }
+
+    private static IReadOnlySet<string> ReadTargetDependencyClosure(
+        IReadOnlyDictionary<string, IReadOnlySet<string>> graph,
+        string targetName)
+    {
+        var closure = new HashSet<string>(StringComparer.Ordinal);
+        var queue = new Queue<string>();
+        queue.Enqueue(targetName);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            if (!graph.TryGetValue(current, out var dependencies))
+                continue;
+
+            foreach (var dependency in dependencies)
+            {
+                if (!closure.Add(dependency))
+                    continue;
+
+                queue.Enqueue(dependency);
+            }
+        }
+
+        return closure;
+    }
+
+    private static IReadOnlySet<string> ParseDependencyList(string dependsOnBlock)
+    {
+        var dependencies = new HashSet<string>(StringComparer.Ordinal);
+        var segments = dependsOnBlock.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var segment in segments)
+        {
+            var token = segment.Trim();
+            if (token.StartsWith("nameof(", StringComparison.Ordinal) && token.EndsWith(')'))
+                token = token[7..^1];
+
+            var identifierMatch = Regex.Match(token, @"([A-Za-z_][A-Za-z0-9_]*)$");
+            if (identifierMatch.Success)
+                dependencies.Add(identifierMatch.Groups[1].Value);
+        }
+
+        return dependencies;
     }
 
     private static string FindRepoRoot()

@@ -16,6 +16,11 @@ Three interconnected areas need modernization: (1) Configuration uses raw single
 - **Error model unification**: Define `FuloraException` base with error code taxonomy. Map Runtime/AI/Bridge exceptions to structured codes aligned with bridge `code/message/data`. Remove empty catch blocks, add minimum logging.
 - **Solution consistency**: Add missing projects (Auth.OAuth, Plugin.Database, Plugin.LocalStorage, Plugin.HttpClient) to main .sln. Add solution-consistency governance target.
 
+## Execution Order
+
+- This change is the second modernization stage and starts only after `runtime-architecture-decomposition` reaches verification closure.
+- Rationale: options/interface/error-model modernization should build on top of a stabilized Runtime decomposition baseline.
+
 ## Capabilities
 
 ### New Capabilities

@@ -1,10 +1,10 @@
 ## 1. Infrastructure evolution (Build.Governance.Infrastructure.cs, Build.ProcessHelpers.cs)
 
 - [x] 1.1 Create `Build.Governance.Infrastructure.cs` with `GovernanceFailure` record and `RunGovernanceCheck`/`RunGovernanceCheckAsync` static helpers
-- [ ] 1.2 Evolve `GovernanceCheckResult.Failures` from `IReadOnlyList<string>` to `IReadOnlyList<GovernanceFailure>`
-- [ ] 1.3 Update `RunGovernanceCheck` assertion message formatting: `[{InvariantId}] {SourceArtifact}: expected {Expected}, actual {Actual}`
-- [ ] 1.4 Add `GovernanceCamelCaseJsonOptions` (`WriteIndented = true`, `PropertyNamingPolicy = CamelCase`) in `Build.ProcessHelpers.cs`
-- [ ] 1.5 Add `WriteGovernanceReport` method (or update `WriteJsonReport` to accept `JsonSerializerOptions` override) to use camelCase options for governance reports
+- [x] 1.2 Evolve `GovernanceCheckResult.Failures` from `IReadOnlyList<string>` to `IReadOnlyList<GovernanceFailure>`
+- [x] 1.3 Update `RunGovernanceCheck` assertion message formatting: `[{InvariantId}] {SourceArtifact}: expected {Expected}, actual {Actual}`
+- [x] 1.4 Add `GovernanceCamelCaseJsonOptions` (`WriteIndented = true`, `PropertyNamingPolicy = CamelCase`) in `Build.ProcessHelpers.cs`
+- [x] 1.5 Add `WriteGovernanceReport` method (or update `WriteJsonReport` to accept `JsonSerializerOptions` override) to use camelCase options for governance reports
 
 ## 2. File decomposition (completed)
 
@@ -22,16 +22,16 @@
 
 ### 3a. Tier 1 — targets already using RunGovernanceCheck (migrate from string failures to GovernanceFailure)
 
-- [ ] 3.1 Migrate `DependencyVulnerabilityGovernance` — construct GovernanceFailure with Category="dependency-vulnerability", InvariantId from scan context
-- [ ] 3.2 Migrate `TypeScriptDeclarationGovernance` — construct GovernanceFailure with Category="typescript-declaration"
-- [ ] 3.3 Migrate `SampleTemplatePackageReferenceGovernance` — construct GovernanceFailure with Category="sample-template-package"
-- [ ] 3.4 Migrate `SolutionConsistencyGovernance` — construct GovernanceFailure with Category="solution-consistency"
-- [ ] 3.5 Migrate `BridgeDistributionGovernance` — construct GovernanceFailure with Category="bridge-distribution"
+- [x] 3.1 Migrate `DependencyVulnerabilityGovernance` — construct GovernanceFailure with Category="dependency-vulnerability", InvariantId from scan context
+- [x] 3.2 Migrate `TypeScriptDeclarationGovernance` — construct GovernanceFailure with Category="typescript-declaration"
+- [x] 3.3 Migrate `SampleTemplatePackageReferenceGovernance` — construct GovernanceFailure with Category="sample-template-package"
+- [x] 3.4 Migrate `SolutionConsistencyGovernance` — construct GovernanceFailure with Category="solution-consistency"
+- [x] 3.5 Migrate `BridgeDistributionGovernance` — construct GovernanceFailure with Category="bridge-distribution"
 
 ### 3b. Tier 2 — targets requiring adoption of RunGovernanceCheck + GovernanceFailure
 
-- [ ] 3.6 Migrate `RuntimeCriticalPathExecutionGovernance` to use RunGovernanceCheck (currently uses direct WriteJsonReport + Assert.Fail)
-- [ ] 3.7 Migrate `ContinuousTransitionGateGovernance` to use RunGovernanceCheck; map `TransitionGateDiagnosticEntry` → GovernanceFailure (Group→Category, ArtifactPath→SourceArtifact, Lane encoded in Expected/Actual)
+- [x] 3.6 Migrate `RuntimeCriticalPathExecutionGovernance` to use RunGovernanceCheck (currently uses direct WriteJsonReport + Assert.Fail)
+- [x] 3.7 Migrate `ContinuousTransitionGateGovernance` to use RunGovernanceCheck; map `TransitionGateDiagnosticEntry` → GovernanceFailure (Group→Category, ArtifactPath→SourceArtifact, Lane encoded in Expected/Actual)
 
 ### 3c. Excluded from migration (no changes needed)
 
@@ -45,14 +45,14 @@
 
 ## 4. Ci target simplification
 
-- [ ] 4.1 Analyze transitive dependency graph of Ci target via `nuke Ci --plan`
-- [ ] 4.2 Remove redundant direct dependencies from `Ci.DependsOn` that are already transitively required through `ReleaseOrchestrationGovernance`
-- [ ] 4.3 Verify `nuke Ci --plan` shows identical execution order after simplification
+- [x] 4.1 Analyze transitive dependency graph of Ci target via `nuke Ci --plan`
+- [x] 4.2 Remove redundant direct dependencies from `Ci.DependsOn` that are already transitively required through `ReleaseOrchestrationGovernance`
+- [x] 4.3 Verify `nuke Ci --plan` shows identical execution order after simplification
 
 ## 5. Verification
 
 - [ ] 5.1 Before/after report JSON comparison: generate governance reports before migration, then after, and diff for field-level compatibility (all camelCase field names, failureCount values, invariant IDs)
-- [ ] 5.2 Downstream consumer contract test: verify ReleaseOrchestrationGovernance can still parse all upstream reports after migration (distribution-readiness, adoption-readiness, transition-gate, closeout-snapshot)
-- [ ] 5.3 Unit test updates: update `AutomationLaneGovernanceTests.cs` file path references from `"build/Build.Governance.cs"` to current file paths
+- [x] 5.2 Downstream consumer contract test: verify ReleaseOrchestrationGovernance can still parse all upstream reports after migration (distribution-readiness, adoption-readiness, transition-gate, closeout-snapshot)
+- [x] 5.3 Unit test updates: update `AutomationLaneGovernanceTests.cs` file path references from `"build/Build.Governance.cs"` to current file paths
 - [ ] 5.4 Build compilation: `nuke Ci --configuration Release` passes with zero new warnings
 - [ ] 5.5 CI dependency graph validation: `nuke Ci --plan` output matches expected target execution order

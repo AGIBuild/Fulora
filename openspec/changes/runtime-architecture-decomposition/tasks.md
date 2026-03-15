@@ -1,3 +1,7 @@
+## 0. Sequencing gate
+
+- [x] 0.1 Mark runtime decomposition as stage-1 prerequisite for `configuration-interface-error-modernization`
+
 ## 1. Shared helpers extraction
 
 - [ ] 1.1 Create `RpcMethodHelpers.cs` with unified `SplitRpcMethod` implementation

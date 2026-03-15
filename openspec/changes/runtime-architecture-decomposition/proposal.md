@@ -19,6 +19,11 @@ Three core Runtime files exceed maintainable size: WebViewCore.cs (1,430 lines),
   - `UiThreadDispatcher` helper — `SafeDispatchToUiThread` replacing 7+ identical dispatch blocks
   - Adapter capability registry pattern replacing `is` check chains in WebViewCore constructor
 
+## Execution Order
+
+- This change is the first modernization stage and MUST land before `configuration-interface-error-modernization`.
+- Rationale: interface/options/error-model updates depend on stable, decomposed Runtime boundaries to avoid cross-change conflicts.
+
 ## Capabilities
 
 ### New Capabilities

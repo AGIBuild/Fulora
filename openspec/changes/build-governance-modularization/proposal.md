@@ -1,6 +1,6 @@
 ## Why
 
-The governance layer was originally a monolithic 1,907-line Build.Governance.cs with 11 governance targets sharing an identical report-generation pattern. The file split into 9 domain-specific partials and the initial `RunGovernanceCheck` infrastructure have been completed. However, the failure model remains fragmented: `GovernanceCheckResult.Failures` uses `IReadOnlyList<string>`, `TransitionGateDiagnosticEntry` exists alongside `GovernanceFailure`, and report payloads use anonymous objects that would break camelCase compatibility if GovernanceFailure records were serialized directly. This remaining inconsistency increases maintenance cost when adding new governance targets and prevents structured machine analysis of governance reports.
+The governance layer was originally a monolithic 1,907-line Build.Governance.cs with 11 governance targets sharing an identical report-generation pattern. The file split into 9 domain-specific partials and the initial `RunGovernanceCheck` infrastructure have been completed. The remaining consistency work focuses on report-shape convergence and dependency-graph semantics: retire TransitionGate dual diagnostic payloads in favor of a single GovernanceFailure schema, enforce camelCase serialization for typed failures, and simplify Ci direct dependency edges while preserving the effective execution graph.
 
 ## Non-goals
 
@@ -14,10 +14,10 @@ The governance layer was originally a monolithic 1,907-line Build.Governance.cs 
 - Evolve `GovernanceCheckResult.Failures` from `IReadOnlyList<string>` to `IReadOnlyList<GovernanceFailure>` for type-safe failure reporting
 - Migrate the 5 targets currently using RunGovernanceCheck (Dependency, TypeScript, Sample, Solution, BridgeDistribution) to construct GovernanceFailure instead of string failures
 - Migrate RuntimeCriticalPathExecutionGovernance and ContinuousTransitionGateGovernance to use RunGovernanceCheck with GovernanceFailure
-- Retire `TransitionGateDiagnosticEntry` by mapping to GovernanceFailure (keeping it as an internal intermediate is acceptable)
+- Retire TransitionGate dual diagnostic report payloads and emit a single GovernanceFailure-based `failures` array
 - Add `GovernanceCamelCaseJsonOptions` for report serialization to ensure GovernanceFailure records serialize with camelCase field names matching downstream consumer expectations
 - Establish a standard report envelope convention (generatedAtUtc, failureCount, failures) without introducing a rigid `GovernanceReportPayload<T>` generic type
-- Simplify `Ci` target's direct dependency list by removing targets that are already transitively required
+- Simplify `Ci` target's direct dependency list by removing targets that are already transitively required, and validate transition-gate parity against the effective transitive closure
 
 ## Capabilities
 

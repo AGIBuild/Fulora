@@ -60,8 +60,8 @@ Governance reports SHALL be serialized using `JsonSerializerOptions` with `Prope
 - **THEN** the camelCase naming policy MUST NOT alter their existing field names
 
 ### Requirement: Governance file decomposition (completed)
-Build.Governance.cs SHALL be split into domain-specific partial class files. Each file MUST contain only the governance targets for its domain.
+Build governance logic SHALL be organized into domain-specific `Build.Governance.*.cs` partial class files. Each file MUST contain only the governance targets for its domain.
 
 #### Scenario: File organization
 - **WHEN** a developer needs to modify the DependencyVulnerabilityGovernance target
-- **THEN** they MUST find it in Build.Governance.Dependency.cs
+- **THEN** they MUST find it in `Build.Governance.Dependency.cs`
