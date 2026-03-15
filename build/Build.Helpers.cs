@@ -44,6 +44,11 @@ internal partial class BuildTask
                 excluded.Add(relPath);
                 Serilog.Log.Information("Excluding {Project} (requires unavailable platform workload)", relPath);
             }
+            else if (HasMissingLocalNuGetSources(fullPath))
+            {
+                excluded.Add(relPath);
+                Serilog.Log.Information("Excluding {Project} (local NuGet source not yet available)", relPath);
+            }
             else
             {
                 included.Add(relPath);
@@ -94,6 +99,37 @@ internal partial class BuildTask
             unavailable.Add("-android");
 
         return unavailable;
+    }
+
+    private static readonly Regex NuGetLocalSourceValueRegex = new(
+        @"<add\s[^>]*value\s*=\s*""(?<path>[^""]+)""",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    /// <summary>
+    /// Returns true when the project directory contains a nuget.config that references
+    /// a local package source directory that does not yet exist (e.g. artifacts/packages
+    /// which is only created after the Pack target runs).
+    /// </summary>
+    private static bool HasMissingLocalNuGetSources(AbsolutePath projectFilePath)
+    {
+        var projectDir = Path.GetDirectoryName(projectFilePath)!;
+        var nugetConfig = Path.Combine(projectDir, "nuget.config");
+        if (!File.Exists(nugetConfig))
+            return false;
+
+        var content = File.ReadAllText(nugetConfig);
+        foreach (Match match in NuGetLocalSourceValueRegex.Matches(content))
+        {
+            var sourcePath = match.Groups["path"].Value;
+            if (sourcePath.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var resolvedPath = Path.GetFullPath(Path.Combine(projectDir, sourcePath));
+            if (!Directory.Exists(resolvedPath))
+                return true;
+        }
+
+        return false;
     }
 
     private static bool RequiresUnavailableWorkload(string csprojContent, IReadOnlyList<string> unavailableSuffixes)
