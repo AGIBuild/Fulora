@@ -58,6 +58,7 @@
         "RuntimeCriticalPathExecutionGovernanceCi",
         "RuntimeCriticalPathExecutionGovernanceCiPublish",
         "SampleTemplatePackageReferenceGovernance",
+        "ShowVersion",
         "Start",
         "StartAiChatApp",
         "StartAndroid",

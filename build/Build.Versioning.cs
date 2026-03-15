@@ -8,6 +8,23 @@ internal partial class BuildTask
     [Parameter("Target version to set (X.Y.Z format). If omitted, patch is auto-incremented.")]
     private readonly string? UpdateVersionTo = null;
 
+    internal Target ShowVersion => _ => _
+        .Description("Displays current version information from Directory.Build.props.")
+        .Executes(() =>
+        {
+            var doc = XDocument.Load(RootDirectory / "Directory.Build.props");
+            var versionPrefix = doc.Descendants("VersionPrefix").FirstOrDefault()?.Value.Trim()
+                ?? "(not found)";
+
+            var fullVersion = string.IsNullOrEmpty(VersionSuffix)
+                ? versionPrefix
+                : $"{versionPrefix}-{VersionSuffix}";
+
+            Serilog.Log.Information("VersionPrefix : {Version}", versionPrefix);
+            Serilog.Log.Information("VersionSuffix : {Suffix}", VersionSuffix ?? "(none)");
+            Serilog.Log.Information("Full Version  : {FullVersion}", fullVersion);
+        });
+
     internal Target UpdateVersion => _ => _
         .Description("Updates the VersionPrefix in Directory.Build.props. Auto-increments patch if no version is specified; validates new > current when specified.")
         .Executes(() =>
