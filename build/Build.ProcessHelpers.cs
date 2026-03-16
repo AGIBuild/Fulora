@@ -165,23 +165,30 @@ internal partial class BuildTask
             : RunProcessCheckedAsync("npm", arguments, workingDirectory, timeout);
     }
 
-    private static async Task<bool> IsToolAvailableAsync(string toolName)
+    private static async Task<bool> IsToolAvailableAsync(
+        string toolName,
+        TimeSpan? timeout = null,
+        string[]? checkArguments = null)
     {
+        timeout ??= TimeSpan.FromSeconds(5);
+        checkArguments ??= ["--version"];
+
         try
         {
             if (OperatingSystem.IsWindows())
             {
+                var command = $"{toolName} {string.Join(' ', checkArguments)}".TrimEnd();
                 await RunProcessCheckedAsync(
                     "cmd.exe",
-                    ["/d", "/s", "/c", $"{toolName} --version"],
-                    timeout: TimeSpan.FromSeconds(5));
+                    ["/d", "/s", "/c", command],
+                    timeout: timeout);
             }
             else
             {
                 await RunProcessCheckedAsync(
                     toolName,
-                    ["--version"],
-                    timeout: TimeSpan.FromSeconds(5));
+                    checkArguments,
+                    timeout: timeout);
             }
 
             return true;

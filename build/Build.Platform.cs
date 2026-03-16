@@ -19,6 +19,32 @@ internal partial class BuildTask
             DotNetRestore(s => s
                 .SetProjectFile(E2EDesktopProject));
 
+            if (OperatingSystem.IsMacOS())
+            {
+                var appProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        UseShellExecute = true
+                    }
+                };
+
+                appProcess.StartInfo.ArgumentList.Add("run");
+                appProcess.StartInfo.ArgumentList.Add("--project");
+                appProcess.StartInfo.ArgumentList.Add(E2EDesktopProject);
+                appProcess.StartInfo.ArgumentList.Add("--configuration");
+                appProcess.StartInfo.ArgumentList.Add(Configuration);
+
+                if (!appProcess.Start())
+                {
+                    Assert.Fail("Failed to start desktop integration app process.");
+                }
+
+                Serilog.Log.Information("Desktop integration app started (PID: {Pid}).", appProcess.Id);
+                return;
+            }
+
             DotNetRun(s => s
                 .SetProjectFile(E2EDesktopProject)
                 .SetConfiguration(Configuration));
@@ -38,14 +64,14 @@ internal partial class BuildTask
             var emulatorCommand = File.Exists(emulatorPath) ? emulatorPath : "emulator";
             var adbCommand = File.Exists(adbPath) ? adbPath : "adb";
 
-            if (!await IsToolAvailableAsync(emulatorCommand))
+            if (!await IsToolAvailableAsync(emulatorCommand, TimeSpan.FromSeconds(20), ["-version"]))
             {
                 Assert.Fail(
                     $"Android emulator tool not found. Checked '{emulatorPath}' and PATH entry 'emulator'. " +
                     "Set --android-sdk-root or install Android command-line tools.");
             }
 
-            if (!await IsToolAvailableAsync(adbCommand))
+            if (!await IsToolAvailableAsync(adbCommand, TimeSpan.FromSeconds(10), ["version"]))
             {
                 Assert.Fail(
                     $"adb tool not found. Checked '{adbPath}' and PATH entry 'adb'. " +
@@ -99,7 +125,10 @@ internal partial class BuildTask
 
             // 5. Build and install the Android test app
             Serilog.Log.Information("Building and installing Android test app...");
-            await RunProcessCheckedAsync("dotnet", ["build", E2EAndroidProject, "--configuration", Configuration, "-t:Install"]);
+            await RunProcessCheckedAsync(
+                "dotnet",
+                ["build", E2EAndroidProject, "--configuration", Configuration, "-t:Install"],
+                timeout: TimeSpan.FromMinutes(10));
 
             // 6. Launch the app (with retry to handle activity manager startup delay)
             const string packageName = "com.CompanyName.Agibuild.Fulora.Integration.Tests";
@@ -116,6 +145,11 @@ internal partial class BuildTask
             if (!OperatingSystem.IsMacOS())
             {
                 Assert.Fail("StartIOS requires macOS with Xcode installed.");
+            }
+            var developerDir = await TryConfigureDeveloperDirForXcodeAsync();
+            if (!string.IsNullOrWhiteSpace(developerDir))
+            {
+                Serilog.Log.Information("Using DEVELOPER_DIR={DeveloperDir}", developerDir);
             }
             if (!await IsToolAvailableAsync("xcrun"))
             {
@@ -261,11 +295,31 @@ internal partial class BuildTask
             }
 
             // 3. Build the iOS test app for the simulator
+            var iOSAdapterProject = RootDirectory / "src" / "Agibuild.Fulora.Adapters.iOS" / "Agibuild.Fulora.Adapters.iOS.csproj";
+            Serilog.Log.Information("Building iOS adapter native artifacts...");
+            await RunProcessCheckedAsync(
+                "dotnet",
+                ["build", iOSAdapterProject, "--configuration", Configuration],
+                timeout: TimeSpan.FromMinutes(10));
+
             Serilog.Log.Information("Building iOS test app...");
-            DotNetBuild(s => s
-                .SetProjectFile(E2EiOSProject)
-                .SetConfiguration(Configuration)
-                .SetRuntime("iossimulator-arm64"));
+            if (Configuration.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+            {
+                DotNetBuild(s => s
+                    .SetProjectFile(E2EiOSProject)
+                    .SetConfiguration(Configuration)
+                    .SetRuntime("iossimulator-arm64")
+                    // Local simulator startup should not be blocked by trim analysis.
+                    .SetProperty("EnableTrimAnalyzer", "false")
+                    .SetProperty("MtouchLink", "None"));
+            }
+            else
+            {
+                DotNetBuild(s => s
+                    .SetProjectFile(E2EiOSProject)
+                    .SetConfiguration(Configuration)
+                    .SetRuntime("iossimulator-arm64"));
+            }
 
             // 4. Find the .app bundle
             var appDir = (AbsolutePath)(Path.GetDirectoryName(E2EiOSProject)!)
@@ -304,6 +358,39 @@ internal partial class BuildTask
 
             Serilog.Log.Information("iOS test app deployed and launched on simulator.");
         });
+
+    private static async Task<string?> TryConfigureDeveloperDirForXcodeAsync()
+    {
+        if (!OperatingSystem.IsMacOS())
+            return null;
+
+        var existing = Environment.GetEnvironmentVariable("DEVELOPER_DIR");
+        if (!string.IsNullOrWhiteSpace(existing))
+            return existing;
+
+        const string xcodeDeveloperDir = "/Applications/Xcode.app/Contents/Developer";
+        if (!Directory.Exists(xcodeDeveloperDir))
+            return null;
+
+        try
+        {
+            var selectedDeveloperDir = (await RunProcessStdoutCheckedAsync(
+                    "xcode-select",
+                    ["-p"],
+                    timeout: TimeSpan.FromSeconds(5)))
+                .Trim();
+
+            if (!selectedDeveloperDir.Contains("CommandLineTools", StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            Environment.SetEnvironmentVariable("DEVELOPER_DIR", xcodeDeveloperDir);
+            return xcodeDeveloperDir;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     private static async Task WaitForAndroidBootAsync(string adbPath, int timeoutMinutes = 3)
     {
@@ -344,15 +431,20 @@ internal partial class BuildTask
         {
             try
             {
-                var output = await RunProcessAsync(adbPath,
+                var output = await RunProcessCaptureAllAsync(adbPath,
                     ["shell", "monkey", "-p", packageName, "-c", "android.intent.category.LAUNCHER", "1"]);
 
-                if (output.Contains("Events injected", StringComparison.OrdinalIgnoreCase))
+                var hasFatalLaunchError =
+                    output.Contains("No activities found", StringComparison.OrdinalIgnoreCase) ||
+                    output.Contains("monkey aborted", StringComparison.OrdinalIgnoreCase) ||
+                    output.Contains("Error:", StringComparison.OrdinalIgnoreCase);
+
+                if (!hasFatalLaunchError)
                 {
                     return;
                 }
 
-                Serilog.Log.Warning("monkey attempt {Attempt}/{Max}: unexpected output: {Output}",
+                Serilog.Log.Warning("monkey attempt {Attempt}/{Max}: launch command reported errors: {Output}",
                     attempt, maxRetries, output.Trim());
             }
             catch (Exception ex)
