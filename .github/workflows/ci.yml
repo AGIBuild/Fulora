@@ -591,6 +591,7 @@ jobs:
         with:
           ref: ${{ needs.version.outputs.sha }}
           fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -752,7 +753,7 @@ jobs:
       - name: Create GitHub Release
         shell: bash
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           TAG="${{ needs.version.outputs.tag }}"
           RELEASE_NAME="Agibuild.Fulora $TAG"
