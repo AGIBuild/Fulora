@@ -175,6 +175,10 @@
           "type": "string",
           "description": "iOS Simulator device name. Default: auto-detect first available iPhone simulator"
         },
+        "MutationProfile": {
+          "type": "string",
+          "description": "Optional mutation profile filter (core/runtime/ai). Empty = all profiles"
+        },
         "NpmToken": {
           "type": "string",
           "description": "npm auth token for @agibuild/bridge publication",

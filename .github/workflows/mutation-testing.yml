@@ -20,9 +20,13 @@ env:
 
 jobs:
   mutation-test:
-    name: Stryker.NET Mutation Testing
+    name: Stryker.NET Mutation Testing (${{ matrix.profile }})
     runs-on: macos-latest
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [core, runtime, ai]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -43,13 +47,13 @@ jobs:
       - name: Restore .NET tools
         run: dotnet tool restore
 
-      - name: Run mutation testing via Nuke orchestration
-        run: ./build.sh --target MutationTest --configuration Release
+      - name: Run mutation testing via Nuke orchestration (${{ matrix.profile }})
+        run: ./build.sh --target MutationTest --configuration Release --mutation-profile ${{ matrix.profile }}
 
-      - name: Upload mutation report
+      - name: Upload mutation report (${{ matrix.profile }})
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
-          name: mutation-report
-          path: artifacts/mutation-report/
+          name: mutation-report-${{ matrix.profile }}
+          path: artifacts/mutation-report/${{ matrix.profile }}/
           if-no-files-found: warn

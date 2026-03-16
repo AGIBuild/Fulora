@@ -78,6 +78,9 @@ internal sealed partial class BuildTask : NukeBuild
     [Parameter("Output directory for packaged app")]
     private readonly string? PackageOutput = null;
 
+    [Parameter("Optional mutation profile filter (core/runtime/ai). Empty = all profiles.")]
+    private readonly string? MutationProfile = null;
+
     private static string ResolveAndroidSdkRoot()
     {
         var home = Environment.GetEnvironmentVariable("ANDROID_HOME");

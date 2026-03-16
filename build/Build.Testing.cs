@@ -257,14 +257,57 @@ internal partial class BuildTask
         .DependsOn(UnitTests, IntegrationTests);
 
     private static AbsolutePath MutationReportDirectory => ArtifactsDirectory / "mutation-report";
-    private sealed record MutationProfile(string Name, string ConfigFileName);
+    private sealed record MutationTestProfile(string Name, string ConfigFileName);
 
-    private static IReadOnlyList<MutationProfile> GetMutationProfiles() =>
+    private static IReadOnlyList<MutationTestProfile> GetMutationProfiles() =>
     [
         new("core", "stryker-config.core.json"),
         new("runtime", "stryker-config.runtime.json"),
         new("ai", "stryker-config.ai.json")
     ];
+
+    private IReadOnlyList<MutationTestProfile> ResolveMutationProfilesToRun()
+    {
+        var profiles = GetMutationProfiles();
+        if (string.IsNullOrWhiteSpace(MutationProfile))
+            return profiles;
+
+        var selectedProfiles = profiles
+            .Where(profile => string.Equals(profile.Name, MutationProfile.Trim(), StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (selectedProfiles.Count > 0)
+            return selectedProfiles;
+
+        var allowedProfiles = string.Join(", ", profiles.Select(profile => profile.Name));
+        Assert.Fail($"Unknown mutation profile '{MutationProfile}'. Allowed values: {allowedProfiles}");
+        return profiles;
+    }
+
+    private static void AppendMutationProgressSummary(
+        IReadOnlyList<(string Name, DateTimeOffset StartedAtUtc, DateTimeOffset EndedAtUtc, TimeSpan Elapsed, AbsolutePath OutputPath)> profileRuns)
+    {
+        if (profileRuns.Count == 0)
+            return;
+
+        var summaryPath = Environment.GetEnvironmentVariable("GITHUB_STEP_SUMMARY");
+        if (string.IsNullOrWhiteSpace(summaryPath))
+            return;
+
+        var lines = new List<string>
+        {
+            "## Mutation Profile Progress",
+            string.Empty,
+            "| Profile | Started (UTC) | Ended (UTC) | Elapsed | Report Path |",
+            "|---|---|---|---|---|"
+        };
+
+        lines.AddRange(profileRuns.Select(run =>
+            $"| `{run.Name}` | `{run.StartedAtUtc:O}` | `{run.EndedAtUtc:O}` | `{run.Elapsed:c}` | `{run.OutputPath}` |"));
+        lines.Add(string.Empty);
+
+        File.AppendAllText(summaryPath, string.Join(Environment.NewLine, lines));
+    }
 
     internal Target MutationTest => _ => _
         .Description("Runs Stryker.NET mutation testing on core business profiles.")
@@ -272,20 +315,37 @@ internal partial class BuildTask
         .Executes(() =>
         {
             MutationReportDirectory.CreateOrCleanDirectory();
+            var selectedProfiles = ResolveMutationProfilesToRun();
+            var selectedProfileNames = string.Join(", ", selectedProfiles.Select(profile => profile.Name));
+            Serilog.Log.Information("Mutation profiles selected: {Profiles}", selectedProfileNames);
+            var profileRuns = new List<(string Name, DateTimeOffset StartedAtUtc, DateTimeOffset EndedAtUtc, TimeSpan Elapsed, AbsolutePath OutputPath)>();
 
-            foreach (var profile in GetMutationProfiles())
+            foreach (var profile in selectedProfiles)
             {
                 var configPath = RootDirectory / profile.ConfigFileName;
                 Assert.FileExists(configPath, $"Missing mutation profile config: {configPath}");
 
                 var profileOutput = MutationReportDirectory / profile.Name;
                 profileOutput.CreateOrCleanDirectory();
+                var startedAtUtc = DateTimeOffset.UtcNow;
+                Serilog.Log.Information("Mutation profile '{Profile}' started at {StartedAtUtc:O}", profile.Name, startedAtUtc);
 
                 DotNet(
                     $"stryker --config-file {configPath} --output {profileOutput}",
                     workingDirectory: UnitTestsProject.Parent);
+
+                var endedAtUtc = DateTimeOffset.UtcNow;
+                var elapsed = endedAtUtc - startedAtUtc;
+                Serilog.Log.Information(
+                    "Mutation profile '{Profile}' completed at {EndedAtUtc:O} (elapsed: {Elapsed:c}). Report: {ReportPath}",
+                    profile.Name,
+                    endedAtUtc,
+                    elapsed,
+                    profileOutput);
+                profileRuns.Add((profile.Name, startedAtUtc, endedAtUtc, elapsed, profileOutput));
             }
 
+            AppendMutationProgressSummary(profileRuns);
             Serilog.Log.Information("Mutation report: {Path}", MutationReportDirectory);
         });
 

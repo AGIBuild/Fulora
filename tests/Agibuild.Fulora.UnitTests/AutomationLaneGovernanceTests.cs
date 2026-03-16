@@ -1489,7 +1489,7 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Mutation_workflow_uses_nuke_mutation_target_as_single_entrypoint()
+    public void Mutation_workflow_exposes_profile_level_progress_via_nuke_profile_selector()
     {
         var repoRoot = FindRepoRoot();
         var mutationWorkflowPath = Path.Combine(repoRoot, ".github", "workflows", "mutation-testing.yml");
@@ -1497,7 +1497,22 @@ public sealed class AutomationLaneGovernanceTests
 
         AssertSourceContains(
             mutationWorkflow,
-            "./build.sh --target MutationTest --configuration Release",
+            "matrix:",
+            BuildPipelineTargetGraph,
+            mutationWorkflowPath);
+        AssertSourceContains(
+            mutationWorkflow,
+            "profile: [core, runtime, ai]",
+            BuildPipelineTargetGraph,
+            mutationWorkflowPath);
+        AssertSourceContains(
+            mutationWorkflow,
+            "./build.sh --target MutationTest --configuration Release --mutation-profile ${{ matrix.profile }}",
+            BuildPipelineTargetGraph,
+            mutationWorkflowPath);
+        AssertSourceContains(
+            mutationWorkflow,
+            "mutation-report-${{ matrix.profile }}",
             BuildPipelineTargetGraph,
             mutationWorkflowPath);
         Assert.DoesNotContain("BuildAll", mutationWorkflow, StringComparison.Ordinal);
