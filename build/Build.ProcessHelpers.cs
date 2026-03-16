@@ -172,12 +172,15 @@ internal partial class BuildTask
     {
         timeout ??= TimeSpan.FromSeconds(5);
         checkArguments ??= ["--version"];
+        var defaultVersionCommand = $"{toolName} --version";
 
         try
         {
             if (OperatingSystem.IsWindows())
             {
-                var command = $"{toolName} {string.Join(' ', checkArguments)}".TrimEnd();
+                var command = checkArguments.Length == 1 && checkArguments[0] == "--version"
+                    ? defaultVersionCommand
+                    : $"{toolName} {string.Join(' ', checkArguments)}".TrimEnd();
                 await RunProcessCheckedAsync(
                     "cmd.exe",
                     ["/d", "/s", "/c", command],
