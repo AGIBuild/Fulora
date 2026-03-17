@@ -836,8 +836,7 @@ public sealed class AutomationLaneGovernanceTests
         AssertSourceContains(ciWorkflow, "needs: [version, build-macos, build-windows, build-linux, build-docs]", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "environment: release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "if: needs.version.outputs.is_release == 'true'", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
-        AssertSourceContains(ciWorkflow, "Create and push tag", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
-        AssertSourceContains(ciWorkflow, "Create GitHub Release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
+        AssertSourceContains(ciWorkflow, "Create Tag and GitHub Release", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "gh release create", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
         AssertSourceContains(ciWorkflow, "deploy-docs", ReleaseOrchestrationDecisionGate, ciWorkflowPath);
     }
