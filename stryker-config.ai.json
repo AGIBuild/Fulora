@@ -20,7 +20,7 @@
     "reporters": [
       "html",
       "json",
-      "progress",
+      "dots",
       "cleartext"
     ],
     "ignore-mutations": [

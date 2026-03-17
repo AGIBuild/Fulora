@@ -331,7 +331,7 @@ internal partial class BuildTask
                 Serilog.Log.Information("Mutation profile '{Profile}' started at {StartedAtUtc:O}", profile.Name, startedAtUtc);
 
                 DotNet(
-                    $"stryker --config-file {configPath} --output {profileOutput}",
+                    $"stryker --config-file {configPath} --output {profileOutput} --log-to-file",
                     workingDirectory: UnitTestsProject.Parent);
 
                 var endedAtUtc = DateTimeOffset.UtcNow;
