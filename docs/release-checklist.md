@@ -51,7 +51,7 @@ After updating the version, commit the `Directory.Build.props` change and push t
 ## Monitoring a Release
 
 1. Push to `main` → CI runs automatically
-2. Watch the [Actions tab](https://github.com/AGIBuild/Agibuild.Fulora/actions) for the "CI and Release" workflow
+2. Watch the [Actions tab](https://github.com/AGIBuild/Fulora/actions) for the "CI and Release" workflow
 3. After three platforms pass, click **Review deployments** to approve the release
 4. Release Promotion publishes packages, creates tag + GitHub Release
 5. Deploy Documentation builds and deploys the docfx site

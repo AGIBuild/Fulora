@@ -1,6 +1,6 @@
 # @agibuild/bridge
 
-Typed bridge client runtime for [Agibuild.Fulora](https://github.com/AGIBuild/Agibuild.Fulora) — call C# services from JavaScript with full type safety.
+Typed bridge client runtime for [Agibuild.Fulora](https://github.com/AGIBuild/Fulora) — call C# services from JavaScript with full type safety.
 
 ## Install
 

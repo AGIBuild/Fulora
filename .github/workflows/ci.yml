@@ -826,7 +826,7 @@ jobs:
         run: |
           TAG="${{ needs.version.outputs.tag }}"
           SHA="${{ needs.version.outputs.sha }}"
-          RELEASE_NAME="Agibuild.Fulora $TAG"
+          RELEASE_NAME="Fulora $TAG"
           VERSION_SUFFIX="${{ needs.version.outputs.version_suffix }}"
 
           if gh release view "$TAG" >/dev/null 2>&1; then

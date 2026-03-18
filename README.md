@@ -8,7 +8,7 @@
 <p align="center">
   <img src="https://img.shields.io/nuget/v/Agibuild.Fulora.Avalonia?logo=nuget&label=NuGet&color=004880&style=flat-square" />
   <img src="https://img.shields.io/nuget/dt/Agibuild.Fulora.Avalonia?logo=nuget&label=Downloads&color=00a86b&style=flat-square" />
-  <a href="https://github.com/AGIBuild/Agibuild.Fulora/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AGIBuild/Agibuild.Fulora/ci.yml?label=CI&logo=github&style=flat-square" /></a>
+  <a href="https://github.com/AGIBuild/Fulora/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AGIBuild/Fulora/ci.yml?label=CI&logo=github&style=flat-square" /></a>
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
 </p>
 

@@ -2,7 +2,7 @@
 
 This sample application demonstrates the full capabilities of **Agibuild.Fulora** — a cross-platform hybrid framework that combines Avalonia's native desktop shell with a modern React frontend, communicating through a type-safe C# ↔ JavaScript bridge.
 
-> **Source code**: [`samples/avalonia-react/`](https://github.com/AGIBuild/Agibuild.Fulora/tree/main/samples/avalonia-react)
+> **Source code**: [`samples/avalonia-react/`](https://github.com/AGIBuild/Fulora/tree/main/samples/avalonia-react)
 
 ## Architecture Overview
 

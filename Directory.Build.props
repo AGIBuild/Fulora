@@ -54,8 +54,8 @@
     <Authors>Agibuild</Authors>
     <Company>Agibuild</Company>
     <Copyright>Copyright (c) $([System.DateTime]::UtcNow.Year) Agibuild</Copyright>
-    <PackageProjectUrl>https://github.com/AGIBuild/Agibuild.Fulora</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/AGIBuild/Agibuild.Fulora.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/AGIBuild/Fulora</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AGIBuild/Fulora.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
     <!-- SPDX license expression for all NuGet packages -->

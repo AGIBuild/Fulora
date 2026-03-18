@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AGIBuild/Agibuild.Fulora.git",
+    "url": "https://github.com/AGIBuild/Fulora.git",
     "directory": "tools/vscode-extension"
   },
   "engines": {

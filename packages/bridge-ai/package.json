@@ -28,10 +28,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AGIBuild/Agibuild.Fulora.git",
+    "url": "https://github.com/AGIBuild/Fulora.git",
     "directory": "packages/bridge-ai"
   },
-  "homepage": "https://github.com/AGIBuild/Agibuild.Fulora#readme",
+  "homepage": "https://github.com/AGIBuild/Fulora#readme",
   "author": "AGIBuild",
   "keywords": [
     "ai",

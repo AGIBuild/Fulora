@@ -26,12 +26,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AGIBuild/Agibuild.Fulora.git",
+    "url": "https://github.com/AGIBuild/Fulora.git",
     "directory": "packages/bridge"
   },
-  "homepage": "https://github.com/AGIBuild/Agibuild.Fulora#readme",
+  "homepage": "https://github.com/AGIBuild/Fulora#readme",
   "bugs": {
-    "url": "https://github.com/AGIBuild/Agibuild.Fulora/issues"
+    "url": "https://github.com/AGIBuild/Fulora/issues"
   },
   "author": "AGIBuild",
   "keywords": [

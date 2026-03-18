@@ -2,7 +2,7 @@
 
 Build AI-powered hybrid desktop apps with **Fulora** — combining Avalonia's native shell with a modern React frontend, `IAsyncEnumerable<T>` streaming, and `Microsoft.Extensions.AI`.
 
-> **Source code**: [`samples/avalonia-ai-chat/`](https://github.com/AGIBuild/Agibuild.Fulora/tree/main/samples/avalonia-ai-chat)
+> **Source code**: [`samples/avalonia-ai-chat/`](https://github.com/AGIBuild/Fulora/tree/main/samples/avalonia-ai-chat)
 
 ---
 
