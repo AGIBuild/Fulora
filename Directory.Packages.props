@@ -5,7 +5,7 @@
     <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
   <ItemGroup Label="Avalonia">
-    <PackageVersion Include="Avalonia" Version="12.0.0-preview2" />
+    <PackageVersion Include="Avalonia" Version="12.0.0-rc1" />
     <PackageVersion Include="Avalonia.Android" Version="12.0.0-preview2" />
     <PackageVersion Include="Avalonia.Browser" Version="12.0.0-preview2" />
     <PackageVersion Include="Avalonia.Desktop" Version="12.0.0-preview2" />
@@ -14,7 +14,7 @@
     <PackageVersion Include="Avalonia.HarfBuzz" Version="12.0.0-preview2" />
     <PackageVersion Include="Avalonia.Headless" Version="12.0.0-preview2" />
     <PackageVersion Include="Avalonia.iOS" Version="12.0.0-preview2" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.0.0-rc1" />
   </ItemGroup>
   <ItemGroup Label="MVVM and logging">
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
