@@ -17,7 +17,7 @@
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
   </ItemGroup>
   <ItemGroup Label="MVVM and logging">
-    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.1" />
     <PackageVersion Include="Serilog" Version="4.3.2-dev-02419" />
     <PackageVersion Include="Serilog.Sinks.File" Version="8.0.0-nblumhardt-02322" />
   </ItemGroup>
