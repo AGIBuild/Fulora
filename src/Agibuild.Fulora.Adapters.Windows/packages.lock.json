@@ -15,9 +15,9 @@
       },
       "Microsoft.Web.WebView2": {
         "type": "Direct",
-        "requested": "[1.0.3848-prerelease, )",
-        "resolved": "1.0.3848-prerelease",
-        "contentHash": "IByYcoTwyFJXlqR9X8qhmfvPa/GIw+1/9n5Kqt/rFqt4bdxOOFhKedFyllNoft8napeJo9xfBmJ5IwoOky5LPA=="
+        "requested": "[1.0.3856.49, )",
+        "resolved": "1.0.3856.49",
+        "contentHash": "OOBKvFgK0pUKcndvTK6/jUsbrPRwce62Wt/0hkJWDsK2AcsJ2ylOS/mLa4xAcNUTOs96YIjpPN4AHMADXJcrgQ=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -40,7 +40,7 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.6-local, )"
+          "Agibuild.Fulora.Core": "[1.5.10-local, )"
         }
       },
       "agibuild.fulora.core": {
