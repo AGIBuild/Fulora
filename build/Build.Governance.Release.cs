@@ -11,7 +11,7 @@ using Nuke.Common.IO;
 internal partial class BuildTask
 {
     private const string TransitionGateParityInvariantId = "GOV-024";
-    private const string TransitionLaneProvenanceInvariantId = "GOV-025";
+    private const string ReleaseCloseoutProvenanceInvariantId = "GOV-025";
     private const string TransitionGateDiagnosticSchemaInvariantId = "GOV-026";
     private const string ReleaseOrchestrationDecisionInvariantId = "GOV-027";
     private const string ReleaseOrchestrationBlockingReasonSchemaInvariantId = "GOV-028";
@@ -26,14 +26,6 @@ internal partial class BuildTask
 
     private sealed record TransitionGateParityRule(string Group, string CiDependency, string CiPublishDependency);
 
-    private static readonly string[] CompletedPhaseCloseoutChangeIds =
-    [
-        "sentry-crash-reporting",
-        "shared-state-management",
-        "enterprise-auth-patterns",
-        "plugin-quality-compatibility"
-    ];
-
     private static readonly TransitionGateParityRule[] CloseoutCriticalTransitionGateParityRules =
     [
         new("coverage", "Coverage", "Coverage"),
@@ -41,7 +33,6 @@ internal partial class BuildTask
         new("warning-governance", "WarningGovernance", "WarningGovernance"),
         new("dependency-vulnerability-governance", "DependencyVulnerabilityGovernance", "DependencyVulnerabilityGovernance"),
         new("typescript-declaration-governance", "TypeScriptDeclarationGovernance", "TypeScriptDeclarationGovernance"),
-        new("openspec-strict-governance", "OpenSpecStrictGovernance", "OpenSpecStrictGovernance"),
         new("release-closeout-snapshot", "ReleaseCloseoutSnapshot", "ReleaseCloseoutSnapshot"),
         new("runtime-critical-path-governance", "RuntimeCriticalPathExecutionGovernance", "RuntimeCriticalPathExecutionGovernance"),
         new("adoption-readiness-governance", "AdoptionReadinessGovernance", "AdoptionReadinessGovernance")
@@ -90,15 +81,13 @@ internal partial class BuildTask
                             Actual: $"{LaneContextCiPublish}: missing"));
                     }
 
-                    var roadmapPath = RootDirectory / "openspec" / "ROADMAP.md";
-                    var (roadmapCompletedPhase, roadmapActivePhase) = ReadRoadmapTransitionState(File.ReadAllText(roadmapPath));
                     const string closeoutArtifactPath = "artifacts/test-results/closeout-snapshot.json";
 
                     if (!File.Exists(CloseoutSnapshotFile))
                     {
                         failures.Add(new GovernanceFailure(
-                            Category: "transition-continuity",
-                            InvariantId: TransitionLaneProvenanceInvariantId,
+                            Category: "release-closeout-provenance",
+                            InvariantId: ReleaseCloseoutProvenanceInvariantId,
                             SourceArtifact: closeoutArtifactPath,
                             Expected: $"{LaneContextCi}: closeout snapshot exists",
                             Actual: $"{LaneContextCi}: file missing"));
@@ -108,17 +97,12 @@ internal partial class BuildTask
                         using var closeoutDoc = JsonDocument.Parse(File.ReadAllText(CloseoutSnapshotFile));
                         var root = closeoutDoc.RootElement;
                         var provenance = root.GetProperty("provenance");
-                        var transition = root.GetProperty("transition");
-                        var continuity = root.GetProperty("transitionContinuity");
 
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, LaneContextCi, provenance.GetProperty("laneContext").GetString(), "transition-continuity", "provenance.laneContext");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, "ReleaseCloseoutSnapshot", provenance.GetProperty("producerTarget").GetString(), "transition-continuity", "provenance.producerTarget");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, roadmapCompletedPhase, transition.GetProperty("completedPhase").GetString(), "transition-continuity", "transition.completedPhase");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, roadmapActivePhase, transition.GetProperty("activePhase").GetString(), "transition-continuity", "transition.activePhase");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, LaneContextCi, continuity.GetProperty("laneContext").GetString(), "transition-continuity", "transitionContinuity.laneContext");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, "ReleaseCloseoutSnapshot", continuity.GetProperty("producerTarget").GetString(), "transition-continuity", "transitionContinuity.producerTarget");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, roadmapCompletedPhase, continuity.GetProperty("completedPhase").GetString(), "transition-continuity", "transitionContinuity.completedPhase");
-                        ValidateTransitionField(failures, LaneContextCi, closeoutArtifactPath, roadmapActivePhase, continuity.GetProperty("activePhase").GetString(), "transition-continuity", "transitionContinuity.activePhase");
+                        ValidateCloseoutField(failures, LaneContextCi, closeoutArtifactPath, LaneContextCi, provenance.GetProperty("laneContext").GetString(), "release-closeout-provenance", "provenance.laneContext");
+                        ValidateCloseoutField(failures, LaneContextCi, closeoutArtifactPath, "ReleaseCloseoutSnapshot", provenance.GetProperty("producerTarget").GetString(), "release-closeout-provenance", "provenance.producerTarget");
+                        ValidateRequiredCloseoutSection(failures, LaneContextCi, closeoutArtifactPath, root, "tests");
+                        ValidateRequiredCloseoutSection(failures, LaneContextCi, closeoutArtifactPath, root, "coverage");
+                        ValidateRequiredCloseoutSection(failures, LaneContextCi, closeoutArtifactPath, root, "governance");
                     }
 
                     var reportPayload = new
@@ -223,19 +207,7 @@ internal partial class BuildTask
         return reachable;
     }
 
-    private static (string CompletedPhase, string ActivePhase) ReadRoadmapTransitionState(string roadmap)
-    {
-        var completedMatch = Regex.Match(roadmap, @"Completed phase id:\s*`(?<id>[^`]+)`", RegexOptions.Multiline);
-        var activeMatch = Regex.Match(roadmap, @"Active phase id:\s*`(?<id>[^`]+)`", RegexOptions.Multiline);
-        if (!completedMatch.Success || !activeMatch.Success)
-            Assert.Fail("ROADMAP transition markers are missing machine-checkable phase ids.");
-
-        return (
-            completedMatch.Groups["id"].Value.Trim(),
-            activeMatch.Groups["id"].Value.Trim());
-    }
-
-    private static void ValidateTransitionField(
+    private static void ValidateCloseoutField(
         List<GovernanceFailure> failures,
         string lane,
         string artifactPath,
@@ -249,30 +221,35 @@ internal partial class BuildTask
 
         failures.Add(new GovernanceFailure(
             Category: group,
-            InvariantId: TransitionLaneProvenanceInvariantId,
+            InvariantId: ReleaseCloseoutProvenanceInvariantId,
             SourceArtifact: artifactPath,
             Expected: $"{lane}: {fieldName} = {expected}",
             Actual: $"{lane}: {fieldName} = {actual ?? "<null>"}"));
     }
 
+    private static void ValidateRequiredCloseoutSection(
+        List<GovernanceFailure> failures,
+        string lane,
+        string artifactPath,
+        JsonElement root,
+        string sectionName)
+    {
+        if (root.TryGetProperty(sectionName, out _))
+            return;
+
+        failures.Add(new GovernanceFailure(
+            Category: "release-closeout-structure",
+            InvariantId: ReleaseCloseoutProvenanceInvariantId,
+            SourceArtifact: artifactPath,
+            Expected: $"{lane}: section '{sectionName}' present",
+            Actual: $"{lane}: section missing"));
+    }
+
     internal Target ReleaseCloseoutSnapshot => _ => _
         .Description("Generates machine-readable CI evidence snapshot (v2) from test/coverage artifacts.")
-        .DependsOn(Coverage, AutomationLaneReport, OpenSpecStrictGovernance)
+        .DependsOn(Coverage, AutomationLaneReport)
         .Executes(() =>
         {
-            const string completedPhase = "phase12-enterprise-advanced-scenarios";
-            const string activePhase = "post-roadmap-maintenance";
-            const string transitionInvariantId = "GOV-022";
-            var roadmapPath = RootDirectory / "openspec" / "ROADMAP.md";
-            var (roadmapCompletedPhase, roadmapActivePhase) = ReadRoadmapTransitionState(File.ReadAllText(roadmapPath));
-            if (!string.Equals(roadmapCompletedPhase, completedPhase, StringComparison.Ordinal)
-                || !string.Equals(roadmapActivePhase, activePhase, StringComparison.Ordinal))
-            {
-                Assert.Fail(
-                    $"[{TransitionLaneProvenanceInvariantId}] Closeout snapshot transition constants drifted from ROADMAP markers. " +
-                    $"Expected ({roadmapCompletedPhase}, {roadmapActivePhase}), actual ({completedPhase}, {activePhase}).");
-            }
-
             TestResultsDirectory.CreateDirectory();
 
             var unitTrxPath = ResolveFirstExistingPath(
@@ -297,17 +274,6 @@ internal partial class BuildTask
             var lineCoveragePct = ReadCoberturaLineCoveragePercent(coberturaPath!);
             var branchCoveragePct = ReadCoberturaBranchCoveragePercent(coberturaPath!);
 
-            var archiveDirectory = RootDirectory / "openspec" / "changes" / "archive";
-            var closeoutArchives = Directory.Exists(archiveDirectory)
-                ? CompletedPhaseCloseoutChangeIds
-                    .Select(changeId => Directory.GetDirectories(archiveDirectory)
-                        .Select(Path.GetFileName)
-                        .FirstOrDefault(name => name is not null && name.EndsWith(changeId, StringComparison.Ordinal)))
-                    .Where(name => name is not null)
-                    .Cast<string>()
-                    .ToArray()
-                : Array.Empty<string>();
-
             var snapshotPayload = new
             {
                 schemaVersion = 2,
@@ -317,26 +283,11 @@ internal partial class BuildTask
                     producerTarget = "ReleaseCloseoutSnapshot",
                     timestamp = DateTime.UtcNow.ToString("o")
                 },
-                transition = new
-                {
-                    invariantId = transitionInvariantId,
-                    completedPhase,
-                    activePhase
-                },
-                transitionContinuity = new
-                {
-                    invariantId = TransitionLaneProvenanceInvariantId,
-                    laneContext = LaneContextCi,
-                    producerTarget = "ReleaseCloseoutSnapshot",
-                    completedPhase,
-                    activePhase
-                },
                 sourcePaths = new
                 {
                     unitTrx = unitTrxPath!.ToString(),
                     integrationTrx = integrationTrxPath!.ToString(),
-                    cobertura = coberturaPath!.ToString(),
-                    openSpecStrictGovernance = OpenSpecStrictGovernanceReportFile.ToString()
+                    cobertura = coberturaPath!.ToString()
                 },
                 tests = new
                 {
@@ -371,14 +322,12 @@ internal partial class BuildTask
                 },
                 governance = new
                 {
-                    openSpecStrictGovernanceReportExists = File.Exists(OpenSpecStrictGovernanceReportFile),
                     automationLaneReportExists = File.Exists(AutomationLaneReportFile),
                     dependencyGovernanceReportExists = File.Exists(DependencyGovernanceReportFile),
                     typeScriptGovernanceReportExists = File.Exists(TypeScriptGovernanceReportFile),
                     sampleTemplatePackageReferenceGovernanceReportExists = File.Exists(SampleTemplatePackageReferenceGovernanceReportFile),
                     runtimeCriticalPathGovernanceReportExists = File.Exists(RuntimeCriticalPathGovernanceReportFile)
-                },
-                closeoutArchives
+                }
             };
 
             WriteJsonReport(CloseoutSnapshotFile, snapshotPayload);
@@ -394,7 +343,6 @@ internal partial class BuildTask
             WarningGovernance,
             DependencyVulnerabilityGovernance,
             TypeScriptDeclarationGovernance,
-            OpenSpecStrictGovernance,
             SampleTemplatePackageReferenceGovernance,
             BridgeDistributionGovernance,
             DistributionReadinessGovernance,

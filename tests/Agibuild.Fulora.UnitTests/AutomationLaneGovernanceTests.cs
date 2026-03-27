@@ -606,7 +606,7 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Ci_targets_enforce_openspec_strict_governance_gate()
+    public void Ci_targets_remove_openspec_strict_governance_gate_but_keep_release_governance_closure()
     {
         var repoRoot = FindRepoRoot();
         var combinedSource = ReadCombinedBuildSource(repoRoot);
@@ -616,7 +616,7 @@ public sealed class AutomationLaneGovernanceTests
 
         var requiredTargets = new[]
         {
-            "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "DependencyVulnerabilityGovernance",
             "SampleTemplatePackageReferenceGovernance",
             "TypeScriptDeclarationGovernance", "ReleaseCloseoutSnapshot",
             "ContinuousTransitionGateGovernance", "DistributionReadinessGovernance",
@@ -626,13 +626,14 @@ public sealed class AutomationLaneGovernanceTests
         foreach (var target in requiredTargets)
             AssertTargetDeclarationExists(combinedSource, target, CiTargetOpenSpecGate, "build/Build*.cs");
 
-        AssertStringLiteralContains(combinedSource, "validate --all --strict", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertInvocationExists(combinedSource, "RunProcessCheckedAsync", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "dependency-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "typescript-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "sample-template-package-reference-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "closeout-snapshot.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "transition-gate-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
+        Assert.DoesNotContain("OpenSpecStrictGovernance", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("validate --all --strict", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("openspec-strict-governance.log", combinedSource, StringComparison.Ordinal);
 
         var ciDirectDependencies = new[]
         {
@@ -643,7 +644,7 @@ public sealed class AutomationLaneGovernanceTests
 
         var ciRequiredClosureDependencies = new[]
         {
-            "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "DependencyVulnerabilityGovernance",
             "SampleTemplatePackageReferenceGovernance", "TypeScriptDeclarationGovernance",
             "ReleaseCloseoutSnapshot", "RuntimeCriticalPathExecutionGovernance",
             "ContinuousTransitionGateGovernance", "BridgeDistributionGovernance",
@@ -656,6 +657,10 @@ public sealed class AutomationLaneGovernanceTests
                 ciClosure.Contains(dependency),
                 $"[{CiTargetOpenSpecGate}] Missing Ci transitive dependency '{dependency}'.");
         }
+
+        Assert.False(
+            ciClosure.Contains("OpenSpecStrictGovernance"),
+            $"[{CiTargetOpenSpecGate}] Ci transitive dependency closure should not contain 'OpenSpecStrictGovernance'.");
 
         var ciPublishDependencies = new[] { "Ci", "Publish" };
         AssertTargetDependsOnContainsAll(mainSource, "CiPublish", ciPublishDependencies, CiTargetOpenSpecGate, "build/Build.cs");
@@ -675,7 +680,7 @@ public sealed class AutomationLaneGovernanceTests
         {
             "Coverage", "AutomationLaneReport", "WarningGovernance",
             "DependencyVulnerabilityGovernance", "TypeScriptDeclarationGovernance",
-            "OpenSpecStrictGovernance", "ReleaseCloseoutSnapshot",
+            "ReleaseCloseoutSnapshot",
             "RuntimeCriticalPathExecutionGovernance", "AdoptionReadinessGovernance",
             "ContinuousTransitionGateGovernance"
         };
@@ -690,6 +695,9 @@ public sealed class AutomationLaneGovernanceTests
         Assert.True(
             ciPublishDependsOn.Contains("Ci"),
             $"[{TransitionGateParityConsistency}] CiPublish must depend on Ci.");
+        Assert.False(
+            ciDependencyClosure.Contains("OpenSpecStrictGovernance"),
+            $"[{TransitionGateParityConsistency}] Ci should not depend on OpenSpecStrictGovernance.");
     }
 
     [Fact]
@@ -731,37 +739,25 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Phase_transition_roadmap_and_shell_governance_artifacts_remain_consistent()
+    public void Release_governance_docs_and_shell_governance_artifacts_remain_consistent()
     {
         var repoRoot = FindRepoRoot();
-        var roadmapPath = Path.Combine(repoRoot, "openspec", "ROADMAP.md");
+        var releaseGovernancePath = Path.Combine(repoRoot, "docs", "release-governance.md");
         var runtimeManifestPath = Path.Combine(repoRoot, "tests", "runtime-critical-path.manifest.json");
         var productionMatrixPath = Path.Combine(repoRoot, "tests", "shell-production-matrix.json");
         var templateIndexPath = Path.Combine(repoRoot, "templates", "agibuild-hybrid", "HybridApp.Desktop", "wwwroot", "index.html");
         var hostCapabilityBridgePath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityBridge.cs");
 
-        foreach (var p in new[] { roadmapPath, runtimeManifestPath, productionMatrixPath, templateIndexPath, hostCapabilityBridgePath })
+        foreach (var p in new[] { releaseGovernancePath, runtimeManifestPath, productionMatrixPath, templateIndexPath, hostCapabilityBridgePath })
             AssertFileExists(p, PhaseTransitionConsistency);
 
-        var roadmap = File.ReadAllText(roadmapPath);
-        Assert.Matches(new Regex(@"## Phase \d+: .+\(✅ Completed\)", RegexOptions.Multiline), roadmap);
-        AssertSourceContains(roadmap, "Completed phase id: `phase12-enterprise-advanced-scenarios`", PhaseTransitionConsistency, roadmapPath);
-        AssertSourceContains(roadmap, "Active phase id: `post-roadmap-maintenance`", PhaseTransitionConsistency, roadmapPath);
-        AssertSourceContains(roadmap, "Closeout snapshot artifact: `artifacts/test-results/closeout-snapshot.json`", PhaseTransitionConsistency, roadmapPath);
-        AssertSourceContains(roadmap, "### Evidence Source Mapping", PhaseTransitionConsistency, roadmapPath);
-
-        var completedPhaseCloseoutChangeIds = new[]
-        {
-            "2026-03-07-sentry-crash-reporting",
-            "2026-03-07-shared-state-management",
-            "2026-03-07-enterprise-auth-patterns",
-            "2026-03-07-plugin-quality-compatibility"
-        };
-        foreach (var changeId in completedPhaseCloseoutChangeIds)
-            AssertSourceContains(roadmap, changeId, PhaseTransitionConsistency, roadmapPath);
-
-        Assert.Matches(new Regex(@"`nuke Test`: Unit `\d+`, Integration `\d+`, Total `\d+` \(pass\)", RegexOptions.Multiline), roadmap);
-        Assert.Matches(new Regex(@"`nuke Coverage`: Line `\d+(\.\d+)?%` \(pass, threshold `\d+%`\)", RegexOptions.Multiline), roadmap);
+        var releaseGovernance = File.ReadAllText(releaseGovernancePath);
+        AssertSourceContains(releaseGovernance, "artifacts/test-results/closeout-snapshot.json", PhaseTransitionConsistency, releaseGovernancePath);
+        AssertSourceContains(releaseGovernance, "transition-gate-governance-report.json", PhaseTransitionConsistency, releaseGovernancePath);
+        AssertSourceContains(releaseGovernance, "release-orchestration-decision-report.json", PhaseTransitionConsistency, releaseGovernancePath);
+        Assert.DoesNotContain("openspec", releaseGovernance, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("## Phase", releaseGovernance, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Phase 12", releaseGovernance, StringComparison.OrdinalIgnoreCase);
 
         using var runtimeDoc = LoadJsonArtifact(runtimeManifestPath, PhaseTransitionConsistency);
         using var matrixDoc = LoadJsonArtifact(productionMatrixPath, PhaseTransitionConsistency);
@@ -861,7 +857,9 @@ public sealed class AutomationLaneGovernanceTests
         Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*integration-tests\.json"), readme);
         Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*line-coverage\.json"), readme);
         Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*branch-coverage\.json"), readme);
-        AssertSourceContains(readme, "Phase 12", ReadmeQualitySignals, readmePath);
+        AssertSourceContains(readme, "capability tiers", ReadmeQualitySignals, readmePath);
+        AssertSourceContains(readme, "docs/product-platform-roadmap.md", ReadmeQualitySignals, readmePath);
+        AssertSourceContains(readme, "docs/platform-status.md", ReadmeQualitySignals, readmePath);
     }
 
     [Fact]
@@ -1174,16 +1172,19 @@ public sealed class AutomationLaneGovernanceTests
             ["\"ReleaseCloseoutSnapshot\""],
             EvidenceContractV2Schema,
             "build/Build.Governance.Release.cs");
-        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transition", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
-        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transitionContinuity", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseDecision", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseBlockingReasons", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertAnonymousObjectHasMembers(
             combinedSource,
-            ["completedPhase", "activePhase", "closeoutArchives", "distributionReadiness", "adoptionReadiness"],
+            ["tests", "coverage", "governance", "distributionReadiness", "adoptionReadiness"],
             EvidenceContractV2Schema,
             "build/Build.Governance.Release.cs");
-        AssertSourceContains(combinedSource, "TransitionLaneProvenanceInvariantId", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
+        AssertSourceContains(combinedSource, "ReleaseCloseoutProvenanceInvariantId", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
+        Assert.DoesNotContain("completedPhase", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("activePhase", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("closeoutArchives", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("transitionContinuity", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("openSpecStrictGovernance", combinedSource, StringComparison.Ordinal);
         AssertSourceContains(combinedSource, "closeout-snapshot.json", EvidenceContractV2Schema, "build/Build.cs");
         AssertSourceContains(combinedSource, "distribution-readiness-governance-report.json", EvidenceContractV2Schema, "build/Build.cs");
         AssertSourceContains(combinedSource, "adoption-readiness-governance-report.json", EvidenceContractV2Schema, "build/Build.cs");
