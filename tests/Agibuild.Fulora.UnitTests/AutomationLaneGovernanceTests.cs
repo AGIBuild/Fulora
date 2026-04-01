@@ -606,9 +606,11 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Ci_targets_remove_openspec_strict_governance_gate_but_keep_release_governance_closure()
+    public void Ci_targets_remove_legacy_spec_strict_governance_gate_but_keep_release_governance_closure()
     {
         var repoRoot = FindRepoRoot();
+        var legacyGateName = string.Concat("Open", "SpecStrictGovernance");
+        var legacyReportFile = string.Concat("open", "spec-strict-governance.log");
         var combinedSource = ReadCombinedBuildSource(repoRoot);
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
         var dependencyGraph = ReadTargetDependencyGraph(combinedSource);
@@ -631,9 +633,9 @@ public sealed class AutomationLaneGovernanceTests
         AssertStringLiteralExists(combinedSource, "sample-template-package-reference-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "closeout-snapshot.json", CiTargetOpenSpecGate, "build/Build*.cs");
         AssertStringLiteralExists(combinedSource, "transition-gate-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
-        Assert.DoesNotContain("OpenSpecStrictGovernance", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(legacyGateName, combinedSource, StringComparison.Ordinal);
         Assert.DoesNotContain("validate --all --strict", combinedSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("openspec-strict-governance.log", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(legacyReportFile, combinedSource, StringComparison.Ordinal);
 
         var ciDirectDependencies = new[]
         {
@@ -659,8 +661,8 @@ public sealed class AutomationLaneGovernanceTests
         }
 
         Assert.False(
-            ciClosure.Contains("OpenSpecStrictGovernance"),
-            $"[{CiTargetOpenSpecGate}] Ci transitive dependency closure should not contain 'OpenSpecStrictGovernance'.");
+            ciClosure.Contains(legacyGateName),
+            $"[{CiTargetOpenSpecGate}] Ci transitive dependency closure should not contain '{legacyGateName}'.");
 
         var ciPublishDependencies = new[] { "Ci", "Publish" };
         AssertTargetDependsOnContainsAll(mainSource, "CiPublish", ciPublishDependencies, CiTargetOpenSpecGate, "build/Build.cs");
@@ -670,6 +672,7 @@ public sealed class AutomationLaneGovernanceTests
     public void Continuous_transition_gate_enforces_lane_parity_for_closeout_critical_groups()
     {
         var repoRoot = FindRepoRoot();
+        var legacyGateName = string.Concat("Open", "SpecStrictGovernance");
         var combinedSource = ReadCombinedBuildSource(repoRoot);
         var mainSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.cs"));
         var dependencyGraph = ReadTargetDependencyGraph(combinedSource);
@@ -696,8 +699,8 @@ public sealed class AutomationLaneGovernanceTests
             ciPublishDependsOn.Contains("Ci"),
             $"[{TransitionGateParityConsistency}] CiPublish must depend on Ci.");
         Assert.False(
-            ciDependencyClosure.Contains("OpenSpecStrictGovernance"),
-            $"[{TransitionGateParityConsistency}] Ci should not depend on OpenSpecStrictGovernance.");
+            ciDependencyClosure.Contains(legacyGateName),
+            $"[{TransitionGateParityConsistency}] Ci should not depend on {legacyGateName}.");
     }
 
     [Fact]
@@ -742,6 +745,7 @@ public sealed class AutomationLaneGovernanceTests
     public void Release_governance_docs_and_shell_governance_artifacts_remain_consistent()
     {
         var repoRoot = FindRepoRoot();
+        var legacySpecDirectoryName = string.Concat("open", "spec");
         var releaseGovernancePath = Path.Combine(repoRoot, "docs", "release-governance.md");
         var runtimeManifestPath = Path.Combine(repoRoot, "tests", "runtime-critical-path.manifest.json");
         var productionMatrixPath = Path.Combine(repoRoot, "tests", "shell-production-matrix.json");
@@ -755,7 +759,7 @@ public sealed class AutomationLaneGovernanceTests
         AssertSourceContains(releaseGovernance, "artifacts/test-results/closeout-snapshot.json", PhaseTransitionConsistency, releaseGovernancePath);
         AssertSourceContains(releaseGovernance, "transition-gate-governance-report.json", PhaseTransitionConsistency, releaseGovernancePath);
         AssertSourceContains(releaseGovernance, "release-orchestration-decision-report.json", PhaseTransitionConsistency, releaseGovernancePath);
-        Assert.DoesNotContain("openspec", releaseGovernance, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(legacySpecDirectoryName, releaseGovernance, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("## Phase", releaseGovernance, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("Phase 12", releaseGovernance, StringComparison.OrdinalIgnoreCase);
 

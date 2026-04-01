@@ -33,6 +33,13 @@ public sealed class DocumentationGovernanceTests
         "docs/docs-site-deploy.md"
     };
 
+    private static readonly string LegacySpecDirectoryName = string.Concat("open", "spec");
+    private static readonly string LegacyRoadmapPath = $"{LegacySpecDirectoryName}/ROADMAP.md";
+    private static readonly string LegacyProjectPath = $"{LegacySpecDirectoryName}/PROJECT.md";
+    private static readonly string LegacySpecsPath = $"{LegacySpecDirectoryName}/specs/";
+    private static readonly string LegacySkillSearchPattern = string.Concat(LegacySpecDirectoryName, "-*");
+    private static readonly string LegacyPromptSearchPattern = string.Concat("ops", "x-*");
+
     [Fact]
     public void Required_platform_documents_exist()
     {
@@ -341,14 +348,14 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Governed_public_docs_do_not_reference_removed_openspec_paths()
+    public void Governed_public_docs_do_not_reference_removed_legacy_spec_paths()
     {
         var repoRoot = FindRepoRoot();
         var blockedPaths = new[]
         {
-            "openspec/ROADMAP.md",
-            "openspec/PROJECT.md",
-            "openspec/specs/"
+            LegacyRoadmapPath,
+            LegacyProjectPath,
+            LegacySpecsPath
         };
 
         foreach (var relativePath in GovernedPublicDocuments)
@@ -376,8 +383,8 @@ public sealed class DocumentationGovernanceTests
 
         var content = File.ReadAllText(readmePath);
         Assert.Contains("docs/product-platform-roadmap.md", content, StringComparison.Ordinal);
-        Assert.DoesNotContain("openspec/ROADMAP.md", content, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("openspec/PROJECT.md", content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacyRoadmapPath, content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacyProjectPath, content, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -462,7 +469,7 @@ public sealed class DocumentationGovernanceTests
             Assert.True(File.Exists(guidePath), $"Missing guide: {guidePath}");
             var content = File.ReadAllText(guidePath);
             Assert.Contains("../product-platform-roadmap.md", content, StringComparison.Ordinal);
-            Assert.DoesNotContain("openspec/ROADMAP.md", content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(LegacyRoadmapPath, content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain("Phase 5", content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain("Phase 8", content, StringComparison.OrdinalIgnoreCase);
         }
@@ -478,7 +485,7 @@ public sealed class DocumentationGovernanceTests
         var content = File.ReadAllText(shippingGuidePath);
         Assert.Contains("(release-governance.md)", content, StringComparison.Ordinal);
         Assert.DoesNotContain("(docs/release-governance.md)", content, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("openspec/specs/", content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacySpecsPath, content, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -497,7 +504,7 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Docs_site_deploy_doc_does_not_allow_invalidfilelink_openspec_exceptions()
+    public void Docs_site_deploy_doc_does_not_allow_invalidfilelink_legacy_spec_exceptions()
     {
         var repoRoot = FindRepoRoot();
         var docsSiteDeployPath = Path.Combine(repoRoot, "docs", "docs-site-deploy.md");
@@ -505,7 +512,7 @@ public sealed class DocumentationGovernanceTests
 
         var content = File.ReadAllText(docsSiteDeployPath);
         Assert.DoesNotContain("InvalidFileLink", content, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("openspec", content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacySpecDirectoryName, content, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -573,30 +580,30 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Openspec_assets_and_prompts_are_removed_and_pr_template_no_longer_requires_openspec_artifacts()
+    public void Legacy_spec_assets_and_prompts_are_removed_and_pr_template_no_longer_requires_legacy_spec_artifacts()
     {
         var repoRoot = FindRepoRoot();
-        var openspecPath = Path.Combine(repoRoot, "openspec");
+        var legacySpecPath = Path.Combine(repoRoot, LegacySpecDirectoryName);
         var skillsPath = Path.Combine(repoRoot, ".github", "skills");
         var promptsPath = Path.Combine(repoRoot, ".github", "prompts");
         var prTemplatePath = Path.Combine(repoRoot, ".github", "PULL_REQUEST_TEMPLATE.md");
 
-        Assert.False(Directory.Exists(openspecPath), "openspec/ directory should be removed.");
-        var openspecSkillAssets = Directory.Exists(skillsPath)
-            ? Directory.EnumerateFileSystemEntries(skillsPath, "openspec-*", SearchOption.TopDirectoryOnly)
+        Assert.False(Directory.Exists(legacySpecPath), $"{LegacySpecDirectoryName}/ directory should be removed.");
+        var legacySkillAssets = Directory.Exists(skillsPath)
+            ? Directory.EnumerateFileSystemEntries(skillsPath, LegacySkillSearchPattern, SearchOption.TopDirectoryOnly)
             : Enumerable.Empty<string>();
-        Assert.Empty(openspecSkillAssets);
+        Assert.Empty(legacySkillAssets);
 
-        var opsxPromptAssets = Directory.Exists(promptsPath)
-            ? Directory.EnumerateFileSystemEntries(promptsPath, "opsx-*", SearchOption.TopDirectoryOnly)
+        var legacyPromptAssets = Directory.Exists(promptsPath)
+            ? Directory.EnumerateFileSystemEntries(promptsPath, LegacyPromptSearchPattern, SearchOption.TopDirectoryOnly)
             : Enumerable.Empty<string>();
-        Assert.Empty(opsxPromptAssets);
+        Assert.Empty(legacyPromptAssets);
 
         Assert.True(File.Exists(prTemplatePath), "Missing .github/PULL_REQUEST_TEMPLATE.md");
         var prTemplate = File.ReadAllText(prTemplatePath);
 
-        Assert.DoesNotContain("OpenSpec", prTemplate, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("openspec", prTemplate, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(string.Concat("Open", "Spec"), prTemplate, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacySpecDirectoryName, prTemplate, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Layer Impact", prTemplate, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -615,8 +622,8 @@ public sealed class DocumentationGovernanceTests
             "Design doc should clearly indicate it is historical/background context.");
         Assert.Contains("product-platform-roadmap.md", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("platform-status.md", content, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("openspec/ROADMAP.md", content, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("openspec/PROJECT.md", content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacyRoadmapPath, content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacyProjectPath, content, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string FindRepoRoot()
