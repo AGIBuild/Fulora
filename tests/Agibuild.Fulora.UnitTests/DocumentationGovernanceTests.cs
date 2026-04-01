@@ -301,6 +301,7 @@ public sealed class DocumentationGovernanceTests
             "plugins / vertical features");
         AssertContainsAnyTokenGroupIgnoreCase(
             content,
+            ["dependency policy"],
             ["allowed dependencies"],
             ["depends only", "must not depend"]);
         AssertContainsAnyTokenGroupIgnoreCase(
@@ -315,6 +316,34 @@ public sealed class DocumentationGovernanceTests
             content,
             ["kernel", "approval", "before merge"],
             ["kernel api", "approval rules"]);
+    }
+
+    [Fact]
+    public void Layering_governance_hook_is_visible_in_build_and_links_to_architecture_policy()
+    {
+        var repoRoot = FindRepoRoot();
+        var buildDirectory = Path.Combine(repoRoot, "build");
+        Assert.True(Directory.Exists(buildDirectory), "Missing build directory under test.");
+
+        var nukeHookPath = Path.Combine(buildDirectory, "Build.LayeringGovernance.cs");
+        var msbuildHookPath = Path.Combine(buildDirectory, "LayeringGovernance.targets");
+        var observedHookPath = File.Exists(nukeHookPath) ? nukeHookPath : msbuildHookPath;
+
+        Assert.True(File.Exists(observedHookPath), "A layering governance hook must exist under build/.");
+
+        var content = File.ReadAllText(observedHookPath);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["layeringgovernance"],
+            ["layering governance"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["architecture-layering.md"],
+            ["docs", "architecture-layering"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["kernel", "bridge"],
+            ["framework", "plugin"]);
     }
 
     [Fact]
