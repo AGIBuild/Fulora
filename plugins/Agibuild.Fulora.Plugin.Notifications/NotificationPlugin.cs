@@ -9,6 +9,18 @@ namespace Agibuild.Fulora.Plugin.Notifications;
 /// </summary>
 public sealed class NotificationPlugin : IBridgePlugin
 {
+    /// <summary>Returns policy metadata for the Notifications plugin.</summary>
+    public static BridgePluginMetadata GetMetadata()
+        => new(
+            "Agibuild.Fulora.Plugin.Notifications",
+            ["plugin.notification.post"],
+            [],
+            [
+                "Delivery guarantees and presentation differ by platform and user settings.",
+                "Production hosts should replace the in-memory provider and respect user consent."
+            ],
+            ["desktop-hosts", "platform-delivery-variance"]);
+
     /// <summary>Returns the service descriptors for the Notifications plugin.</summary>
     public static IEnumerable<BridgePluginServiceDescriptor> GetServices()
     {

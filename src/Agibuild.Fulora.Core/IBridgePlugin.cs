@@ -12,6 +12,14 @@ namespace Agibuild.Fulora;
 /// <code>
 /// public class MyPlugin : IBridgePlugin
 /// {
+///     public static BridgePluginMetadata GetMetadata()
+///         => new(
+///             "sample.my-plugin",
+///             ["sample.read"],
+///             [],
+///             ["Document the security model for this plugin."],
+///             ["desktop-hosts"]);
+///
 ///     public static IEnumerable&lt;BridgePluginServiceDescriptor&gt; GetServices()
 ///     {
 ///         yield return BridgePluginServiceDescriptor.Create&lt;IMyService&gt;(
@@ -24,11 +32,31 @@ namespace Agibuild.Fulora;
 public interface IBridgePlugin
 {
     /// <summary>
+    /// Returns the plugin metadata declared by this plugin.
+    /// </summary>
+    static abstract BridgePluginMetadata GetMetadata();
+
+    /// <summary>
     /// Returns the service descriptors declared by this plugin.
     /// Each descriptor registers one bridge service.
     /// </summary>
     static abstract IEnumerable<BridgePluginServiceDescriptor> GetServices();
 }
+
+/// <summary>
+/// Describes the policy-relevant metadata exposed by a bridge plugin.
+/// </summary>
+/// <param name="PluginId">Stable plugin identifier used by tooling and diagnostics.</param>
+/// <param name="RequiredCapabilities">Capabilities the plugin requires for its baseline behavior.</param>
+/// <param name="OptionalCapabilities">Capabilities the plugin can use when the host explicitly enables them.</param>
+/// <param name="SecurityNotes">Short notes describing the plugin's security posture and operational expectations.</param>
+/// <param name="PlatformConstraints">Short notes describing platform or environment limitations.</param>
+public sealed record BridgePluginMetadata(
+    string PluginId,
+    IReadOnlyList<string> RequiredCapabilities,
+    IReadOnlyList<string> OptionalCapabilities,
+    IReadOnlyList<string> SecurityNotes,
+    IReadOnlyList<string> PlatformConstraints);
 
 /// <summary>
 /// Describes a single bridge service provided by a plugin.
@@ -65,6 +93,14 @@ public sealed class BridgePluginServiceDescriptor
 /// </summary>
 public static class BridgePluginExtensions
 {
+    /// <summary>
+    /// Returns the metadata declared by <typeparamref name="TPlugin"/>.
+    /// </summary>
+    /// <typeparam name="TPlugin">A type implementing <see cref="IBridgePlugin"/>.</typeparam>
+    public static BridgePluginMetadata GetMetadata<TPlugin>()
+        where TPlugin : IBridgePlugin
+        => TPlugin.GetMetadata();
+
     /// <summary>
     /// Registers all services declared by <typeparamref name="TPlugin"/> on this bridge.
     /// </summary>
