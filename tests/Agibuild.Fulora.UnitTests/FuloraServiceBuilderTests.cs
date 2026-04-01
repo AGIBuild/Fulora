@@ -1,5 +1,7 @@
+using Agibuild.Fulora.Adapters.Abstractions;
 using Agibuild.Fulora.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -112,6 +114,92 @@ public class FuloraServiceBuilderTests
 
         var buses = sp.GetServices<IWebViewMessageBus>().ToList();
         Assert.True(buses.Count >= 1);
+    }
+
+    [Fact]
+    public void AddWebView_registers_dispatcher_and_factory_services()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        Agibuild.Fulora.DependencyInjection.ServiceCollectionExtensions.AddWebView(services);
+        var provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<IWebViewDispatcher>());
+        Assert.NotNull(provider.GetRequiredService<Func<IWebViewDispatcher, IWebView>>());
+    }
+
+    [Fact]
+    public void AddJsonFileConfig_registers_json_config_provider()
+    {
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(tempFile, "{}");
+
+            var services = new ServiceCollection();
+            var provider = services.AddFulora()
+                .AddJsonFileConfig(tempFile)
+                .Services
+                .BuildServiceProvider();
+
+            var config = provider.GetRequiredService<IConfigProvider>();
+            Assert.IsType<JsonFileConfigProvider>(config);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
+    [Fact]
+    public void AddRemoteConfig_registers_remote_provider_with_optional_fallback()
+    {
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(tempFile, "{}");
+
+            var services = new ServiceCollection();
+            services.AddLogging();
+
+            var provider = services.AddFulora()
+                .AddRemoteConfig(new Uri("https://config.example"), tempFile)
+                .Services
+                .BuildServiceProvider();
+
+            var config = provider.GetRequiredService<IConfigProvider>();
+            Assert.IsType<RemoteConfigProvider>(config);
+            Assert.NotNull(provider.GetRequiredService<IHttpClientFactory>());
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
+    [Fact]
+    public void AddSharedState_registers_shared_state_store()
+    {
+        var services = new ServiceCollection();
+        var provider = services.AddFulora()
+            .AddSharedState()
+            .Services
+            .BuildServiceProvider();
+
+        var sharedState = provider.GetRequiredService<ISharedStateStore>();
+        Assert.IsType<SharedStateStore>(sharedState);
+    }
+
+    [Fact]
+    public void ConfigureBridge_registers_bridge_configuration_action()
+    {
+        var services = new ServiceCollection();
+        services.AddFulora()
+            .ConfigureBridge((_, _) => { });
+
+        var descriptor = Assert.Single(services, x => x.ServiceType == typeof(BridgeConfigurationAction));
+        Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
+        Assert.NotNull(descriptor.ImplementationInstance);
     }
 
     private sealed class StubAutoUpdateProvider : IAutoUpdatePlatformProvider

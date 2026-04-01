@@ -62,6 +62,106 @@ public class TelemetryTests
     }
 
     [Fact]
+    public void BridgeTelemetryTracer_export_start_with_payload_emits_payload_attribute()
+    {
+        var sink = new MemoryFuloraDiagnosticsSink();
+        var tracer = new BridgeTelemetryTracer(NullTelemetryProvider.Instance, diagnosticsSink: sink);
+
+        tracer.OnExportCallStart("AppService", "getUser", """{"id":1}""");
+
+        var diagnostic = Assert.Single(sink.Events);
+        Assert.Equal("bridge.export.start", diagnostic.EventName);
+        Assert.Equal("""{"id":1}""", diagnostic.Attributes["params"]);
+    }
+
+    [Fact]
+    public void BridgeTelemetryTracer_import_start_with_whitespace_payload_omits_params_attribute()
+    {
+        var sink = new MemoryFuloraDiagnosticsSink();
+        var tracer = new BridgeTelemetryTracer(NullTelemetryProvider.Instance, diagnosticsSink: sink);
+
+        tracer.OnImportCallStart("UiService", "notify", "   ");
+
+        var diagnostic = Assert.Single(sink.Events);
+        Assert.Equal("bridge.import.start", diagnostic.EventName);
+        Assert.Empty(diagnostic.Attributes);
+    }
+
+    [Fact]
+    public void BridgeTelemetryTracer_service_lifecycle_emits_registration_mode_and_removed_status()
+    {
+        var sink = new MemoryFuloraDiagnosticsSink();
+        var tracer = new BridgeTelemetryTracer(NullTelemetryProvider.Instance, diagnosticsSink: sink);
+
+        tracer.OnServiceExposed("AppService", 2, true);
+        tracer.OnServiceRemoved("AppService");
+
+        Assert.Equal(2, sink.Events.Count);
+        Assert.Equal("source-generated", sink.Events[0].Attributes["registrationMode"]);
+        Assert.Equal("removed", sink.Events[1].Status);
+    }
+
+    [Fact]
+    public void LoggingFuloraDiagnosticsSink_uses_information_for_non_error_status()
+    {
+        var logger = new RecordingLogger();
+        var sink = new LoggingFuloraDiagnosticsSink(logger);
+
+        sink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "bridge.export.start",
+            Layer = "bridge",
+            Component = "BridgeTelemetryTracer",
+            Service = "AppService",
+            Method = "getUser",
+            Status = "started",
+            DurationMs = 5
+        });
+
+        var entry = Assert.Single(logger.Entries);
+        Assert.Equal(Microsoft.Extensions.Logging.LogLevel.Information, entry.Level);
+        Assert.Contains("bridge.export.start", entry.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void LoggingFuloraDiagnosticsSink_uses_warning_for_error_and_dropped_statuses()
+    {
+        var logger = new RecordingLogger();
+        var sink = new LoggingFuloraDiagnosticsSink(logger);
+
+        sink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "bridge.export.error",
+            Layer = "bridge",
+            Component = "BridgeTelemetryTracer",
+            Service = "AppService",
+            Method = "getUser",
+            Status = "error",
+            ErrorType = "InvalidOperationException"
+        });
+
+        sink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "runtime.message.dropped",
+            Layer = "runtime",
+            Component = "WebViewCore",
+            Status = "dropped"
+        });
+
+        Assert.Equal(2, logger.Entries.Count);
+        Assert.All(logger.Entries, entry => Assert.Equal(Microsoft.Extensions.Logging.LogLevel.Warning, entry.Level));
+    }
+
+    [Fact]
+    public void LoggingFuloraDiagnosticsSink_throws_on_null_inputs()
+    {
+        Assert.Throws<ArgumentNullException>(() => new LoggingFuloraDiagnosticsSink(null!));
+
+        var sink = new LoggingFuloraDiagnosticsSink(new RecordingLogger());
+        Assert.Throws<ArgumentNullException>(() => sink.OnEvent(null!));
+    }
+
+    [Fact]
     public void BridgeTelemetryTracer_tracks_exception_on_export_call_error()
     {
         var metrics = new List<(string Name, double Value, IDictionary<string, string>? Dims)>();
@@ -306,5 +406,32 @@ public class TelemetryTests
         public void OnImportCallEnd(string s, string m, long e) => Calls.Add($"ImportEnd:{s}.{m}");
         public void OnServiceExposed(string s, int c, bool g) => Calls.Add($"Exposed:{s}");
         public void OnServiceRemoved(string s) => Calls.Add($"Removed:{s}");
+    }
+
+    private sealed class RecordingLogger : Microsoft.Extensions.Logging.ILogger
+    {
+        public List<(Microsoft.Extensions.Logging.LogLevel Level, string Message)> Entries { get; } = [];
+
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull
+            => NoopDisposable.Instance;
+
+        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            Microsoft.Extensions.Logging.LogLevel logLevel,
+            Microsoft.Extensions.Logging.EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter)
+            => Entries.Add((logLevel, formatter(state, exception)));
+    }
+
+    private sealed class NoopDisposable : IDisposable
+    {
+        public static readonly NoopDisposable Instance = new();
+
+        public void Dispose()
+        {
+        }
     }
 }

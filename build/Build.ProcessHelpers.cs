@@ -24,6 +24,10 @@ internal partial class BuildTask
 
     private static void WriteGovernanceReport(AbsolutePath path, object payload)
     {
+        var directory = System.IO.Path.GetDirectoryName(path);
+        if (!string.IsNullOrWhiteSpace(directory))
+            Directory.CreateDirectory(directory);
+
         File.WriteAllText(path, JsonSerializer.Serialize(payload, GovernanceCamelCaseJsonOptions));
     }
 

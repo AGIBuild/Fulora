@@ -1,3 +1,4 @@
+using System.Reflection;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -300,6 +301,138 @@ public class BridgeDevToolsServiceTests
         Assert.Equal("fail", evt.MethodName);
         Assert.Equal(12, evt.ElapsedMs);
         Assert.Equal("boom", evt.ErrorMessage);
+    }
+
+    [Theory]
+    [InlineData("bridge.export.start", BridgeCallDirection.Export, BridgeCallPhase.Start)]
+    [InlineData("bridge.import.start", BridgeCallDirection.Import, BridgeCallPhase.Start)]
+    [InlineData("bridge.import.end", BridgeCallDirection.Import, BridgeCallPhase.End)]
+    [InlineData("bridge.service.exposed", BridgeCallDirection.Lifecycle, BridgeCallPhase.ServiceExposed)]
+    [InlineData("bridge.service.removed", BridgeCallDirection.Lifecycle, BridgeCallPhase.ServiceRemoved)]
+    public void DiagnosticsSink_maps_supported_event_names(string eventName, BridgeCallDirection direction, BridgeCallPhase phase)
+    {
+        using var svc = new BridgeDevToolsService();
+
+        svc.DiagnosticsSink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = eventName,
+            Layer = "bridge",
+            Component = "ComponentFallback",
+            Status = "ok"
+        });
+
+        var evt = Assert.Single(svc.Collector.GetEvents());
+        Assert.Equal(direction, evt.Direction);
+        Assert.Equal(phase, evt.Phase);
+        Assert.Equal("ComponentFallback", evt.ServiceName);
+        Assert.Equal(string.Empty, evt.MethodName);
+    }
+
+    [Fact]
+    public void DiagnosticsSink_ignores_unsupported_event_names()
+    {
+        using var svc = new BridgeDevToolsService();
+
+        svc.DiagnosticsSink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "runtime.navigation.start",
+            Layer = "runtime",
+            Component = "WebViewCore",
+            Status = "started"
+        });
+
+        Assert.Empty(svc.Collector.GetEvents());
+    }
+
+    [Fact]
+    public void DiagnosticsSink_maps_export_end_and_copies_result_and_params()
+    {
+        using var svc = new BridgeDevToolsService();
+
+        svc.DiagnosticsSink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "bridge.export.end",
+            Layer = "bridge",
+            Component = "BridgeRuntime",
+            Service = "AppService",
+            Method = "getCurrentUser",
+            DurationMs = 18,
+            Status = "success",
+            Attributes = new Dictionary<string, string>
+            {
+                ["resultType"] = "UserDto",
+                ["params"] = """{"id":1}"""
+            }
+        });
+
+        var evt = Assert.Single(svc.Collector.GetEvents());
+        Assert.Equal(BridgeCallDirection.Export, evt.Direction);
+        Assert.Equal(BridgeCallPhase.End, evt.Phase);
+        Assert.Equal("AppService", evt.ServiceName);
+        Assert.Equal("getCurrentUser", evt.MethodName);
+        Assert.Equal(18, evt.ElapsedMs);
+        Assert.Equal("UserDto", evt.ResultJson);
+        Assert.Equal("""{"id":1}""", evt.ParamsJson);
+    }
+
+    [Fact]
+    public void DiagnosticsSink_uses_error_type_when_message_attribute_is_missing()
+    {
+        using var svc = new BridgeDevToolsService();
+
+        svc.DiagnosticsSink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "bridge.export.error",
+            Layer = "bridge",
+            Component = "BridgeRuntime",
+            Service = "AppService",
+            Method = "save",
+            DurationMs = 7,
+            Status = "error",
+            ErrorType = "InvalidOperationException",
+            Attributes = new Dictionary<string, string>()
+        });
+
+        var evt = Assert.Single(svc.Collector.GetEvents());
+        Assert.Equal("InvalidOperationException", evt.ErrorMessage);
+    }
+
+    [Fact]
+    public void DiagnosticsSink_ignores_known_prefix_with_unknown_phase()
+    {
+        using var svc = new BridgeDevToolsService();
+
+        svc.DiagnosticsSink.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "bridge.export.cancelled",
+            Layer = "bridge",
+            Component = "BridgeRuntime",
+            Status = "cancelled"
+        });
+
+        Assert.Empty(svc.Collector.GetEvents());
+    }
+
+    [Fact]
+    public void DiagnosticsSink_on_null_event_throws()
+    {
+        using var svc = new BridgeDevToolsService();
+        Assert.Throws<ArgumentNullException>(() => svc.DiagnosticsSink.OnEvent(null!));
+    }
+
+    [Fact]
+    public void CollectorDiagnosticsSink_ctor_null_collector_throws()
+    {
+        var nestedType = typeof(BridgeDevToolsService)
+            .GetNestedType("CollectorDiagnosticsSink", BindingFlags.NonPublic);
+        Assert.NotNull(nestedType);
+
+        var ctor = nestedType!.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, [typeof(BridgeEventCollector)], null);
+        Assert.NotNull(ctor);
+
+        var ex = Assert.Throws<TargetInvocationException>(() => ctor!.Invoke([null]));
+        var inner = Assert.IsType<ArgumentNullException>(ex.InnerException);
+        Assert.Equal("collector", inner.ParamName);
     }
 
     [Fact]

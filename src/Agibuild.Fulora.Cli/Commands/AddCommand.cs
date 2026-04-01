@@ -17,6 +17,12 @@ internal static class AddCommand
     {
         var nameArg = new Argument<string>("name") { Description = "Service name (PascalCase, e.g. NotificationService)" };
         var importFlag = new Option<bool>("--import") { Description = "Generate a [JsImport] interface instead of [JsExport]" };
+        var layerOpt = new Option<string>("--layer")
+        {
+            Description = "Service ownership layer: bridge, framework, or plugin",
+            Required = true
+        };
+        layerOpt.AcceptOnlyFromAmong("bridge", "framework", "plugin");
         var bridgeProjectOpt = new Option<string?>("--bridge-project")
         {
             Description = "Path to the Bridge .csproj (auto-detected if omitted)"
@@ -29,6 +35,7 @@ internal static class AddCommand
         var command = new Command("service") { Description = "Scaffold a new bridge service (C# interface, implementation, TS proxy)" };
         command.Arguments.Add(nameArg);
         command.Options.Add(importFlag);
+        command.Options.Add(layerOpt);
         command.Options.Add(bridgeProjectOpt);
         command.Options.Add(webDirOpt);
 
@@ -36,6 +43,7 @@ internal static class AddCommand
         {
             var name = parseResult.GetValue(nameArg);
             var isImport = parseResult.GetValue(importFlag);
+            var layer = NormalizeLayer(parseResult.GetValue(layerOpt)!);
             var bridgeProject = parseResult.GetValue(bridgeProjectOpt);
             var webDir = parseResult.GetValue(webDirOpt);
 
@@ -65,10 +73,13 @@ internal static class AddCommand
             }
 
             // C# interface
-            var interfacePath = Path.Combine(bridgeProjDir, $"{interfaceName}.cs");
+            var interfaceTargetDir = ResolveBridgeLayerDir(bridgeProjDir, layer);
+            Directory.CreateDirectory(interfaceTargetDir);
+            var interfacePath = Path.Combine(interfaceTargetDir, $"{interfaceName}.cs");
+            var interfaceNamespace = InferNamespace(interfaceTargetDir);
             if (!File.Exists(interfacePath))
             {
-                File.WriteAllText(interfacePath, GenerateCSharpInterface(interfaceName, direction), Encoding.UTF8);
+                File.WriteAllText(interfacePath, GenerateCSharpInterface(interfaceNamespace, interfaceName, direction), Encoding.UTF8);
                 Console.WriteLine($"Created {interfacePath}");
             }
             else
@@ -79,19 +90,14 @@ internal static class AddCommand
             // C# implementation (only for JsExport)
             if (!isImport)
             {
-                var implDir = Path.GetDirectoryName(bridgeProjDir);
-                var desktopDirs = implDir is not null
-                    ? Directory.GetDirectories(implDir)
-                        .Where(d => Path.GetFileName(d).Contains("Desktop", StringComparison.OrdinalIgnoreCase))
-                        .ToArray()
-                    : [];
-                var implTargetDir = desktopDirs.Length == 1 ? desktopDirs[0] : bridgeProjDir;
+                var implTargetDir = ResolveImplementationTargetDir(bridgeProjDir, layer);
+                Directory.CreateDirectory(implTargetDir);
 
                 var implPath = Path.Combine(implTargetDir, $"{className}.cs");
                 if (!File.Exists(implPath))
                 {
                     var ns = InferNamespace(implTargetDir);
-                    File.WriteAllText(implPath, GenerateCSharpImplementation(className, interfaceName, ns), Encoding.UTF8);
+                    File.WriteAllText(implPath, GenerateCSharpImplementation(className, interfaceName, ns, interfaceNamespace), Encoding.UTF8);
                     Console.WriteLine($"Created {implPath}");
                 }
                 else
@@ -115,7 +121,7 @@ internal static class AddCommand
             }
 
             Console.WriteLine();
-            Console.WriteLine($"Service '{className}' scaffolded successfully.");
+            Console.WriteLine($"Service '{className}' scaffolded successfully in layer '{layer}'.");
             if (!isImport)
             {
                 Console.WriteLine($"Wire it up: Bridge.Expose<{interfaceName}>(new {className}());");
@@ -126,9 +132,9 @@ internal static class AddCommand
         return command;
     }
 
-    private static string GenerateCSharpInterface(string interfaceName, string attribute) =>
+    private static string GenerateCSharpInterface(string ns, string interfaceName, string attribute) =>
         $$"""
-        namespace HybridApp.Bridge;
+        namespace {{ns}};
 
         [{{attribute}}]
         public interface {{interfaceName}}
@@ -137,9 +143,9 @@ internal static class AddCommand
         }
         """;
 
-    private static string GenerateCSharpImplementation(string className, string interfaceName, string ns) =>
+    private static string GenerateCSharpImplementation(string className, string interfaceName, string ns, string interfaceNamespace) =>
         $$"""
-        using HybridApp.Bridge;
+        using {{interfaceNamespace}};
 
         namespace {{ns}};
 
@@ -159,6 +165,27 @@ internal static class AddCommand
 
         export const {{camelName}} = bridge.getService<{{className}}>("{{className}}");
         """;
+
+    private static string NormalizeLayer(string layer)
+        => layer.Trim().ToLowerInvariant();
+
+    private static string ResolveBridgeLayerDir(string bridgeProjDir, string layer)
+        => layer switch
+        {
+            "bridge" => bridgeProjDir,
+            "framework" => Path.Combine(bridgeProjDir, "Framework"),
+            "plugin" => Path.Combine(bridgeProjDir, "Plugins"),
+            _ => throw new ArgumentOutOfRangeException(nameof(layer), layer, "Unsupported service layer.")
+        };
+
+    private static string ResolveImplementationTargetDir(string bridgeProjDir, string layer)
+        => layer switch
+        {
+            "bridge" => bridgeProjDir,
+            "framework" => Path.Combine(ResolveDesktopProjectDir(bridgeProjDir), "Framework"),
+            "plugin" => Path.Combine(ResolveDesktopProjectDir(bridgeProjDir), "Plugins"),
+            _ => throw new ArgumentOutOfRangeException(nameof(layer), layer, "Unsupported service layer.")
+        };
 
     private static string? ResolveProjectDir(string? explicitPath, string hint)
     {
@@ -207,9 +234,52 @@ internal static class AddCommand
 
     private static string InferNamespace(string dir)
     {
-        var csproj = Directory.GetFiles(dir, "*.csproj").FirstOrDefault();
-        if (csproj is not null)
-            return Path.GetFileNameWithoutExtension(csproj);
+        var current = dir;
+        while (!string.IsNullOrWhiteSpace(current))
+        {
+            var csproj = Directory.GetFiles(current, "*.csproj").FirstOrDefault();
+            if (csproj is not null)
+            {
+                var rootNamespace = Path.GetFileNameWithoutExtension(csproj);
+                var relative = Path.GetRelativePath(current, dir);
+                if (relative == ".")
+                    return rootNamespace;
+
+                var segments = relative.Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
+                    .Select(SanitizeNamespaceSegment);
+                return string.Join(".", new[] { rootNamespace }.Concat(segments));
+            }
+
+            current = Directory.GetParent(current)?.FullName ?? string.Empty;
+        }
+
         return Path.GetFileName(dir) ?? "HybridApp.Desktop";
+    }
+
+    private static string ResolveDesktopProjectDir(string bridgeProjDir)
+    {
+        var parent = Directory.GetParent(bridgeProjDir)?.FullName;
+        if (parent is null)
+            throw new DirectoryNotFoundException("Could not resolve Desktop project from Bridge project.");
+
+        var desktopDirs = Directory.GetDirectories(parent)
+            .Where(d => Path.GetFileName(d).Contains("Desktop", StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        return desktopDirs.Length switch
+        {
+            1 => desktopDirs[0],
+            > 1 => desktopDirs[0],
+            _ => throw new DirectoryNotFoundException("Could not find Desktop project alongside Bridge project.")
+        };
+    }
+
+    private static string SanitizeNamespaceSegment(string segment)
+    {
+        var builder = new StringBuilder(segment.Length);
+        foreach (var ch in segment)
+            builder.Append(char.IsLetterOrDigit(ch) || ch == '_' ? ch : '_');
+
+        return builder.Length == 0 ? "_" : builder.ToString();
     }
 }

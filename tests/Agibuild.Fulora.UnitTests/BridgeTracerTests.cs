@@ -48,6 +48,58 @@ public class BridgeTracerTests
         tracer.OnServiceRemoved("svc");
     }
 
+    [Fact]
+    public void LoggingBridgeTracer_emits_diagnostics_for_export_import_and_lifecycle_events()
+    {
+        var logger = new Microsoft.Extensions.Logging.Abstractions.NullLogger<LoggingBridgeTracer>();
+        var sink = new MemoryFuloraDiagnosticsSink();
+        var tracer = new LoggingBridgeTracer(logger, sink);
+
+        tracer.OnExportCallStart("svc", "method", """{"ok":true}""");
+        tracer.OnExportCallEnd("svc", "method", 42, null);
+        tracer.OnImportCallStart("svc", "method", "   ");
+        tracer.OnImportCallEnd("svc", "method", 5);
+        tracer.OnServiceExposed("svc", 3, true);
+        tracer.OnServiceRemoved("svc");
+
+        Assert.Equal(6, sink.Events.Count);
+        Assert.Equal("""{"ok":true}""", sink.Events[0].Attributes["params"]);
+        Assert.Empty(sink.Events[2].Attributes);
+        Assert.Empty(sink.Events[1].Attributes);
+        Assert.Equal("source-generated", sink.Events[4].Attributes["registrationMode"]);
+        Assert.Equal("removed", sink.Events[5].Status);
+    }
+
+    [Fact]
+    public void LoggingBridgeTracer_export_error_emits_message_and_error_type()
+    {
+        var logger = new Microsoft.Extensions.Logging.Abstractions.NullLogger<LoggingBridgeTracer>();
+        var sink = new MemoryFuloraDiagnosticsSink();
+        var tracer = new LoggingBridgeTracer(logger, sink);
+
+        tracer.OnExportCallError("svc", "method", 9, new InvalidOperationException("boom"));
+
+        var diagnostic = Assert.Single(sink.Events);
+        Assert.Equal("bridge.export.error", diagnostic.EventName);
+        Assert.Equal("InvalidOperationException", diagnostic.ErrorType);
+        Assert.Equal("boom", diagnostic.Attributes["message"]);
+    }
+
+    [Fact]
+    public void LoggingBridgeTracer_truncates_long_payload_before_emitting_diagnostics()
+    {
+        var logger = new Microsoft.Extensions.Logging.Abstractions.NullLogger<LoggingBridgeTracer>();
+        var sink = new MemoryFuloraDiagnosticsSink();
+        var tracer = new LoggingBridgeTracer(logger, sink);
+        var payload = new string('x', 300);
+
+        tracer.OnExportCallStart("svc", "method", payload);
+
+        var diagnostic = Assert.Single(sink.Events);
+        Assert.True(diagnostic.Attributes["params"].Length < payload.Length);
+        Assert.EndsWith("…", diagnostic.Attributes["params"], StringComparison.Ordinal);
+    }
+
     // ==================== Custom tracer ====================
 
     [Fact]
@@ -262,6 +314,94 @@ public sealed class TracingRpcWrapperTests
     }
 
     [Fact]
+    public async Task TracingRpcWrapper_Handle_sync_delegate_traces_export_lifecycle()
+    {
+        var tracer = new TestTracer();
+        var rpc = new StubRpcService();
+        var wrapper = new TracingRpcWrapper(rpc, tracer, "AppService");
+
+        wrapper.Handle("AppService.getCurrentUser", _ => "alice");
+
+        var result = await rpc.Handlers["AppService.getCurrentUser"](null);
+
+        Assert.Equal("alice", result);
+        Assert.Contains(tracer.Events, e => e.Contains("ExportStart:AppService.getCurrentUser"));
+        Assert.Contains(tracer.Events, e => e.Contains("ExportEnd:AppService.getCurrentUser"));
+    }
+
+    [Fact]
+    public async Task TracingRpcWrapper_Handle_cancellable_delegate_traces_export_lifecycle()
+    {
+        var tracer = new TestTracer();
+        var rpc = new StubRpcService();
+        var wrapper = new TracingRpcWrapper(rpc, tracer, "AppService");
+
+        wrapper.Handle("AppService.getCurrentUser", (_, ct) => Task.FromResult<object?>(ct.CanBeCanceled));
+
+        var result = await rpc.Handlers["AppService.getCurrentUser"](null);
+
+        Assert.Equal(false, result);
+        Assert.Contains(tracer.Events, e => e.Contains("ExportStart:AppService.getCurrentUser"));
+        Assert.Contains(tracer.Events, e => e.Contains("ExportEnd:AppService.getCurrentUser"));
+    }
+
+    [Fact]
+    public void TracingRpcWrapper_RegisterEnumerator_delegates_to_inner()
+    {
+        var tracer = new TestTracer();
+        var rpc = new StubRpcService();
+        var wrapper = new TracingRpcWrapper(rpc, tracer, "AppService");
+        Func<Task<(object? Value, bool Finished)>> moveNext = () => Task.FromResult<(object? Value, bool Finished)>(("value", true));
+        Func<Task> dispose = () => Task.CompletedTask;
+
+        wrapper.RegisterEnumerator("enum-token", moveNext, dispose);
+
+        Assert.Equal("enum-token", rpc.RegisteredEnumeratorToken);
+        Assert.Same(moveNext, rpc.RegisteredMoveNext);
+        Assert.Same(dispose, rpc.RegisteredDispose);
+    }
+
+    [Fact]
+    public void TracingRpcWrapper_UnregisterHandler_directly_delegates()
+    {
+        var tracer = new TestTracer();
+        var rpc = new StubRpcService();
+        var wrapper = new TracingRpcWrapper(rpc, tracer, "AppService");
+
+        wrapper.UnregisterHandler("AppService.getCurrentUser");
+
+        Assert.Contains("AppService.getCurrentUser", rpc.RemovedMethods);
+    }
+
+    [Fact]
+    public async Task TracingRpcWrapper_InvokeAsync_without_args_traces_null_payload()
+    {
+        var tracer = new TestTracer();
+        var rpc = new StubRpcService();
+        var wrapper = new TracingRpcWrapper(rpc, tracer, "UiShell");
+
+        await wrapper.InvokeAsync("UiShell.refresh", args: null, ct: TestContext.Current.CancellationToken);
+
+        Assert.Contains(tracer.ImportParams, payload => payload is null);
+        Assert.Contains(tracer.Events, e => e.Contains("ImportStart:UiShell.refresh"));
+        Assert.Contains(tracer.Events, e => e.Contains("ImportEnd:UiShell.refresh"));
+    }
+
+    [Fact]
+    public async Task TracingRpcWrapper_NotifyAsync_directly_delegates()
+    {
+        var tracer = new TestTracer();
+        var rpc = new StubRpcService();
+        var wrapper = new TracingRpcWrapper(rpc, tracer, "UiShell");
+
+        await wrapper.NotifyAsync("UiShell.refresh", new { force = true });
+
+        var invocation = Assert.Single(rpc.Invocations);
+        Assert.Equal("UiShell.refresh", invocation.Method);
+        Assert.NotNull(invocation.Args);
+    }
+
+    [Fact]
     public void TracingRpcWrapper_UnregisterHandler_delegates()
     {
         var tracer = new TestTracer();
@@ -288,6 +428,7 @@ public sealed class TracingRpcWrapperTests
     private sealed class TestTracer : IBridgeTracer
     {
         public List<string> Events { get; } = [];
+        public List<string?> ImportParams { get; } = [];
 
         public void OnExportCallStart(string serviceName, string methodName, string? paramsJson)
             => Events.Add($"ExportStart:{serviceName}.{methodName}");
@@ -299,7 +440,10 @@ public sealed class TracingRpcWrapperTests
             => Events.Add($"ExportError:{serviceName}.{methodName}");
 
         public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
-            => Events.Add($"ImportStart:{serviceName}.{methodName}");
+        {
+            ImportParams.Add(paramsJson);
+            Events.Add($"ImportStart:{serviceName}.{methodName}");
+        }
 
         public void OnImportCallEnd(string serviceName, string methodName, long elapsedMs)
             => Events.Add($"ImportEnd:{serviceName}.{methodName}:{elapsedMs}ms");
@@ -317,6 +461,9 @@ public sealed class TracingRpcWrapperTests
         public List<string> RemovedMethods { get; } = [];
         public List<(string Method, object? Args)> Invocations { get; } = [];
         public bool ThrowOnInvoke { get; set; }
+        public string? RegisteredEnumeratorToken { get; private set; }
+        public Func<Task<(object? Value, bool Finished)>>? RegisteredMoveNext { get; private set; }
+        public Func<Task>? RegisteredDispose { get; private set; }
 
         public void Handle(string method, Func<System.Text.Json.JsonElement?, Task<object?>> handler)
             => Handlers[method] = handler;
@@ -364,6 +511,11 @@ public sealed class TracingRpcWrapperTests
             return Task.CompletedTask;
         }
 
-        public void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose) { }
+        public void RegisterEnumerator(string token, Func<Task<(object? Value, bool Finished)>> moveNext, Func<Task> dispose)
+        {
+            RegisteredEnumeratorToken = token;
+            RegisteredMoveNext = moveNext;
+            RegisteredDispose = dispose;
+        }
     }
 }

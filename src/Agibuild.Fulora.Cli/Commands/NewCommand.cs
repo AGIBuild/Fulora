@@ -15,24 +15,28 @@ internal static class NewCommand
         };
         frontendOpt.AcceptOnlyFromAmong("react", "vue", "vanilla");
 
-        var presetOpt = new Option<string?>("--preset") { Description = "Template preset (e.g. app-shell)" };
+        var shellPresetOpt = new Option<string>("--shell-preset")
+        {
+            Description = "Desktop shell preset: baseline or app-shell",
+            Required = true,
+        };
+        shellPresetOpt.AcceptOnlyFromAmong("baseline", "app-shell");
 
         var command = new Command("new") { Description = "Create a new Agibuild.Fulora hybrid app project" };
         command.Arguments.Add(nameArg);
         command.Options.Add(frontendOpt);
-        command.Options.Add(presetOpt);
+        command.Options.Add(shellPresetOpt);
 
         command.SetAction(async (parseResult, ct) =>
         {
             var name = parseResult.GetValue(nameArg);
             var frontend = parseResult.GetValue(frontendOpt);
-            var preset = parseResult.GetValue(presetOpt);
+            var shellPreset = parseResult.GetValue(shellPresetOpt);
 
             Console.WriteLine($"Creating project '{name}' with {frontend} frontend...");
 
             var dotnetArgs = $"new agibuild-hybrid -n {name} --framework {frontend}";
-            if (!string.IsNullOrWhiteSpace(preset))
-                dotnetArgs += $" --preset {preset}";
+            dotnetArgs += $" --shellPreset {shellPreset}";
 
             var exitCode = await RunProcessAsync("dotnet", dotnetArgs, ct: ct);
             if (exitCode != 0)

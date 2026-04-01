@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "defaultPolicy": "deny",
+  "allowedCapabilities": [
+    "clipboard.read",
+    "clipboard.write",
+    "window.chrome.modify",
+    "shell.system_action.execute",
+    "shell.integration.event.dispatch"
+  ],
+  "disabledCapabilities": [
+    "filesystem.pick",
+    "notification.post",
+    "shell.external_open"
+  ],
+  "notes": [
+    "This starter template keeps sensitive host capabilities deny-by-default.",
+    "Promote this placeholder into a runtime policy source when your app needs broader access."
+  ]
+}

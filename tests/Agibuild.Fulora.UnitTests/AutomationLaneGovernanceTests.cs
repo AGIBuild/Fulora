@@ -422,9 +422,9 @@ public sealed class AutomationLaneGovernanceTests
             vueServices.Contains("getService", StringComparison.Ordinal),
             $"[{TemplateMetadataSchema}] Vue template must expose service contracts via generated client or typed bridge service lookup.");
 
-        Assert.True(
-            reactHook.Contains("ready(", StringComparison.Ordinal) ||
-            reactHook.Contains("bridge.ready(", StringComparison.Ordinal),
+            Assert.True(
+                reactHook.Contains("ready(", StringComparison.Ordinal) ||
+                reactHook.Contains("bridge.ready(", StringComparison.Ordinal),
             $"[{TemplateMetadataSchema}] React template must use bridge readiness contract.");
         Assert.True(
             vueHook.Contains("ready(", StringComparison.Ordinal) ||
@@ -441,6 +441,36 @@ public sealed class AutomationLaneGovernanceTests
                 reactClient.Contains("withErrorNormalization", StringComparison.Ordinal),
                 $"[{TemplateMetadataSchema}] React bridge client should configure middleware through profile or explicit middleware wiring.");
         }
+    }
+
+    [Fact]
+    public void Hybrid_template_includes_layer_aware_governance_placeholders()
+    {
+        var repoRoot = FindRepoRoot();
+        var templateRoot = Path.Combine(repoRoot, "templates", "agibuild-hybrid");
+
+        var requiredPaths = new[]
+        {
+            Path.Combine(templateRoot, "capabilities.json"),
+            Path.Combine(templateRoot, "docs", "compatibility-notes.md"),
+            Path.Combine(templateRoot, "docs", "release-checklist.md"),
+            Path.Combine(templateRoot, "HybridApp.Desktop", "Framework", "README.md"),
+            Path.Combine(templateRoot, "HybridApp.Desktop", "Plugins", "README.md"),
+            Path.Combine(templateRoot, "HybridApp.Desktop", "KernelExtensions", "README.md")
+        };
+
+        foreach (var path in requiredPaths)
+            AssertFileExists(path, TemplateMetadataSchema);
+
+        var capabilitiesPath = Path.Combine(templateRoot, "capabilities.json");
+        var capabilities = File.ReadAllText(capabilitiesPath);
+        AssertSourceContains(capabilities, "\"defaultPolicy\": \"deny\"", TemplateMetadataSchema, capabilitiesPath);
+        AssertSourceContains(capabilities, "\"clipboard.read\"", TemplateMetadataSchema, capabilitiesPath);
+        AssertSourceContains(capabilities, "\"window.chrome.modify\"", TemplateMetadataSchema, capabilitiesPath);
+
+        var appShellPresetPath = Path.Combine(templateRoot, "HybridApp.Desktop", "MainWindow.AppShellPreset.cs");
+        var appShellPreset = File.ReadAllText(appShellPresetPath);
+        AssertSourceContains(appShellPreset, "template-capability-not-enabled", TemplateMetadataSchema, appShellPresetPath);
     }
 
     [Fact]
@@ -696,6 +726,16 @@ public sealed class AutomationLaneGovernanceTests
         Assert.True(
             ciPublishDependsOn.Contains("Ci"),
             $"[{TransitionGateParityConsistency}] CiPublish must depend on Ci.");
+    }
+
+    [Fact]
+    public void Governance_report_writers_create_parent_directories_before_serialization()
+    {
+        var repoRoot = FindRepoRoot();
+        var processHelpers = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.ProcessHelpers.cs"));
+
+        AssertSourceContains(processHelpers, "Directory.CreateDirectory", BuildPipelineTargetGraph, "build/Build.ProcessHelpers.cs");
+        AssertSourceContains(processHelpers, "Path.GetDirectoryName(path)", BuildPipelineTargetGraph, "build/Build.ProcessHelpers.cs");
     }
 
     [Fact]
