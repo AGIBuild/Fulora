@@ -1,15 +1,7 @@
 name: Link Check
 
 on:
-  pull_request:
-    paths:
-      - '**.md'
-      - 'docs/**'
-  push:
-    branches: [main]
-    paths:
-      - '**.md'
-      - 'docs/**'
+  workflow_dispatch:
 
 permissions:
   contents: read

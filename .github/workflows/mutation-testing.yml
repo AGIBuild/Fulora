@@ -1,9 +1,7 @@
 name: Mutation Testing
 
 on:
-  schedule:
-    - cron: '0 4 * * 1'  # Weekly Monday 4am UTC
-  workflow_dispatch:       # Manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: read
