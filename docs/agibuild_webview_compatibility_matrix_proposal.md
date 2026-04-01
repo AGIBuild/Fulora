@@ -2,6 +2,8 @@
 
 > 本文是“可验证、可测试、可验收”的兼容矩阵提案，用于替代“完全模拟官方 WebView”的不可验证目标。
 > 核心原则：任何“支持/一致”的声明都必须落到矩阵条目 + 明确语义 + 对应测试用例。
+>
+> Historical note: this proposal is now a historical design reference. The current governed support contract lives in `docs/framework-capabilities.json` and `docs/platform-status.md`.
 
 ---
 
@@ -246,4 +248,3 @@
 - 输出 **契约语义规范 v1**：线程模型、生命周期状态机、事件顺序、取消/超时/失败语义
 - 输出 **Contract Tests 清单 v1**：对齐本矩阵 Baseline 条目逐条给出最小用例
 - 输出 **平台 IT 冒烟清单 v1**：每个平台最小可运行闭环
-

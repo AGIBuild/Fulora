@@ -2,36 +2,52 @@
 
 ## Current Snapshot
 
-This page is the release-line placeholder for the current governed platform snapshot.
+This page tracks the current docs-first governed platform snapshot for the active Fulora release line.
 
-> Placeholder notice: this page is intentionally unfilled. Until all `TBD` fields are replaced through release governance, this page MUST NOT be treated as a stable release fact snapshot.
-
-- Snapshot date: `TBD`
-- Release line: `TBD`
-- Stable channel status: `TBD`
-- Capability registry version: `TBD`
-- Security gate status: `TBD`
-- Observability gate status: `TBD`
-- Release gate status: `TBD`
+- Snapshot date: `2026-04-01`
+- Release line: `0.2.x docs-first governance baseline`
+- Stable channel status: `Pre-stable release governance baseline`
+- Capability registry version: `1.0-seeded`
+- Security gate status: `Capability policy taxonomy documented; runtime policy evaluator still in P2`
+- Observability gate status: `Bridge-first diagnostics shipped; runtime/framework unification still in P3`
+- Release gate status: `Docs-first release governance is active for roadmap, closeout snapshot, and layering checks`
 
 ## Tier A
 
-Reserved for stable cross-platform contract capabilities and their current release status.
+Stable cross-platform contract capabilities:
+
+- `kernel.navigation`: stable on Windows/macOS/Linux, preview on iOS/Android.
+- `kernel.lifecycle.disposal`: stable on Windows/macOS/Linux, preview on iOS/Android.
+- `bridge.transport.binary`: stable on desktop hosts, preview on mobile hosts.
+- `bridge.transport.cancellation`: stable on desktop hosts, preview on mobile hosts.
+- `bridge.transport.streaming`: stable on desktop hosts, preview on mobile hosts.
 
 ## Tier B
 
-Reserved for officially supported capabilities with documented platform differences.
+Officially supported capabilities with documented platform variation:
+
+- `framework.spa.hosting`: stable on Windows/macOS, documented Linux variation, mobile support planned.
+- `framework.shell.integration`: stable on Windows/macOS, documented Linux variation, mobile support planned.
+- `framework.shell.activation`: stable on Windows/macOS, documented Linux variation, mobile support planned.
 
 ## Tier C
 
-Reserved for experimental capabilities that do not carry a stable cross-platform SLA.
+Experimental capabilities without a stable cross-platform SLA:
+
+- `plugin.filesystem.read`: experimental and policy-gated.
+- `plugin.http.outbound`: experimental and policy-gated.
+- `plugin.notification.post`: experimental and policy-gated.
+- `plugin.ai.integration`: experimental and opt-in.
 
 ## Known Limitations
 
-Reserved for current platform gaps, temporary restrictions, and platform-specific caveats linked from `framework-capabilities.json`.
+- Linux remains primarily a dialog-first support story; embedded desktop parity is not part of the current baseline.
+- Android and iOS stay preview for Tier A bridge/kernel capabilities and are not yet Tier B-ready for framework services.
+- Capability policy enforcement for plugin powers is not fully implemented yet; the registry entries are the current contract seed for P2 hardening.
+- Platform-specific caveats must continue to flow from `framework-capabilities.json` into release evidence and support messaging.
 
 ## Notes
 
-- Replace `TBD` values only through the release governance process.
 - Keep this page aligned with `release-governance.md` and `framework-capabilities.json`.
-- Placeholder values are not release evidence and cannot be used for support claims.
+- Support claims must use this page plus the machine-readable registry together.
+- This page is a governed snapshot, not a replacement for machine-readable release evidence.

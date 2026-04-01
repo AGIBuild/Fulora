@@ -104,7 +104,8 @@ public sealed class DocumentationGovernanceTests
         var root = doc.RootElement;
         Assert.True(root.TryGetProperty("capabilities", out var capabilitiesElement), "Capabilities array is required.");
         Assert.True(root.TryGetProperty("registry_status", out var registryStatus) && registryStatus.ValueKind == JsonValueKind.String);
-        Assert.Contains("placeholder", registryStatus.GetString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("placeholder", registryStatus.GetString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+        Assert.False(string.IsNullOrWhiteSpace(registryStatus.GetString()), "registry_status must not be empty.");
 
         var capabilities = capabilitiesElement.EnumerateArray().ToList();
         Assert.NotEmpty(capabilities);
@@ -229,6 +230,8 @@ public sealed class DocumentationGovernanceTests
         Assert.Contains("capabilit", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("architect", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("release", content, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("framework-capabilities.json", content, StringComparison.Ordinal);
+        Assert.Contains("platform-status.md", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -347,21 +350,36 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Platform_status_placeholder_reserves_tiered_support_and_known_limitations_sections()
+    public void Platform_status_declares_current_snapshot_tiers_and_known_limitations()
     {
         var repoRoot = FindRepoRoot();
         var statusPath = Path.Combine(repoRoot, "docs", "platform-status.md");
         Assert.True(File.Exists(statusPath), "Missing docs/platform-status.md");
 
         var content = File.ReadAllText(statusPath);
-        AssertContainsAllTokensIgnoreCase(content, "placeholder", "tbd");
+        Assert.DoesNotContain("placeholder", content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("TBD", content, StringComparison.OrdinalIgnoreCase);
         AssertContainsAnyTokenGroupIgnoreCase(
             content,
-            ["must not", "stable release fact snapshot"],
-            ["not be treated", "stable", "fact snapshot"]);
+            ["snapshot date"],
+            ["release line"],
+            ["capability registry version"]);
         AssertContainsAnyTokenGroupIgnoreCase(
             content,
-            ["tier a", "tier b", "tier c"],
+            ["tier a", "kernel.navigation"],
+            ["bridge.transport.streaming"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["tier b", "framework.spa.hosting"],
+            ["framework.shell.activation"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["tier c", "plugin.filesystem.read"],
+            ["plugin.notification.post"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["known limitations", "linux"],
+            ["android"],
             ["known limitations"]);
     }
 
@@ -388,7 +406,7 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Framework_capabilities_registry_uses_starter_schema_and_representative_entries()
+    public void Framework_capabilities_registry_uses_seeded_schema_and_representative_entries()
     {
         var repoRoot = FindRepoRoot();
         var capabilitiesPath = Path.Combine(repoRoot, "docs", "framework-capabilities.json");
@@ -406,15 +424,23 @@ public sealed class DocumentationGovernanceTests
             "id",
             "compatibility",
             "migration");
+        Assert.True(root.TryGetProperty("registry_status", out var registryStatus) && registryStatus.ValueKind == JsonValueKind.String);
+        Assert.DoesNotContain("placeholder", registryStatus.GetString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
         Assert.True(root.TryGetProperty("capabilities", out var capabilitiesElement), "Capabilities array is required.");
 
         var capabilities = capabilitiesElement.EnumerateArray().ToList();
-        Assert.True(capabilities.Count >= 4, "Starter capability registry should include representative entries across four layers.");
+        Assert.True(capabilities.Count >= 10, "Seeded capability registry should include representative entries across layers and tiers.");
 
         var observedLayers = new HashSet<string>(StringComparer.Ordinal);
+        var observedCapabilityIds = new HashSet<string>(StringComparer.Ordinal);
 
         foreach (var capability in capabilities)
         {
+            Assert.True(capability.TryGetProperty("capability_id", out var capabilityId) && capabilityId.ValueKind == JsonValueKind.String);
+            var capabilityIdValue = capabilityId.GetString();
+            Assert.False(string.IsNullOrWhiteSpace(capabilityIdValue), "Each capability must declare a non-empty capability_id.");
+            observedCapabilityIds.Add(capabilityIdValue!);
+
             Assert.True(capability.TryGetProperty("layer", out var layer) && layer.ValueKind == JsonValueKind.String);
             var layerName = layer.GetString();
             Assert.False(string.IsNullOrWhiteSpace(layerName), "Each capability must declare a non-empty layer.");
@@ -425,6 +451,37 @@ public sealed class DocumentationGovernanceTests
         Assert.Contains("Bridge", observedLayers);
         Assert.Contains("Framework Services", observedLayers);
         Assert.Contains("Plugins / Vertical Features", observedLayers);
+        foreach (var expectedCapabilityId in new[]
+                 {
+                     "kernel.navigation",
+                     "kernel.lifecycle.disposal",
+                     "bridge.transport.binary",
+                     "bridge.transport.cancellation",
+                     "bridge.transport.streaming",
+                     "framework.spa.hosting",
+                     "framework.shell.activation",
+                     "plugin.filesystem.read",
+                     "plugin.http.outbound",
+                     "plugin.notification.post"
+                 })
+        {
+            Assert.Contains(expectedCapabilityId, observedCapabilityIds);
+        }
+    }
+
+    [Fact]
+    public void Compatibility_matrix_proposal_is_marked_historical_and_points_to_current_registry_and_status()
+    {
+        var repoRoot = FindRepoRoot();
+        var proposalPath = Path.Combine(repoRoot, "docs", "agibuild_webview_compatibility_matrix_proposal.md");
+        Assert.True(File.Exists(proposalPath), "Missing docs/agibuild_webview_compatibility_matrix_proposal.md");
+
+        var content = File.ReadAllText(proposalPath);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["historical"],
+            ["current", "framework-capabilities.json"],
+            ["current", "platform-status.md"]);
     }
 
     [Fact]
