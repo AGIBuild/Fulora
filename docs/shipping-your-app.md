@@ -173,4 +173,4 @@ Target Package => _ => _
 ## See Also
 
 - [Velopack documentation](https://docs.velopack.io/)
-- [Auto-update framework spec](../openspec/specs/auto-update-framework/spec.md)
+- [Release Governance](release-governance.md)

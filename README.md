@@ -27,6 +27,8 @@
   <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
 </p>
 
+> Five-platform messaging is directional runtime-model positioning; capability support is tiered and governed by registry/status snapshots, and is not fully covered for every capability on every platform.
+
 ---
 
 ## Why Fulora
@@ -247,9 +249,9 @@ Two paths, one runtime:
 
 Unlike wrapper-only solutions, Fulora provides typed host/web contracts, policy-governed capabilities, machine-checkable diagnostics, and scalable app-shell patterns out of the box.
 
-**Current status:** Phase 12 (Enterprise & Advanced Scenarios) completed. All roadmap phases through 12 are done.
+**Roadmap note:** The phase roadmap is directional planning context. Treat governed capability/support facts as the source of truth in Platform Status and Release Governance.
 
-[Full Roadmap](openspec/ROADMAP.md) · [Project Vision & Goals](openspec/PROJECT.md)
+[Product Platform Roadmap](docs/product-platform-roadmap.md) · [Platform Status](docs/platform-status.md)
 
 ---
 

@@ -2,6 +2,10 @@
 
 Step-by-step guide for publishing a new Agibuild.Fulora release via the unified CI/Release pipeline.
 
+## Normative Reference
+
+- [Release Governance](release-governance.md) — authoritative stable release rules, gate definitions, and promotion constraints for this checklist.
+
 ## How Releases Work
 
 Releases are fully automated through the unified `ci.yml` workflow:

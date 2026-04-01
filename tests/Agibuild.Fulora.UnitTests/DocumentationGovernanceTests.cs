@@ -14,6 +14,26 @@ public sealed class DocumentationGovernanceTests
         ["Framework Capabilities"] = "framework-capabilities.json"
     };
 
+    private static readonly string[] PublicDocsRepointTargets =
+    [
+        "README.md",
+        "docs/index.md",
+        "docs/articles/architecture.md",
+        "docs/articles/bridge-guide.md",
+        "docs/articles/spa-hosting.md",
+        "docs/shipping-your-app.md",
+        "docs/release-checklist.md",
+        "docs/agibuild_webview_design_doc.md",
+        "docs/docs-site-deploy.md"
+    ];
+
+    private static readonly string[] ForbiddenOpenSpecReferences =
+    [
+        "openspec/ROADMAP.md",
+        "openspec/PROJECT.md",
+        "openspec/specs/"
+    ];
+
     [Fact]
     public void Required_platform_documents_exist()
     {
@@ -402,6 +422,144 @@ public sealed class DocumentationGovernanceTests
         AssertContainsAnyTokenGroupIgnoreCase(content, ["status", "pass", "fail"], ["status", "blocked"]);
         AssertContainsAnyTokenGroupIgnoreCase(content, ["producer", "generator"], ["ci", "workflow", "job"], ["release tool"]);
         AssertContainsAnyTokenGroupIgnoreCase(content, ["artifacts[]", "type", "path"], ["hash"], ["build/run id"]);
+    }
+
+    [Fact]
+    public void Public_docs_do_not_reference_legacy_openspec_paths()
+    {
+        var repoRoot = FindRepoRoot();
+
+        foreach (var relativePath in PublicDocsRepointTargets)
+        {
+            var absolutePath = Path.Combine(repoRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            Assert.True(File.Exists(absolutePath), $"Missing public document under test: {relativePath}");
+
+            var content = File.ReadAllText(absolutePath);
+            foreach (var forbidden in ForbiddenOpenSpecReferences)
+            {
+                Assert.DoesNotContain(forbidden, content, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+    }
+
+    [Fact]
+    public void Readme_links_to_product_platform_roadmap_doc_entry()
+    {
+        var repoRoot = FindRepoRoot();
+        var readmePath = Path.Combine(repoRoot, "README.md");
+        Assert.True(File.Exists(readmePath), "Missing README.md");
+
+        var content = File.ReadAllText(readmePath);
+        Assert.Contains("docs/product-platform-roadmap.md", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Shipping_guide_links_to_release_governance_doc()
+    {
+        var repoRoot = FindRepoRoot();
+        var shippingPath = Path.Combine(repoRoot, "docs", "shipping-your-app.md");
+        Assert.True(File.Exists(shippingPath), "Missing docs/shipping-your-app.md");
+
+        var content = File.ReadAllText(shippingPath);
+        Assert.Contains("release-governance.md", content, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Readme_and_docs_index_use_consistent_public_roadmap_status_language()
+    {
+        var repoRoot = FindRepoRoot();
+        var readmePath = Path.Combine(repoRoot, "README.md");
+        var indexPath = Path.Combine(repoRoot, "docs", "index.md");
+        Assert.True(File.Exists(readmePath), "Missing README.md");
+        Assert.True(File.Exists(indexPath), "Missing docs/index.md");
+
+        var readmeContent = File.ReadAllText(readmePath);
+        var indexContent = File.ReadAllText(indexPath);
+
+        var readmeHasCompleted = readmeContent.Contains("completed", StringComparison.OrdinalIgnoreCase);
+        var readmeHasPlanned = readmeContent.Contains("planned", StringComparison.OrdinalIgnoreCase);
+        var indexHasCompleted = indexContent.Contains("completed", StringComparison.OrdinalIgnoreCase);
+        var indexHasPlanned = indexContent.Contains("planned", StringComparison.OrdinalIgnoreCase);
+
+        Assert.False(
+            readmeHasCompleted && indexHasPlanned,
+            "README says roadmap/status is completed while docs/index says planned. Public roadmap/status language must stay consistent.");
+
+        Assert.False(
+            readmeHasPlanned && indexHasCompleted,
+            "README says roadmap/status is planned while docs/index says completed. Public roadmap/status language must stay consistent.");
+    }
+
+    [Fact]
+    public void Historical_design_doc_uses_non_normative_language_and_points_to_current_governance_sources()
+    {
+        var repoRoot = FindRepoRoot();
+        var designDocPath = Path.Combine(repoRoot, "docs", "agibuild_webview_design_doc.md");
+        Assert.True(File.Exists(designDocPath), "Missing docs/agibuild_webview_design_doc.md");
+
+        var content = File.ReadAllText(designDocPath);
+
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["历史", "参考"],
+            ["早期", "设计稿"],
+            ["不作为", "规范"]);
+        AssertContainsAllTokensIgnoreCase(
+            content,
+            "product-platform-roadmap.md",
+            "platform-status.md",
+            "release-governance.md");
+
+        var forbiddenPhrases = new[]
+        {
+            "已达成基础目标",
+            "覆盖率",
+            "✅ done",
+            "planned",
+            "🔜 next"
+        };
+
+        foreach (var forbidden in forbiddenPhrases)
+        {
+            Assert.DoesNotContain(forbidden, content, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    [Fact]
+    public void Readme_declares_governed_tiered_support_language_for_five_platform_direction()
+    {
+        var repoRoot = FindRepoRoot();
+        var readmePath = Path.Combine(repoRoot, "README.md");
+        Assert.True(File.Exists(readmePath), "Missing README.md");
+
+        var content = File.ReadAllText(readmePath);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["tiered", "registry", "status"],
+            ["tiered", "governance"],
+            ["registry", "status", "governed"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["directional"],
+            ["not fully covered"],
+            ["does not mean", "fully covered"]);
+    }
+
+    [Fact]
+    public void Historical_design_doc_is_not_exposed_as_primary_navigation_entry()
+    {
+        var repoRoot = FindRepoRoot();
+        var indexPath = Path.Combine(repoRoot, "docs", "index.md");
+        var tocPath = Path.Combine(repoRoot, "docs", "toc.yml");
+        Assert.True(File.Exists(indexPath), "Missing docs/index.md");
+        Assert.True(File.Exists(tocPath), "Missing docs/toc.yml");
+
+        var indexContent = File.ReadAllText(indexPath);
+        var tocContent = File.ReadAllText(tocPath);
+        const string historicalDesignDoc = "agibuild_webview_design_doc.md";
+
+        Assert.DoesNotContain(historicalDesignDoc, indexContent, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(historicalDesignDoc, tocContent, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string FindRepoRoot()

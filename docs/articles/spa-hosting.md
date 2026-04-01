@@ -134,4 +134,5 @@ Key behaviors:
 - [Getting Started](./getting-started.md)
 - [Bridge Guide](./bridge-guide.md)
 - [Architecture](./architecture.md)
-- [Roadmap](../../openspec/ROADMAP.md)
+- [Product Platform Roadmap](../product-platform-roadmap.md)
+- [Platform Status](../platform-status.md)

@@ -73,13 +73,7 @@ All of this is type-checked at compile time and AOT-safe, with one runtime model
 
 ## Roadmap
 
-| Phase | Focus | Status |
-|---|---|---|
-| Phase 0–3 | Foundation, Bridge, SPA, Polish | Done |
-| Phase 4–6 | Application Shell, Framework Positioning, Governance | Done |
-| Phase 7–8 | Release Orchestration, Bridge V2 & Platform Parity | Done |
-| Phase 9 | GA Release (1.0.0) | Done |
-| Phase 10–11 | Production Operations, Ecosystem & DX | Done |
-| Phase 12 | Enterprise & Advanced Scenarios | Planned |
+Roadmap phases are directional planning context, not the governed release fact source.
+For externally communicated support/status, use Platform Status and Release Governance.
 
-[Full Roadmap](../openspec/ROADMAP.md) · [Project Vision](../openspec/PROJECT.md)
+[Product Platform Roadmap](product-platform-roadmap.md) · [Platform Status](platform-status.md)

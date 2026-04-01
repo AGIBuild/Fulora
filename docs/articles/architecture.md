@@ -34,7 +34,18 @@ Fulora takes a different approach: the web frontend and the native host share a 
 └──────────────────────────────────────────────────────────┘
 ```
 
-The key insight: **your application code never touches the WebView engine directly**. The runtime core mediates everything — bridge calls, capability requests, SPA hosting, diagnostics — through well-defined abstractions. This is what makes the same app code run on five platforms without `#if` blocks.
+The key insight: **your application code never touches the WebView engine directly**. The runtime core mediates everything — bridge calls, capability requests, SPA hosting, diagnostics — through well-defined abstractions. This enables one runtime model to be reused across five host platforms while capability/support outcomes remain tiered and governed by the registry and platform status snapshots.
+
+## Four-Layer Runtime Model
+
+Fulora's product-grade architecture governance follows a four-layer model:
+
+1. **Kernel** — runtime invariants, contract semantics, and platform-agnostic lifecycle rules.
+2. **Bridge** — typed C# ↔ JavaScript contract surface and generated marshalling.
+3. **Framework Services** — policy, diagnostics, shell, hosting, and other governed services.
+4. **Plugins / Vertical Features** — domain-specific extensions that compose on top of stable layers.
+
+Dependency direction is top-down only: higher layers can depend on lower layers, and lower layers must not depend on higher layers.
 
 ## Bridge Model
 
@@ -103,5 +114,6 @@ Secondary instances forward activation to the primary. Duplicate activations are
 
 - [Getting Started](./getting-started.md) — Build your first app
 - [Bridge Guide](./bridge-guide.md) — Advanced bridge patterns
-- [Roadmap](../../openspec/ROADMAP.md) — Product direction
-- [Project Vision](../../openspec/PROJECT.md) — Goals and positioning
+- [Architecture Layering](../architecture-layering.md) — Four-layer boundaries and dependency rules
+- [Product Platform Roadmap](../product-platform-roadmap.md) — Platform direction and execution phases
+- [Platform Status](../platform-status.md) — Current governed capability/support snapshot

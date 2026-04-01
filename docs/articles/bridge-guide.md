@@ -230,4 +230,5 @@ Closed generic types in parameters and return values are fully supported.
 - [Getting Started](./getting-started.md)
 - [Architecture](./architecture.md)
 - [SPA Hosting](./spa-hosting.md)
-- [Roadmap](../../openspec/ROADMAP.md)
+- [Product Platform Roadmap](../product-platform-roadmap.md)
+- [Platform Status](../platform-status.md)

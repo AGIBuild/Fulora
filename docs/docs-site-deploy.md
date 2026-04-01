@@ -49,6 +49,5 @@ The site output is in `docs/_site/` (gitignored).
 
 ## Troubleshooting
 
-- **docfx metadata warnings**: Some `InvalidFileLink` warnings for `openspec/` links are expected — those files are outside the docs scope.
 - **Pages not deploying**: Verify that GitHub Pages source is set to "GitHub Actions" in repository settings.
 - **Missing API docs**: Ensure `GenerateDocumentationFile` is enabled in `Directory.Build.props` for product projects.
