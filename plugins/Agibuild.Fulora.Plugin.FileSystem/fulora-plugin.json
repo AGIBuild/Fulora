@@ -4,5 +4,12 @@
   "services": ["FileSystemService"],
   "npmPackage": "@agibuild/bridge-plugin-filesystem",
   "minFuloraVersion": "1.0.0",
-  "platforms": ["windows", "macos", "linux", "android", "ios"]
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "requiredCapabilities": ["plugin.filesystem.read", "plugin.filesystem.write"],
+  "optionalCapabilities": ["plugin.filesystem.pick"],
+  "securityNotes": [
+    "Constrain access to sandboxed or policy-approved roots.",
+    "Write operations remain gated by FileSystemOptions.AllowWrite."
+  ],
+  "platformConstraints": ["desktop-hosts", "sandbox-or-policy-governed-paths"]
 }

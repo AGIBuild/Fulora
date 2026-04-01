@@ -39,6 +39,22 @@ public sealed class PluginManifest
     [JsonPropertyName("platforms")]
     public string[]? Platforms { get; set; }
 
+    /// <summary>Capabilities required for the plugin's baseline behavior.</summary>
+    [JsonPropertyName("requiredCapabilities")]
+    public string[] RequiredCapabilities { get; set; } = [];
+
+    /// <summary>Capabilities the host may opt into explicitly.</summary>
+    [JsonPropertyName("optionalCapabilities")]
+    public string[] OptionalCapabilities { get; set; } = [];
+
+    /// <summary>Short notes describing the plugin's security expectations.</summary>
+    [JsonPropertyName("securityNotes")]
+    public string[] SecurityNotes { get; set; } = [];
+
+    /// <summary>Short notes describing platform or environment constraints.</summary>
+    [JsonPropertyName("platformConstraints")]
+    public string[] PlatformConstraints { get; set; } = [];
+
     /// <summary>
     /// Checks whether this plugin is compatible with the given Fulora framework version.
     /// </summary>

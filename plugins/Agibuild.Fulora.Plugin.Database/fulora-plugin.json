@@ -4,5 +4,12 @@
   "services": ["DatabaseService"],
   "npmPackage": "@agibuild/bridge-plugin-database",
   "minFuloraVersion": "1.0.0",
-  "platforms": ["windows", "macos", "linux", "android", "ios"]
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "requiredCapabilities": ["plugin.database.read", "plugin.database.write"],
+  "optionalCapabilities": [],
+  "securityNotes": [
+    "Use parameterized SQL when forwarding untrusted input into database operations.",
+    "Review database path, migrations, and backup handling before enabling production writes."
+  ],
+  "platformConstraints": ["desktop-hosts", "connection-options-required-for-production"]
 }

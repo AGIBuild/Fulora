@@ -4,5 +4,12 @@
   "services": ["HttpClientService"],
   "npmPackage": "@agibuild/bridge-plugin-httpclient",
   "minFuloraVersion": "1.0.0",
-  "platforms": ["windows", "macos", "linux", "android", "ios"]
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "requiredCapabilities": ["plugin.http.outbound"],
+  "optionalCapabilities": [],
+  "securityNotes": [
+    "Restrict outbound hosts with policy before enabling the plugin in production.",
+    "Review default headers and interceptors because they apply to every request."
+  ],
+  "platformConstraints": ["desktop-hosts", "policy-governed-network-egress"]
 }

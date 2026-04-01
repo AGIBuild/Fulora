@@ -4,5 +4,12 @@
   "services": ["NotificationService"],
   "npmPackage": "@agibuild/bridge-plugin-notifications",
   "minFuloraVersion": "1.0.0",
-  "platforms": ["windows", "macos", "linux", "android", "ios"]
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "requiredCapabilities": ["plugin.notification.post"],
+  "optionalCapabilities": [],
+  "securityNotes": [
+    "Delivery guarantees and presentation differ by platform and user settings.",
+    "Production hosts should replace the in-memory provider and respect user consent."
+  ],
+  "platformConstraints": ["desktop-hosts", "platform-delivery-variance"]
 }
