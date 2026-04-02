@@ -34,6 +34,7 @@
   <PropertyGroup>
     <!-- Generate XML documentation for API reference -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile Condition="'$(IsPackable)' == 'true' and '$(PackageReadmeFile)' == ''">README.md</PackageReadmeFile>
 
     <!-- Explicit version: single source of truth for the entire solution.
          Bump this value via PR when preparing a new release.

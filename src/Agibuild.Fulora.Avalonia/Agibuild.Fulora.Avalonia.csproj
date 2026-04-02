@@ -10,7 +10,6 @@
     <PackageId>Agibuild.Fulora.Avalonia</PackageId>
     <Description>Cross-platform WebView control for Avalonia UI with native platform adapters (WKWebView on macOS/iOS, WebView2 on Windows, WebKitGTK on Linux, Android WebView). Provides embedded WebView, popup dialog, and OAuth authentication flows.</Description>
     <PackageTags>avalonia;webview;wkwebview;webview2;android;ios;cross-platform;macos;windows;linux</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- Build output (Agibuild.Fulora.dll) is included in lib/net10.0/ automatically. -->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -46,7 +45,6 @@
 
   <ItemGroup>
     <None Include="buildTransitive/Agibuild.Fulora.Avalonia.targets" Pack="true" PackagePath="buildTransitive/Agibuild.Fulora.Avalonia.targets" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <!--

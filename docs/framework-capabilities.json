@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0",
-  "updatedAtUtc": "2026-04-01T14:00:00Z",
+  "updatedAtUtc": "2026-04-02T10:30:00Z",
   "registry_status": "seeded-governed-baseline",
   "migration_notes": "Both 'id' and 'capability_id' are currently preserved for migration compatibility. New consumers should use 'capability_id' as the canonical key while legacy readers transition from 'id'.",
   "capabilities": [

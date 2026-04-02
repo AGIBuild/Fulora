@@ -5,12 +5,13 @@
 This page tracks the current docs-first governed platform snapshot for the active Fulora release line.
 
 - Snapshot date: `2026-04-01`
+- Snapshot date: `2026-04-02`
 - Release line: `0.2.x docs-first governance baseline`
 - Stable channel status: `Pre-stable release governance baseline`
 - Capability registry version: `1.0-seeded`
-- Security gate status: `Capability policy taxonomy documented; runtime policy evaluator still in P2`
-- Observability gate status: `Bridge-first diagnostics shipped; runtime/framework unification still in P3`
-- Release gate status: `Docs-first release governance is active for roadmap, closeout snapshot, and layering checks`
+- Security gate status: `Capability taxonomy is documented and the runtime policy evaluator now governs host capability enforcement; plugin capability expansion remains Tier C and policy-gated`
+- Observability gate status: `Unified diagnostics event envelope and runtime/bridge sinks are shipped; broader framework event coverage remains incremental`
+- Release gate status: `Docs-first release governance, capability snapshots, dependency governance, and closeout evidence are active in Ci`
 
 ## Tier A
 
@@ -43,7 +44,7 @@ Experimental capabilities without a stable cross-platform SLA:
 
 - Linux remains primarily a dialog-first support story; embedded desktop parity is not part of the current baseline.
 - Android and iOS stay preview for Tier A bridge/kernel capabilities and are not yet Tier B-ready for framework services.
-- Capability policy enforcement for plugin powers is not fully implemented yet; the registry entries are the current contract seed for P2 hardening.
+- Capability policy enforcement is active for governed host capability paths; broader plugin power rollout remains experimental and Tier C.
 - Platform-specific caveats must continue to flow from `framework-capabilities.json` into release evidence and support messaging.
 
 ## Notes
