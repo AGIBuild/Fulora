@@ -81,6 +81,8 @@ public sealed class HostCapabilityBridgeTests
         Assert.Equal(WebViewHostCapabilityCallOutcome.Deny, result.Outcome);
         Assert.False(result.IsAllowed);
         Assert.False(result.IsSuccess);
+        Assert.Equal("shell.external_open", result.CapabilityId);
+        Assert.Equal(WebViewCapabilityPolicyDecisionKind.Deny, result.PolicyDecision.Kind);
         Assert.Equal("denied-by-policy", result.DenyReason);
         Assert.Equal(0, provider.CallCount);
     }
@@ -163,20 +165,28 @@ public sealed class HostCapabilityBridgeTests
 
         Assert.Equal(4, diagnostics.Count);
         Assert.Equal(WebViewHostCapabilityOperation.ClipboardReadText, diagnostics[0].Operation);
+        Assert.Equal("clipboard.read", diagnostics[0].CapabilityId);
+        Assert.Equal("host-bridge", diagnostics[0].SourceComponent);
         Assert.Equal(WebViewHostCapabilityCallOutcome.Allow, diagnostics[0].Outcome);
         Assert.True(diagnostics[0].WasAuthorized);
+        Assert.Equal(WebViewCapabilityPolicyDecisionKind.Allow, diagnostics[0].PolicyDecision.Kind);
 
         Assert.Equal(WebViewHostCapabilityOperation.NotificationShow, diagnostics[1].Operation);
+        Assert.Equal("notification.post", diagnostics[1].CapabilityId);
         Assert.Equal(WebViewHostCapabilityCallOutcome.Deny, diagnostics[1].Outcome);
         Assert.False(diagnostics[1].WasAuthorized);
+        Assert.Equal(WebViewCapabilityPolicyDecisionKind.Deny, diagnostics[1].PolicyDecision.Kind);
         Assert.Equal("notification-denied", diagnostics[1].DenyReason);
 
         Assert.Equal(WebViewHostCapabilityOperation.ExternalOpen, diagnostics[2].Operation);
+        Assert.Equal("shell.external_open", diagnostics[2].CapabilityId);
         Assert.Equal(WebViewHostCapabilityCallOutcome.Failure, diagnostics[2].Outcome);
         Assert.True(diagnostics[2].WasAuthorized);
+        Assert.Equal(WebViewCapabilityPolicyDecisionKind.Allow, diagnostics[2].PolicyDecision.Kind);
         Assert.Equal(WebViewOperationFailureCategory.AdapterFailed, diagnostics[2].FailureCategory);
 
         Assert.Equal(WebViewHostCapabilityOperation.MenuApplyModel, diagnostics[3].Operation);
+        Assert.Equal("window.chrome.modify", diagnostics[3].CapabilityId);
         Assert.Equal(WebViewHostCapabilityCallOutcome.Allow, diagnostics[3].Outcome);
         Assert.True(diagnostics[3].WasAuthorized);
 
@@ -212,18 +222,25 @@ public sealed class HostCapabilityBridgeTests
         Assert.True(Guid.TryParseExact(records[0].CorrelationId, "D", out _));
         Assert.True(Guid.TryParseExact(records[0].RootWindowId, "D", out _));
         Assert.Equal("clipboard-read-text", records[0].Operation);
+        Assert.Equal("clipboard.read", records[0].CapabilityId);
+        Assert.Equal("host-bridge", records[0].SourceComponent);
+        Assert.Equal("allow", records[0].PolicyDecision);
         Assert.Equal("allow", records[0].Outcome);
         Assert.True(records[0].WasAuthorized);
         Assert.Null(records[0].DenyReason);
         Assert.Null(records[0].FailureCategory);
 
         Assert.Equal("notification-show", records[1].Operation);
+        Assert.Equal("notification.post", records[1].CapabilityId);
+        Assert.Equal("deny", records[1].PolicyDecision);
         Assert.Equal("deny", records[1].Outcome);
         Assert.False(records[1].WasAuthorized);
         Assert.Equal("notification-denied", records[1].DenyReason);
         Assert.Null(records[1].FailureCategory);
 
         Assert.Equal("external-open", records[2].Operation);
+        Assert.Equal("shell.external_open", records[2].CapabilityId);
+        Assert.Equal("allow", records[2].PolicyDecision);
         Assert.Equal("failure", records[2].Outcome);
         Assert.True(records[2].WasAuthorized);
         Assert.Null(records[2].DenyReason);

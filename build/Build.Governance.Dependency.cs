@@ -48,15 +48,28 @@ internal partial class BuildTask
 
                     var npmWorkspaces = new[]
                     {
-                        ReactWebDirectory
+                        ReactWebDirectory,
+                        AiChatWebDirectory,
+                        VueWebDirectory,
+                        TodoWebDirectory
                     }
-                    .Where(path => File.Exists(path / "package-lock.json"))
                     .Distinct()
                     .ToArray();
 
                     foreach (var workspace in npmWorkspaces)
                     {
-                        var npmOutput = await RunNpmCaptureAllAsync(
+                        if (!File.Exists(workspace / "package-lock.json"))
+                        {
+                            failures.Add(new GovernanceFailure(
+                                Category: "dependency-vulnerability",
+                                InvariantId: DependencyVulnerabilityInvariantId,
+                                SourceArtifact: workspace.ToString(),
+                                Expected: "missing npm lockfile is treated as a governance failure",
+                                Actual: "missing npm lockfile"));
+                            continue;
+                        }
+
+                        var npmOutput = await RunNpmStdoutAsync(
                             ["audit", "--json", "--audit-level=high"],
                             workspace,
                             TimeSpan.FromMinutes(3));

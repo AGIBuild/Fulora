@@ -23,6 +23,10 @@ public static class DiagnosticSchemaAssertionHelper
             throw new InvalidOperationException("Host capability diagnostic RootWindowId does not match expected value.");
         if (diagnostic.DurationMilliseconds < 0)
             throw new InvalidOperationException("Host capability diagnostic DurationMilliseconds must be non-negative.");
+        if (string.IsNullOrWhiteSpace(diagnostic.CapabilityId))
+            throw new InvalidOperationException("Host capability diagnostic CapabilityId must be non-empty.");
+        if (string.IsNullOrWhiteSpace(diagnostic.SourceComponent))
+            throw new InvalidOperationException("Host capability diagnostic SourceComponent must be non-empty.");
         if (diagnostic.DiagnosticSchemaVersion != HostCapabilitySchemaVersion)
             throw new InvalidOperationException("Host capability diagnostic schema version mismatch.");
     }

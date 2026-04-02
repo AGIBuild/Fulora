@@ -17,9 +17,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.4, )",
-        "resolved": "10.0.4",
-        "contentHash": "CCx8ojW3mOL150/LnP0DK7qpMrJEt6xxNCmJFKoX89v1h0FwpsEHqennowGPYDxp6zIkIO4f9PxynjOeLF+1zw=="
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "A+5ZuQ0f449tM+MQrhf6R9ZX7lYpjk/ODEwLYKrnF6111rtARx8fVsm4YznUnQiKnnXfaXNBqgxmil6RW3L3SA=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
@@ -764,14 +764,14 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.6-local, )"
+          "Agibuild.Fulora.Core": "[1.5.10-local, )"
         }
       },
       "agibuild.fulora.adapters.android": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
+          "Agibuild.Fulora.Core": "[1.5.10-local, )",
           "Xamarin.AndroidX.Activity": "[1.12.4.1, )"
         }
       },
@@ -790,11 +790,11 @@
       "agibuild.fulora.integration.tests": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Avalonia": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.6-local, )",
-          "Agibuild.Fulora.Testing": "[1.5.6-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
+          "Agibuild.Fulora.Avalonia": "[1.5.10-local, )",
+          "Agibuild.Fulora.Core": "[1.5.10-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.10-local, )",
+          "Agibuild.Fulora.Testing": "[1.5.10-local, )",
           "Avalonia": "[12.0.0-preview2, )",
           "Avalonia.Fonts.Inter": "[12.0.0-preview2, )",
           "Avalonia.Themes.Fluent": "[12.0.0-preview2, )",
@@ -806,17 +806,17 @@
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
+          "Agibuild.Fulora.Core": "[1.5.10-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
       "agibuild.fulora.testing": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.6-local, )"
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
+          "Agibuild.Fulora.Core": "[1.5.10-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.10-local, )"
         }
       },
       "Avalonia": {

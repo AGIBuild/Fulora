@@ -1236,7 +1236,11 @@ public sealed class WebViewShellExperience : IDisposable
         {
             if (!WebViewOperationFailure.TryGetCategory(ex, out _))
                 WebViewOperationFailure.SetCategory(ex, WebViewOperationFailureCategory.AdapterFailed);
-            var failed = WebViewHostCapabilityCallResult<object?>.Failure(ex, wasAuthorized: false);
+            var failed = WebViewHostCapabilityCallResult<object?>.Failure(
+                WebViewCapabilityPolicyEvaluator.Describe(WebViewHostCapabilityOperation.MenuApplyModel),
+                WebViewCapabilityPolicyDecision.Deny("menu-pruning-policy-failed"),
+                ex,
+                wasAuthorized: false);
             ReportSystemIntegrationOutcome(
                 failed,
                 "Menu pruning policy failed.");
@@ -1245,7 +1249,10 @@ public sealed class WebViewShellExperience : IDisposable
 
         if (!decision.IsAllowed)
         {
-            var denied = WebViewHostCapabilityCallResult<object?>.Denied(decision.DenyReason ?? "menu-pruning-policy-denied");
+            var denied = WebViewHostCapabilityCallResult<object?>.Denied(
+                WebViewCapabilityPolicyEvaluator.Describe(WebViewHostCapabilityOperation.MenuApplyModel),
+                WebViewCapabilityPolicyDecision.Deny(decision.DenyReason ?? "menu-pruning-policy-denied"),
+                decision.DenyReason ?? "menu-pruning-policy-denied");
             ReportSystemIntegrationOutcome(
                 denied,
                 "Menu pruning was denied by shell policy stage.");
@@ -1280,7 +1287,11 @@ public sealed class WebViewShellExperience : IDisposable
         {
             if (!WebViewOperationFailure.TryGetCategory(ex, out _))
                 WebViewOperationFailure.SetCategory(ex, WebViewOperationFailureCategory.AdapterFailed);
-            var failed = WebViewHostCapabilityCallResult<object?>.Failure(ex, wasAuthorized: false);
+            var failed = WebViewHostCapabilityCallResult<object?>.Failure(
+                WebViewCapabilityPolicyEvaluator.Describe(WebViewHostCapabilityOperation.MenuApplyModel),
+                WebViewCapabilityPolicyDecision.Deny("menu-pruning-profile-resolution-failed"),
+                ex,
+                wasAuthorized: false);
             ReportSystemIntegrationOutcome(
                 failed,
                 "Menu pruning profile resolution failed.");
@@ -1291,7 +1302,11 @@ public sealed class WebViewShellExperience : IDisposable
         {
             var nullProfile = new InvalidOperationException("Session permission profile resolver returned null for menu pruning.");
             WebViewOperationFailure.SetCategory(nullProfile, WebViewOperationFailureCategory.AdapterFailed);
-            var failed = WebViewHostCapabilityCallResult<object?>.Failure(nullProfile, wasAuthorized: false);
+            var failed = WebViewHostCapabilityCallResult<object?>.Failure(
+                WebViewCapabilityPolicyEvaluator.Describe(WebViewHostCapabilityOperation.MenuApplyModel),
+                WebViewCapabilityPolicyDecision.Deny("menu-pruning-profile-resolution-failed"),
+                nullProfile,
+                wasAuthorized: false);
             ReportSystemIntegrationOutcome(
                 failed,
                 "Menu pruning profile resolution failed.");
@@ -1315,7 +1330,10 @@ public sealed class WebViewShellExperience : IDisposable
 
         if (profilePermissionDecision.IsExplicit && profilePermissionDecision.State == PermissionState.Deny)
         {
-            var denied = WebViewHostCapabilityCallResult<object?>.Denied($"menu-pruning-profile-denied:{resolvedProfile.ProfileIdentity}");
+            var denied = WebViewHostCapabilityCallResult<object?>.Denied(
+                WebViewCapabilityPolicyEvaluator.Describe(WebViewHostCapabilityOperation.MenuApplyModel),
+                WebViewCapabilityPolicyDecision.Deny($"menu-pruning-profile-denied:{resolvedProfile.ProfileIdentity}"),
+                $"menu-pruning-profile-denied:{resolvedProfile.ProfileIdentity}");
             ReportSystemIntegrationOutcome(
                 denied,
                 "Menu pruning was denied by session permission profile stage.");
@@ -1414,4 +1432,3 @@ public sealed class WebViewShellExperience : IDisposable
             _options.HostCapabilityBridge.SystemIntegrationEventDispatched -= OnSystemIntegrationEventDispatched;
     }
 }
-

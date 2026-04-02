@@ -7,6 +7,10 @@
 - `Framework Services`
 - `Plugins / Vertical Features`
 
+## Dependency Policy
+
+The dependency policy is enforced through repository-visible governance hooks. Any layering violation must point developers back to this document before merge.
+
 ## Allowed Dependencies
 
 - `Kernel` depends only on BCL and internal kernel contracts.

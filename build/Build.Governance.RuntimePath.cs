@@ -100,7 +100,7 @@ internal partial class BuildTask
                             if (string.Equals(id, "package-consumption-smoke", StringComparison.Ordinal))
                             {
                                 var telemetryExists = File.Exists(NugetSmokeTelemetryFile);
-                                var smokeTestAvailable = OperatingSystem.IsMacOS();
+                                var smokeTestAvailable = IsMacOsGuiSmokeEnvironment();
                                 checks.Add(new
                                 {
                                     id,
@@ -108,7 +108,7 @@ internal partial class BuildTask
                                     evidenceType = "nuget-smoke-telemetry",
                                     telemetryPath = NugetSmokeTelemetryFile.ToString(),
                                     passed = telemetryExists,
-                                    skippedReason = smokeTestAvailable ? (string?)null : "GUI smoke test requires macOS display server"
+                                    skippedReason = smokeTestAvailable ? (string?)null : "GUI smoke test runs only on macOS CI agents with a display server"
                                 });
 
                                 if (smokeTestAvailable && !telemetryExists)

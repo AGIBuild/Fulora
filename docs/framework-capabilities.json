@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
-  "updatedAtUtc": "2026-04-01T00:00:00Z",
-  "registry_status": "starter-placeholder",
+  "updatedAtUtc": "2026-04-01T14:00:00Z",
+  "registry_status": "seeded-governed-baseline",
   "migration_notes": "Both 'id' and 'capability_id' are currently preserved for migration compatibility. New consumers should use 'capability_id' as the canonical key while legacy readers transition from 'id'.",
   "capabilities": [
     {
@@ -27,6 +27,78 @@
       ],
       "contract_ref": "product-platform-roadmap.md#capability-support-contract",
       "limitations_ref": "platform-status.md#known-limitations"
+    },
+    {
+      "id": "kernel.lifecycle.disposal",
+      "capability_id": "kernel.lifecycle.disposal",
+      "name": "Kernel Lifecycle and Disposal Semantics",
+      "layer": "Kernel",
+      "tier": "A",
+      "status": "stable",
+      "breakingChangePolicy": "architecture-approval-required",
+      "compatibilityScope": "all-supported-hosts-with-governed-disposal-contract",
+      "rollbackStrategy": "revert-to-the-previous-disposal-contract-and-restore-last-stable-lifecycle-adapter",
+      "platform_support": {
+        "windows": "stable",
+        "macos": "stable",
+        "linux": "stable",
+        "ios": "preview",
+        "android": "preview"
+      },
+      "test_requirements": [
+        "contract",
+        "integration"
+      ],
+      "contract_ref": "product-platform-roadmap.md#stable-core-vs-extensions",
+      "limitations_ref": "platform-status.md#known-limitations"
+    },
+    {
+      "id": "bridge.transport.binary",
+      "capability_id": "bridge.transport.binary",
+      "name": "Bridge Binary Transport",
+      "layer": "Bridge",
+      "tier": "A",
+      "status": "stable",
+      "breakingChangePolicy": "architecture-approval-required",
+      "compatibilityScope": "governed-runtime-contract-with-aot-safe-binary-roundtrip",
+      "rollbackStrategy": "disable-the-new-binary-codec-path-and-pin-the-previous-bridge-runtime",
+      "platform_support": {
+        "windows": "stable",
+        "macos": "stable",
+        "linux": "stable",
+        "ios": "preview",
+        "android": "preview"
+      },
+      "test_requirements": [
+        "contract",
+        "integration"
+      ],
+      "contract_ref": "product-platform-roadmap.md#capability-support-contract",
+      "limitations_ref": "platform-status.md#tier-a"
+    },
+    {
+      "id": "bridge.transport.cancellation",
+      "capability_id": "bridge.transport.cancellation",
+      "name": "Bridge Cancellation Transport",
+      "layer": "Bridge",
+      "tier": "A",
+      "status": "stable",
+      "breakingChangePolicy": "architecture-approval-required",
+      "compatibilityScope": "governed-runtime-contract-with-latest-wins-cancellation-semantics",
+      "rollbackStrategy": "disable-the-new-cancellation-transport-path-and-restore-the-last-stable-bridge-runtime",
+      "platform_support": {
+        "windows": "stable",
+        "macos": "stable",
+        "linux": "stable",
+        "ios": "preview",
+        "android": "preview"
+      },
+      "test_requirements": [
+        "contract",
+        "integration"
+      ],
+      "contract_ref": "product-platform-roadmap.md#capability-support-contract",
+      "limitations_ref": "platform-status.md#tier-a"
     },
     {
       "id": "bridge.transport.streaming",
@@ -75,6 +147,126 @@
       ],
       "contract_ref": "architecture-layering.md#allowed-public-api-types",
       "limitations_ref": "platform-status.md#tier-b"
+    },
+    {
+      "id": "framework.spa.hosting",
+      "capability_id": "framework.spa.hosting",
+      "name": "Framework SPA Hosting",
+      "layer": "Framework Services",
+      "tier": "B",
+      "status": "stable",
+      "breakingChangePolicy": "release-gate-required",
+      "compatibilityScope": "supported-desktop-hosts-with-documentation-first-platform-variation",
+      "rollbackStrategy": "disable-the-new-spa-hosting-path-and-pin-the-last-stable-framework-runtime",
+      "platform_support": {
+        "windows": "stable",
+        "macos": "stable",
+        "linux": "documented-variation",
+        "ios": "planned",
+        "android": "planned"
+      },
+      "test_requirements": [
+        "integration",
+        "governance"
+      ],
+      "contract_ref": "product-platform-roadmap.md#developer-defaults",
+      "limitations_ref": "platform-status.md#tier-b"
+    },
+    {
+      "id": "framework.shell.activation",
+      "capability_id": "framework.shell.activation",
+      "name": "Framework Shell Activation",
+      "layer": "Framework Services",
+      "tier": "B",
+      "status": "stable",
+      "breakingChangePolicy": "release-gate-required",
+      "compatibilityScope": "desktop-first-shell-activation-with-documented-mobile-and-linux-differences",
+      "rollbackStrategy": "disable-the-new-shell-activation-entrypoint-and-restore-the-last-stable-framework-adapter",
+      "platform_support": {
+        "windows": "stable",
+        "macos": "stable",
+        "linux": "documented-variation",
+        "ios": "planned",
+        "android": "planned"
+      },
+      "test_requirements": [
+        "integration",
+        "governance"
+      ],
+      "contract_ref": "product-platform-roadmap.md#capability-support-contract",
+      "limitations_ref": "platform-status.md#tier-b"
+    },
+    {
+      "id": "plugin.filesystem.read",
+      "capability_id": "plugin.filesystem.read",
+      "name": "Plugin Filesystem Read",
+      "layer": "Plugins / Vertical Features",
+      "tier": "C",
+      "status": "experimental",
+      "breakingChangePolicy": "compatibility-note-required",
+      "compatibilityScope": "opt-in-plugin-consumers-with-explicit-capability-policy",
+      "rollbackStrategy": "pin-the-previous-plugin-package-and-disable-read-capability-by-policy",
+      "platform_support": {
+        "windows": "experimental",
+        "macos": "experimental",
+        "linux": "experimental",
+        "ios": "planned",
+        "android": "planned"
+      },
+      "test_requirements": [
+        "governance",
+        "integration"
+      ],
+      "contract_ref": "product-platform-roadmap.md#security",
+      "limitations_ref": "platform-status.md#tier-c"
+    },
+    {
+      "id": "plugin.http.outbound",
+      "capability_id": "plugin.http.outbound",
+      "name": "Plugin HTTP Outbound",
+      "layer": "Plugins / Vertical Features",
+      "tier": "C",
+      "status": "experimental",
+      "breakingChangePolicy": "compatibility-note-required",
+      "compatibilityScope": "opt-in-plugin-consumers-with-policy-controlled-network-access",
+      "rollbackStrategy": "pin-the-previous-plugin-package-and-disable-outbound-network-capability-by-policy",
+      "platform_support": {
+        "windows": "experimental",
+        "macos": "experimental",
+        "linux": "experimental",
+        "ios": "planned",
+        "android": "planned"
+      },
+      "test_requirements": [
+        "governance",
+        "integration"
+      ],
+      "contract_ref": "product-platform-roadmap.md#security",
+      "limitations_ref": "platform-status.md#tier-c"
+    },
+    {
+      "id": "plugin.notification.post",
+      "capability_id": "plugin.notification.post",
+      "name": "Plugin Notification Post",
+      "layer": "Plugins / Vertical Features",
+      "tier": "C",
+      "status": "experimental",
+      "breakingChangePolicy": "compatibility-note-required",
+      "compatibilityScope": "opt-in-plugin-consumers-with-documented-platform-delivery-differences",
+      "rollbackStrategy": "pin-the-previous-plugin-package-and-disable-post-notification-capability-by-policy",
+      "platform_support": {
+        "windows": "experimental",
+        "macos": "experimental",
+        "linux": "experimental",
+        "ios": "planned",
+        "android": "planned"
+      },
+      "test_requirements": [
+        "governance",
+        "integration"
+      ],
+      "contract_ref": "product-platform-roadmap.md#capability-support-contract",
+      "limitations_ref": "platform-status.md#tier-c"
     },
     {
       "id": "plugin.ai.integration",

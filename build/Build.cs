@@ -104,7 +104,7 @@ internal sealed partial class BuildTask : NukeBuild
     private static AbsolutePath AutomationLaneReportFile => TestResultsDirectory / "automation-lane-report.json";
     private static AbsolutePath NugetSmokeTelemetryFile => TestResultsDirectory / "nuget-smoke-retry-telemetry.json";
     private static AbsolutePath WarningGovernanceReportFile => TestResultsDirectory / "warning-governance-report.json";
-    private static AbsolutePath OpenSpecStrictGovernanceReportFile => TestResultsDirectory / "openspec-strict-governance.log";
+    private static AbsolutePath LayeringGovernanceReportFile => TestResultsDirectory / "layering-governance-report.json";
     private static AbsolutePath DependencyGovernanceReportFile => TestResultsDirectory / "dependency-governance-report.json";
     private static AbsolutePath TypeScriptGovernanceReportFile => TestResultsDirectory / "typescript-governance-report.json";
     private static AbsolutePath SampleTemplatePackageReferenceGovernanceReportFile => TestResultsDirectory / "sample-template-package-reference-governance-report.json";
@@ -270,11 +270,11 @@ internal sealed partial class BuildTask : NukeBuild
 
     internal Target Ci => _ => _
         .Description("Full CI pipeline: compile → coverage → lane automation → pack → validate.")
-        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, NugetPackageTest, PackTemplate);
+        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, LayeringGovernance, NugetPackageTest, PackTemplate);
 
     internal Target CiMatrix => _ => _
         .Description("Cross-platform CI validation without package smoke/template packing.")
-        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance);
+        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, LayeringGovernance);
 
     internal Target CiPublish => _ => _
         .Description("Full release pipeline: Ci + publish.")

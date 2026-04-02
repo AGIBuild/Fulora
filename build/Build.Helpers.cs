@@ -14,6 +14,28 @@ internal partial class BuildTask
         @"<TargetFrameworks?>\s*(?<tfms>[^<]+)\s*</TargetFrameworks?>",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+    private static bool IsCiEnvironment()
+        => IsTruthyEnvironmentVariable("CI")
+           || IsTruthyEnvironmentVariable("GITHUB_ACTIONS")
+           || IsTruthyEnvironmentVariable("TF_BUILD");
+
+    private static bool IsTruthyEnvironmentVariable(string variableName)
+    {
+        var value = Environment.GetEnvironmentVariable(variableName);
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        if (string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(value, "1", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return !string.Equals(value, "false", StringComparison.OrdinalIgnoreCase)
+               && !string.Equals(value, "0", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsMacOsGuiSmokeEnvironment()
+        => OperatingSystem.IsMacOS() && IsCiEnvironment();
+
     private async Task<AbsolutePath> BuildPlatformAwareSolutionFilterAsync(string filterName)
     {
         var unavailableTfmSuffixes = await DetectUnavailableTfmSuffixesAsync();

@@ -4,5 +4,12 @@
   "services": ["BiometricService"],
   "npmPackage": "@agibuild/bridge-plugin-biometric",
   "minFuloraVersion": "1.0.0",
-  "platforms": ["windows", "macos", "linux", "android", "ios"]
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "requiredCapabilities": ["plugin.biometric.prompt"],
+  "optionalCapabilities": [],
+  "securityNotes": [
+    "Biometric prompts require explicit user presence and inherit the host platform's trust boundary.",
+    "Replace the in-memory provider with a platform provider before shipping real authentication flows."
+  ],
+  "platformConstraints": ["windows", "macos", "ios", "android"]
 }

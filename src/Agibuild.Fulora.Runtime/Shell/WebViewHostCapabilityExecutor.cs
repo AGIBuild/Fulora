@@ -38,35 +38,35 @@ internal sealed class WebViewHostCapabilityExecutor
     public WebViewHostCapabilityCallResult<string?> ReadClipboardText()
     {
         if (_options.HostCapabilityBridge is null)
-            return WebViewHostCapabilityCallResult<string?>.Denied(HostCapabilityBridgeUnavailableReason);
+            return CreateUnavailableResult<string?>(WebViewHostCapabilityOperation.ClipboardReadText);
         return _options.HostCapabilityBridge.ReadClipboardText(_rootWindowId, parentWindowId: null, targetWindowId: _rootWindowId);
     }
 
     public WebViewHostCapabilityCallResult<object?> WriteClipboardText(string text)
     {
         if (_options.HostCapabilityBridge is null)
-            return WebViewHostCapabilityCallResult<object?>.Denied(HostCapabilityBridgeUnavailableReason);
+            return CreateUnavailableResult<object?>(WebViewHostCapabilityOperation.ClipboardWriteText);
         return _options.HostCapabilityBridge.WriteClipboardText(text, _rootWindowId, parentWindowId: null, targetWindowId: _rootWindowId);
     }
 
     public WebViewHostCapabilityCallResult<WebViewFileDialogResult> ShowOpenFileDialog(WebViewOpenFileDialogRequest request)
     {
         if (_options.HostCapabilityBridge is null)
-            return WebViewHostCapabilityCallResult<WebViewFileDialogResult>.Denied(HostCapabilityBridgeUnavailableReason);
+            return CreateUnavailableResult<WebViewFileDialogResult>(WebViewHostCapabilityOperation.FileDialogOpen);
         return _options.HostCapabilityBridge.ShowOpenFileDialog(request, _rootWindowId, parentWindowId: null, targetWindowId: _rootWindowId);
     }
 
     public WebViewHostCapabilityCallResult<WebViewFileDialogResult> ShowSaveFileDialog(WebViewSaveFileDialogRequest request)
     {
         if (_options.HostCapabilityBridge is null)
-            return WebViewHostCapabilityCallResult<WebViewFileDialogResult>.Denied(HostCapabilityBridgeUnavailableReason);
+            return CreateUnavailableResult<WebViewFileDialogResult>(WebViewHostCapabilityOperation.FileDialogSave);
         return _options.HostCapabilityBridge.ShowSaveFileDialog(request, _rootWindowId, parentWindowId: null, targetWindowId: _rootWindowId);
     }
 
     public WebViewHostCapabilityCallResult<object?> ShowNotification(WebViewNotificationRequest request)
     {
         if (_options.HostCapabilityBridge is null)
-            return WebViewHostCapabilityCallResult<object?>.Denied(HostCapabilityBridgeUnavailableReason);
+            return CreateUnavailableResult<object?>(WebViewHostCapabilityOperation.NotificationShow);
         return _options.HostCapabilityBridge.ShowNotification(request, _rootWindowId, parentWindowId: null, targetWindowId: _rootWindowId);
     }
 
@@ -82,7 +82,7 @@ internal sealed class WebViewHostCapabilityExecutor
 
         if (_options.HostCapabilityBridge is null)
         {
-            var unavailable = WebViewHostCapabilityCallResult<object?>.Denied(HostCapabilityBridgeUnavailableReason);
+            var unavailable = CreateUnavailableResult<object?>(WebViewHostCapabilityOperation.MenuApplyModel);
             ReportSystemIntegrationOutcome(
                 unavailable,
                 "Menu model operation was denied by host capability policy.");
@@ -106,7 +106,7 @@ internal sealed class WebViewHostCapabilityExecutor
     {
         if (_options.HostCapabilityBridge is null)
         {
-            var unavailable = WebViewHostCapabilityCallResult<object?>.Denied(HostCapabilityBridgeUnavailableReason);
+            var unavailable = CreateUnavailableResult<object?>(WebViewHostCapabilityOperation.TrayUpdateState);
             ReportSystemIntegrationOutcome(
                 unavailable,
                 "Tray state operation was denied by host capability policy.");
@@ -129,7 +129,7 @@ internal sealed class WebViewHostCapabilityExecutor
         ArgumentNullException.ThrowIfNull(request);
         if (!_isSystemActionWhitelisted(request.Action))
         {
-            var denied = WebViewHostCapabilityCallResult<object?>.Denied("system-action-not-whitelisted");
+            var denied = CreateDeniedResult<object?>(WebViewHostCapabilityOperation.SystemActionExecute, "system-action-not-whitelisted");
             ReportSystemIntegrationOutcome(
                 denied,
                 "System action is not in shell whitelist.");
@@ -138,7 +138,7 @@ internal sealed class WebViewHostCapabilityExecutor
 
         if (_options.HostCapabilityBridge is null)
         {
-            var unavailable = WebViewHostCapabilityCallResult<object?>.Denied(HostCapabilityBridgeUnavailableReason);
+            var unavailable = CreateUnavailableResult<object?>(WebViewHostCapabilityOperation.SystemActionExecute);
             ReportSystemIntegrationOutcome(
                 unavailable,
                 "System action operation was denied by host capability policy.");
@@ -162,7 +162,10 @@ internal sealed class WebViewHostCapabilityExecutor
         ArgumentNullException.ThrowIfNull(request);
         if (_options.HostCapabilityBridge is null)
         {
-            var unavailable = WebViewHostCapabilityCallResult<WebViewSystemIntegrationEventRequest>.Denied(HostCapabilityBridgeUnavailableReason);
+            var unavailable = CreateUnavailableResult<WebViewSystemIntegrationEventRequest>(
+                request.Kind == WebViewSystemIntegrationEventKind.TrayInteracted
+                    ? WebViewHostCapabilityOperation.TrayInteractionEventDispatch
+                    : WebViewHostCapabilityOperation.MenuInteractionEventDispatch);
             ReportSystemIntegrationOutcome(
                 unavailable,
                 "System integration event dispatch was denied by host capability policy.");
@@ -228,4 +231,16 @@ internal sealed class WebViewHostCapabilityExecutor
                 result.Error ?? new InvalidOperationException("System integration capability failed without an exception payload."));
         }
     }
+
+    private static WebViewHostCapabilityCallResult<T> CreateDeniedResult<T>(
+        WebViewHostCapabilityOperation operation,
+        string denyReason)
+    {
+        var capability = WebViewCapabilityPolicyEvaluator.Describe(operation);
+        var policyDecision = WebViewCapabilityPolicyDecision.Deny(denyReason);
+        return WebViewHostCapabilityCallResult<T>.Denied(capability, policyDecision, denyReason);
+    }
+
+    private static WebViewHostCapabilityCallResult<T> CreateUnavailableResult<T>(WebViewHostCapabilityOperation operation)
+        => CreateDeniedResult<T>(operation, HostCapabilityBridgeUnavailableReason);
 }

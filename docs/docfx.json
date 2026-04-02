@@ -37,7 +37,6 @@
           "articles/**/toc.yml",
           "demo/**.md",
           "demo/**/toc.yml",
-          "framework-capabilities.json",
           "toc.yml",
           "*.md"
         ]
@@ -46,6 +45,7 @@
     "resource": [
       {
         "files": [
+          "framework-capabilities.json",
           "images/**",
           "demo/images/**",
           "ai-chat-demo/images/**"

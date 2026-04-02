@@ -32,6 +32,7 @@ Fulora documents and evolves the platform through four layers:
 - Tier A capabilities are part of Fulora's stable cross-platform contract and unexpected platform differences are treated as defects.
 - Tier B capabilities are officially supported, may vary by platform, and must document those differences without failing silently.
 - Tier C capabilities are experimental and do not carry a stable cross-platform SLA.
+- The current governed capability fact set lives in `framework-capabilities.json`, and the corresponding human-readable release snapshot lives in `platform-status.md`.
 - Capabilities are registered in `framework-capabilities.json` with lifecycle state, support tier, platform support, test requirements, contract reference, and limitations reference.
 - Breaking capability changes must follow each capability's `breakingChangePolicy`.
 - Architecture approval is mandatory for kernel-level changes and capability policies that explicitly require it.

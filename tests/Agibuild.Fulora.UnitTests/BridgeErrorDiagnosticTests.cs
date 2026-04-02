@@ -198,4 +198,34 @@ public sealed class BridgeErrorDiagnosticTests
         Assert.Contains("1002", responseScript);
         Assert.DoesNotContain("hint", responseScript);
     }
+
+    [Fact]
+    public void WebMessage_policy_drop_emits_unified_runtime_diagnostic_event()
+    {
+        var dispatcher = new TestDispatcher();
+        var adapter = MockWebViewAdapter.Create();
+        var core = new WebViewCore(adapter, dispatcher);
+        var sink = new MemoryFuloraDiagnosticsSink();
+        core.EnableWebMessageBridge(new WebMessageBridgeOptions
+        {
+            AllowedOrigins = new HashSet<string> { "https://allowed.example" },
+            DiagnosticsSink = sink
+        });
+
+        adapter.RaiseWebMessage(
+            """{"jsonrpc":"2.0","id":"m-1","method":"AppService.ping","params":{}}""",
+            "https://blocked.example",
+            core.ChannelId);
+        dispatcher.RunAll();
+
+        var diagnostic = Assert.Single(sink.Events);
+        Assert.Equal("runtime.webmessage.dropped", diagnostic.EventName);
+        Assert.Equal("runtime", diagnostic.Layer);
+        Assert.Equal("WebViewCore", diagnostic.Component);
+        Assert.Equal(core.ChannelId.ToString("D"), diagnostic.ChannelId);
+        Assert.Equal("dropped", diagnostic.Status);
+        Assert.Equal("OriginNotAllowed", diagnostic.ErrorType);
+        Assert.Equal("https://blocked.example", diagnostic.Attributes["origin"]);
+        Assert.Equal("OriginNotAllowed", diagnostic.Attributes["dropReason"]);
+    }
 }

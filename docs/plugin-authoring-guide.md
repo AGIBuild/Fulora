@@ -50,11 +50,19 @@ public sealed class MyService : IMyService
 
 ### 3. Create the Plugin Manifest
 
-Implement `IBridgePlugin` with a static `GetServices()` method:
+Implement `IBridgePlugin` with both a static `GetMetadata()` method and a static `GetServices()` method:
 
 ```csharp
 public sealed class MyPlugin : IBridgePlugin
 {
+    public static BridgePluginMetadata GetMetadata()
+        => new(
+            "Contoso.Fulora.Plugin.MyFeature",
+            ["plugin.my-feature.read"],
+            ["plugin.my-feature.write"],
+            ["Document the trust boundary and least-privilege expectations for this plugin."],
+            ["desktop-hosts"]);
+
     public static IEnumerable<BridgePluginServiceDescriptor> GetServices()
     {
         yield return BridgePluginServiceDescriptor.Create<IMyService>(
@@ -65,10 +73,32 @@ public sealed class MyPlugin : IBridgePlugin
 
 Key points:
 - Uses `static abstract` members (C# 11+) — NativeAOT-safe, no reflection
+- `GetMetadata()` declares the plugin id, required capabilities, optional capabilities, security notes, and platform constraints
 - The factory `Func<IServiceProvider?, T>` receives an optional DI container
 - Multiple services can be yielded from a single plugin
 
-### 4. Add BridgeOptions (Optional)
+### 4. Declare Capability Metadata
+
+Capability metadata is part of the plugin contract, not an optional comment.
+
+Populate these fields deliberately:
+
+| Field | Purpose |
+|---|---|
+| `PluginId` | Stable identifier used by tooling, diagnostics, and release governance |
+| `RequiredCapabilities` | Capabilities needed for the plugin's baseline behavior |
+| `OptionalCapabilities` | Capabilities the host may enable explicitly for extra behavior |
+| `SecurityNotes` | Short operational notes that explain the plugin's trust boundary |
+| `PlatformConstraints` | Short notes describing supported platforms or environment assumptions |
+
+Guidance:
+- Prefer stable dot-separated ids such as `plugin.http.outbound` or `plugin.database.write`
+- Keep required capabilities minimal; move host-optional powers into `OptionalCapabilities`
+- `SecurityNotes` should describe real operational expectations, not marketing text
+- `PlatformConstraints` should match the actual provider/runtime limitations of the plugin
+- If a plugin persists data or touches the network, say what policy boundary should govern it
+
+### 5. Add BridgeOptions (Optional)
 
 ```csharp
 yield return BridgePluginServiceDescriptor.Create<IMyService>(
@@ -79,7 +109,7 @@ yield return BridgePluginServiceDescriptor.Create<IMyService>(
     });
 ```
 
-### 5. Project Setup
+### 6. Project Setup
 
 Your `.csproj` needs:
 
@@ -97,7 +127,7 @@ The source generator will automatically produce:
 - `{ServiceName}BridgeRegistration.g.cs` — RPC handler registration
 - `BridgeTypeScriptDeclarations.g.cs` — TypeScript `.d.ts` content
 
-### 6. Extract TypeScript Declarations
+### 7. Extract TypeScript Declarations
 
 Build with `EmitCompilerGeneratedFiles` to extract the generated TS:
 
@@ -206,6 +236,7 @@ fulora add plugin Agibuild.Fulora.Plugin.Database
 ## Testing
 
 - **Unit tests**: Test the service implementation independently
+- **Manifest tests**: Verify `GetMetadata()` declares the expected plugin id and capabilities
 - **Contract tests**: Verify `UsePlugin` registers all declared services
 - **Integration tests**: Full round-trip: register plugin → call from JS → verify
 

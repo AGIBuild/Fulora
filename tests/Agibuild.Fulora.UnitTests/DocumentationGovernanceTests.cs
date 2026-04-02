@@ -27,12 +27,16 @@ public sealed class DocumentationGovernanceTests
         "docs/docs-site-deploy.md"
     ];
 
-    private static readonly string[] ForbiddenOpenSpecReferences =
+    private static readonly string[] ForbiddenLegacySpecReferences =
     [
-        "openspec/ROADMAP.md",
-        "openspec/PROJECT.md",
-        "openspec/specs/"
+        string.Concat("open", "spec", "/ROADMAP.md"),
+        string.Concat("open", "spec", "/PROJECT.md"),
+        string.Concat("open", "spec", "/specs/")
     ];
+
+    private static readonly string LegacySpecDirectoryName = string.Concat("open", "spec");
+    private static readonly string LegacySpecAssetPattern = string.Concat("open", "spec", "-*");
+    private static readonly string LegacyPromptAssetPattern = string.Concat("op", "sx", "-*");
 
     [Fact]
     public void Required_platform_documents_exist()
@@ -104,7 +108,8 @@ public sealed class DocumentationGovernanceTests
         var root = doc.RootElement;
         Assert.True(root.TryGetProperty("capabilities", out var capabilitiesElement), "Capabilities array is required.");
         Assert.True(root.TryGetProperty("registry_status", out var registryStatus) && registryStatus.ValueKind == JsonValueKind.String);
-        Assert.Contains("placeholder", registryStatus.GetString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("placeholder", registryStatus.GetString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+        Assert.False(string.IsNullOrWhiteSpace(registryStatus.GetString()), "registry_status must not be empty.");
 
         var capabilities = capabilitiesElement.EnumerateArray().ToList();
         Assert.NotEmpty(capabilities);
@@ -229,6 +234,8 @@ public sealed class DocumentationGovernanceTests
         Assert.Contains("capabilit", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("architect", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("release", content, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("framework-capabilities.json", content, StringComparison.Ordinal);
+        Assert.Contains("platform-status.md", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -301,6 +308,7 @@ public sealed class DocumentationGovernanceTests
             "plugins / vertical features");
         AssertContainsAnyTokenGroupIgnoreCase(
             content,
+            ["dependency policy"],
             ["allowed dependencies"],
             ["depends only", "must not depend"]);
         AssertContainsAnyTokenGroupIgnoreCase(
@@ -318,21 +326,64 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Platform_status_placeholder_reserves_tiered_support_and_known_limitations_sections()
+    public void Layering_governance_hook_is_visible_in_build_and_links_to_architecture_policy()
+    {
+        var repoRoot = FindRepoRoot();
+        var buildDirectory = Path.Combine(repoRoot, "build");
+        Assert.True(Directory.Exists(buildDirectory), "Missing build directory under test.");
+
+        var nukeHookPath = Path.Combine(buildDirectory, "Build.LayeringGovernance.cs");
+        var msbuildHookPath = Path.Combine(buildDirectory, "LayeringGovernance.targets");
+        var observedHookPath = File.Exists(nukeHookPath) ? nukeHookPath : msbuildHookPath;
+
+        Assert.True(File.Exists(observedHookPath), "A layering governance hook must exist under build/.");
+
+        var content = File.ReadAllText(observedHookPath);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["layeringgovernance"],
+            ["layering governance"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["architecture-layering.md"],
+            ["docs", "architecture-layering"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["kernel", "bridge"],
+            ["framework", "plugin"]);
+    }
+
+    [Fact]
+    public void Platform_status_declares_current_snapshot_tiers_and_known_limitations()
     {
         var repoRoot = FindRepoRoot();
         var statusPath = Path.Combine(repoRoot, "docs", "platform-status.md");
         Assert.True(File.Exists(statusPath), "Missing docs/platform-status.md");
 
         var content = File.ReadAllText(statusPath);
-        AssertContainsAllTokensIgnoreCase(content, "placeholder", "tbd");
+        Assert.DoesNotContain("placeholder", content, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("TBD", content, StringComparison.OrdinalIgnoreCase);
         AssertContainsAnyTokenGroupIgnoreCase(
             content,
-            ["must not", "stable release fact snapshot"],
-            ["not be treated", "stable", "fact snapshot"]);
+            ["snapshot date"],
+            ["release line"],
+            ["capability registry version"]);
         AssertContainsAnyTokenGroupIgnoreCase(
             content,
-            ["tier a", "tier b", "tier c"],
+            ["tier a", "kernel.navigation"],
+            ["bridge.transport.streaming"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["tier b", "framework.spa.hosting"],
+            ["framework.shell.activation"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["tier c", "plugin.filesystem.read"],
+            ["plugin.notification.post"]);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["known limitations", "linux"],
+            ["android"],
             ["known limitations"]);
     }
 
@@ -359,7 +410,7 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Framework_capabilities_registry_uses_starter_schema_and_representative_entries()
+    public void Framework_capabilities_registry_uses_seeded_schema_and_representative_entries()
     {
         var repoRoot = FindRepoRoot();
         var capabilitiesPath = Path.Combine(repoRoot, "docs", "framework-capabilities.json");
@@ -377,15 +428,23 @@ public sealed class DocumentationGovernanceTests
             "id",
             "compatibility",
             "migration");
+        Assert.True(root.TryGetProperty("registry_status", out var registryStatus) && registryStatus.ValueKind == JsonValueKind.String);
+        Assert.DoesNotContain("placeholder", registryStatus.GetString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
         Assert.True(root.TryGetProperty("capabilities", out var capabilitiesElement), "Capabilities array is required.");
 
         var capabilities = capabilitiesElement.EnumerateArray().ToList();
-        Assert.True(capabilities.Count >= 4, "Starter capability registry should include representative entries across four layers.");
+        Assert.True(capabilities.Count >= 10, "Seeded capability registry should include representative entries across layers and tiers.");
 
         var observedLayers = new HashSet<string>(StringComparer.Ordinal);
+        var observedCapabilityIds = new HashSet<string>(StringComparer.Ordinal);
 
         foreach (var capability in capabilities)
         {
+            Assert.True(capability.TryGetProperty("capability_id", out var capabilityId) && capabilityId.ValueKind == JsonValueKind.String);
+            var capabilityIdValue = capabilityId.GetString();
+            Assert.False(string.IsNullOrWhiteSpace(capabilityIdValue), "Each capability must declare a non-empty capability_id.");
+            observedCapabilityIds.Add(capabilityIdValue!);
+
             Assert.True(capability.TryGetProperty("layer", out var layer) && layer.ValueKind == JsonValueKind.String);
             var layerName = layer.GetString();
             Assert.False(string.IsNullOrWhiteSpace(layerName), "Each capability must declare a non-empty layer.");
@@ -396,6 +455,37 @@ public sealed class DocumentationGovernanceTests
         Assert.Contains("Bridge", observedLayers);
         Assert.Contains("Framework Services", observedLayers);
         Assert.Contains("Plugins / Vertical Features", observedLayers);
+        foreach (var expectedCapabilityId in new[]
+                 {
+                     "kernel.navigation",
+                     "kernel.lifecycle.disposal",
+                     "bridge.transport.binary",
+                     "bridge.transport.cancellation",
+                     "bridge.transport.streaming",
+                     "framework.spa.hosting",
+                     "framework.shell.activation",
+                     "plugin.filesystem.read",
+                     "plugin.http.outbound",
+                     "plugin.notification.post"
+                 })
+        {
+            Assert.Contains(expectedCapabilityId, observedCapabilityIds);
+        }
+    }
+
+    [Fact]
+    public void Compatibility_matrix_proposal_is_marked_historical_and_points_to_current_registry_and_status()
+    {
+        var repoRoot = FindRepoRoot();
+        var proposalPath = Path.Combine(repoRoot, "docs", "agibuild_webview_compatibility_matrix_proposal.md");
+        Assert.True(File.Exists(proposalPath), "Missing docs/agibuild_webview_compatibility_matrix_proposal.md");
+
+        var content = File.ReadAllText(proposalPath);
+        AssertContainsAnyTokenGroupIgnoreCase(
+            content,
+            ["historical"],
+            ["current", "framework-capabilities.json"],
+            ["current", "platform-status.md"]);
     }
 
     [Fact]
@@ -425,7 +515,7 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
-    public void Public_docs_do_not_reference_legacy_openspec_paths()
+    public void Public_docs_do_not_reference_legacy_spec_workspace_paths()
     {
         var repoRoot = FindRepoRoot();
 
@@ -435,11 +525,53 @@ public sealed class DocumentationGovernanceTests
             Assert.True(File.Exists(absolutePath), $"Missing public document under test: {relativePath}");
 
             var content = File.ReadAllText(absolutePath);
-            foreach (var forbidden in ForbiddenOpenSpecReferences)
+            foreach (var forbidden in ForbiddenLegacySpecReferences)
             {
                 Assert.DoesNotContain(forbidden, content, StringComparison.OrdinalIgnoreCase);
             }
         }
+    }
+
+    [Fact]
+    public void Legacy_spec_workspace_directory_is_removed()
+    {
+        var repoRoot = FindRepoRoot();
+        var legacySpecPath = Path.Combine(repoRoot, LegacySpecDirectoryName);
+        Assert.False(Directory.Exists(legacySpecPath), "The legacy spec workspace directory must be removed.");
+    }
+
+    [Fact]
+    public void Legacy_spec_skill_assets_are_removed()
+    {
+        var repoRoot = FindRepoRoot();
+        var skillsPath = Path.Combine(repoRoot, ".github", "skills");
+        Assert.True(Directory.Exists(skillsPath), "Missing .github/skills directory under test.");
+
+        var matches = Directory.EnumerateFileSystemEntries(skillsPath, LegacySpecAssetPattern, SearchOption.TopDirectoryOnly);
+        Assert.Empty(matches);
+    }
+
+    [Fact]
+    public void Legacy_prompt_assets_are_removed()
+    {
+        var repoRoot = FindRepoRoot();
+        var promptsPath = Path.Combine(repoRoot, ".github", "prompts");
+        Assert.True(Directory.Exists(promptsPath), "Missing .github/prompts directory under test.");
+
+        var matches = Directory.EnumerateFileSystemEntries(promptsPath, LegacyPromptAssetPattern, SearchOption.TopDirectoryOnly);
+        Assert.Empty(matches);
+    }
+
+    [Fact]
+    public void Pull_request_template_removes_legacy_spec_requirement_and_adds_layer_impact()
+    {
+        var repoRoot = FindRepoRoot();
+        var pullRequestTemplatePath = Path.Combine(repoRoot, ".github", "PULL_REQUEST_TEMPLATE.md");
+        Assert.True(File.Exists(pullRequestTemplatePath), "Missing .github/PULL_REQUEST_TEMPLATE.md");
+
+        var content = File.ReadAllText(pullRequestTemplatePath);
+        Assert.DoesNotContain(string.Concat("Open", "Spec artifacts created for non-trivial changes"), content, StringComparison.Ordinal);
+        Assert.Contains("Layer Impact", content, StringComparison.Ordinal);
     }
 
     [Fact]

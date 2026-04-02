@@ -103,6 +103,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     private bool _webMessageBridgeEnabled;
     private IWebMessagePolicy? _webMessagePolicy;
     private IWebMessageDropDiagnosticsSink? _webMessageDropDiagnosticsSink;
+    private IFuloraDiagnosticsSink? _fuloraDiagnosticsSink;
     private WebViewRpcService? _rpcService;
     private RuntimeBridgeService? _bridgeService;
     private IBridgeTracer? _bridgeTracer;
@@ -968,6 +969,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
         _webMessageBridgeEnabled = true;
         _webMessagePolicy = new DefaultWebMessagePolicy(options.AllowedOrigins, options.ProtocolVersion, ChannelId);
         _webMessageDropDiagnosticsSink = options.DropDiagnosticsSink;
+        _fuloraDiagnosticsSink = options.DiagnosticsSink;
         _rpcService ??= new WebViewRpcService(script => InvokeScriptAsync(script), _logger, options.EnableDevToolsDiagnostics);
 
         // Inject RPC JS stub.
@@ -986,6 +988,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
         _webMessageBridgeEnabled = false;
         _webMessagePolicy = null;
         _webMessageDropDiagnosticsSink = null;
+        _fuloraDiagnosticsSink = null;
         _rpcService = null;
 
         _logger.LogDebug("WebMessageBridge disabled");
@@ -1398,6 +1401,20 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
         var reason = decision.DropReason ?? WebMessageDropReason.OriginNotAllowed;
         _logger.LogDebug("WebMessageReceived: policy denied, reason={Reason}", reason);
         _webMessageDropDiagnosticsSink?.OnMessageDropped(new WebMessageDropDiagnostic(reason, e.Origin, e.ChannelId));
+        _fuloraDiagnosticsSink?.OnEvent(new FuloraDiagnosticsEvent
+        {
+            EventName = "runtime.webmessage.dropped",
+            Layer = "runtime",
+            Component = nameof(WebViewCore),
+            ChannelId = e.ChannelId.ToString("D"),
+            Status = "dropped",
+            ErrorType = reason.ToString(),
+            Attributes = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["origin"] = e.Origin,
+                ["dropReason"] = reason.ToString()
+            }
+        });
     }
 
     private void OnAdapterWebResourceRequested(object? sender, WebResourceRequestedEventArgs e)

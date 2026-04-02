@@ -10,6 +10,7 @@ namespace Agibuild.Fulora;
 public sealed class BridgeDevToolsService : IDisposable
 {
     private readonly BridgeEventCollector _collector;
+    private readonly IFuloraDiagnosticsSink _diagnosticsSink;
     private readonly DevToolsPanelTracer _tracer;
     private IDisposable? _subscription;
     private Func<string, Task<string?>>? _invokeScript;
@@ -24,6 +25,7 @@ public sealed class BridgeDevToolsService : IDisposable
     public BridgeDevToolsService(IBridgeTracer? existingTracer = null, int bufferCapacity = 500)
     {
         _collector = new BridgeEventCollector(bufferCapacity);
+        _diagnosticsSink = new CollectorDiagnosticsSink(_collector);
         _tracer = new DevToolsPanelTracer(_collector, existingTracer);
     }
 
@@ -35,6 +37,9 @@ public sealed class BridgeDevToolsService : IDisposable
 
     /// <summary>The underlying event collector for testing or direct access.</summary>
     public IBridgeEventCollector Collector => _collector;
+
+    /// <summary>Unified diagnostics sink that projects normalized events into the DevTools collector.</summary>
+    public IFuloraDiagnosticsSink DiagnosticsSink => _diagnosticsSink;
 
     /// <summary>
     /// Returns the self-contained DevTools overlay HTML from embedded resources.
@@ -91,5 +96,86 @@ public sealed class BridgeDevToolsService : IDisposable
         if (_disposed) return;
         _disposed = true;
         StopPushing();
+    }
+
+    private sealed class CollectorDiagnosticsSink : IFuloraDiagnosticsSink
+    {
+        private readonly BridgeEventCollector _collector;
+
+        public CollectorDiagnosticsSink(BridgeEventCollector collector)
+        {
+            _collector = collector ?? throw new ArgumentNullException(nameof(collector));
+        }
+
+        public void OnEvent(FuloraDiagnosticsEvent diagnosticEvent)
+        {
+            ArgumentNullException.ThrowIfNull(diagnosticEvent);
+
+            if (!TryMapDirection(diagnosticEvent.EventName, out var direction) ||
+                !TryMapPhase(diagnosticEvent.EventName, out var phase))
+            {
+                return;
+            }
+
+            _collector.Add(new BridgeDevToolsEvent
+            {
+                Timestamp = DateTimeOffset.UtcNow,
+                Direction = direction,
+                Phase = phase,
+                ServiceName = diagnosticEvent.Service ?? diagnosticEvent.Component,
+                MethodName = diagnosticEvent.Method ?? string.Empty,
+                ElapsedMs = diagnosticEvent.DurationMs,
+                ErrorMessage = diagnosticEvent.Attributes.TryGetValue("message", out var message) ? message : diagnosticEvent.ErrorType,
+                ResultJson = diagnosticEvent.Attributes.TryGetValue("resultType", out var resultType) ? resultType : null,
+                ParamsJson = diagnosticEvent.Attributes.TryGetValue("params", out var payload) ? payload : null,
+                Truncated = false
+            });
+        }
+
+        private static bool TryMapDirection(string eventName, out BridgeCallDirection direction)
+        {
+            if (eventName.StartsWith("bridge.export.", StringComparison.Ordinal))
+            {
+                direction = BridgeCallDirection.Export;
+                return true;
+            }
+
+            if (eventName.StartsWith("bridge.import.", StringComparison.Ordinal))
+            {
+                direction = BridgeCallDirection.Import;
+                return true;
+            }
+
+            if (eventName.StartsWith("bridge.service.", StringComparison.Ordinal))
+            {
+                direction = BridgeCallDirection.Lifecycle;
+                return true;
+            }
+
+            direction = default;
+            return false;
+        }
+
+        private static bool TryMapPhase(string eventName, out BridgeCallPhase phase)
+        {
+            phase = eventName switch
+            {
+                "bridge.export.start" or "bridge.import.start" => BridgeCallPhase.Start,
+                "bridge.export.end" or "bridge.import.end" => BridgeCallPhase.End,
+                "bridge.export.error" => BridgeCallPhase.Error,
+                "bridge.service.exposed" => BridgeCallPhase.ServiceExposed,
+                "bridge.service.removed" => BridgeCallPhase.ServiceRemoved,
+                _ => default
+            };
+
+            return eventName is
+                "bridge.export.start" or
+                "bridge.import.start" or
+                "bridge.export.end" or
+                "bridge.import.end" or
+                "bridge.export.error" or
+                "bridge.service.exposed" or
+                "bridge.service.removed";
+        }
     }
 }

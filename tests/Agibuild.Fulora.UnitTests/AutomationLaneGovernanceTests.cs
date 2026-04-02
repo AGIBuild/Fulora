@@ -10,6 +10,11 @@ namespace Agibuild.Fulora.UnitTests;
 
 public sealed class AutomationLaneGovernanceTests
 {
+    private static readonly string LegacyStrictGovernanceToken = string.Concat("Open", "Spec", "Strict", "Governance");
+    private static readonly string LegacyStrictGovernanceLog = string.Concat("open", "spec", "-strict-governance.log");
+    private static readonly string LegacyRoadmapPathToken = string.Concat("open", "spec", "/ROADMAP.md");
+    private static readonly string LegacyArchivePathToken = string.Concat("open", "spec", "/changes/archive");
+
     [Fact]
     public void Automation_lane_manifest_declares_required_lanes_and_existing_projects()
     {
@@ -139,6 +144,8 @@ public sealed class AutomationLaneGovernanceTests
         AssertSourceContains(mainSource, "partial class BuildTask", BuildPipelineTargetGraph, "build/Build.cs");
         AssertSourceContains(mainSource, "Execute<BuildTask>(x => x.Build)", BuildPipelineTargetGraph, "build/Build.cs");
         AssertSourceContains(combinedSource, "--shellPreset app-shell", BuildPipelineTargetGraph, "build/Build*.cs");
+        AssertSourceContains(combinedSource, "IsMacOsGuiSmokeEnvironment", BuildPipelineTargetGraph, "build/Build*.cs");
+        AssertSourceContains(combinedSource, "macOS CI agents with a display server", BuildPipelineTargetGraph, "build/Build*.cs");
     }
 
     [Fact]
@@ -417,9 +424,9 @@ public sealed class AutomationLaneGovernanceTests
             vueServices.Contains("getService", StringComparison.Ordinal),
             $"[{TemplateMetadataSchema}] Vue template must expose service contracts via generated client or typed bridge service lookup.");
 
-        Assert.True(
-            reactHook.Contains("ready(", StringComparison.Ordinal) ||
-            reactHook.Contains("bridge.ready(", StringComparison.Ordinal),
+            Assert.True(
+                reactHook.Contains("ready(", StringComparison.Ordinal) ||
+                reactHook.Contains("bridge.ready(", StringComparison.Ordinal),
             $"[{TemplateMetadataSchema}] React template must use bridge readiness contract.");
         Assert.True(
             vueHook.Contains("ready(", StringComparison.Ordinal) ||
@@ -436,6 +443,36 @@ public sealed class AutomationLaneGovernanceTests
                 reactClient.Contains("withErrorNormalization", StringComparison.Ordinal),
                 $"[{TemplateMetadataSchema}] React bridge client should configure middleware through profile or explicit middleware wiring.");
         }
+    }
+
+    [Fact]
+    public void Hybrid_template_includes_layer_aware_governance_placeholders()
+    {
+        var repoRoot = FindRepoRoot();
+        var templateRoot = Path.Combine(repoRoot, "templates", "agibuild-hybrid");
+
+        var requiredPaths = new[]
+        {
+            Path.Combine(templateRoot, "capabilities.json"),
+            Path.Combine(templateRoot, "docs", "compatibility-notes.md"),
+            Path.Combine(templateRoot, "docs", "release-checklist.md"),
+            Path.Combine(templateRoot, "HybridApp.Desktop", "Framework", "README.md"),
+            Path.Combine(templateRoot, "HybridApp.Desktop", "Plugins", "README.md"),
+            Path.Combine(templateRoot, "HybridApp.Desktop", "KernelExtensions", "README.md")
+        };
+
+        foreach (var path in requiredPaths)
+            AssertFileExists(path, TemplateMetadataSchema);
+
+        var capabilitiesPath = Path.Combine(templateRoot, "capabilities.json");
+        var capabilities = File.ReadAllText(capabilitiesPath);
+        AssertSourceContains(capabilities, "\"defaultPolicy\": \"deny\"", TemplateMetadataSchema, capabilitiesPath);
+        AssertSourceContains(capabilities, "\"clipboard.read\"", TemplateMetadataSchema, capabilitiesPath);
+        AssertSourceContains(capabilities, "\"window.chrome.modify\"", TemplateMetadataSchema, capabilitiesPath);
+
+        var appShellPresetPath = Path.Combine(templateRoot, "HybridApp.Desktop", "MainWindow.AppShellPreset.cs");
+        var appShellPreset = File.ReadAllText(appShellPresetPath);
+        AssertSourceContains(appShellPreset, "template-capability-not-enabled", TemplateMetadataSchema, appShellPresetPath);
     }
 
     [Fact]
@@ -606,7 +643,7 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Ci_targets_enforce_openspec_strict_governance_gate()
+    public void Ci_targets_enforce_docs_first_release_governance()
     {
         var repoRoot = FindRepoRoot();
         var combinedSource = ReadCombinedBuildSource(repoRoot);
@@ -616,7 +653,7 @@ public sealed class AutomationLaneGovernanceTests
 
         var requiredTargets = new[]
         {
-            "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "DependencyVulnerabilityGovernance",
             "SampleTemplatePackageReferenceGovernance",
             "TypeScriptDeclarationGovernance", "ReleaseCloseoutSnapshot",
             "ContinuousTransitionGateGovernance", "DistributionReadinessGovernance",
@@ -624,26 +661,27 @@ public sealed class AutomationLaneGovernanceTests
             "ReleaseOrchestrationGovernance"
         };
         foreach (var target in requiredTargets)
-            AssertTargetDeclarationExists(combinedSource, target, CiTargetOpenSpecGate, "build/Build*.cs");
+            AssertTargetDeclarationExists(combinedSource, target, CiTargetDocsFirstGovernance, "build/Build*.cs");
 
-        AssertStringLiteralContains(combinedSource, "validate --all --strict", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertInvocationExists(combinedSource, "RunProcessCheckedAsync", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertStringLiteralExists(combinedSource, "dependency-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertStringLiteralExists(combinedSource, "typescript-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertStringLiteralExists(combinedSource, "sample-template-package-reference-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertStringLiteralExists(combinedSource, "closeout-snapshot.json", CiTargetOpenSpecGate, "build/Build*.cs");
-        AssertStringLiteralExists(combinedSource, "transition-gate-governance-report.json", CiTargetOpenSpecGate, "build/Build*.cs");
+        Assert.DoesNotContain(LegacyStrictGovernanceToken, combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("validate --all --strict", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(LegacyStrictGovernanceLog, combinedSource, StringComparison.Ordinal);
+        AssertStringLiteralExists(combinedSource, "dependency-governance-report.json", CiTargetDocsFirstGovernance, "build/Build*.cs");
+        AssertStringLiteralExists(combinedSource, "typescript-governance-report.json", CiTargetDocsFirstGovernance, "build/Build*.cs");
+        AssertStringLiteralExists(combinedSource, "sample-template-package-reference-governance-report.json", CiTargetDocsFirstGovernance, "build/Build*.cs");
+        AssertStringLiteralExists(combinedSource, "closeout-snapshot.json", CiTargetDocsFirstGovernance, "build/Build*.cs");
+        AssertStringLiteralExists(combinedSource, "transition-gate-governance-report.json", CiTargetDocsFirstGovernance, "build/Build*.cs");
 
         var ciDirectDependencies = new[]
         {
             "ReleaseOrchestrationGovernance", "SolutionConsistencyGovernance",
             "NugetPackageTest", "PackTemplate"
         };
-        AssertTargetDependsOnContainsAll(mainSource, "Ci", ciDirectDependencies, CiTargetOpenSpecGate, "build/Build.cs");
+        AssertTargetDependsOnContainsAll(mainSource, "Ci", ciDirectDependencies, CiTargetDocsFirstGovernance, "build/Build.cs");
 
         var ciRequiredClosureDependencies = new[]
         {
-            "OpenSpecStrictGovernance", "DependencyVulnerabilityGovernance",
+            "DependencyVulnerabilityGovernance",
             "SampleTemplatePackageReferenceGovernance", "TypeScriptDeclarationGovernance",
             "ReleaseCloseoutSnapshot", "RuntimeCriticalPathExecutionGovernance",
             "ContinuousTransitionGateGovernance", "BridgeDistributionGovernance",
@@ -654,11 +692,11 @@ public sealed class AutomationLaneGovernanceTests
         {
             Assert.True(
                 ciClosure.Contains(dependency),
-                $"[{CiTargetOpenSpecGate}] Missing Ci transitive dependency '{dependency}'.");
+                $"[{CiTargetDocsFirstGovernance}] Missing Ci transitive dependency '{dependency}'.");
         }
 
         var ciPublishDependencies = new[] { "Ci", "Publish" };
-        AssertTargetDependsOnContainsAll(mainSource, "CiPublish", ciPublishDependencies, CiTargetOpenSpecGate, "build/Build.cs");
+        AssertTargetDependsOnContainsAll(mainSource, "CiPublish", ciPublishDependencies, CiTargetDocsFirstGovernance, "build/Build.cs");
     }
 
     [Fact]
@@ -675,7 +713,7 @@ public sealed class AutomationLaneGovernanceTests
         {
             "Coverage", "AutomationLaneReport", "WarningGovernance",
             "DependencyVulnerabilityGovernance", "TypeScriptDeclarationGovernance",
-            "OpenSpecStrictGovernance", "ReleaseCloseoutSnapshot",
+            "ReleaseCloseoutSnapshot",
             "RuntimeCriticalPathExecutionGovernance", "AdoptionReadinessGovernance",
             "ContinuousTransitionGateGovernance"
         };
@@ -690,6 +728,82 @@ public sealed class AutomationLaneGovernanceTests
         Assert.True(
             ciPublishDependsOn.Contains("Ci"),
             $"[{TransitionGateParityConsistency}] CiPublish must depend on Ci.");
+    }
+
+    [Fact]
+    public void Governance_report_writers_create_parent_directories_before_serialization()
+    {
+        var repoRoot = FindRepoRoot();
+        var processHelpers = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.ProcessHelpers.cs"));
+
+        AssertSourceContains(processHelpers, "Directory.CreateDirectory", BuildPipelineTargetGraph, "build/Build.ProcessHelpers.cs");
+        AssertSourceContains(processHelpers, "Path.GetDirectoryName(path)", BuildPipelineTargetGraph, "build/Build.ProcessHelpers.cs");
+    }
+
+    [Fact]
+    public void Dependency_vulnerability_governance_parses_npm_audit_from_stdout_only()
+    {
+        var repoRoot = FindRepoRoot();
+        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.Dependency.cs"));
+        var processHelpers = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.ProcessHelpers.cs"));
+
+        AssertSourceContains(
+            governanceSource,
+            "RunNpmStdoutAsync",
+            CiTargetDocsFirstGovernance,
+            "build/Build.Governance.Dependency.cs");
+        Assert.DoesNotContain("RunNpmCaptureAllAsync", governanceSource, StringComparison.Ordinal);
+        AssertSourceContains(
+            processHelpers,
+            "RunNpmStdoutAsync",
+            CiTargetDocsFirstGovernance,
+            "build/Build.ProcessHelpers.cs");
+    }
+
+    [Fact]
+    public void Dependency_vulnerability_governance_scans_all_web_samples()
+    {
+        var repoRoot = FindRepoRoot();
+        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.Dependency.cs"));
+
+        foreach (var sampleDirectory in new[]
+                 {
+                     "ReactWebDirectory",
+                     "AiChatWebDirectory",
+                     "VueWebDirectory",
+                     "TodoWebDirectory"
+                 })
+        {
+            AssertSourceContains(
+                governanceSource,
+                sampleDirectory,
+                CiTargetDocsFirstGovernance,
+                "build/Build.Governance.Dependency.cs");
+        }
+    }
+
+    [Fact]
+    public void Dependency_vulnerability_governance_requires_lockfiles_for_all_web_samples()
+    {
+        var repoRoot = FindRepoRoot();
+        var governanceSource = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Governance.Dependency.cs"));
+
+        AssertSourceContains(
+            governanceSource,
+            "missing npm lockfile",
+            CiTargetDocsFirstGovernance,
+            "build/Build.Governance.Dependency.cs");
+        Assert.DoesNotContain(".Where(path => File.Exists(path / \"package-lock.json\"))", governanceSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Gui_smoke_environment_detection_accepts_common_ci_markers()
+    {
+        var repoRoot = FindRepoRoot();
+        var processHelpers = File.ReadAllText(Path.Combine(repoRoot, "build", "Build.Helpers.cs"));
+
+        AssertSourceContains(processHelpers, "TF_BUILD", BuildPipelineTargetGraph, "build/Build.Helpers.cs");
+        AssertSourceContains(processHelpers, "\"1\"", BuildPipelineTargetGraph, "build/Build.Helpers.cs");
     }
 
     [Fact]
@@ -731,37 +845,25 @@ public sealed class AutomationLaneGovernanceTests
     }
 
     [Fact]
-    public void Phase_transition_roadmap_and_shell_governance_artifacts_remain_consistent()
+    public void Docs_first_release_governance_artifacts_remain_consistent()
     {
         var repoRoot = FindRepoRoot();
-        var roadmapPath = Path.Combine(repoRoot, "openspec", "ROADMAP.md");
+        var releaseGovernancePath = Path.Combine(repoRoot, "docs", "release-governance.md");
         var runtimeManifestPath = Path.Combine(repoRoot, "tests", "runtime-critical-path.manifest.json");
         var productionMatrixPath = Path.Combine(repoRoot, "tests", "shell-production-matrix.json");
         var templateIndexPath = Path.Combine(repoRoot, "templates", "agibuild-hybrid", "HybridApp.Desktop", "wwwroot", "index.html");
         var hostCapabilityBridgePath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityBridge.cs");
 
-        foreach (var p in new[] { roadmapPath, runtimeManifestPath, productionMatrixPath, templateIndexPath, hostCapabilityBridgePath })
+        foreach (var p in new[] { releaseGovernancePath, runtimeManifestPath, productionMatrixPath, templateIndexPath, hostCapabilityBridgePath })
             AssertFileExists(p, PhaseTransitionConsistency);
 
-        var roadmap = File.ReadAllText(roadmapPath);
-        Assert.Matches(new Regex(@"## Phase \d+: .+\(✅ Completed\)", RegexOptions.Multiline), roadmap);
-        AssertSourceContains(roadmap, "Completed phase id: `phase12-enterprise-advanced-scenarios`", PhaseTransitionConsistency, roadmapPath);
-        AssertSourceContains(roadmap, "Active phase id: `post-roadmap-maintenance`", PhaseTransitionConsistency, roadmapPath);
-        AssertSourceContains(roadmap, "Closeout snapshot artifact: `artifacts/test-results/closeout-snapshot.json`", PhaseTransitionConsistency, roadmapPath);
-        AssertSourceContains(roadmap, "### Evidence Source Mapping", PhaseTransitionConsistency, roadmapPath);
-
-        var completedPhaseCloseoutChangeIds = new[]
-        {
-            "2026-03-07-sentry-crash-reporting",
-            "2026-03-07-shared-state-management",
-            "2026-03-07-enterprise-auth-patterns",
-            "2026-03-07-plugin-quality-compatibility"
-        };
-        foreach (var changeId in completedPhaseCloseoutChangeIds)
-            AssertSourceContains(roadmap, changeId, PhaseTransitionConsistency, roadmapPath);
-
-        Assert.Matches(new Regex(@"`nuke Test`: Unit `\d+`, Integration `\d+`, Total `\d+` \(pass\)", RegexOptions.Multiline), roadmap);
-        Assert.Matches(new Regex(@"`nuke Coverage`: Line `\d+(\.\d+)?%` \(pass, threshold `\d+%`\)", RegexOptions.Multiline), roadmap);
+        var releaseGovernance = File.ReadAllText(releaseGovernancePath);
+        AssertSourceContains(releaseGovernance, "docs-first", PhaseTransitionConsistency, releaseGovernancePath);
+        AssertSourceContains(releaseGovernance, "closeout-snapshot.json", PhaseTransitionConsistency, releaseGovernancePath);
+        AssertSourceContains(releaseGovernance, "release-governance.md", PhaseTransitionConsistency, releaseGovernancePath);
+        Assert.DoesNotContain(LegacyRoadmapPathToken, releaseGovernance, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(LegacyArchivePathToken, releaseGovernance, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ROADMAP.md", releaseGovernance, StringComparison.Ordinal);
 
         using var runtimeDoc = LoadJsonArtifact(runtimeManifestPath, PhaseTransitionConsistency);
         using var matrixDoc = LoadJsonArtifact(productionMatrixPath, PhaseTransitionConsistency);
@@ -861,7 +963,9 @@ public sealed class AutomationLaneGovernanceTests
         Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*integration-tests\.json"), readme);
         Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*line-coverage\.json"), readme);
         Assert.Matches(new Regex(@"img\.shields\.io/endpoint\?url=.*branch-coverage\.json"), readme);
-        AssertSourceContains(readme, "Phase 12", ReadmeQualitySignals, readmePath);
+        AssertSourceContains(readme, "typed, policy-driven hybrid app platform", ReadmeQualitySignals, readmePath);
+        AssertSourceContains(readme, "docs/product-platform-roadmap.md", ReadmeQualitySignals, readmePath);
+        AssertSourceContains(readme, "docs/platform-status.md", ReadmeQualitySignals, readmePath);
     }
 
     [Fact]
@@ -1175,15 +1279,19 @@ public sealed class AutomationLaneGovernanceTests
             EvidenceContractV2Schema,
             "build/Build.Governance.Release.cs");
         AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transition", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
-        AssertAnonymousObjectMemberAssignedWithNew(combinedSource, "transitionContinuity", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseDecision", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertIndexerStringKeyAssignmentExists(combinedSource, "releaseBlockingReasons", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
         AssertAnonymousObjectHasMembers(
             combinedSource,
-            ["completedPhase", "activePhase", "closeoutArchives", "distributionReadiness", "adoptionReadiness"],
+            ["closeoutSummary", "distributionReadiness", "adoptionReadiness"],
             EvidenceContractV2Schema,
             "build/Build.Governance.Release.cs");
-        AssertSourceContains(combinedSource, "TransitionLaneProvenanceInvariantId", EvidenceContractV2Schema, "build/Build.Governance.Release.cs");
+        Assert.DoesNotContain("transitionContinuity", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("completedPhase", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("activePhase", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("closeoutArchives", combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(string.Concat("open", "Spec", "Strict", "Governance"), combinedSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(LegacyRoadmapPathToken, combinedSource, StringComparison.Ordinal);
         AssertSourceContains(combinedSource, "closeout-snapshot.json", EvidenceContractV2Schema, "build/Build.cs");
         AssertSourceContains(combinedSource, "distribution-readiness-governance-report.json", EvidenceContractV2Schema, "build/Build.cs");
         AssertSourceContains(combinedSource, "adoption-readiness-governance-report.json", EvidenceContractV2Schema, "build/Build.cs");

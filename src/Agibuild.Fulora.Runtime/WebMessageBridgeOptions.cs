@@ -22,6 +22,11 @@ public sealed class WebMessageBridgeOptions
     public IWebMessageDropDiagnosticsSink? DropDiagnosticsSink { get; init; }
 
     /// <summary>
+    /// Optional unified diagnostics sink for runtime and bridge observability.
+    /// </summary>
+    public IFuloraDiagnosticsSink? DiagnosticsSink { get; init; }
+
+    /// <summary>
     /// When true, bridge error responses include actionable hints in the <c>data.hint</c> field.
     /// Default is false to avoid information leakage in production.
     /// </summary>
@@ -61,4 +66,3 @@ internal sealed class DefaultWebMessagePolicy : IWebMessagePolicy
         return WebMessagePolicyDecision.Allow();
     }
 }
-

@@ -55,20 +55,24 @@ public sealed class BridgeCallProfiler : IBridgeTracer
     private const int MaxLatencySamples = 10000;
 
     private readonly IBridgeTracer? _inner;
+    private readonly IFuloraDiagnosticsSink? _diagnosticsSink;
     private readonly ConcurrentDictionary<string, MethodCallStats> _stats = new();
 
     /// <summary>
     /// Creates a profiler with optional inner tracer delegation.
     /// </summary>
     /// <param name="inner">Optional inner tracer to delegate to.</param>
-    public BridgeCallProfiler(IBridgeTracer? inner = null)
+    /// <param name="diagnosticsSink">Optional unified diagnostics sink for normalized bridge events.</param>
+    public BridgeCallProfiler(IBridgeTracer? inner = null, IFuloraDiagnosticsSink? diagnosticsSink = null)
     {
         _inner = inner is NullBridgeTracer ? null : inner;
+        _diagnosticsSink = diagnosticsSink;
     }
 
     /// <inheritdoc />
     public void OnExportCallStart(string serviceName, string methodName, string? paramsJson)
     {
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.export.start", serviceName, methodName, "started"));
         _inner?.OnExportCallStart(serviceName, methodName, paramsJson);
     }
 
@@ -76,6 +80,7 @@ public sealed class BridgeCallProfiler : IBridgeTracer
     public void OnExportCallEnd(string serviceName, string methodName, long elapsedMs, string? resultType)
     {
         RecordLatency(serviceName, methodName, elapsedMs, isError: false);
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.export.end", serviceName, methodName, "success", elapsedMs));
         _inner?.OnExportCallEnd(serviceName, methodName, elapsedMs, resultType);
     }
 
@@ -83,12 +88,14 @@ public sealed class BridgeCallProfiler : IBridgeTracer
     public void OnExportCallError(string serviceName, string methodName, long elapsedMs, Exception exception)
     {
         RecordLatency(serviceName, methodName, elapsedMs, isError: true);
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.export.error", serviceName, methodName, "error", elapsedMs, exception.GetType().Name));
         _inner?.OnExportCallError(serviceName, methodName, elapsedMs, exception);
     }
 
     /// <inheritdoc />
     public void OnImportCallStart(string serviceName, string methodName, string? paramsJson)
     {
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.import.start", serviceName, methodName, "started"));
         _inner?.OnImportCallStart(serviceName, methodName, paramsJson);
     }
 
@@ -96,18 +103,21 @@ public sealed class BridgeCallProfiler : IBridgeTracer
     public void OnImportCallEnd(string serviceName, string methodName, long elapsedMs)
     {
         RecordLatency(serviceName, methodName, elapsedMs, isError: false);
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.import.end", serviceName, methodName, "success", elapsedMs));
         _inner?.OnImportCallEnd(serviceName, methodName, elapsedMs);
     }
 
     /// <inheritdoc />
     public void OnServiceExposed(string serviceName, int methodCount, bool isSourceGenerated)
     {
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.service.exposed", serviceName, null, "exposed"));
         _inner?.OnServiceExposed(serviceName, methodCount, isSourceGenerated);
     }
 
     /// <inheritdoc />
     public void OnServiceRemoved(string serviceName)
     {
+        _diagnosticsSink?.OnEvent(CreateBridgeEvent("bridge.service.removed", serviceName, null, "removed"));
         _inner?.OnServiceRemoved(serviceName);
     }
 
@@ -209,6 +219,25 @@ public sealed class BridgeCallProfiler : IBridgeTracer
         var stats = _stats.GetOrAdd(key, _ => new MethodCallStats(MaxLatencySamples));
         stats.Record(elapsedMs, isError);
     }
+
+    private static FuloraDiagnosticsEvent CreateBridgeEvent(
+        string eventName,
+        string serviceName,
+        string? methodName,
+        string status,
+        long? durationMs = null,
+        string? errorType = null)
+        => new()
+        {
+            EventName = eventName,
+            Layer = "bridge",
+            Component = nameof(BridgeCallProfiler),
+            Service = serviceName,
+            Method = methodName,
+            DurationMs = durationMs,
+            Status = status,
+            ErrorType = errorType
+        };
 
     private static string MakeKey(string serviceName, string methodName) => $"{serviceName}.{methodName}";
 

@@ -25,33 +25,20 @@ internal static class ListPluginsCommand
 
         var listCommand = new Command("list") { Description = "List project resources" };
         listCommand.Subcommands.Add(pluginsCommand);
+        listCommand.Subcommands.Add(ListCapabilitiesCommand.Create());
         return listCommand;
     }
 
     internal static int Execute(bool check = false)
     {
         var cwd = Directory.GetCurrentDirectory();
-        var csprojFiles = Directory.GetFiles(cwd, "*.csproj");
-
-        if (csprojFiles.Length == 0)
-        {
-            Console.WriteLine("No .csproj file found in the current directory.");
-            return 0;
-        }
-
-        var allPlugins = new List<(string Project, string PackageId, string Version)>();
-
-        foreach (var csprojPath in csprojFiles)
-        {
-            var plugins = GetFuloraPluginsFromCsproj(csprojPath);
-            var projectName = Path.GetFileNameWithoutExtension(csprojPath);
-            foreach (var (pkgId, version) in plugins)
-                allPlugins.Add((projectName, pkgId, version));
-        }
-
+        var allPlugins = GetProjectPlugins(cwd);
         if (allPlugins.Count == 0)
         {
-            Console.WriteLine("No Fulora plugins installed.");
+            if (Directory.GetFiles(cwd, "*.csproj").Length == 0)
+                Console.WriteLine("No .csproj file found in the current directory.");
+            else
+                Console.WriteLine("No Fulora plugins installed.");
             return 0;
         }
 
@@ -74,35 +61,80 @@ internal static class ListPluginsCommand
     }
 
     internal static int ExecuteWithCheck(
-        List<(string Project, string PackageId, string Version)> plugins, string cwd)
+        List<(string Project, string PackageId, string Version)> plugins,
+        string cwd,
+        Func<string, string, PluginManifest?>? findManifest = null,
+        TextWriter? output = null)
     {
+        output ??= Console.Out;
+        findManifest ??= FindManifest;
         var fuloraVersion = GetInstalledFuloraVersion(cwd);
         var hasIncompatible = false;
 
-        Console.WriteLine($"Fulora version: {fuloraVersion?.ToString() ?? "(unknown)"}");
-        Console.WriteLine();
+        output.WriteLine($"Fulora version: {fuloraVersion?.ToString() ?? "(unknown)"}");
+        output.WriteLine();
 
         foreach (var (project, pkgId, version) in plugins.OrderBy(p => p.PackageId))
         {
-            var manifest = FindManifest(pkgId, version);
+            var manifest = findManifest(pkgId, version);
             if (manifest == null)
             {
-                Console.WriteLine($"  {pkgId} {version} — no manifest found");
+                output.WriteLine($"  {pkgId} {version} — no manifest found");
                 continue;
             }
 
             if (fuloraVersion != null && !manifest.IsCompatibleWith(fuloraVersion))
             {
-                Console.WriteLine($"  {pkgId} {version} — INCOMPATIBLE (requires >= {manifest.MinFuloraVersion})");
+                output.WriteLine($"  {pkgId} {version} — INCOMPATIBLE (requires >= {manifest.MinFuloraVersion})");
                 hasIncompatible = true;
             }
             else
             {
-                Console.WriteLine($"  {pkgId} {version} — compatible (min: {manifest.MinFuloraVersion})");
+                output.WriteLine($"  {pkgId} {version} — compatible (min: {manifest.MinFuloraVersion})");
             }
+
+            foreach (var summaryLine in FormatCapabilitySummary(manifest))
+                output.WriteLine($"      {summaryLine}");
         }
 
         return hasIncompatible ? 1 : 0;
+    }
+
+    internal static List<(string Project, string PackageId, string Version)> GetProjectPlugins(string cwd)
+    {
+        var csprojFiles = Directory.GetFiles(cwd, "*.csproj");
+        var allPlugins = new List<(string Project, string PackageId, string Version)>();
+
+        foreach (var csprojPath in csprojFiles)
+        {
+            var plugins = GetFuloraPluginsFromCsproj(csprojPath);
+            var projectName = Path.GetFileNameWithoutExtension(csprojPath);
+            foreach (var (pkgId, version) in plugins)
+                allPlugins.Add((projectName, pkgId, version));
+        }
+
+        return allPlugins;
+    }
+
+    internal static List<PluginManifest> ResolveInstalledManifests(
+        string cwd,
+        Func<string, string, PluginManifest?>? findManifest = null)
+    {
+        findManifest ??= FindManifest;
+        return GetProjectPlugins(cwd)
+            .Select(plugin => findManifest(plugin.PackageId, plugin.Version))
+            .Where(manifest => manifest is not null)
+            .Cast<PluginManifest>()
+            .ToList();
+    }
+
+    internal static IEnumerable<string> FormatCapabilitySummary(PluginManifest manifest)
+    {
+        if (manifest.RequiredCapabilities.Length > 0)
+            yield return $"required: {string.Join(", ", manifest.RequiredCapabilities)}";
+
+        if (manifest.OptionalCapabilities.Length > 0)
+            yield return $"optional: {string.Join(", ", manifest.OptionalCapabilities)}";
     }
 
     internal static PluginManifest? FindManifest(string packageId, string version)

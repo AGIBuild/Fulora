@@ -23,7 +23,7 @@ public static class GovernanceInvariantIds
     public const string CoverageThreshold = "GOV-015";
     public const string ReadmeQualitySignals = "GOV-016";
     public const string WindowsBaseConflictGovernance = "GOV-017";
-    public const string CiTargetOpenSpecGate = "GOV-018";
+    public const string CiTargetDocsFirstGovernance = "GOV-018";
     public const string PhaseCloseoutConsistency = "GOV-019";
     public const string EvidenceContractV2Schema = "GOV-020";
     public const string BridgeDistributionParity = "GOV-021";

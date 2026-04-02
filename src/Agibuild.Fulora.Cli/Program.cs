@@ -8,6 +8,7 @@ rootCommand.Subcommands.Add(GenerateCommand.Create());
 rootCommand.Subcommands.Add(DevCommand.Create());
 rootCommand.Subcommands.Add(AddCommand.Create());
 rootCommand.Subcommands.Add(ListPluginsCommand.Create());
+rootCommand.Subcommands.Add(InspectPluginCommand.Create());
 rootCommand.Subcommands.Add(SearchCommand.Create());
 rootCommand.Subcommands.Add(PackageCommand.Create());
 

@@ -271,13 +271,17 @@ public sealed class WebViewHostCapabilityCallResult<T>
         bool wasAuthorized,
         T? value,
         string? denyReason,
-        Exception? error)
+        Exception? error,
+        WebViewCapabilityDescriptor capability,
+        WebViewCapabilityPolicyDecision policyDecision)
     {
         Outcome = outcome;
         WasAuthorized = wasAuthorized;
         Value = value;
         DenyReason = denyReason;
         Error = error;
+        Capability = capability;
+        PolicyDecision = policyDecision;
     }
 
     /// <summary>Deterministic capability outcome.</summary>
@@ -294,15 +298,33 @@ public sealed class WebViewHostCapabilityCallResult<T>
     public string? DenyReason { get; }
     /// <summary>Operation error when execution fails.</summary>
     public Exception? Error { get; }
+    /// <summary>Stable capability descriptor for this result.</summary>
+    public WebViewCapabilityDescriptor Capability { get; }
+    /// <summary>Stable capability identifier for this result.</summary>
+    public string CapabilityId => Capability.CapabilityId;
+    /// <summary>Stable source component token for this result.</summary>
+    public string SourceComponent => Capability.SourceComponent;
+    /// <summary>Effective policy decision for this result.</summary>
+    public WebViewCapabilityPolicyDecision PolicyDecision { get; }
 
-    internal static WebViewHostCapabilityCallResult<T> Success(T? value)
-        => new(WebViewHostCapabilityCallOutcome.Allow, wasAuthorized: true, value, denyReason: null, error: null);
+    internal static WebViewHostCapabilityCallResult<T> Success(
+        WebViewCapabilityDescriptor capability,
+        WebViewCapabilityPolicyDecision policyDecision,
+        T? value)
+        => new(WebViewHostCapabilityCallOutcome.Allow, wasAuthorized: true, value, denyReason: null, error: null, capability, policyDecision);
 
-    internal static WebViewHostCapabilityCallResult<T> Denied(string? reason)
-        => new(WebViewHostCapabilityCallOutcome.Deny, wasAuthorized: false, value: default, denyReason: reason, error: null);
+    internal static WebViewHostCapabilityCallResult<T> Denied(
+        WebViewCapabilityDescriptor capability,
+        WebViewCapabilityPolicyDecision policyDecision,
+        string? reason = null)
+        => new(WebViewHostCapabilityCallOutcome.Deny, wasAuthorized: false, value: default, denyReason: reason ?? policyDecision.Reason, error: null, capability, policyDecision);
 
-    internal static WebViewHostCapabilityCallResult<T> Failure(Exception error, bool wasAuthorized)
-        => new(WebViewHostCapabilityCallOutcome.Failure, wasAuthorized, value: default, denyReason: null, error);
+    internal static WebViewHostCapabilityCallResult<T> Failure(
+        WebViewCapabilityDescriptor capability,
+        WebViewCapabilityPolicyDecision policyDecision,
+        Exception error,
+        bool wasAuthorized)
+        => new(WebViewHostCapabilityCallOutcome.Failure, wasAuthorized, value: default, denyReason: null, error, capability, policyDecision);
 }
 
 /// <summary>
@@ -325,7 +347,9 @@ public sealed class WebViewHostCapabilityDiagnosticEventArgs : EventArgs
         bool wasAuthorized,
         string? denyReason,
         WebViewOperationFailureCategory? failureCategory,
-        long durationMilliseconds)
+        long durationMilliseconds,
+        WebViewCapabilityDescriptor? capability = null,
+        WebViewCapabilityPolicyDecision? policyDecision = null)
     {
         CorrelationId = correlationId;
         RootWindowId = rootWindowId;
@@ -338,6 +362,8 @@ public sealed class WebViewHostCapabilityDiagnosticEventArgs : EventArgs
         DenyReason = denyReason;
         FailureCategory = failureCategory;
         DurationMilliseconds = durationMilliseconds;
+        Capability = capability ?? WebViewCapabilityPolicyEvaluator.Describe(operation);
+        PolicyDecision = policyDecision ?? InferPolicyDecision(outcome, wasAuthorized, denyReason);
         DiagnosticSchemaVersion = CurrentDiagnosticSchemaVersion;
     }
 
@@ -363,6 +389,14 @@ public sealed class WebViewHostCapabilityDiagnosticEventArgs : EventArgs
     public WebViewOperationFailureCategory? FailureCategory { get; }
     /// <summary>Elapsed duration in milliseconds.</summary>
     public long DurationMilliseconds { get; }
+    /// <summary>Stable capability descriptor.</summary>
+    public WebViewCapabilityDescriptor Capability { get; }
+    /// <summary>Stable capability identifier.</summary>
+    public string CapabilityId => Capability.CapabilityId;
+    /// <summary>Stable source component token.</summary>
+    public string SourceComponent => Capability.SourceComponent;
+    /// <summary>Effective policy decision.</summary>
+    public WebViewCapabilityPolicyDecision PolicyDecision { get; }
     /// <summary>Diagnostic payload schema version.</summary>
     public int DiagnosticSchemaVersion { get; }
 
@@ -378,11 +412,26 @@ public sealed class WebViewHostCapabilityDiagnosticEventArgs : EventArgs
             targetWindowId: TargetWindowId?.ToString("D"),
             operation: ToKebabCase(Operation.ToString()),
             requestUri: RequestUri?.AbsoluteUri,
+            capabilityId: CapabilityId,
+            sourceComponent: SourceComponent,
+            policyDecision: ToKebabCase(PolicyDecision.Kind.ToString()),
             outcome: ToKebabCase(Outcome.ToString()),
             wasAuthorized: WasAuthorized,
             denyReason: DenyReason,
             failureCategory: FailureCategory is null ? null : ToKebabCase(FailureCategory.Value.ToString()),
             durationMilliseconds: DurationMilliseconds);
+
+    private static WebViewCapabilityPolicyDecision InferPolicyDecision(
+        WebViewHostCapabilityCallOutcome outcome,
+        bool wasAuthorized,
+        string? denyReason)
+        => outcome switch
+        {
+            WebViewHostCapabilityCallOutcome.Deny => WebViewCapabilityPolicyDecision.Deny(denyReason),
+            WebViewHostCapabilityCallOutcome.Allow => WebViewCapabilityPolicyDecision.Allow(),
+            WebViewHostCapabilityCallOutcome.Failure when wasAuthorized => WebViewCapabilityPolicyDecision.Allow(),
+            _ => WebViewCapabilityPolicyDecision.Deny(denyReason ?? "policy-evaluation-failed")
+        };
 
     private static string ToKebabCase(string value)
     {
@@ -417,6 +466,9 @@ public sealed class WebViewHostCapabilityDiagnosticExportRecord
         string? targetWindowId,
         string operation,
         string? requestUri,
+        string capabilityId,
+        string sourceComponent,
+        string policyDecision,
         string outcome,
         bool wasAuthorized,
         string? denyReason,
@@ -430,6 +482,9 @@ public sealed class WebViewHostCapabilityDiagnosticExportRecord
         TargetWindowId = targetWindowId;
         Operation = operation;
         RequestUri = requestUri;
+        CapabilityId = capabilityId;
+        SourceComponent = sourceComponent;
+        PolicyDecision = policyDecision;
         Outcome = outcome;
         WasAuthorized = wasAuthorized;
         DenyReason = denyReason;
@@ -451,6 +506,12 @@ public sealed class WebViewHostCapabilityDiagnosticExportRecord
     public string Operation { get; }
     /// <summary>Optional request URI.</summary>
     public string? RequestUri { get; }
+    /// <summary>Stable capability identifier.</summary>
+    public string CapabilityId { get; }
+    /// <summary>Stable source component token.</summary>
+    public string SourceComponent { get; }
+    /// <summary>Effective policy decision token in kebab-case.</summary>
+    public string PolicyDecision { get; }
     /// <summary>Outcome token in kebab-case.</summary>
     public string Outcome { get; }
     /// <summary>Whether authorization passed.</summary>
@@ -512,6 +573,7 @@ public sealed class WebViewHostCapabilityBridge
 
     private readonly IWebViewHostCapabilityProvider _provider;
     private readonly IWebViewHostCapabilityPolicy? _policy;
+    private readonly WebViewCapabilityPolicyEvaluator _policyEvaluator;
     private readonly int _maxSystemIntegrationMetadataTotalLength;
 
     /// <summary>
@@ -531,6 +593,7 @@ public sealed class WebViewHostCapabilityBridge
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _policy = policy;
+        _policyEvaluator = new WebViewCapabilityPolicyEvaluator();
         options ??= new WebViewHostCapabilityBridgeOptions();
         _maxSystemIntegrationMetadataTotalLength = ValidateSystemIntegrationMetadataTotalLength(options.SystemIntegrationMetadataTotalLength);
     }
@@ -754,27 +817,32 @@ public sealed class WebViewHostCapabilityBridge
         var correlationId = Guid.NewGuid();
         var stopwatch = Stopwatch.StartNew();
         WebViewHostCapabilityCallResult<T> result;
+        var capability = _policyEvaluator.Describe(context);
 
         if (!TryEvaluatePolicy(context, out var decision, out var policyFailure))
         {
-            result = WebViewHostCapabilityCallResult<T>.Failure(policyFailure!, wasAuthorized: false);
+            result = WebViewHostCapabilityCallResult<T>.Failure(
+                capability,
+                WebViewCapabilityPolicyDecision.Deny("policy-evaluation-failed"),
+                policyFailure!,
+                wasAuthorized: false);
         }
         else if (!decision.IsAllowed)
         {
-            result = WebViewHostCapabilityCallResult<T>.Denied(decision.Reason);
+            result = WebViewHostCapabilityCallResult<T>.Denied(capability, decision, decision.Reason);
         }
         else
         {
             try
             {
                 var value = action();
-                result = WebViewHostCapabilityCallResult<T>.Success(value);
+                result = WebViewHostCapabilityCallResult<T>.Success(capability, decision, value);
             }
             catch (Exception ex)
             {
                 if (!WebViewOperationFailure.TryGetCategory(ex, out _))
                     WebViewOperationFailure.SetCategory(ex, WebViewOperationFailureCategory.AdapterFailed);
-                result = WebViewHostCapabilityCallResult<T>.Failure(ex, wasAuthorized: true);
+                result = WebViewHostCapabilityCallResult<T>.Failure(capability, decision, ex, wasAuthorized: true);
             }
         }
 
@@ -785,19 +853,12 @@ public sealed class WebViewHostCapabilityBridge
 
     private bool TryEvaluatePolicy(
         in WebViewHostCapabilityRequestContext context,
-        out WebViewHostCapabilityDecision decision,
+        out WebViewCapabilityPolicyDecision decision,
         out Exception? failure)
     {
-        if (_policy is null)
-        {
-            decision = WebViewHostCapabilityDecision.Allow();
-            failure = null;
-            return true;
-        }
-
         try
         {
-            decision = _policy.Evaluate(context);
+            decision = _policyEvaluator.Evaluate(_policy, context);
             failure = null;
             return true;
         }
@@ -805,7 +866,7 @@ public sealed class WebViewHostCapabilityBridge
         {
             if (!WebViewOperationFailure.TryGetCategory(ex, out _))
                 WebViewOperationFailure.SetCategory(ex, WebViewOperationFailureCategory.AdapterFailed);
-            decision = default;
+            decision = WebViewCapabilityPolicyDecision.Deny("policy-evaluation-failed");
             failure = ex;
             return false;
         }
@@ -918,7 +979,9 @@ public sealed class WebViewHostCapabilityBridge
         in WebViewHostCapabilityRequestContext context,
         string denyReason)
     {
-        var result = WebViewHostCapabilityCallResult<T>.Denied(denyReason);
+        var capability = _policyEvaluator.Describe(context);
+        var policyDecision = WebViewCapabilityPolicyDecision.Deny(denyReason);
+        var result = WebViewHostCapabilityCallResult<T>.Denied(capability, policyDecision, denyReason);
         EmitCapabilityDiagnostic(
             Guid.NewGuid(),
             context,
@@ -950,6 +1013,8 @@ public sealed class WebViewHostCapabilityBridge
                 result.WasAuthorized,
                 result.DenyReason,
                 failureCategory,
-                durationMilliseconds));
+                durationMilliseconds,
+                result.Capability,
+                result.PolicyDecision));
     }
 }

@@ -1,5 +1,7 @@
 # Release Governance
 
+Fulora release governance is docs-first. The source of truth is this document plus the machine-readable evidence generated under `artifacts/test-results/`. Release automation must not depend on OpenSpec roadmap files or OpenSpec archive folders.
+
 ## Stable Release Rules
 
 1. Stable releases preserve kernel and bridge compatibility unless architecture approval is recorded.
@@ -24,6 +26,9 @@
 ## Evidence Contract and Artifact Convention
 
 - Evidence schema: every gate artifact must include `gate`, `releaseLine`, `snapshotAtUtc`, `status`, `producer`, and `artifacts[]` with machine-readable details.
+- Docs-first evidence baseline: `docs/release-governance.md` defines the release policy, and `artifacts/test-results/closeout-snapshot.json` records the current closeout snapshot used by build/release governance.
+- Closeout snapshot contract: the snapshot must record `provenance`, `transition`, `tests`, `coverage`, `governance`, and `closeoutSummary` so release lanes can validate the current docs-first governance state.
+- Governance document linkage: release evidence must point back to `docs/release-governance.md` instead of any OpenSpec artifact.
 - Field semantics (required for each gate artifact record):
   - `gate`: the release gate identity the record belongs to (for example `Compatibility`, `Security`, `Quality`).
   - `releaseLine`: the governed release line this evidence is proving (for example `1.0.x` or `1.1.0-rc`).
@@ -34,6 +39,7 @@
 - Evidence path: release evidence is stored under `artifacts/releases/<release-line>/<gate>/`.
 - Naming convention: use `<release-line>.<gate>.<artifact-kind>.<timestamp-utc>.json` where timestamp uses `yyyyMMddTHHmmssZ`.
 - Snapshot linkage: capability evidence must include the `framework-capabilities.json` version and the corresponding `platform-status.md` snapshot section reference.
+- Release closeout linkage: the closeout snapshot must include the governed documentation path and confirm docs-first governance artifacts are present before promotion.
 - Retention rule: keep the full stable promotion evidence set and preserve hashes for reproducibility checks.
 
 ## Promotion Flow

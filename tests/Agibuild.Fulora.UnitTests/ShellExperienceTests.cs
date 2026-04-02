@@ -649,6 +649,11 @@ public sealed class ShellExperienceTests
         Assert.Equal(WebViewHostCapabilityCallOutcome.Deny, open.Outcome);
         Assert.Equal(WebViewHostCapabilityCallOutcome.Deny, save.Outcome);
         Assert.Equal(WebViewHostCapabilityCallOutcome.Deny, notify.Outcome);
+        Assert.Equal("clipboard.write", write.CapabilityId);
+        Assert.Equal("filesystem.pick", open.CapabilityId);
+        Assert.Equal("filesystem.pick", save.CapabilityId);
+        Assert.Equal("notification.post", notify.CapabilityId);
+        Assert.Equal(WebViewCapabilityPolicyDecisionKind.Deny, write.PolicyDecision.Kind);
         Assert.Equal("host-capability-bridge-not-configured", write.DenyReason);
         Assert.Equal("host-capability-bridge-not-configured", open.DenyReason);
         Assert.Equal("host-capability-bridge-not-configured", save.DenyReason);
@@ -816,4 +821,3 @@ public sealed class ShellExperienceTests
         }
     }
 }
-

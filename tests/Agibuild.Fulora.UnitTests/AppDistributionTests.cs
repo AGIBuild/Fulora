@@ -256,6 +256,14 @@ public class AppDistributionTests
     }
 
     [Fact]
+    public void ParseFeedAndFindUpdate_without_assets_or_version_returns_null()
+    {
+        var json = """{ "channel": "stable" }""";
+        var result = VelopackAutoUpdateProvider.ParseFeedAndFindUpdate(json, "https://feed.example.com/", "1.0.0");
+        Assert.Null(result);
+    }
+
+    [Fact]
     public void ParseFeedAndFindUpdate_empty_assets_returns_null()
     {
         var json = """{ "Assets": [] }""";
@@ -298,6 +306,23 @@ public class AppDistributionTests
     public void ParseFeedAndFindUpdate_velopack_asset_invalid_version_skipped()
     {
         var json = """{ "Assets": [{ "Type": "Full", "Version": "not-a-version", "FileName": "app.nupkg" }] }""";
+        var result = VelopackAutoUpdateProvider.ParseFeedAndFindUpdate(json, "https://feed.example.com/", "1.0.0");
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void ParseFeedAndFindUpdate_velopack_asset_missing_type_is_treated_as_full()
+    {
+        var json = """{ "Assets": [{ "Version": "2.0.0", "FileName": "app.nupkg" }] }""";
+        var result = VelopackAutoUpdateProvider.ParseFeedAndFindUpdate(json, "https://feed.example.com/", "1.0.0");
+        Assert.NotNull(result);
+        Assert.Equal("https://feed.example.com/app.nupkg", result!.DownloadUrl);
+    }
+
+    [Fact]
+    public void ParseFeedAndFindUpdate_velopack_asset_missing_version_property_skipped()
+    {
+        var json = """{ "Assets": [{ "Type": "Full", "FileName": "app.nupkg" }] }""";
         var result = VelopackAutoUpdateProvider.ParseFeedAndFindUpdate(json, "https://feed.example.com/", "1.0.0");
         Assert.Null(result);
     }
@@ -353,10 +378,33 @@ public class AppDistributionTests
     }
 
     [Fact]
+    public void ParseFeedAndFindUpdate_velopack_invalid_current_version_still_returns_latest()
+    {
+        var json = """{ "Assets": [{ "Type": "Full", "Version": "2.0.0", "FileName": "app.nupkg" }] }""";
+        var result = VelopackAutoUpdateProvider.ParseFeedAndFindUpdate(json, "https://feed.example.com/", "invalid-version");
+        Assert.NotNull(result);
+        Assert.Equal("2.0.0", result!.Version);
+    }
+
+    [Fact]
+    public void ParseFeedAndFindUpdate_simple_invalid_current_version_returns_null()
+    {
+        var json = """{ "version": "2.0.0", "downloadUrl": "https://example.com/app.exe" }""";
+        var result = VelopackAutoUpdateProvider.ParseFeedAndFindUpdate(json, "https://feed.example.com/", "invalid-version");
+        Assert.Null(result);
+    }
+
+    [Fact]
     public void GetBaseUrl_extracts_directory_from_feed_url()
     {
         Assert.Equal("https://example.com/releases/", VelopackAutoUpdateProvider.GetBaseUrl("https://example.com/releases/feed.json"));
         Assert.Equal("https://example.com/", VelopackAutoUpdateProvider.GetBaseUrl("https://example.com/feed.json"));
+    }
+
+    [Fact]
+    public void GetBaseUrl_supports_non_hierarchical_uri()
+    {
+        Assert.Equal("urn:updates:feed/", VelopackAutoUpdateProvider.GetBaseUrl("urn:updates:feed"));
     }
 
     [Fact]

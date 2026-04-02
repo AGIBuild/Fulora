@@ -4,5 +4,12 @@
   "services": ["AuthTokenService"],
   "npmPackage": "@agibuild/bridge-plugin-authtoken",
   "minFuloraVersion": "1.0.0",
-  "platforms": ["windows", "macos", "linux", "android", "ios"]
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "requiredCapabilities": ["plugin.auth.token.read", "plugin.auth.token.write"],
+  "optionalCapabilities": [],
+  "securityNotes": [
+    "The default in-memory provider is test-only and does not satisfy production secure storage requirements.",
+    "Tokens should be scoped and rotated according to the host application's security policy."
+  ],
+  "platformConstraints": ["desktop-hosts", "secure-storage-provider-required-for-production"]
 }

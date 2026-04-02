@@ -122,6 +122,14 @@ internal sealed class PluginTestServiceB : IPluginTestServiceB
 
 internal sealed class TwoServiceTestPlugin : IBridgePlugin
 {
+    public static BridgePluginMetadata GetMetadata()
+        => new(
+            "test.integration.two-service",
+            ["test.integration.required"],
+            [],
+            ["Integration-test plugin manifest used for multi-service registration coverage."],
+            ["test-only"]);
+
     public static IEnumerable<BridgePluginServiceDescriptor> GetServices()
     {
         yield return BridgePluginServiceDescriptor.Create<IPluginTestServiceA>(

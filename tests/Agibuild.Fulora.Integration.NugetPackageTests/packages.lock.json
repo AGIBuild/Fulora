@@ -5,8 +5,8 @@
       "Agibuild.Fulora.Avalonia": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "1.5.6",
-        "contentHash": "QyQqtiUR/Zztbx67c64XsUvk0WI4vcqHoFb1PhwNFFSSE43gtYJPq6aA5b6O80Q+nKPKOTdMhmAVCGLnu7o3Sw==",
+        "resolved": "1.5.10",
+        "contentHash": "ZInpAG2j2s+QEPiZ0xb2OMDpYrE8C0kQNmLWn4orpXslDGzL5wgf+K5v8Y5nLS2mS457p0Bw+1mMBx0xLRcK5w==",
         "dependencies": {
           "Avalonia": "12.0.0-preview2",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
@@ -18,14 +18,14 @@
       "Agibuild.Fulora.Bridge.Generator": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "1.5.6",
-        "contentHash": "ErarHdyaaegCW9n/M+sMbfFsZFMW03/72iqWAeSarYu4Bxbjv8Hjr7uswtztUdtdMQMtZsIv0v7Mh0nj1W/WEQ=="
+        "resolved": "1.5.10",
+        "contentHash": "fH/w6voNWE81oSESybspp1uhH4BZGOxoCsguIYIYowDMgkq0WZdCyLyeCtQQX6r59Gwg4/xhd89ybHaIoKD8sw=="
       },
       "Agibuild.Fulora.Core": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "1.5.6",
-        "contentHash": "d+WA6gAzfr/CmNwaePkcMakutMbNpcfk6E/ZbgU/PVTrOUX96Wi9TYSv1gZMA2SH5ObENrLizhKKy41mFBsW3g=="
+        "resolved": "1.5.10",
+        "contentHash": "UWcexpjTMbejxkY7WGC6huxzBPX2Toz+rVkfKwH5AEj9N6j10+hNQU3huTIJzo+PGxU6uMC6y8KjzJLei/GKmA=="
       },
       "Avalonia": {
         "type": "Direct",

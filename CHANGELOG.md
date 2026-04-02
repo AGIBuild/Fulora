@@ -81,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 - **TypeScript Declaration Governance** — Validates `@agibuild/bridge` package structure and TypeScript declarations.
 - **Bridge Distribution Governance** — npm/pnpm/yarn parity smoke tests and Node LTS import validation.
-- **OpenSpec Strict Governance** — `openspec validate --all --strict` integrated into CI pipeline.
+- **Legacy Spec Validation Governance** — strict spec validation was integrated into the CI pipeline during this phase.
 - **Runtime Critical-Path Governance** — Shell production matrix and runtime manifest sync enforcement.
 
 ### Changed

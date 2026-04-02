@@ -486,6 +486,7 @@ public partial class MainWindow
         }
 
         public WebViewHostCapabilityDecision Evaluate(in WebViewHostCapabilityRequestContext context)
+            // Keep the starter shell deny-by-default and mirror intentional allows in capabilities.json.
             => context.Operation switch
             {
                 WebViewHostCapabilityOperation.ClipboardReadText => WebViewHostCapabilityDecision.Allow(),
