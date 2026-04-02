@@ -11,7 +11,7 @@ using Nuke.Common.IO;
 internal partial class BuildTask
 {
     private const string TransitionGateParityInvariantId = "GOV-024";
-    private const string TransitionLaneProvenanceInvariantId = "GOV-025";
+    private const string ReleaseCloseoutProvenanceInvariantId = "GOV-025";
     private const string TransitionGateDiagnosticSchemaInvariantId = "GOV-026";
     private const string ReleaseOrchestrationDecisionInvariantId = "GOV-027";
     private const string ReleaseOrchestrationBlockingReasonSchemaInvariantId = "GOV-028";
@@ -86,8 +86,8 @@ internal partial class BuildTask
                     if (!File.Exists(CloseoutSnapshotFile))
                     {
                         failures.Add(new GovernanceFailure(
-                            Category: "transition-continuity",
-                            InvariantId: TransitionLaneProvenanceInvariantId,
+                            Category: "release-closeout-provenance",
+                            InvariantId: ReleaseCloseoutProvenanceInvariantId,
                             SourceArtifact: closeoutArtifactPath,
                             Expected: $"{LaneContextCi}: closeout snapshot exists",
                             Actual: $"{LaneContextCi}: file missing"));
@@ -97,47 +97,12 @@ internal partial class BuildTask
                         using var closeoutDoc = JsonDocument.Parse(File.ReadAllText(CloseoutSnapshotFile));
                         var root = closeoutDoc.RootElement;
                         var provenance = root.GetProperty("provenance");
-                        var transition = root.GetProperty("transition");
 
-                        if (!string.Equals(provenance.GetProperty("laneContext").GetString(), LaneContextCi, StringComparison.Ordinal))
-                        {
-                            failures.Add(new GovernanceFailure(
-                                Category: "transition-continuity",
-                                InvariantId: TransitionLaneProvenanceInvariantId,
-                                SourceArtifact: closeoutArtifactPath,
-                                Expected: $"{LaneContextCi}: provenance.laneContext = {LaneContextCi}",
-                                Actual: $"{LaneContextCi}: provenance.laneContext = {provenance.GetProperty("laneContext").GetString() ?? "<null>"}"));
-                        }
-
-                        if (!string.Equals(provenance.GetProperty("producerTarget").GetString(), "ReleaseCloseoutSnapshot", StringComparison.Ordinal))
-                        {
-                            failures.Add(new GovernanceFailure(
-                                Category: "transition-continuity",
-                                InvariantId: TransitionLaneProvenanceInvariantId,
-                                SourceArtifact: closeoutArtifactPath,
-                                Expected: $"{LaneContextCi}: provenance.producerTarget = ReleaseCloseoutSnapshot",
-                                Actual: $"{LaneContextCi}: provenance.producerTarget = {provenance.GetProperty("producerTarget").GetString() ?? "<null>"}"));
-                        }
-
-                        if (!string.Equals(transition.GetProperty("governanceModel").GetString(), "docs-first", StringComparison.Ordinal))
-                        {
-                            failures.Add(new GovernanceFailure(
-                                Category: "transition-continuity",
-                                InvariantId: TransitionLaneProvenanceInvariantId,
-                                SourceArtifact: closeoutArtifactPath,
-                                Expected: $"{LaneContextCi}: transition.governanceModel = docs-first",
-                                Actual: $"{LaneContextCi}: transition.governanceModel = {transition.GetProperty("governanceModel").GetString() ?? "<null>"}"));
-                        }
-
-                        if (!string.Equals(transition.GetProperty("releaseGovernanceDocument").GetString(), "docs/release-governance.md", StringComparison.Ordinal))
-                        {
-                            failures.Add(new GovernanceFailure(
-                                Category: "transition-continuity",
-                                InvariantId: TransitionLaneProvenanceInvariantId,
-                                SourceArtifact: closeoutArtifactPath,
-                                Expected: $"{LaneContextCi}: transition.releaseGovernanceDocument = docs/release-governance.md",
-                                Actual: $"{LaneContextCi}: transition.releaseGovernanceDocument = {transition.GetProperty("releaseGovernanceDocument").GetString() ?? "<null>"}"));
-                        }
+                        ValidateCloseoutField(failures, LaneContextCi, closeoutArtifactPath, LaneContextCi, provenance.GetProperty("laneContext").GetString(), "release-closeout-provenance", "provenance.laneContext");
+                        ValidateCloseoutField(failures, LaneContextCi, closeoutArtifactPath, "ReleaseCloseoutSnapshot", provenance.GetProperty("producerTarget").GetString(), "release-closeout-provenance", "provenance.producerTarget");
+                        ValidateRequiredCloseoutSection(failures, LaneContextCi, closeoutArtifactPath, root, "tests");
+                        ValidateRequiredCloseoutSection(failures, LaneContextCi, closeoutArtifactPath, root, "coverage");
+                        ValidateRequiredCloseoutSection(failures, LaneContextCi, closeoutArtifactPath, root, "governance");
                     }
 
                     var reportPayload = new
@@ -242,16 +207,49 @@ internal partial class BuildTask
         return reachable;
     }
 
+    private static void ValidateCloseoutField(
+        List<GovernanceFailure> failures,
+        string lane,
+        string artifactPath,
+        string expected,
+        string? actual,
+        string group,
+        string fieldName)
+    {
+        if (string.Equals(expected, actual, StringComparison.Ordinal))
+            return;
+
+        failures.Add(new GovernanceFailure(
+            Category: group,
+            InvariantId: ReleaseCloseoutProvenanceInvariantId,
+            SourceArtifact: artifactPath,
+            Expected: $"{lane}: {fieldName} = {expected}",
+            Actual: $"{lane}: {fieldName} = {actual ?? "<null>"}"));
+    }
+
+    private static void ValidateRequiredCloseoutSection(
+        List<GovernanceFailure> failures,
+        string lane,
+        string artifactPath,
+        JsonElement root,
+        string sectionName)
+    {
+        if (root.TryGetProperty(sectionName, out _))
+            return;
+
+        failures.Add(new GovernanceFailure(
+            Category: "release-closeout-structure",
+            InvariantId: ReleaseCloseoutProvenanceInvariantId,
+            SourceArtifact: artifactPath,
+            Expected: $"{lane}: section '{sectionName}' present",
+            Actual: $"{lane}: section missing"));
+    }
+
     internal Target ReleaseCloseoutSnapshot => _ => _
         .Description("Generates machine-readable CI evidence snapshot (v2) from test/coverage artifacts.")
         .DependsOn(Coverage, AutomationLaneReport)
         .Executes(() =>
         {
-            const string transitionInvariantId = "GOV-022";
-            var releaseGovernanceDocument = RootDirectory / "docs" / "release-governance.md";
-            if (!File.Exists(releaseGovernanceDocument))
-                Assert.Fail($"[{TransitionLaneProvenanceInvariantId}] Docs-first release governance requires docs/release-governance.md.");
-
             TestResultsDirectory.CreateDirectory();
 
             var unitTrxPath = ResolveFirstExistingPath(
@@ -275,9 +273,6 @@ internal partial class BuildTask
             var integrationCounters = ReadTrxCounters(integrationTrxPath!);
             var lineCoveragePct = ReadCoberturaLineCoveragePercent(coberturaPath!);
             var branchCoveragePct = ReadCoberturaBranchCoveragePercent(coberturaPath!);
-            var totalTests = unitCounters.Total + integrationCounters.Total;
-            var totalFailed = unitCounters.Failed + integrationCounters.Failed;
-            var totalSkipped = unitCounters.Skipped + integrationCounters.Skipped;
 
             var snapshotPayload = new
             {
@@ -288,18 +283,11 @@ internal partial class BuildTask
                     producerTarget = "ReleaseCloseoutSnapshot",
                     timestamp = DateTime.UtcNow.ToString("o")
                 },
-                transition = new
-                {
-                    invariantId = transitionInvariantId,
-                    governanceModel = "docs-first",
-                    releaseGovernanceDocument = "docs/release-governance.md"
-                },
                 sourcePaths = new
                 {
                     unitTrx = unitTrxPath!.ToString(),
                     integrationTrx = integrationTrxPath!.ToString(),
-                    cobertura = coberturaPath!.ToString(),
-                    releaseGovernance = releaseGovernanceDocument.ToString()
+                    cobertura = coberturaPath!.ToString()
                 },
                 tests = new
                 {
@@ -334,20 +322,11 @@ internal partial class BuildTask
                 },
                 governance = new
                 {
-                    releaseGovernanceDocumentExists = File.Exists(releaseGovernanceDocument),
                     automationLaneReportExists = File.Exists(AutomationLaneReportFile),
                     dependencyGovernanceReportExists = File.Exists(DependencyGovernanceReportFile),
                     typeScriptGovernanceReportExists = File.Exists(TypeScriptGovernanceReportFile),
                     sampleTemplatePackageReferenceGovernanceReportExists = File.Exists(SampleTemplatePackageReferenceGovernanceReportFile),
                     runtimeCriticalPathGovernanceReportExists = File.Exists(RuntimeCriticalPathGovernanceReportFile)
-                },
-                closeoutSummary = new
-                {
-                    totalTests,
-                    failedTests = totalFailed,
-                    skippedTests = totalSkipped,
-                    lineCoveragePercent = Math.Round(lineCoveragePct, 2),
-                    branchCoveragePercent = Math.Round(branchCoveragePct, 2)
                 }
             };
 

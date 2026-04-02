@@ -3,7 +3,7 @@
 Typed bridge is the foundation of this project's framework-positioning architecture.
 It keeps host/web interaction explicit, testable, and automation-friendly.
 
-## Why It Matters in Phase 5
+## Why It Matters for Capability Governance
 
 Bridge contracts are the entry point for:
 
@@ -139,9 +139,9 @@ Analyzer package reference:
                   ReferenceOutputAssembly="false" />
 ```
 
-## Bridge V2 Capabilities (Phase 8)
+## Bridge Capability Expansion (V2)
 
-Phase 8 expanded bridge expressiveness beyond the initial V1 contract:
+Bridge V2 expands expressiveness beyond the initial V1 contract:
 
 ### Binary Payload (`byte[]` ↔ `Uint8Array`)
 
@@ -231,4 +231,3 @@ Closed generic types in parameters and return values are fully supported.
 - [Architecture](./architecture.md)
 - [SPA Hosting](./spa-hosting.md)
 - [Product Platform Roadmap](../product-platform-roadmap.md)
-- [Platform Status](../platform-status.md)

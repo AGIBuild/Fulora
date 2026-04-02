@@ -1,54 +1,42 @@
 # Platform Status
 
-## Current Snapshot
+## Governed Status Template
 
-This page tracks the current docs-first governed platform snapshot for the active Fulora release line.
+This page is the governed status template and publication location for release-line snapshots.
 
-- Snapshot date: `2026-04-01`
-- Snapshot date: `2026-04-02`
-- Release line: `0.2.x docs-first governance baseline`
-- Stable channel status: `Pre-stable release governance baseline`
-- Capability registry version: `1.0-seeded`
-- Security gate status: `Capability taxonomy is documented and the runtime policy evaluator now governs host capability enforcement; plugin capability expansion remains Tier C and policy-gated`
-- Observability gate status: `Unified diagnostics event envelope and runtime/bridge sinks are shipped; broader framework event coverage remains incremental`
-- Release gate status: `Docs-first release governance, capability snapshots, dependency governance, and closeout evidence are active in Ci`
+- Snapshot date: `TBD`
+- Channel status: `TBD`
+- Kernel stability: `TBD`
+- Extension readiness: `TBD`
+- Security gate status: `TBD`
+- Observability gate status: `TBD`
+- Release gate status: `TBD`
 
 ## Tier A
 
-Stable cross-platform contract capabilities:
+Tier A captures the stable contract required for every supported release line.
 
-- `kernel.navigation`: stable on Windows/macOS/Linux, preview on iOS/Android.
-- `kernel.lifecycle.disposal`: stable on Windows/macOS/Linux, preview on iOS/Android.
-- `bridge.transport.binary`: stable on desktop hosts, preview on mobile hosts.
-- `bridge.transport.cancellation`: stable on desktop hosts, preview on mobile hosts.
-- `bridge.transport.streaming`: stable on desktop hosts, preview on mobile hosts.
+- Includes `Kernel` and `Bridge` capabilities marked as stable in `framework-capabilities.json`.
+- Changes at this tier require the strongest compatibility evidence and release-gate review.
+- Current release-line publication fields remain template-driven until snapshot values are promoted.
 
 ## Tier B
 
-Officially supported capabilities with documented platform variation:
+Tier B captures governed framework and shell experiences that are broadly supported but may evolve faster than the core contract.
 
-- `framework.spa.hosting`: stable on Windows/macOS, documented Linux variation, mobile support planned.
-- `framework.shell.integration`: stable on Windows/macOS, documented Linux variation, mobile support planned.
-- `framework.shell.activation`: stable on Windows/macOS, documented Linux variation, mobile support planned.
+- Includes `Framework` capabilities such as SPA hosting and shell activation.
+- Differences across hosts or front-end stacks must be documented in the registry and release evidence.
+- Promotion requires matching framework-level validation and rollback notes.
 
 ## Tier C
 
-Experimental capabilities without a stable cross-platform SLA:
+Tier C captures optional extension lanes and ecosystem add-ons.
 
-- `plugin.filesystem.read`: experimental and policy-gated.
-- `plugin.http.outbound`: experimental and policy-gated.
-- `plugin.notification.post`: experimental and policy-gated.
-- `plugin.ai.integration`: experimental and opt-in.
-
-## Known Limitations
-
-- Linux remains primarily a dialog-first support story; embedded desktop parity is not part of the current baseline.
-- Android and iOS stay preview for Tier A bridge/kernel capabilities and are not yet Tier B-ready for framework services.
-- Capability policy enforcement is active for governed host capability paths; broader plugin power rollout remains experimental and Tier C.
-- Platform-specific caveats must continue to flow from `framework-capabilities.json` into release evidence and support messaging.
+- Includes `Plugin` capabilities such as filesystem, HTTP, and notification extensions.
+- Consumers may adopt these selectively, but every declared capability must still publish compatibility scope and rollback strategy.
+- Tier C snapshots should call out notable limitations, opt-in requirements, or pending hardening work.
 
 ## Notes
 
-- Keep this page aligned with `release-governance.md` and `framework-capabilities.json`.
-- Support claims must use this page plus the machine-readable registry together.
-- This page is a governed snapshot, not a replacement for machine-readable release evidence.
+- Replace `TBD` values through the release governance process.
+- Keep this document aligned with `release-governance.md` and capability registry updates in `framework-capabilities.json`.

@@ -1,7 +1,6 @@
 # Fulora 设计文档
 
-> **文档定位**: 本文是早期设计稿，保留为历史背景参考，不作为当前规范文档。
-> **当前平台基线**: 以 `docs/product-platform-roadmap.md`、`docs/platform-status.md`、`docs/release-governance.md` 为准。
+> **历史说明**：本文档保留早期 WebView 设计语境，当前平台定义以 [Product Platform Roadmap](product-platform-roadmap.md) 和 [Platform Status](platform-status.md) 为准。
 
 ---
 
@@ -11,20 +10,18 @@
 
 构建一个跨平台混合应用框架（Hybrid App Framework），基于 Avalonia UI，使开发者能够以原生性能和体积，获得 Web-first 级别的开发效率：
 
-**核心目标**（历史设计目标摘要）：
+**核心目标**（当前规范参见 [Product Platform Roadmap](product-platform-roadmap.md)）：
 - **G1 — Type-Safe Bidirectional Bridge**: 源码生成器驱动的 C# ↔ JS 类型安全通信
 - **G2 — First-Class SPA Hosting**: 开箱即用的前端应用托管（`app://` 协议）
 - **G3 — Secure by Default**: 基于能力的安全模型，Web 内容只能调用显式暴露的方法
 - **G4 — Contract-Driven Testability**: 所有功能可通过 MockAdapter 测试，无需真实浏览器
 
-**当时阶段目标设想**（Phase 0 草案）：
+**已达成基础目标**（Phase 0）：
 - 5 平台原生 WebView 适配器（Windows/macOS/iOS/Android/Linux）
 - 完整导航控制（拦截、取消、重定向关联）
 - WebMessage 桥接 + 策略（Origin、Channel、Protocol 检查）
 - 丰富功能集：Cookies、Commands、Screenshot、PDF、RPC、Zoom、Find、Preload、ContextMenu、Download、Permission、WebResource
-- 当时文档记录了较高测试指标要求（具体数字随版本演进已不作为当前事实）
-
-> 说明：本设计稿仅用于历史背景理解。当前事实请以 `docs/product-platform-roadmap.md`、`docs/platform-status.md`、`docs/release-governance.md` 为准。
+- 1459 单元测试 + 209 集成测试，95%+ 行覆盖率
 
 ### 🧠 设计原则
 
@@ -300,19 +297,19 @@ public void WebView_OnWebMessageReceived_ShouldPassMessage()
 
 ## 10. 路线图
 
-历史路线图摘要（已归档，仅供背景理解）：
+完整路线图参见 [Product Platform Roadmap](product-platform-roadmap.md)。概要：
 
 | Phase | Focus | Status |
 |-------|-------|--------|
-| **Phase 0**: Foundation | 跨平台适配器 + 契约语义 + 丰富功能集 | 历史记录（草案口径） |
-| **Phase 1**: Type-Safe Bridge | 源码生成器 + C# ↔ JS 类型安全桥接 + TS 类型生成 | 当时后续设想 |
-| **Phase 2**: SPA Hosting | `app://` 协议 + 嵌入式资源 + HMR 代理 + 前端集成 | 当时阶段设想 |
-| **Phase 3**: Polish & GA | 项目模板 + 文档 + 性能基准 + 1.0 发布 | 当时阶段设想 |
+| **Phase 0**: Foundation | 跨平台适配器 + 契约语义 + 丰富功能集 | ✅ Done |
+| **Phase 1**: Type-Safe Bridge | 源码生成器 + C# ↔ JS 类型安全桥接 + TS 类型生成 | 🔜 Next |
+| **Phase 2**: SPA Hosting | `app://` 协议 + 嵌入式资源 + HMR 代理 + 前端集成 | Planned |
+| **Phase 3**: Polish & GA | 项目模板 + 文档 + 性能基准 + 1.0 发布 | Planned |
 
 ---
 
 **总结**
 
-该设计稿当时用于推动项目从"WebView 控件"走向"跨平台 Hybrid App 框架"的阶段讨论。文中的 Phase 叙述属于历史背景摘要，不应视为当前发布状态或对外支持承诺。
+本项目已从一个"WebView 控件"演进为一个"跨平台 Hybrid App 框架"。Phase 0 建立了契约驱动、可测试、5 平台统一的基础设施；后续 Phase 1-3 将在此基础上构建类型安全桥接、SPA 托管和开发者工具链，最终实现"Web-first 的开发效率 + Native 的性能和体积"这一核心价值主张。
 
-当前目标与治理口径请参考 `docs/product-platform-roadmap.md`、`docs/platform-status.md`、`docs/release-governance.md`。
+详细目标定义参见 [Product Platform Roadmap](product-platform-roadmap.md) 与 [Architecture Layering](architecture-layering.md)。

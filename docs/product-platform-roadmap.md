@@ -2,126 +2,76 @@
 
 ## Positioning
 
-Fulora is a product-grade hybrid application platform for .NET and Avalonia. It centers on WebView contracts, typed bridge execution, policy-governed capabilities, and production shipping workflows.
+Fulora is a product platform for shipping web-first applications as native desktop products with governed runtime contracts.
 
 ## Strategic Direction
 
-- Keep the product story narrow: WebView host, typed bridge, policy, diagnostics, and shipping.
-- Keep the stable platform small enough to defend with tests and release gates.
-- Move framework-specific and vertical change into explicit extension lanes.
-- Make support claims machine-readable so release quality is auditable.
+- Keep the runtime core host-neutral and stable.
+- Push host, framework, and ecosystem change into explicit extension lanes.
+- Scale releases through machine-checkable governance artifacts.
 
 ## Stable Core vs Extensions
 
-- Stable core: Kernel contracts, bridge execution semantics, capability governance model, security defaults, and observability schema.
-- Extensions: Framework services, plugins, templates, and host or vertical feature packs.
-- Rule: extension velocity must not weaken stable core compatibility guarantees.
-- Rule: stable release claims apply first to the governed core, then to tiered capability surfaces.
+- Stable core: runtime kernel, bridge contracts, lifecycle invariants, security primitives, and diagnostics contracts.
+- Extensions: framework adapters, host-specific integration layers, optional plugins, and ecosystem templates.
+- Rule: extension velocity must not break stable core compatibility guarantees.
 
 ## Layering Model
 
-Fulora documents and evolves the platform through four layers:
-
-- `Kernel` for WebView lifecycle, messaging, cancellation, baseline security semantics, and minimum diagnostics hooks.
-- `Bridge` for `[JsExport]`, `[JsImport]`, source generation, transport semantics, streaming, cancellation, and tracing.
-- `Framework Services` for SPA hosting, shell activation, deep linking, theme and window shell coordination, auto-update integration, and telemetry integration.
-- `Plugins / Vertical Features` for filesystem, HTTP client, database, notifications, auth token, biometric, local storage, AI integrations, IDE tooling, and showcase-only features.
+- `Kernel` — cross-platform runtime contracts and execution invariants.
+- `Bridge` — JS/C# contract generation, transport semantics, and bridge diagnostics.
+- `Framework` — host integration, adapter composition, shell bootstrapping, and SPA hosting surfaces.
+- `Plugin` — optional capability packages that extend the platform without reversing lower-layer dependencies.
+- Product surfaces consume these four layers but do not define the platform dependency envelope.
 
 ## Capability Support Contract
 
-- Tier A capabilities are part of Fulora's stable cross-platform contract and unexpected platform differences are treated as defects.
-- Tier B capabilities are officially supported, may vary by platform, and must document those differences without failing silently.
-- Tier C capabilities are experimental and do not carry a stable cross-platform SLA.
-- The current governed capability fact set lives in `framework-capabilities.json`, and the corresponding human-readable release snapshot lives in `platform-status.md`.
-- Capabilities are registered in `framework-capabilities.json` with lifecycle state, support tier, platform support, test requirements, contract reference, and limitations reference.
+- Capabilities are registered in `framework-capabilities.json` with explicit lifecycle states.
+- Current release-line publication status lives in `platform-status.md`.
+- Each capability declares owner, support tier, compatibility scope, and rollback strategy.
+- Tier A covers stable `Kernel` and `Bridge` contracts, Tier B covers governed `Framework` surfaces, and Tier C covers optional `Plugin` capabilities.
 - Breaking capability changes must follow each capability's `breakingChangePolicy`.
 - Architecture approval is mandatory for kernel-level changes and capability policies that explicitly require it.
 - release-gate evidence is required for all breaking capability changes.
 
-## Security
+## Security Model
 
 - Validate all external inputs at the boundary.
-- Default deny privileged host capabilities until policy grants them.
-- Require explicit capability declarations for filesystem, network, shell, auth, clipboard, and window-control powers.
-- Treat security review as a release gate for stable promotion, not a best-effort checklist.
+- Default-deny privileged operations; require explicit capability enablement.
+- Enforce secret isolation through environment/runtime providers only.
+- Apply security review gates before stable release promotion.
 
-## Observability
+## Observability Model
 
-- Fulora exposes one governed observability model spanning runtime events, bridge events, and framework events.
-- Required event families include navigation, auth, bridge execution, plugin lifecycle, hot update, auto-update, and capability denial paths.
-- Stable releases must publish machine-readable health and regression evidence, including traces, metrics, and structured error baselines.
-- DevTools consumes the unified event stream instead of defining a separate tracing universe.
+- Every capability exposes baseline traces, metrics, and structured error events.
+- Release candidates must include machine-readable evidence for health, regression, and fallback readiness.
+- Observability artifacts are part of release governance, not optional diagnostics.
 
 ## Release Governance
 
-- Stable channel promotion follows the rules in `release-governance.md`.
-- Capability snapshots, compatibility summaries, package smoke, and auto-update smoke evidence are required inputs for promotion.
-- Kernel API changes and support-tier changes require architecture review before merge and before stable release promotion.
-- If any release gate fails, promotion stops until evidence is refreshed and the gate passes.
+- Stable channel changes require passing release gates defined in `release-governance.md`.
+- Kernel API and support-tier changes require architecture review sign-off.
+- Regression or policy gate failures block promotion until evidence is updated.
 
 ## Developer Defaults
 
-- Templates default to least-privilege capability policy.
-- Generated project structure should reflect layer intent instead of a single expanding runtime bucket.
-- New capabilities begin as provisional until they have declared tests, limitations, and release evidence.
-- Default diagnostics and compatibility placeholders are generated rather than left to manual follow-up.
+- Safe-by-default templates and policy presets.
+- Stable APIs first; extension APIs are opt-in and explicitly marked.
+- New capabilities start as provisional until governance evidence is complete.
 
-## P0-P5
+## P0-P5 Roadmap
 
-| Priority | Theme | Primary Outcome |
-| --- | --- | --- |
-| P0 | Kernel Narrowing | Smaller, more defensible core |
-| P1 | Capability Contract | Clear support commitments |
-| P2 | Capability Security | Policy-governed host capabilities |
-| P3 | Runtime Observability | Unified diagnostics across layers |
-| P4 | Release Governance | Stable releases with hard gates |
-| P5 | DX Defaults | Best practices generated by default |
-
-### P0
-
-- Objective: narrow the kernel to the minimum host-neutral runtime surface.
-- Why Now: the biggest platform risk is an oversized core boundary.
-- Major Deliverables: kernel boundary definition, bridge separation, and architecture governance tests.
-- Exit Criteria: the kernel boundary is documented, approved, and test-enforced.
-
-### P1
-
-- Objective: publish a capability contract with explicit support tiers.
-- Why Now: platform promises need to match documented maturity.
-- Major Deliverables: capability registry, platform status page, and contract references.
-- Exit Criteria: Tier A, Tier B, and Tier C claims are machine-readable and docs-discoverable.
-
-### P2
-
-- Objective: govern host powers through explicit capability policy.
-- Why Now: WebMessage security alone is not enough for platform-scale integrations.
-- Major Deliverables: capability taxonomy, deny-by-default policy model, and stable deny diagnostics.
-- Exit Criteria: privileged capabilities have explicit declarations, policy decisions, and rollback guidance.
-
-### P3
-
-- Objective: converge diagnostics into one runtime observability model.
-- Why Now: release quality depends on comparable evidence across layers.
-- Major Deliverables: unified event schema, baseline traces and metrics, and stable structured errors.
-- Exit Criteria: release candidates produce auditable observability evidence for governed capabilities.
-
-### P4
-
-- Objective: make release governance mandatory for stable claims.
-- Why Now: guidance-only release quality does not scale.
-- Major Deliverables: gate policy, compatibility summary, package smoke, and auto-update smoke checks.
-- Exit Criteria: stable promotion is blocked automatically when required evidence is missing or failing.
-
-### P5
-
-- Objective: encode platform best practices into templates and tooling defaults.
-- Why Now: correct platform usage should be the easiest path.
-- Major Deliverables: layer-aware project layout, generated placeholders, and policy-first templates.
-- Exit Criteria: new projects start with governed defaults instead of post-hoc cleanup.
+| Phase | Focus | Outcome |
+|---|---|---|
+| P0 | Baseline platform contracts | Kernel and governance envelope established |
+| P1 | Layering enforcement | Dependency rules and API categories formalized |
+| P2 | Capability registry | Machine-readable capability metadata and support tiers |
+| P3 | Security + observability hardening | Required gates and evidence pipelines active |
+| P4 | Release automation | Stable release gates fully automated in CI |
+| P5 | Ecosystem scale-out | Extension lanes expand without core contract drift |
 
 ## Documentation Governance
 
-- Platform documents are first-class governance artifacts and must remain DocFX-discoverable.
-- `docs/index.md` and `docs/toc.yml` must expose platform pages as top-level navigation.
-- `docs/platform-status.md` is the human-readable release snapshot and `docs/framework-capabilities.json` is the machine-readable source of capability facts.
-- Governance tests enforce file presence, navigation links, and minimum structure for these platform documents.
+- Platform docs are first-class governance artifacts and must stay DocFX-discoverable.
+- `docs/index.md` and `docs/toc.yml` must expose platform documents as top-level navigation.
+- Governance tests enforce presence and linkage for required platform pages.

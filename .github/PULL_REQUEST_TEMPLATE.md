@@ -8,7 +8,9 @@
 
 ## Layer Impact
 
-<!-- Which platform/runtime layers are impacted by this PR -->
+- Kernel:
+- Capability / Experience:
+- Adapter / Tooling:
 
 ## Checklist
 

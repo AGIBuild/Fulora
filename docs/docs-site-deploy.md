@@ -1,17 +1,17 @@
 # Documentation Site Deployment
 
-The API reference and guides are built with [docfx](https://dotnet.github.io/docfx/) and deployed to GitHub Pages as part of the unified CI/Release pipeline.
+The API reference and guides are built with [docfx](https://dotnet.github.io/docfx/) and deployed to GitHub Pages via the dedicated `.github/workflows/docs.yml` workflow.
 
 ## How it works
 
-Documentation deployment is integrated into the unified `ci.yml` workflow:
+Documentation deployment uses an independent workflow:
 
-1. Code is pushed to `main` and the CI stage builds and tests across three platforms (macOS, Windows, Linux).
-2. After CI passes, the **Release Promotion** job requires manual approval via the `release` GitHub environment.
-3. Once approved, release publishes NuGet/npm packages, creates a Git tag and GitHub Release.
-4. The **Deploy Documentation** job runs after release, building the docfx site and deploying it to GitHub Pages.
+1. `docs.yml` triggers on `push` to `main` when changed files match `docs/**`.
+2. The workflow builds `docs/docfx.json`.
+3. The built site is uploaded as an artifact.
+4. A separate deploy job publishes the artifact to GitHub Pages.
 
-This ensures documentation is always in sync with the published release — no docs deploy without a successful release.
+This means docs-only changes on `main` can deploy the docs site without going through the release promotion path.
 
 ## GitHub Pages setup (one-time)
 

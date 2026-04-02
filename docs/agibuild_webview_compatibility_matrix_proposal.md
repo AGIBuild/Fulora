@@ -2,8 +2,7 @@
 
 > 本文是“可验证、可测试、可验收”的兼容矩阵提案，用于替代“完全模拟官方 WebView”的不可验证目标。
 > 核心原则：任何“支持/一致”的声明都必须落到矩阵条目 + 明确语义 + 对应测试用例。
->
-> Historical note: this proposal is now a historical design reference. The current governed support contract lives in `docs/framework-capabilities.json` and `docs/platform-status.md`.
+> 当前生效的 capability contract 与 release-line 状态请以 `framework-capabilities.json` 和 `platform-status.md` 为准；本文保留为历史设计提案与背景材料。
 
 ---
 

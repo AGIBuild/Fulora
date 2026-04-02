@@ -4,7 +4,7 @@ Step-by-step guide for publishing a new Agibuild.Fulora release via the unified 
 
 ## Normative Reference
 
-- [Release Governance](release-governance.md) — authoritative stable release rules, gate definitions, and promotion constraints for this checklist.
+This checklist is governed by [Release Governance](release-governance.md). If this page conflicts with governance policy, `release-governance.md` is the source of truth.
 
 ## How Releases Work
 
@@ -12,9 +12,15 @@ Releases are fully automated through the unified `ci.yml` workflow:
 
 1. **Version baseline** is defined in `Directory.Build.props` (`<VersionPrefix>`). Update it with `nuke UpdateVersion` when you want to bump the version.
 2. **Every push to `main`** triggers the CI pipeline, which builds and tests across macOS, Windows, and Linux.
-3. **Package version** is computed as `{VersionPrefix}.{run_number}` — deterministic, monotonic, and no manual tagging required.
+3. **Version resolution** follows workflow mode:
+   - Stable release mode: tag `v{VersionPrefix}`, `full_version = VersionPrefix`
+   - Non-release CI mode: `full_version = VersionPrefix-ci.{run_number}`
+   - Manual prerelease mode: `full_version = VersionPrefix-{prerelease_suffix}`
 4. **After CI passes**, the Release Promotion job waits for **manual approval** via the `release` GitHub environment.
-5. **After approval**, the pipeline publishes NuGet packages, npm packages, creates a Git tag (`v{version}`), a GitHub Release, and deploys documentation — all in one run.
+5. **After approval**, the pipeline publishes NuGet packages, npm packages, and creates a Git tag (`v{VersionPrefix}`) plus GitHub Release.
+6. **Documentation deployment paths**:
+   - Release pipeline includes a docs deploy step for release runs.
+   - Docs-only changes on `main` are deployed by the independent `docs.yml` workflow.
 
 ## Prerequisites
 
@@ -58,7 +64,8 @@ After updating the version, commit the `Directory.Build.props` change and push t
 2. Watch the [Actions tab](https://github.com/AGIBuild/Fulora/actions) for the "CI and Release" workflow
 3. After three platforms pass, click **Review deployments** to approve the release
 4. Release Promotion publishes packages, creates tag + GitHub Release
-5. Deploy Documentation builds and deploys the docfx site
+5. If this is a release run, Deploy Documentation publishes docs from the release pipeline
+6. For docs-only changes, monitor the separate `Deploy Documentation` workflow (`docs.yml`)
 
 ## Post-Release Verification
 

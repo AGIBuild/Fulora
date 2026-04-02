@@ -4,10 +4,10 @@
   href: architecture-layering.md
 - name: Platform Status
   href: platform-status.md
-- name: Framework Capabilities
-  href: framework-capabilities.json
 - name: Release Governance
   href: release-governance.md
+- name: Framework Capabilities
+  href: framework-capabilities.md
 - name: Demo
   href: demo/
 - name: Articles

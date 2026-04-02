@@ -2,35 +2,82 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Nuke.Common;
+using Nuke.Common.IO;
 
 internal partial class BuildTask
 {
-    private const string LayeringGovernanceInvariantId = "GOV-041";
+    private const string LayeringGovernanceInvariantId = "GOV-037";
+    private static readonly Regex ProjectReferencePattern = new(
+        "<ProjectReference\\s+Include=\"(?<path>[^\"]+)\"",
+        RegexOptions.Compiled);
 
     private sealed record LayeringRule(
-        string LayerName,
-        string NamespacePrefix,
-        string[] ForbiddenNamespacePrefixes);
+        string Layer,
+        string[] Roots,
+        string[] ForbiddenProjectReferenceMarkers,
+        Regex[] ForbiddenNamespacePatterns);
 
-    private static readonly LayeringRule[] LayeringGovernanceRules =
+    private static readonly string[] FrameworkReferenceMarkers =
+    [
+        "Agibuild.Fulora.Avalonia",
+        "Agibuild.Fulora.Adapters.Windows",
+        "Agibuild.Fulora.Adapters.Gtk",
+        "Agibuild.Fulora.Adapters.MacOS",
+        "Agibuild.Fulora.Adapters.Android",
+        "Agibuild.Fulora.Adapters.iOS"
+    ];
+
+    private static readonly LayeringRule[] LayeringRules =
     [
         new(
-            "Kernel",
-            "Agibuild.Fulora.Kernel.",
-            ["Agibuild.Fulora.Bridge.", "Agibuild.Fulora.Framework.", "Agibuild.Fulora.Plugin."]),
+            Layer: "Kernel",
+            Roots:
+            [
+                "src/Agibuild.Fulora.Core",
+                "src/Agibuild.Fulora.Adapters.Abstractions",
+                "src/Agibuild.Fulora.Runtime",
+                "src/Agibuild.Fulora.DependencyInjection"
+            ],
+            ForbiddenProjectReferenceMarkers: FrameworkReferenceMarkers.Concat(["Agibuild.Fulora.Plugin."]).ToArray(),
+            ForbiddenNamespacePatterns: FrameworkReferenceMarkers
+                .Select(CreateNamespacePattern)
+                .Concat([CreateNamespacePattern("Agibuild.Fulora.Plugin.")])
+                .ToArray()),
         new(
-            "Bridge",
-            "Agibuild.Fulora.Bridge.",
-            ["Agibuild.Fulora.Framework.", "Agibuild.Fulora.Plugin."]),
+            Layer: "Bridge",
+            Roots: ["src/Agibuild.Fulora.Bridge.Generator"],
+            ForbiddenProjectReferenceMarkers: FrameworkReferenceMarkers.Concat(["Agibuild.Fulora.Plugin."]).ToArray(),
+            ForbiddenNamespacePatterns: FrameworkReferenceMarkers
+                .Select(CreateNamespacePattern)
+                .Concat([CreateNamespacePattern("Agibuild.Fulora.Plugin.")])
+                .ToArray()),
         new(
-            "Framework Services",
-            "Agibuild.Fulora.Framework.",
-            ["Agibuild.Fulora.Plugin."])
+            Layer: "Framework",
+            Roots:
+            [
+                "src/Agibuild.Fulora.Avalonia",
+                "src/Agibuild.Fulora.Adapters.Windows",
+                "src/Agibuild.Fulora.Adapters.Gtk",
+                "src/Agibuild.Fulora.Adapters.MacOS",
+                "src/Agibuild.Fulora.Adapters.Android",
+                "src/Agibuild.Fulora.Adapters.iOS"
+            ],
+            ForbiddenProjectReferenceMarkers: ["Agibuild.Fulora.Plugin."],
+            ForbiddenNamespacePatterns: [CreateNamespacePattern("Agibuild.Fulora.Plugin.")]),
+        new(
+            Layer: "Plugin",
+            Roots: ["plugins"],
+            ForbiddenProjectReferenceMarkers: FrameworkReferenceMarkers.Concat(["Agibuild.Fulora.Plugin."]).ToArray(),
+            ForbiddenNamespacePatterns: FrameworkReferenceMarkers
+                .Select(CreateNamespacePattern)
+                .Concat([CreateNamespacePattern("Agibuild.Fulora.Plugin.")])
+                .ToArray())
     ];
 
     internal Target LayeringGovernance => _ => _
-        .Description("Validates docs-first layering rules and blocks forbidden reverse namespace dependencies.")
+        .Description("Blocks forbidden reverse dependencies across Kernel, Bridge, Framework, and Plugin layers.")
         .Executes(() =>
         {
             RunGovernanceCheck(
@@ -39,66 +86,84 @@ internal partial class BuildTask
                 () =>
                 {
                     var failures = new List<GovernanceFailure>();
-                    var checks = new List<object>();
-                    var guidancePath = "docs/architecture-layering.md";
-                    var csFiles = Directory.GetFiles(RootDirectory, "*.cs", SearchOption.AllDirectories)
-                        .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                        .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                        .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}.git{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                        .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
-                        .ToArray();
 
-                    foreach (var rule in LayeringGovernanceRules)
+                    foreach (var rule in LayeringRules)
                     {
-                        var governedFiles = csFiles
-                            .Where(path => File.ReadAllText(path).Contains($"namespace {rule.NamespacePrefix}", StringComparison.Ordinal))
-                            .ToArray();
-
-                        var violations = new List<object>();
-                        foreach (var file in governedFiles)
+                        foreach (var root in rule.Roots)
                         {
-                            var source = File.ReadAllText(file);
-                            var relativePath = Path.GetRelativePath(RootDirectory, file).Replace('\\', '/');
+                            var fullRoot = RootDirectory / root;
+                            if (!Directory.Exists(fullRoot))
+                                continue;
 
-                            foreach (var forbiddenPrefix in rule.ForbiddenNamespacePrefixes)
+                            foreach (var projectFile in Directory.GetFiles(fullRoot, "*.csproj", SearchOption.AllDirectories))
                             {
-                                if (!source.Contains(forbiddenPrefix, StringComparison.Ordinal))
-                                    continue;
+                                var source = File.ReadAllText(projectFile);
+                                var projectReferences = ProjectReferencePattern.Matches(source)
+                                    .Select(match => match.Groups["path"].Value)
+                                    .ToArray();
 
-                                violations.Add(new
+                                foreach (var marker in rule.ForbiddenProjectReferenceMarkers)
                                 {
-                                    file = relativePath,
-                                    forbiddenNamespacePrefix = forbiddenPrefix
-                                });
-                                failures.Add(new GovernanceFailure(
-                                    Category: "layering",
-                                    InvariantId: LayeringGovernanceInvariantId,
-                                    SourceArtifact: relativePath,
-                                    Expected: $"{rule.LayerName} code must not reference {forbiddenPrefix}; see {guidancePath}",
-                                    Actual: $"forbidden namespace reference detected in {rule.NamespacePrefix} scope"));
+                                    foreach (var projectReference in projectReferences)
+                                    {
+                                        if (!projectReference.Contains(marker, StringComparison.Ordinal))
+                                            continue;
+
+                                        failures.Add(new GovernanceFailure(
+                                            Category: "layering",
+                                            InvariantId: LayeringGovernanceInvariantId,
+                                            SourceArtifact: ToRepoRelativePath(projectFile),
+                                            Expected: $"{rule.Layer} layer avoids project references to '{marker}'",
+                                            Actual: $"found project reference '{projectReference}'. See docs/architecture-layering.md"));
+                                    }
+                                }
+                            }
+
+                            foreach (var codeFile in Directory.GetFiles(fullRoot, "*.cs", SearchOption.AllDirectories))
+                            {
+                                var source = File.ReadAllText(codeFile);
+                                foreach (var pattern in rule.ForbiddenNamespacePatterns)
+                                {
+                                    var match = pattern.Match(source);
+                                    if (!match.Success)
+                                        continue;
+
+                                    failures.Add(new GovernanceFailure(
+                                        Category: "layering",
+                                        InvariantId: LayeringGovernanceInvariantId,
+                                        SourceArtifact: ToRepoRelativePath(codeFile),
+                                        Expected: $"{rule.Layer} layer avoids namespace imports outside docs/architecture-layering.md",
+                                        Actual: $"found forbidden namespace import '{match.Groups["namespace"].Value}'."));
+                                }
                             }
                         }
-
-                        checks.Add(new
-                        {
-                            layer = rule.LayerName,
-                            namespacePrefix = rule.NamespacePrefix,
-                            scannedFiles = governedFiles.Length,
-                            forbiddenNamespacePrefixes = rule.ForbiddenNamespacePrefixes,
-                            violations
-                        });
                     }
 
                     var reportPayload = new
                     {
-                        generatedAtUtc = DateTime.UtcNow,
-                        guidance = guidancePath,
+                        schemaVersion = 1,
+                        documentation = "docs/architecture-layering.md",
                         failureCount = failures.Count,
-                        checks,
+                        rules = LayeringRules.Select(rule => new
+                        {
+                            layer = rule.Layer,
+                            roots = rule.Roots
+                        }),
                         failures
                     };
 
                     return new GovernanceCheckResult(failures, reportPayload);
                 });
         });
+
+    private static Regex CreateNamespacePattern(string namespacePrefix)
+    {
+        var normalized = Regex.Escape(namespacePrefix.TrimEnd('.'));
+        return new Regex(
+            $@"(?:^|\s)(?:global\s+)?using\s+(?<namespace>{normalized}(?:\.[A-Za-z0-9_]+)*)\s*;",
+            RegexOptions.Multiline | RegexOptions.Compiled);
+    }
+
+    private static string ToRepoRelativePath(string path) =>
+        Path.GetRelativePath(RootDirectory, path).Replace(Path.DirectorySeparatorChar, '/');
 }

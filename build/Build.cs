@@ -270,11 +270,11 @@ internal sealed partial class BuildTask : NukeBuild
 
     internal Target Ci => _ => _
         .Description("Full CI pipeline: compile → coverage → lane automation → pack → validate.")
-        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, LayeringGovernance, NugetPackageTest, PackTemplate);
+        .DependsOn(LayeringGovernance, ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, NugetPackageTest, PackTemplate);
 
     internal Target CiMatrix => _ => _
         .Description("Cross-platform CI validation without package smoke/template packing.")
-        .DependsOn(ReleaseOrchestrationGovernance, SolutionConsistencyGovernance, LayeringGovernance);
+        .DependsOn(LayeringGovernance, ReleaseOrchestrationGovernance, SolutionConsistencyGovernance);
 
     internal Target CiPublish => _ => _
         .Description("Full release pipeline: Ci + publish.")
