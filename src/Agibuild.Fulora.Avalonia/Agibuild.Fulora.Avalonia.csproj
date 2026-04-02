@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <!-- Compile-time assets (dependency DLLs manually packed). -->
+    <None Include="..\..\README.md" Pack="true" PackagePath="/" Visible="false" />
     <None Include="..\Agibuild.Fulora.Core\bin\$(Configuration)\net10.0\Agibuild.Fulora.Core.dll" Pack="true" PackagePath="lib/net10.0/" />
     <None Include="..\Agibuild.Fulora.Adapters.Abstractions\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.Abstractions.dll" Pack="true" PackagePath="lib/net10.0/" />
     <None Include="..\Agibuild.Fulora.Runtime\bin\$(Configuration)\net10.0\Agibuild.Fulora.Runtime.dll" Pack="true" PackagePath="lib/net10.0/" />
