@@ -623,6 +623,7 @@ public sealed class WebViewShellExperience : IDisposable
     private readonly Guid _rootWindowId;
     private readonly WebViewHostCapabilityExecutor _hostCapabilityExecutor;
     private readonly ShellSystemIntegrationRuntime _systemIntegrationRuntime;
+    private readonly ShellWindowingRuntime _windowingRuntime;
     private readonly WebViewManagedWindowManager _managedWindowManager;
     private readonly WebViewNewWindowHandler _newWindowHandler;
     private readonly WebViewShellSessionDecision? _sessionDecision;
@@ -663,6 +664,7 @@ public sealed class WebViewShellExperience : IDisposable
                                       IsSystemActionWhitelisted,
                                       ReportPolicyFailure);
         _systemIntegrationRuntime = new ShellSystemIntegrationRuntime(_hostCapabilityExecutor);
+        _windowingRuntime = new ShellWindowingRuntime(_webView, _options, _rootWindowId, _hostCapabilityExecutor);
 
         var rootSessionContext = _options.SessionContext with
         {
@@ -720,7 +722,7 @@ public sealed class WebViewShellExperience : IDisposable
                                     _rootWindowId,
                                     _sessionDecision,
                                     _rootProfile,
-                                    _hostCapabilityExecutor,
+                                    _windowingRuntime,
                                     ReportPolicyFailure,
                                     RaiseSessionPermissionProfileDiagnostic,
                                     args => ManagedWindowLifecycleChanged?.Invoke(this, args));
@@ -729,9 +731,8 @@ public sealed class WebViewShellExperience : IDisposable
                             ?? new WebViewNewWindowHandler(
                                 _webView,
                                 _options,
-                                _rootWindowId,
                                 _managedWindowManager,
-                                _hostCapabilityExecutor,
+                                _windowingRuntime,
                                 ReportPolicyFailure);
 
         if (_options.NewWindowPolicy is not null)

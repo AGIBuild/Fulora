@@ -5,26 +5,23 @@ namespace Agibuild.Fulora.Shell;
 
 internal sealed class WebViewNewWindowHandler
 {
-    private readonly IWebView _webView;
-    private readonly WebViewShellExperienceOptions _options;
-    private readonly Guid _rootWindowId;
+    private const string HostCapabilityBridgeUnavailableReason = "host-capability-bridge-not-configured";
+
     private readonly WebViewManagedWindowManager _managedWindowManager;
-    private readonly WebViewHostCapabilityExecutor _policyExecutor;
+    private readonly ShellWindowingRuntime _windowingRuntime;
     private readonly Action<WebViewShellPolicyDomain, Exception> _reportPolicyFailure;
 
     public WebViewNewWindowHandler(
         IWebView webView,
         WebViewShellExperienceOptions options,
-        Guid rootWindowId,
         WebViewManagedWindowManager managedWindowManager,
-        WebViewHostCapabilityExecutor policyExecutor,
+        ShellWindowingRuntime windowingRuntime,
         Action<WebViewShellPolicyDomain, Exception> reportPolicyFailure)
     {
-        _webView = webView ?? throw new ArgumentNullException(nameof(webView));
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-        _rootWindowId = rootWindowId;
+        ArgumentNullException.ThrowIfNull(webView);
+        ArgumentNullException.ThrowIfNull(options);
         _managedWindowManager = managedWindowManager ?? throw new ArgumentNullException(nameof(managedWindowManager));
-        _policyExecutor = policyExecutor ?? throw new ArgumentNullException(nameof(policyExecutor));
+        _windowingRuntime = windowingRuntime ?? throw new ArgumentNullException(nameof(windowingRuntime));
         _reportPolicyFailure = reportPolicyFailure ?? throw new ArgumentNullException(nameof(reportPolicyFailure));
     }
 
@@ -39,18 +36,7 @@ internal sealed class WebViewNewWindowHandler
     }
 
     private WebViewNewWindowStrategyDecision? ResolveNewWindowStrategy(Guid candidateWindowId, NewWindowRequestedEventArgs args)
-    {
-        var policyContext = new WebViewNewWindowPolicyContext(
-            SourceWindowId: _rootWindowId,
-            CandidateWindowId: candidateWindowId,
-            TargetUri: args.Uri,
-            ScopeIdentity: _options.SessionContext.ScopeIdentity);
-
-        return _policyExecutor.ExecutePolicyDomain(
-            WebViewShellPolicyDomain.NewWindow,
-            () => _options.NewWindowPolicy?.Decide(_webView, args, policyContext)
-                  ?? WebViewNewWindowStrategyDecision.InPlace());
-    }
+        => _windowingRuntime.ResolveNewWindowStrategy(args, candidateWindowId);
 
     private void ExecuteStrategyDecision(WebViewNewWindowStrategyDecision decision, Guid candidateWindowId, NewWindowRequestedEventArgs args)
     {
@@ -96,24 +82,19 @@ internal sealed class WebViewNewWindowHandler
             return;
         }
 
-        if (_options.HostCapabilityBridge is null)
-        {
-            args.Handled = true;
-            _reportPolicyFailure(
-                WebViewShellPolicyDomain.ExternalOpen,
-                new InvalidOperationException("Host capability bridge is required for ExternalBrowser strategy."));
-            return;
-        }
-
-        var openResult = _options.HostCapabilityBridge.OpenExternal(
-            args.Uri,
-            _rootWindowId,
-            parentWindowId: _rootWindowId,
-            targetWindowId: null);
+        var openResult = _windowingRuntime.OpenExternal(args.Uri);
 
         args.Handled = true;
         if (openResult.Outcome == WebViewHostCapabilityCallOutcome.Deny)
         {
+            if (string.Equals(openResult.DenyReason, HostCapabilityBridgeUnavailableReason, StringComparison.Ordinal))
+            {
+                _reportPolicyFailure(
+                    WebViewShellPolicyDomain.ExternalOpen,
+                    new InvalidOperationException("Host capability bridge is required for ExternalBrowser strategy."));
+                return;
+            }
+
             _reportPolicyFailure(
                 WebViewShellPolicyDomain.ExternalOpen,
                 new UnauthorizedAccessException(openResult.DenyReason ?? "External open was denied by host capability policy."));

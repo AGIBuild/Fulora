@@ -12,7 +12,7 @@ internal sealed class WebViewManagedWindowManager
     private readonly Guid _rootWindowId;
     private readonly WebViewShellSessionDecision? _sessionDecision;
     private readonly WebViewSessionPermissionProfile? _rootProfile;
-    private readonly WebViewHostCapabilityExecutor _policyExecutor;
+    private readonly ShellWindowingRuntime _windowingRuntime;
     private readonly Action<WebViewShellPolicyDomain, Exception> _reportPolicyFailure;
     private readonly Action<Guid, Guid?, string, WebViewSessionPermissionProfile, WebViewShellSessionDecision, WebViewPermissionKind?, WebViewPermissionProfileDecision> _raiseSessionPermissionProfileDiagnostic;
     private readonly Action<WebViewManagedWindowLifecycleEventArgs> _onManagedWindowLifecycleChanged;
@@ -24,7 +24,7 @@ internal sealed class WebViewManagedWindowManager
         Guid rootWindowId,
         WebViewShellSessionDecision? sessionDecision,
         WebViewSessionPermissionProfile? rootProfile,
-        WebViewHostCapabilityExecutor policyExecutor,
+        ShellWindowingRuntime windowingRuntime,
         Action<WebViewShellPolicyDomain, Exception> reportPolicyFailure,
         Action<Guid, Guid?, string, WebViewSessionPermissionProfile, WebViewShellSessionDecision, WebViewPermissionKind?, WebViewPermissionProfileDecision> raiseSessionPermissionProfileDiagnostic,
         Action<WebViewManagedWindowLifecycleEventArgs> onManagedWindowLifecycleChanged)
@@ -33,7 +33,7 @@ internal sealed class WebViewManagedWindowManager
         _rootWindowId = rootWindowId;
         _sessionDecision = sessionDecision;
         _rootProfile = rootProfile;
-        _policyExecutor = policyExecutor ?? throw new ArgumentNullException(nameof(policyExecutor));
+        _windowingRuntime = windowingRuntime ?? throw new ArgumentNullException(nameof(windowingRuntime));
         _reportPolicyFailure = reportPolicyFailure ?? throw new ArgumentNullException(nameof(reportPolicyFailure));
         _raiseSessionPermissionProfileDiagnostic = raiseSessionPermissionProfileDiagnostic
                                                   ?? throw new ArgumentNullException(nameof(raiseSessionPermissionProfileDiagnostic));
@@ -88,9 +88,7 @@ internal sealed class WebViewManagedWindowManager
             RequestUri = targetUri
         };
 
-        var sessionDecision = _options.SessionPolicy is null
-            ? _sessionDecision
-            : _policyExecutor.ExecutePolicyDomain(WebViewShellPolicyDomain.Session, () => _options.SessionPolicy.Resolve(sessionContext));
+        var sessionDecision = _windowingRuntime.ResolveSessionDecision(sessionContext, _sessionDecision);
 
         WebViewSessionPermissionProfile? resolvedProfile = null;
         var profileIdentity = _rootProfile?.ProfileIdentity;
@@ -104,9 +102,7 @@ internal sealed class WebViewManagedWindowManager
                 RequestUri: targetUri,
                 PermissionKind: null);
 
-            resolvedProfile = _policyExecutor.ExecutePolicyDomain(
-                WebViewShellPolicyDomain.Session,
-                () => _options.SessionPermissionProfileResolver.Resolve(profileContext, _rootProfile));
+            resolvedProfile = _windowingRuntime.ResolveSessionPermissionProfile(profileContext, _rootProfile);
 
             if (resolvedProfile is not null)
             {
@@ -138,9 +134,7 @@ internal sealed class WebViewManagedWindowManager
             sessionDecision,
             profileIdentity);
 
-        var managedWindow = _policyExecutor.ExecutePolicyDomain(
-            WebViewShellPolicyDomain.ManagedWindowLifecycle,
-            () => _options.ManagedWindowFactory?.Invoke(createContext));
+        var managedWindow = _windowingRuntime.CreateManagedWindow(createContext);
 
         if (managedWindow is null)
             return false;

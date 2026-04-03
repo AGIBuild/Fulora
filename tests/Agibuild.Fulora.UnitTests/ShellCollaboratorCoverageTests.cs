@@ -14,6 +14,7 @@ public sealed class ShellCollaboratorCoverageTests
         using var webView = CreateCore();
         var options = new WebViewShellExperienceOptions();
         var executor = CreateExecutor(webView, options);
+        var runtime = CreateWindowingRuntime(webView, options, executor);
 
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewManagedWindowManager(
@@ -21,7 +22,7 @@ public sealed class ShellCollaboratorCoverageTests
                 Guid.NewGuid(),
                 null,
                 null,
-                executor,
+                runtime,
                 (_, _) => { },
                 (_, _, _, _, _, _, _) => { },
                 _ => { }));
@@ -32,7 +33,7 @@ public sealed class ShellCollaboratorCoverageTests
                 Guid.NewGuid(),
                 null,
                 null,
-                policyExecutor: null!,
+                windowingRuntime: null!,
                 (_, _) => { },
                 (_, _, _, _, _, _, _) => { },
                 _ => { }));
@@ -43,7 +44,7 @@ public sealed class ShellCollaboratorCoverageTests
                 Guid.NewGuid(),
                 null,
                 null,
-                executor,
+                runtime,
                 reportPolicyFailure: null!,
                 (_, _, _, _, _, _, _) => { },
                 _ => { }));
@@ -54,7 +55,7 @@ public sealed class ShellCollaboratorCoverageTests
                 Guid.NewGuid(),
                 null,
                 null,
-                executor,
+                runtime,
                 (_, _) => { },
                 raiseSessionPermissionProfileDiagnostic: null!,
                 _ => { }));
@@ -65,7 +66,7 @@ public sealed class ShellCollaboratorCoverageTests
                 Guid.NewGuid(),
                 null,
                 null,
-                executor,
+                runtime,
                 (_, _) => { },
                 (_, _, _, _, _, _, _) => { },
                 onManagedWindowLifecycleChanged: null!));
@@ -77,52 +78,60 @@ public sealed class ShellCollaboratorCoverageTests
         using var webView = CreateCore();
         var options = new WebViewShellExperienceOptions();
         var executor = CreateExecutor(webView, options);
-        var manager = CreateManager(options, executor);
+        var runtime = CreateWindowingRuntime(webView, options, executor);
+        var manager = CreateManager(webView, options, executor);
 
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewNewWindowHandler(
                 webView: null!,
                 options,
-                Guid.NewGuid(),
                 manager,
-                executor,
+                runtime,
                 (_, _) => { }));
 
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewNewWindowHandler(
                 webView,
                 options: null!,
-                Guid.NewGuid(),
                 manager,
-                executor,
+                runtime,
                 (_, _) => { }));
 
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewNewWindowHandler(
                 webView,
                 options,
-                Guid.NewGuid(),
                 managedWindowManager: null!,
-                executor,
+                runtime,
                 (_, _) => { }));
 
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewNewWindowHandler(
                 webView,
                 options,
-                Guid.NewGuid(),
                 manager,
-                policyExecutor: null!,
+                windowingRuntime: null!,
                 (_, _) => { }));
 
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewNewWindowHandler(
                 webView,
                 options,
-                Guid.NewGuid(),
                 manager,
-                executor,
+                runtime,
                 reportPolicyFailure: null!));
+    }
+
+    [Fact]
+    public void ShellWindowingRuntime_ctor_null_guards()
+    {
+        using var webView = CreateCore();
+        var options = new WebViewShellExperienceOptions();
+        var executor = CreateExecutor(webView, options);
+
+        Assert.Throws<ArgumentNullException>(() => new ShellWindowingRuntime(null!, options, Guid.NewGuid(), executor));
+        Assert.Throws<ArgumentNullException>(() => new ShellWindowingRuntime(webView, null!, Guid.NewGuid(), executor));
+        Assert.Throws<ArgumentNullException>(() => new ShellWindowingRuntime(webView, options, Guid.NewGuid(), null!));
     }
 
     [Fact]
@@ -158,6 +167,7 @@ public sealed class ShellCollaboratorCoverageTests
         using var webView = CreateCore();
         var options = new WebViewShellExperienceOptions();
         var executor = CreateExecutor(webView, options);
+        var runtime = CreateWindowingRuntime(webView, options, executor);
 
         var reported = new List<Exception>();
         var manager = new WebViewManagedWindowManager(
@@ -165,7 +175,7 @@ public sealed class ShellCollaboratorCoverageTests
             Guid.NewGuid(),
             null,
             null,
-            executor,
+            runtime,
             (_, ex) => reported.Add(ex),
             (_, _, _, _, _, _, _) => { },
             _ => { });
@@ -208,7 +218,14 @@ public sealed class ShellCollaboratorCoverageTests
             isSystemActionWhitelisted: _ => true,
             reportPolicyFailure: (_, _) => { });
 
+    private static ShellWindowingRuntime CreateWindowingRuntime(
+        IWebView webView,
+        WebViewShellExperienceOptions options,
+        WebViewHostCapabilityExecutor executor)
+        => new(webView, options, Guid.NewGuid(), executor);
+
     private static WebViewManagedWindowManager CreateManager(
+        IWebView webView,
         WebViewShellExperienceOptions options,
         WebViewHostCapabilityExecutor executor)
         => new(
@@ -216,7 +233,7 @@ public sealed class ShellCollaboratorCoverageTests
             Guid.NewGuid(),
             null,
             null,
-            executor,
+            CreateWindowingRuntime(webView, options, executor),
             (_, _) => { },
             (_, _, _, _, _, _, _) => { },
             _ => { });
