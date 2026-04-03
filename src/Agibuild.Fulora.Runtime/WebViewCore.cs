@@ -7,7 +7,7 @@ namespace Agibuild.Fulora;
 /// <summary>
 /// Core runtime implementation of <see cref="IWebView"/> over a platform adapter.
 /// </summary>
-public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebViewCoreFeatureHost, IWebViewCoreBridgeHost, IDisposable
+public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebViewCoreFeatureHost, IWebViewCoreBridgeHost, IWebViewCoreAdapterEventHost, IDisposable
 {
     private static readonly Uri AboutBlank = new("about:blank");
 
@@ -94,6 +94,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     internal bool HasDragDropSupport => _featureRuntime.HasDragDropSupport;
 
     private readonly WebViewCoreBridgeRuntime _bridgeRuntime;
+    private readonly WebViewCoreAdapterEventRuntime _adapterEventRuntime;
     private SpaHostingService? _spaHostingService;
 
     internal WebViewCore(IWebViewAdapter adapter, IWebViewDispatcher dispatcher)
@@ -168,6 +169,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
 
         _featureRuntime = new WebViewCoreFeatureRuntime(this, _adapter, _dispatcher, _logger, _environmentOptions);
         _bridgeRuntime = new WebViewCoreBridgeRuntime(this, _logger, _environmentOptions.EnableDevTools);
+        _adapterEventRuntime = new WebViewCoreAdapterEventRuntime(this, _dispatcher, _logger);
 
         _adapter.NavigationCompleted += OnAdapterNavigationCompleted;
         _adapter.NewWindowRequested += OnAdapterNewWindowRequested;
@@ -1013,33 +1015,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     }
 
     private void OnAdapterNewWindowRequested(object? sender, NewWindowRequestedEventArgs e)
-    {
-        _logger.LogDebug("Event NewWindowRequested: uri={Uri}", e.Uri);
-
-        UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _disposed,
-            _adapterDestroyed,
-            () => HandleNewWindowRequestedOnUiThread(e),
-            _logger,
-            "NewWindowRequested: ignored (disposed or destroyed)");
-    }
-
-    private void HandleNewWindowRequestedOnUiThread(NewWindowRequestedEventArgs e)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        NewWindowRequested?.Invoke(this, e);
-
-        if (!e.Handled && e.Uri is not null)
-        {
-            _logger.LogDebug("NewWindowRequested: unhandled, navigating in-view to {Uri}", e.Uri);
-            _ = NavigateAsync(e.Uri);
-        }
-    }
+        => _adapterEventRuntime.HandleAdapterNewWindowRequested(e);
 
     private void OnAdapterWebMessageReceived(object? sender, WebMessageReceivedEventArgs e)
     {
@@ -1058,48 +1034,16 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
         => _bridgeRuntime.HandleAdapterWebMessageReceivedOnUiThread(e);
 
     private void OnAdapterWebResourceRequested(object? sender, WebResourceRequestedEventArgs e)
-    {
-        _logger.LogDebug("Event WebResourceRequested");
-
-        UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _disposed,
-            _adapterDestroyed,
-            () => WebResourceRequested?.Invoke(this, e));
-    }
+        => _adapterEventRuntime.HandleAdapterWebResourceRequested(e);
 
     private void OnAdapterEnvironmentRequested(object? sender, EnvironmentRequestedEventArgs e)
-    {
-        _logger.LogDebug("Event EnvironmentRequested");
-
-        UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _disposed,
-            _adapterDestroyed,
-            () => EnvironmentRequested?.Invoke(this, e));
-    }
+        => _adapterEventRuntime.HandleAdapterEnvironmentRequested(e);
 
     private void OnAdapterDownloadRequested(object? sender, DownloadRequestedEventArgs e)
-    {
-        _logger.LogDebug("Event DownloadRequested: uri={Uri}, file={File}", e.DownloadUri, e.SuggestedFileName);
-
-        UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _disposed,
-            _adapterDestroyed,
-            () => DownloadRequested?.Invoke(this, e));
-    }
+        => _adapterEventRuntime.HandleAdapterDownloadRequested(e);
 
     private void OnAdapterPermissionRequested(object? sender, PermissionRequestedEventArgs e)
-    {
-        _logger.LogDebug("Event PermissionRequested: kind={Kind}, origin={Origin}", e.PermissionKind, e.Origin);
-
-        UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _disposed,
-            _adapterDestroyed,
-            () => PermissionRequested?.Invoke(this, e));
-    }
+        => _adapterEventRuntime.HandleAdapterPermissionRequested(e);
 
     private void CompleteActiveNavigation(NavigationCompletedStatus status, Exception? error)
     {
@@ -1248,6 +1192,28 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
 
     void IWebViewCoreBridgeHost.ThrowIfNotOnUiThread(string apiName)
         => ThrowIfNotOnUiThread(apiName);
+
+    bool IWebViewCoreAdapterEventHost.IsDisposed => _disposed;
+
+    bool IWebViewCoreAdapterEventHost.IsAdapterDestroyed => _adapterDestroyed;
+
+    Task IWebViewCoreAdapterEventHost.NavigateAsync(Uri uri)
+        => NavigateAsync(uri);
+
+    void IWebViewCoreAdapterEventHost.RaiseNewWindowRequested(NewWindowRequestedEventArgs args)
+        => NewWindowRequested?.Invoke(this, args);
+
+    void IWebViewCoreAdapterEventHost.RaiseWebResourceRequested(WebResourceRequestedEventArgs args)
+        => WebResourceRequested?.Invoke(this, args);
+
+    void IWebViewCoreAdapterEventHost.RaiseEnvironmentRequested(EnvironmentRequestedEventArgs args)
+        => EnvironmentRequested?.Invoke(this, args);
+
+    void IWebViewCoreAdapterEventHost.RaiseDownloadRequested(DownloadRequestedEventArgs args)
+        => DownloadRequested?.Invoke(this, args);
+
+    void IWebViewCoreAdapterEventHost.RaisePermissionRequested(PermissionRequestedEventArgs args)
+        => PermissionRequested?.Invoke(this, args);
 
     private void SetSourceInternal(Uri uri)
     {
