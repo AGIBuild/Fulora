@@ -7,7 +7,7 @@ namespace Agibuild.Fulora;
 /// <summary>
 /// Core runtime implementation of <see cref="IWebView"/> over a platform adapter.
 /// </summary>
-public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisposable
+public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebViewCoreFeatureHost, IDisposable
 {
     private static readonly Uri AboutBlank = new("about:blank");
 
@@ -88,17 +88,10 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
 
     private readonly ICookieManager? _cookieManager;
     private readonly ICommandManager? _commandManager;
-    private readonly IScreenshotAdapter? _screenshotAdapter;
-    private readonly IPrintAdapter? _printAdapter;
-    private readonly IFindInPageAdapter? _findInPageAdapter;
-    private readonly IZoomAdapter? _zoomAdapter;
-    private readonly IPreloadScriptAdapter? _preloadScriptAdapter;
-    private readonly IAsyncPreloadScriptAdapter? _asyncPreloadScriptAdapter;
-    private readonly IContextMenuAdapter? _contextMenuAdapter;
-    private readonly IDragDropAdapter? _dragDropAdapter;
+    private readonly WebViewCoreFeatureRuntime _featureRuntime;
 
     /// <summary>Whether the current adapter supports drag-and-drop.</summary>
-    internal bool HasDragDropSupport => _dragDropAdapter is not null;
+    internal bool HasDragDropSupport => _featureRuntime.HasDragDropSupport;
 
     private bool _webMessageBridgeEnabled;
     private IWebMessagePolicy? _webMessagePolicy;
@@ -179,58 +172,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
             : null;
         _logger.LogDebug("Command support: {Supported}", _commandManager is not null);
 
-        // Detect screenshot support.
-        _screenshotAdapter = _adapter as IScreenshotAdapter;
-        _logger.LogDebug("Screenshot support: {Supported}", _screenshotAdapter is not null);
-
-        // Detect print support.
-        _printAdapter = _adapter as IPrintAdapter;
-        _logger.LogDebug("Print support: {Supported}", _printAdapter is not null);
-
-        // Detect find-in-page support.
-        _findInPageAdapter = _adapter as IFindInPageAdapter;
-        _logger.LogDebug("Find-in-page support: {Supported}", _findInPageAdapter is not null);
-
-        // Detect zoom support.
-        _zoomAdapter = _adapter as IZoomAdapter;
-        if (_zoomAdapter is not null)
-        {
-            _zoomAdapter.ZoomFactorChanged += OnAdapterZoomFactorChanged;
-        }
-        _logger.LogDebug("Zoom support: {Supported}", _zoomAdapter is not null);
-
-        // Detect preload script support and apply global scripts.
-        _preloadScriptAdapter = _adapter as IPreloadScriptAdapter;
-        _asyncPreloadScriptAdapter = _adapter as IAsyncPreloadScriptAdapter;
-        if (_preloadScriptAdapter is not null)
-        {
-            var globalScripts = _environmentOptions.PreloadScripts;
-            foreach (var script in globalScripts)
-            {
-                _preloadScriptAdapter.AddPreloadScript(script);
-            }
-            if (globalScripts.Count > 0)
-                _logger.LogDebug("Global preload scripts applied: {Count}", globalScripts.Count);
-        }
-        _logger.LogDebug("Preload script support: {Supported}", _preloadScriptAdapter is not null);
-
-        // Subscribe to context menu events if adapter supports it.
-        _contextMenuAdapter = _adapter as IContextMenuAdapter;
-        if (_contextMenuAdapter is not null)
-        {
-            _contextMenuAdapter.ContextMenuRequested += OnAdapterContextMenuRequested;
-        }
-        _logger.LogDebug("Context menu support: {Supported}", _contextMenuAdapter is not null);
-
-        _dragDropAdapter = _adapter as IDragDropAdapter;
-        if (_dragDropAdapter is not null)
-        {
-            _dragDropAdapter.DragEntered += OnAdapterDragEntered;
-            _dragDropAdapter.DragOver += OnAdapterDragOver;
-            _dragDropAdapter.DragLeft += OnAdapterDragLeft;
-            _dragDropAdapter.DropCompleted += OnAdapterDropCompleted;
-        }
-        _logger.LogDebug("Drag-drop support: {Supported}", _dragDropAdapter is not null);
+        _featureRuntime = new WebViewCoreFeatureRuntime(this, _adapter, _dispatcher, _logger, _environmentOptions);
 
         _adapter.NavigationCompleted += OnAdapterNavigationCompleted;
         _adapter.NewWindowRequested += OnAdapterNewWindowRequested;
@@ -320,20 +262,6 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
             downloadAdapter.DownloadRequested -= OnAdapterDownloadRequested;
         if (_adapter is IPermissionAdapter permissionAdapter)
             permissionAdapter.PermissionRequested -= OnAdapterPermissionRequested;
-        if (_zoomAdapter is not null)
-            _zoomAdapter.ZoomFactorChanged -= OnAdapterZoomFactorChanged;
-
-        if (_contextMenuAdapter is not null)
-            _contextMenuAdapter.ContextMenuRequested -= OnAdapterContextMenuRequested;
-
-        if (_dragDropAdapter is not null)
-        {
-            _dragDropAdapter.DragEntered -= OnAdapterDragEntered;
-            _dragDropAdapter.DragOver -= OnAdapterDragOver;
-            _dragDropAdapter.DragLeft -= OnAdapterDragLeft;
-            _dragDropAdapter.DropCompleted -= OnAdapterDropCompleted;
-        }
-
         if (_activeNavigation is not null)
         {
             _logger.LogDebug("Dispose: faulting active navigation id={NavigationId}", _activeNavigation.NavigationId);
@@ -341,6 +269,8 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
             _activeNavigation.TrySetFault(new ObjectDisposedException(nameof(WebViewCore)));
             _activeNavigation = null;
         }
+
+        _featureRuntime.Dispose();
 
         _bridgeService?.Dispose();
         _bridgeService = null;
@@ -651,41 +581,15 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
 
     /// <inheritdoc />
     public Task OpenDevToolsAsync()
-    {
-        return EnqueueOperationAsync(nameof(OpenDevToolsAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_adapter is IDevToolsAdapter devTools)
-                devTools.OpenDevTools();
-            else
-                _logger.LogDebug("DevTools: adapter does not support runtime toggle");
-
-            return Task.CompletedTask;
-        });
-    }
+        => _featureRuntime.OpenDevToolsAsync();
 
     /// <inheritdoc />
     public Task CloseDevToolsAsync()
-    {
-        return EnqueueOperationAsync(nameof(CloseDevToolsAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_adapter is IDevToolsAdapter devTools)
-                devTools.CloseDevTools();
-
-            return Task.CompletedTask;
-        });
-    }
+        => _featureRuntime.CloseDevToolsAsync();
 
     /// <inheritdoc />
     public Task<bool> IsDevToolsOpenAsync()
-    {
-        return EnqueueOperationAsync(nameof(IsDevToolsOpenAsync), () =>
-        {
-            ThrowIfDisposed();
-            return Task.FromResult(_adapter is IDevToolsAdapter devTools && devTools.IsDevToolsOpen);
-        });
-    }
+        => _featureRuntime.IsDevToolsOpenAsync();
 
     // ==================== Bridge ====================
 
@@ -737,32 +641,13 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
 
     /// <inheritdoc />
     public Task<byte[]> CaptureScreenshotAsync()
-    {
-        return EnqueueOperationAsync(nameof(CaptureScreenshotAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_screenshotAdapter is null)
-                throw new NotSupportedException("The current WebView adapter does not support screenshot capture.");
-            return _screenshotAdapter.CaptureScreenshotAsync();
-        });
-    }
+        => _featureRuntime.CaptureScreenshotAsync();
 
     /// <inheritdoc />
     public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null)
-    {
-        return EnqueueOperationAsync(nameof(PrintToPdfAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_printAdapter is null)
-                throw new NotSupportedException("The current WebView adapter does not support PDF printing.");
-            return _printAdapter.PrintToPdfAsync(options);
-        });
-    }
+        => _featureRuntime.PrintToPdfAsync(options);
 
     // ==================== Zoom ====================
-
-    private const double MinZoom = 0.25;
-    private const double MaxZoom = 5.0;
 
     /// <summary>Raised when the zoom factor changes.</summary>
     public event EventHandler<double>? ZoomFactorChanged;
@@ -772,31 +657,11 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// Returns 1.0 if the adapter does not support zoom.
     /// </summary>
     public Task<double> GetZoomFactorAsync()
-    {
-        return EnqueueOperationAsync(nameof(GetZoomFactorAsync), () =>
-        {
-            ThrowIfDisposed();
-            return Task.FromResult(_zoomAdapter?.ZoomFactor ?? 1.0);
-        });
-    }
+        => _featureRuntime.GetZoomFactorAsync();
 
     /// <inheritdoc />
     public Task SetZoomFactorAsync(double zoomFactor)
-    {
-        return EnqueueOperationAsync(nameof(SetZoomFactorAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_zoomAdapter is null) return Task.CompletedTask; // no-op without adapter
-            _zoomAdapter.ZoomFactor = Math.Clamp(zoomFactor, MinZoom, MaxZoom);
-            return Task.CompletedTask;
-        });
-    }
-
-    private void OnAdapterZoomFactorChanged(object? sender, double newZoom)
-    {
-        if (_disposed) return;
-        _ = _dispatcher.InvokeAsync(() => ZoomFactorChanged?.Invoke(this, newZoom));
-    }
+        => _featureRuntime.SetZoomFactorAsync(zoomFactor);
 
     /// <summary>Raised when the user triggers a context menu (right-click, long-press).</summary>
     public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested;
@@ -810,17 +675,6 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// <summary>Raised when a drop is completed on the WebView.</summary>
     public event EventHandler<DropEventArgs>? DropCompleted;
 
-    private void OnAdapterContextMenuRequested(object? sender, ContextMenuRequestedEventArgs e)
-    {
-        if (_disposed) return;
-        _ = _dispatcher.InvokeAsync(() => ContextMenuRequested?.Invoke(this, e));
-    }
-
-    private void OnAdapterDragEntered(object? sender, DragEventArgs e) => DragEntered?.Invoke(this, e);
-    private void OnAdapterDragOver(object? sender, DragEventArgs e) => DragOver?.Invoke(this, e);
-    private void OnAdapterDragLeft(object? sender, EventArgs e) => DragLeft?.Invoke(this, e);
-    private void OnAdapterDropCompleted(object? sender, DropEventArgs e) => DropCompleted?.Invoke(this, e);
-
     /// <summary>
     /// Searches the current page for the given text.
     /// </summary>
@@ -830,17 +684,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IFindInPageAdapter"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="text"/> is null or empty.</exception>
     public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
-    {
-        return EnqueueOperationAsync(nameof(FindInPageAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentException("Search text must not be null or empty.", nameof(text));
-            if (_findInPageAdapter is null)
-                throw new NotSupportedException("The current WebView adapter does not support find-in-page.");
-            return _findInPageAdapter.FindAsync(text, options);
-        });
-    }
+        => _featureRuntime.FindInPageAsync(text, options);
 
     /// <summary>
     /// Clears find-in-page highlights and resets search state.
@@ -848,16 +692,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// <param name="clearHighlights">Whether to remove visual highlights. Default: true.</param>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IFindInPageAdapter"/>.</exception>
     public Task StopFindInPageAsync(bool clearHighlights = true)
-    {
-        return EnqueueOperationAsync(nameof(StopFindInPageAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_findInPageAdapter is null)
-                throw new NotSupportedException("The current WebView adapter does not support find-in-page.");
-            _findInPageAdapter.StopFind(clearHighlights);
-            return Task.CompletedTask;
-        });
-    }
+        => _featureRuntime.StopFindInPageAsync(clearHighlights);
 
     /// <summary>
     /// Registers a JavaScript snippet to run at document start on every page load.
@@ -866,20 +701,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// <returns>An opaque script ID that can be passed to <see cref="RemovePreloadScriptAsync"/>.</returns>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IPreloadScriptAdapter"/>.</exception>
     public Task<string> AddPreloadScriptAsync(string javaScript)
-    {
-        return EnqueueOperationAsync(nameof(AddPreloadScriptAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_asyncPreloadScriptAdapter is not null)
-            {
-                return _asyncPreloadScriptAdapter.AddPreloadScriptAsync(javaScript);
-            }
-
-            if (_preloadScriptAdapter is null)
-                throw new NotSupportedException("The current WebView adapter does not support preload scripts.");
-            return Task.FromResult(_preloadScriptAdapter.AddPreloadScript(javaScript));
-        });
-    }
+        => _featureRuntime.AddPreloadScriptAsync(javaScript);
 
     /// <summary>
     /// Removes a previously registered preload script by its ID.
@@ -887,77 +709,28 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     /// <param name="scriptId">The ID returned by <see cref="AddPreloadScriptAsync"/>.</param>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IPreloadScriptAdapter"/>.</exception>
     public Task RemovePreloadScriptAsync(string scriptId)
-    {
-        return EnqueueOperationAsync(nameof(RemovePreloadScriptAsync), () =>
-        {
-            ThrowIfDisposed();
-            if (_asyncPreloadScriptAdapter is not null)
-            {
-                return _asyncPreloadScriptAdapter.RemovePreloadScriptAsync(scriptId);
-            }
-
-            if (_preloadScriptAdapter is null)
-                throw new NotSupportedException("The current WebView adapter does not support preload scripts.");
-            _preloadScriptAdapter.RemovePreloadScript(scriptId);
-            return Task.CompletedTask;
-        });
-    }
+        => _featureRuntime.RemovePreloadScriptAsync(scriptId);
 
     /// <summary>
     /// Asynchronously retrieves the native platform WebView handle.
     /// This is the primary any-thread API surface and always marshals adapter access to the UI thread.
     /// </summary>
     public Task<INativeHandle?> TryGetWebViewHandleAsync()
-    {
-        if (_adapterDestroyed)
-        {
-            return Task.FromResult<INativeHandle?>(null);
-        }
-
-        if (_adapter is not INativeWebViewHandleProvider provider)
-        {
-            return Task.FromResult<INativeHandle?>(null);
-        }
-
-        if (_dispatcher.CheckAccess())
-        {
-            return Task.FromResult(provider.TryGetWebViewHandle());
-        }
-
-        return _dispatcher.InvokeAsync(() => provider.TryGetWebViewHandle());
-    }
+        => _featureRuntime.TryGetWebViewHandleAsync();
 
     /// <summary>
     /// Compatibility wrapper around <see cref="TryGetWebViewHandleAsync"/> for synchronous call sites.
     /// Prefer using <see cref="TryGetWebViewHandleAsync"/> to avoid blocking.
     /// </summary>
     public INativeHandle? TryGetWebViewHandle()
-    {
-        return TryGetWebViewHandleAsync().GetAwaiter().GetResult();
-    }
+        => TryGetWebViewHandleAsync().GetAwaiter().GetResult();
 
     /// <summary>
     /// Sets the custom User-Agent string at runtime.
     /// Pass <c>null</c> to revert to the platform default.
     /// </summary>
     public void SetCustomUserAgent(string? userAgent)
-    {
-        ThrowIfDisposed();
-        if (_adapter is IWebViewAdapterOptions adapterOptions)
-        {
-            if (_dispatcher.CheckAccess())
-            {
-                adapterOptions.SetCustomUserAgent(userAgent);
-            }
-            else
-            {
-                var dispatchTask = _dispatcher.InvokeAsync(() => adapterOptions.SetCustomUserAgent(userAgent));
-                ObserveBackgroundTask(dispatchTask, nameof(SetCustomUserAgent));
-            }
-
-            _logger.LogDebug("CustomUserAgent set to: {UA}", userAgent ?? "(default)");
-        }
-    }
+        => _featureRuntime.SetCustomUserAgent(userAgent);
 
     /// <inheritdoc />
     public void EnableWebMessageBridge(WebMessageBridgeOptions options)
@@ -1555,6 +1328,40 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IDisp
     {
         ObjectDisposedException.ThrowIf(_disposed, nameof(WebViewCore));
     }
+
+    bool IWebViewCoreFeatureHost.IsDisposed => _disposed;
+
+    bool IWebViewCoreFeatureHost.IsAdapterDestroyed => _adapterDestroyed;
+
+    Task IWebViewCoreFeatureHost.EnqueueOperationAsync(string operationType, Func<Task> func)
+        => EnqueueOperationAsync(operationType, func);
+
+    Task<T> IWebViewCoreFeatureHost.EnqueueOperationAsync<T>(string operationType, Func<Task<T>> func)
+        => EnqueueOperationAsync(operationType, func);
+
+    void IWebViewCoreFeatureHost.ObserveBackgroundTask(Task task, string operationType)
+        => ObserveBackgroundTask(task, operationType);
+
+    void IWebViewCoreFeatureHost.ThrowIfDisposed()
+        => ThrowIfDisposed();
+
+    void IWebViewCoreFeatureHost.RaiseZoomFactorChanged(double zoomFactor)
+        => ZoomFactorChanged?.Invoke(this, zoomFactor);
+
+    void IWebViewCoreFeatureHost.RaiseContextMenuRequested(ContextMenuRequestedEventArgs args)
+        => ContextMenuRequested?.Invoke(this, args);
+
+    void IWebViewCoreFeatureHost.RaiseDragEntered(DragEventArgs args)
+        => DragEntered?.Invoke(this, args);
+
+    void IWebViewCoreFeatureHost.RaiseDragOver(DragEventArgs args)
+        => DragOver?.Invoke(this, args);
+
+    void IWebViewCoreFeatureHost.RaiseDragLeft()
+        => DragLeft?.Invoke(this, EventArgs.Empty);
+
+    void IWebViewCoreFeatureHost.RaiseDropCompleted(DropEventArgs args)
+        => DropCompleted?.Invoke(this, args);
 
     private void SetSourceInternal(Uri uri)
     {

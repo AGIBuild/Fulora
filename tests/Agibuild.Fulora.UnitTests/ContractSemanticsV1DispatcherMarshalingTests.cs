@@ -83,14 +83,15 @@ public sealed class ContractSemanticsV1DispatcherMarshalingTests
         };
         thread.Start();
 
-        // Drain the dispatcher queue on the "UI thread" so the blocking call completes.
-        DispatcherTestPump.WaitUntil(dispatcher, () => dispatcher.QueuedCount > 0);
+        // Drain the dispatcher queue on the "UI thread" until the blocking call completes.
+        DispatcherTestPump.WaitUntil(dispatcher, () => result is not null || thrown is not null);
         thread.Join();
 
         Assert.Null(thrown);
         Assert.NotNull(result);
         Assert.Equal("TestHandle", result!.HandleDescriptor);
         Assert.Equal(1, adapter.TryGetHandleCallCount);
+        Assert.Equal(dispatcher.UiThreadId, adapter.LastTryGetHandleThreadId);
     }
 
     [Fact]
@@ -122,6 +123,7 @@ public sealed class ContractSemanticsV1DispatcherMarshalingTests
         Assert.NotNull(result);
         Assert.Equal("AsyncHandle", result!.HandleDescriptor);
         Assert.Equal(1, adapter.TryGetHandleCallCount);
+        Assert.Equal(dispatcher.UiThreadId, adapter.LastTryGetHandleThreadId);
     }
 
     [Fact]
@@ -137,6 +139,7 @@ public sealed class ContractSemanticsV1DispatcherMarshalingTests
         Assert.NotNull(result);
         Assert.Equal("DirectHandle", result!.HandleDescriptor);
         Assert.Equal(1, adapter.TryGetHandleCallCount);
+        Assert.Equal(dispatcher.UiThreadId, adapter.LastTryGetHandleThreadId);
     }
 
     [Fact]

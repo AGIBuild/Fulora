@@ -376,10 +376,12 @@ internal sealed class MockWebViewAdapterWithHandle : MockWebViewAdapter, INative
 {
     public INativeHandle? HandleToReturn { get; set; }
     public int TryGetHandleCallCount { get; private set; }
+    public int? LastTryGetHandleThreadId { get; private set; }
 
     public INativeHandle? TryGetWebViewHandle()
     {
         TryGetHandleCallCount++;
+        LastTryGetHandleThreadId = Environment.CurrentManagedThreadId;
         return HandleToReturn;
     }
 }
