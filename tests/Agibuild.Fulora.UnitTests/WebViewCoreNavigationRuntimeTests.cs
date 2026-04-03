@@ -47,13 +47,93 @@ public sealed class WebViewCoreNavigationRuntimeTests
     }
 
     [Fact]
+    public async Task StartNavigationRequest_supersedes_active_navigation_and_invokes_adapter()
+    {
+        var host = new TestNavigationHost();
+        var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
+        _ = host.SetActiveNavigation(Guid.NewGuid(), Guid.NewGuid(), new Uri("https://example.test/active"));
+        Guid? invokedNavigationId = null;
+
+        var operationTask = await runtime.StartNavigationRequestCoreAsync(
+            new Uri("https://example.test/next"),
+            navigationId =>
+            {
+                invokedNavigationId = navigationId;
+                return Task.CompletedTask;
+            },
+            updateSource: true);
+
+        Assert.Equal(NavigationCompletedStatus.Superseded, host.CompletedStatuses[0]);
+        Assert.NotNull(invokedNavigationId);
+        Assert.Equal(invokedNavigationId, host.ActiveNavigation!.Value.NavigationId);
+        Assert.Equal(new Uri("https://example.test/next"), host.LastSource);
+        Assert.Single(host.StartedEvents);
+        Assert.False(operationTask.IsCompleted);
+    }
+
+    [Fact]
+    public async Task StartNavigationRequest_canceled_by_handler_completes_as_canceled_without_invoking_adapter()
+    {
+        var host = new TestNavigationHost
+        {
+            CancelStartedNavigations = true
+        };
+        var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
+        var adapterInvoked = false;
+
+        var operationTask = await runtime.StartNavigationRequestCoreAsync(
+            new Uri("https://example.test/cancel"),
+            _ =>
+            {
+                adapterInvoked = true;
+                return Task.CompletedTask;
+            },
+            updateSource: true);
+
+        Assert.False(adapterInvoked);
+        Assert.Equal([NavigationCompletedStatus.Canceled], host.CompletedStatuses);
+        await operationTask;
+    }
+
+    [Fact]
+    public async Task StartNavigationRequest_adapter_exception_completes_as_failure()
+    {
+        var host = new TestNavigationHost();
+        var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
+
+        var operationTask = await runtime.StartNavigationRequestCoreAsync(
+            new Uri("https://example.test/fail"),
+            _ => Task.FromException(new InvalidOperationException("adapter boom")),
+            updateSource: true);
+
+        Assert.Equal(NavigationCompletedStatus.Failure, host.LastCompletedStatus);
+        Assert.Equal("adapter boom", host.LastCompletedError!.Message);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operationTask);
+    }
+
+    [Fact]
+    public void StartCommandNavigation_canceled_by_handler_returns_empty_guid()
+    {
+        var host = new TestNavigationHost
+        {
+            CancelStartedNavigations = true
+        };
+        var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
+
+        var navigationId = runtime.StartCommandNavigation(new Uri("https://example.test/command"));
+
+        Assert.Equal(Guid.Empty, navigationId);
+        Assert.Equal([NavigationCompletedStatus.Canceled], host.CompletedStatuses);
+    }
+
+    [Fact]
     public async Task NativeNavigationStarting_redirect_reuses_active_navigation_id()
     {
         var host = new TestNavigationHost();
         var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
         var correlationId = Guid.NewGuid();
         var activeNavigationId = Guid.NewGuid();
-        host.SetActiveNavigation(activeNavigationId, correlationId, new Uri("https://example.test/start"));
+        _ = host.SetActiveNavigation(activeNavigationId, correlationId, new Uri("https://example.test/start"));
 
         var decision = await runtime.OnNativeNavigationStartingAsync(new NativeNavigationStartingInfo(
             correlationId,
@@ -78,7 +158,7 @@ public sealed class WebViewCoreNavigationRuntimeTests
         var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
         var correlationId = Guid.NewGuid();
         var activeNavigationId = Guid.NewGuid();
-        host.SetActiveNavigation(activeNavigationId, correlationId, new Uri("https://example.test/start"));
+        _ = host.SetActiveNavigation(activeNavigationId, correlationId, new Uri("https://example.test/start"));
 
         var decision = await runtime.OnNativeNavigationStartingAsync(new NativeNavigationStartingInfo(
             correlationId,
@@ -96,7 +176,7 @@ public sealed class WebViewCoreNavigationRuntimeTests
     {
         var host = new TestNavigationHost();
         var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
-        host.SetActiveNavigation(Guid.NewGuid(), Guid.NewGuid(), new Uri("https://example.test/active"));
+        _ = host.SetActiveNavigation(Guid.NewGuid(), Guid.NewGuid(), new Uri("https://example.test/active"));
 
         runtime.HandleAdapterNavigationCompleted(new NavigationCompletedEventArgs(
             Guid.NewGuid(),
@@ -114,7 +194,7 @@ public sealed class WebViewCoreNavigationRuntimeTests
         var host = new TestNavigationHost();
         var runtime = new WebViewCoreNavigationRuntime(host, _dispatcher, NullLogger.Instance);
         var navigationId = Guid.NewGuid();
-        host.SetActiveNavigation(navigationId, navigationId, new Uri("https://example.test/active"));
+        _ = host.SetActiveNavigation(navigationId, navigationId, new Uri("https://example.test/active"));
 
         runtime.HandleAdapterNavigationCompleted(new NavigationCompletedEventArgs(
             navigationId,
@@ -149,11 +229,24 @@ public sealed class WebViewCoreNavigationRuntimeTests
 
         public List<NavigationStartingEventArgs> StartedEvents { get; } = [];
 
+        public List<NavigationCompletedStatus> CompletedStatuses { get; } = [];
+
         public void CompleteActiveNavigation(NavigationCompletedStatus status, Exception? error)
         {
+            CompletedStatuses.Add(status);
             LastCompletedStatus = status;
             LastCompletedError = error;
+            if (status == NavigationCompletedStatus.Failure)
+            {
+                ActiveNavigationTaskSource?.TrySetException(error ?? new InvalidOperationException("Navigation failed."));
+            }
+            else
+            {
+                ActiveNavigationTaskSource?.TrySetResult();
+            }
+
             ActiveNavigation = null;
+            ActiveNavigationTaskSource = null;
         }
 
         public void RaiseNavigationStarting(NavigationStartingEventArgs args)
@@ -165,8 +258,14 @@ public sealed class WebViewCoreNavigationRuntimeTests
             }
         }
 
-        public void SetActiveNavigation(Guid navigationId, Guid correlationId, Uri requestUri)
-            => ActiveNavigation = new WebViewCoreNavigationState(navigationId, correlationId, requestUri);
+        public TaskCompletionSource? ActiveNavigationTaskSource { get; private set; }
+
+        public Task SetActiveNavigation(Guid navigationId, Guid correlationId, Uri requestUri)
+        {
+            ActiveNavigation = new WebViewCoreNavigationState(navigationId, correlationId, requestUri);
+            ActiveNavigationTaskSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            return ActiveNavigationTaskSource.Task;
+        }
 
         public void SetSource(Uri uri)
             => LastSource = uri;
