@@ -623,6 +623,7 @@ public sealed class WebViewShellExperience : IDisposable
     private readonly WebViewHostCapabilityExecutor _hostCapabilityExecutor;
     private readonly ShellSystemIntegrationRuntime _systemIntegrationRuntime;
     private readonly ShellWindowingRuntime _windowingRuntime;
+    private readonly ShellBrowserInteractionRuntime _browserInteractionRuntime;
     private readonly WebViewManagedWindowManager _managedWindowManager;
     private readonly WebViewNewWindowHandler _newWindowHandler;
     private readonly WebViewShellSessionDecision? _sessionDecision;
@@ -664,6 +665,12 @@ public sealed class WebViewShellExperience : IDisposable
                                       ReportPolicyFailure);
         _systemIntegrationRuntime = new ShellSystemIntegrationRuntime(_hostCapabilityExecutor);
         _windowingRuntime = new ShellWindowingRuntime(_webView, _options, _rootWindowId, _hostCapabilityExecutor);
+        _browserInteractionRuntime = new ShellBrowserInteractionRuntime(
+            _webView,
+            _options,
+            _rootWindowId,
+            _hostCapabilityExecutor,
+            ReportPolicyFailure);
         var (resolvedRootSessionDecision, resolvedRootProfile) = _windowingRuntime.ResolveRootShellState();
         if (resolvedRootProfile is not null && resolvedRootSessionDecision is not null)
         {
@@ -834,15 +841,7 @@ public sealed class WebViewShellExperience : IDisposable
     {
         if (_disposed)
             return Task.FromResult(false);
-
-        var decision = EvaluateDevToolsPolicy(WebViewShellDevToolsAction.Open);
-        if (decision is null || !decision.IsAllowed)
-        {
-            ReportDevToolsDenied(decision?.DenyReason, WebViewShellDevToolsAction.Open);
-            return Task.FromResult(false);
-        }
-
-        return ExecuteDevToolsOperation(() => _webView.OpenDevToolsAsync());
+        return _browserInteractionRuntime.OpenDevToolsAsync();
     }
 
     /// <summary>
@@ -853,15 +852,7 @@ public sealed class WebViewShellExperience : IDisposable
     {
         if (_disposed)
             return Task.FromResult(false);
-
-        var decision = EvaluateDevToolsPolicy(WebViewShellDevToolsAction.Close);
-        if (decision is null || !decision.IsAllowed)
-        {
-            ReportDevToolsDenied(decision?.DenyReason, WebViewShellDevToolsAction.Close);
-            return Task.FromResult(false);
-        }
-
-        return ExecuteDevToolsOperation(() => _webView.CloseDevToolsAsync());
+        return _browserInteractionRuntime.CloseDevToolsAsync();
     }
 
     /// <summary>
@@ -872,15 +863,7 @@ public sealed class WebViewShellExperience : IDisposable
     {
         if (_disposed)
             return Task.FromResult(false);
-
-        var decision = EvaluateDevToolsPolicy(WebViewShellDevToolsAction.Query);
-        if (decision is null || !decision.IsAllowed)
-        {
-            ReportDevToolsDenied(decision?.DenyReason, WebViewShellDevToolsAction.Query);
-            return Task.FromResult(false);
-        }
-
-        return ExecuteDevToolsQueryOperation(() => _webView.IsDevToolsOpenAsync());
+        return _browserInteractionRuntime.IsDevToolsOpenAsync();
     }
 
     /// <summary>
@@ -891,24 +874,7 @@ public sealed class WebViewShellExperience : IDisposable
     {
         if (_disposed)
             return Task.FromResult(false);
-
-        var decision = EvaluateCommandPolicy(command);
-        if (decision is null || !decision.IsAllowed)
-        {
-            ReportCommandDenied(command, decision?.DenyReason);
-            return Task.FromResult(false);
-        }
-
-        var commandManager = _webView.TryGetCommandManager();
-        if (commandManager is null)
-        {
-            ReportPolicyFailure(
-                WebViewShellPolicyDomain.Command,
-                new NotSupportedException("Command manager is not available for this WebView instance."));
-            return Task.FromResult(false);
-        }
-
-        return ExecuteCommandOperation(commandManager, command);
+        return _browserInteractionRuntime.ExecuteCommandAsync(command);
     }
 
     private void OnNewWindowRequested(object? sender, NewWindowRequestedEventArgs e)
@@ -992,116 +958,6 @@ public sealed class WebViewShellExperience : IDisposable
 
         e.State = profileDecision.State;
         return true;
-    }
-
-    private WebViewShellDevToolsDecision? EvaluateDevToolsPolicy(WebViewShellDevToolsAction action)
-    {
-        if (_options.DevToolsPolicy is null)
-            return WebViewShellDevToolsDecision.Allow();
-
-        var context = new WebViewShellDevToolsPolicyContext(
-            RootWindowId: _rootWindowId,
-            TargetWindowId: _rootWindowId,
-            Action: action);
-
-        return ExecutePolicyDomain(
-            WebViewShellPolicyDomain.DevTools,
-            () => _options.DevToolsPolicy.Decide(_webView, context));
-    }
-
-    private WebViewShellCommandDecision? EvaluateCommandPolicy(WebViewCommand command)
-    {
-        if (_options.CommandPolicy is null)
-            return WebViewShellCommandDecision.Allow();
-
-        var context = new WebViewShellCommandPolicyContext(
-            RootWindowId: _rootWindowId,
-            TargetWindowId: _rootWindowId,
-            Command: command);
-
-        return ExecutePolicyDomain(
-            WebViewShellPolicyDomain.Command,
-            () => _options.CommandPolicy.Decide(_webView, context));
-    }
-
-    private async Task<bool> ExecuteDevToolsOperation(Func<Task> operation)
-    {
-        try
-        {
-            await operation().ConfigureAwait(false);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            ReportPolicyFailure(WebViewShellPolicyDomain.DevTools, ex);
-            return false;
-        }
-    }
-
-    private async Task<bool> ExecuteDevToolsQueryOperation(Func<Task<bool>> operation)
-    {
-        try
-        {
-            return await operation().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ReportPolicyFailure(WebViewShellPolicyDomain.DevTools, ex);
-            return false;
-        }
-    }
-
-    private void ReportDevToolsDenied(string? denyReason, WebViewShellDevToolsAction action)
-    {
-        ReportPolicyFailure(
-            WebViewShellPolicyDomain.DevTools,
-            new UnauthorizedAccessException(
-                denyReason ?? $"DevTools action '{action}' was denied by shell policy."));
-    }
-
-    private async Task<bool> ExecuteCommandOperation(ICommandManager commandManager, WebViewCommand command)
-    {
-        try
-        {
-            switch (command)
-            {
-                case WebViewCommand.Copy:
-                    await commandManager.CopyAsync().ConfigureAwait(false);
-                    break;
-                case WebViewCommand.Cut:
-                    await commandManager.CutAsync().ConfigureAwait(false);
-                    break;
-                case WebViewCommand.Paste:
-                    await commandManager.PasteAsync().ConfigureAwait(false);
-                    break;
-                case WebViewCommand.SelectAll:
-                    await commandManager.SelectAllAsync().ConfigureAwait(false);
-                    break;
-                case WebViewCommand.Undo:
-                    await commandManager.UndoAsync().ConfigureAwait(false);
-                    break;
-                case WebViewCommand.Redo:
-                    await commandManager.RedoAsync().ConfigureAwait(false);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(command), command, "Unsupported command action.");
-            }
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            ReportPolicyFailure(WebViewShellPolicyDomain.Command, ex);
-            return false;
-        }
-    }
-
-    private void ReportCommandDenied(WebViewCommand command, string? denyReason)
-    {
-        ReportPolicyFailure(
-            WebViewShellPolicyDomain.Command,
-            new UnauthorizedAccessException(
-                denyReason ?? $"Command '{command}' was denied by shell policy."));
     }
 
     /// <summary>

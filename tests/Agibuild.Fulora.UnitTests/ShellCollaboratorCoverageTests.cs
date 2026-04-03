@@ -135,6 +135,23 @@ public sealed class ShellCollaboratorCoverageTests
     }
 
     [Fact]
+    public void ShellBrowserInteractionRuntime_ctor_null_guards()
+    {
+        using var webView = CreateCore();
+        var options = new WebViewShellExperienceOptions();
+        var executor = CreateExecutor(webView, options);
+
+        Assert.Throws<ArgumentNullException>(() =>
+            new ShellBrowserInteractionRuntime(null!, options, Guid.NewGuid(), executor, (_, _) => { }));
+        Assert.Throws<ArgumentNullException>(() =>
+            new ShellBrowserInteractionRuntime(webView, null!, Guid.NewGuid(), executor, (_, _) => { }));
+        Assert.Throws<ArgumentNullException>(() =>
+            new ShellBrowserInteractionRuntime(webView, options, Guid.NewGuid(), null!, (_, _) => { }));
+        Assert.Throws<ArgumentNullException>(() =>
+            new ShellBrowserInteractionRuntime(webView, options, Guid.NewGuid(), executor, null!));
+    }
+
+    [Fact]
     public void WebViewManagedWindowManager_IsTransitionAllowed_branch_matrix()
     {
         var method = typeof(WebViewManagedWindowManager)
