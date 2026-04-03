@@ -624,6 +624,7 @@ public sealed class WebViewShellExperience : IDisposable
     private readonly ShellSystemIntegrationRuntime _systemIntegrationRuntime;
     private readonly ShellWindowingRuntime _windowingRuntime;
     private readonly ShellBrowserInteractionRuntime _browserInteractionRuntime;
+    private readonly ShellRequestGovernanceRuntime _requestGovernanceRuntime;
     private readonly WebViewManagedWindowManager _managedWindowManager;
     private readonly WebViewNewWindowHandler _newWindowHandler;
     private readonly WebViewShellSessionDecision? _sessionDecision;
@@ -686,6 +687,14 @@ public sealed class WebViewShellExperience : IDisposable
 
         _sessionDecision = resolvedRootSessionDecision;
         _rootProfile = resolvedRootProfile;
+        _requestGovernanceRuntime = new ShellRequestGovernanceRuntime(
+            _webView,
+            _options,
+            _rootWindowId,
+            _hostCapabilityExecutor,
+            _sessionDecision,
+            _rootProfile,
+            RaiseSessionPermissionProfileDiagnostic);
 
         _managedWindowManager = managedWindowManager
                                 ?? new WebViewManagedWindowManager(
@@ -886,78 +895,13 @@ public sealed class WebViewShellExperience : IDisposable
     private void OnDownloadRequested(object? sender, DownloadRequestedEventArgs e)
     {
         if (_disposed) return;
-
-        // Deterministic execution order:
-        // 1) policy object
-        // 2) delegate handler
-        ExecutePolicyDomain(
-            WebViewShellPolicyDomain.Download,
-            () => _options.DownloadPolicy?.Handle(_webView, e));
-        ExecutePolicyDomain(
-            WebViewShellPolicyDomain.Download,
-            () => _options.DownloadHandler?.Invoke(_webView, e));
+        _requestGovernanceRuntime.HandleDownloadRequested(e);
     }
 
     private void OnPermissionRequested(object? sender, PermissionRequestedEventArgs e)
     {
         if (_disposed) return;
-
-        var appliedProfileDecision = TryApplyProfilePermissionDecision(e);
-        if (appliedProfileDecision)
-            return;
-
-        // Deterministic execution order:
-        // 1) policy object
-        // 2) delegate handler
-        ExecutePolicyDomain(
-            WebViewShellPolicyDomain.Permission,
-            () => _options.PermissionPolicy?.Handle(_webView, e));
-        ExecutePolicyDomain(
-            WebViewShellPolicyDomain.Permission,
-            () => _options.PermissionHandler?.Invoke(_webView, e));
-    }
-
-    private bool TryApplyProfilePermissionDecision(PermissionRequestedEventArgs e)
-    {
-        if (_options.SessionPermissionProfileResolver is null)
-            return false;
-
-        var scopeIdentity = _sessionDecision?.ScopeIdentity ?? _options.SessionContext.ScopeIdentity;
-        var profileContext = new WebViewSessionPermissionProfileContext(
-            _rootWindowId,
-            ParentWindowId: null,
-            WindowId: _rootWindowId,
-            ScopeIdentity: scopeIdentity,
-            RequestUri: e.Origin,
-            PermissionKind: e.PermissionKind);
-
-        var resolvedProfile = ExecutePolicyDomain(
-            WebViewShellPolicyDomain.Permission,
-            () => _options.SessionPermissionProfileResolver.Resolve(profileContext, _rootProfile));
-
-        if (resolvedProfile is null)
-            return false;
-
-        var effectiveSessionDecision = resolvedProfile.ResolveSessionDecision(
-            parentDecision: null,
-            fallbackDecision: _sessionDecision,
-            scopeIdentity: scopeIdentity);
-        var profileDecision = resolvedProfile.ResolvePermissionDecision(e.PermissionKind);
-
-        RaiseSessionPermissionProfileDiagnostic(
-            windowId: _rootWindowId,
-            parentWindowId: null,
-            scopeIdentity: scopeIdentity,
-            profile: resolvedProfile,
-            sessionDecision: effectiveSessionDecision,
-            permissionKind: e.PermissionKind,
-            permissionDecision: profileDecision);
-
-        if (!profileDecision.IsExplicit || profileDecision.State == PermissionState.Default)
-            return false;
-
-        e.State = profileDecision.State;
-        return true;
+        _requestGovernanceRuntime.HandlePermissionRequested(e);
     }
 
     /// <summary>
