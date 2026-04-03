@@ -513,6 +513,7 @@ public sealed class AutomationLaneGovernanceTests
     {
         var repoRoot = FindRepoRoot();
         var bridgePath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityBridge.cs");
+        var bridgeContractsPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityContracts.cs");
         var shellPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewShellExperience.cs");
         var shellContractsPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewShellPolicyContracts.cs");
         var shellExecutorPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityExecutor.cs");
@@ -523,10 +524,13 @@ public sealed class AutomationLaneGovernanceTests
         var hostCapabilityIntegrationTestPath = Path.Combine(repoRoot, "tests", "Agibuild.Fulora.Integration.Tests.Automation", "HostCapabilityBridgeIntegrationTests.cs");
         var profileIntegrationTestPath = Path.Combine(repoRoot, "tests", "Agibuild.Fulora.Integration.Tests.Automation", "MultiWindowLifecycleIntegrationTests.cs");
 
-        foreach (var p in new[] { bridgePath, shellPath, shellContractsPath, shellExecutorPath, shellNewWindowPath, profilePath, helperPath, hostCapabilityUnitTestPath, hostCapabilityIntegrationTestPath, profileIntegrationTestPath })
+        foreach (var p in new[] { bridgePath, bridgeContractsPath, shellPath, shellContractsPath, shellExecutorPath, shellNewWindowPath, profilePath, helperPath, hostCapabilityUnitTestPath, hostCapabilityIntegrationTestPath, profileIntegrationTestPath })
             AssertFileExists(p, PhaseCloseoutConsistency);
 
-        var bridgeSource = File.ReadAllText(bridgePath);
+        var bridgeSource = string.Join(
+            Environment.NewLine,
+            File.ReadAllText(bridgePath),
+            File.ReadAllText(bridgeContractsPath));
         var shellSource = string.Join(
             Environment.NewLine,
             File.ReadAllText(shellPath),
@@ -775,8 +779,9 @@ public sealed class AutomationLaneGovernanceTests
         var productionMatrixPath = Path.Combine(repoRoot, "tests", "shell-production-matrix.json");
         var templateIndexPath = Path.Combine(repoRoot, "templates", "agibuild-hybrid", "HybridApp.Desktop", "wwwroot", "index.html");
         var hostCapabilityBridgePath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityBridge.cs");
+        var hostCapabilityContractsPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Runtime", "Shell", "WebViewHostCapabilityContracts.cs");
 
-        foreach (var p in new[] { releaseGovernancePath, runtimeManifestPath, productionMatrixPath, templateIndexPath, hostCapabilityBridgePath })
+        foreach (var p in new[] { releaseGovernancePath, runtimeManifestPath, productionMatrixPath, templateIndexPath, hostCapabilityBridgePath, hostCapabilityContractsPath })
             AssertFileExists(p, PhaseTransitionConsistency);
 
         var releaseGovernance = File.ReadAllText(releaseGovernancePath);
@@ -802,9 +807,12 @@ public sealed class AutomationLaneGovernanceTests
         AssertContainsAll(matrixCapabilityIds, sharedTransitionCapabilityIds, PhaseTransitionConsistency, productionMatrixPath);
 
         AssertSourceContains(File.ReadAllText(templateIndexPath), "window.runTemplateRegressionChecks", PhaseTransitionConsistency, templateIndexPath);
-        var bridgeSource = File.ReadAllText(hostCapabilityBridgePath);
-        AssertSourceContains(bridgeSource, "ToExportRecord", PhaseTransitionConsistency, hostCapabilityBridgePath);
-        AssertSourceContains(bridgeSource, "WebViewHostCapabilityDiagnosticExportRecord", PhaseTransitionConsistency, hostCapabilityBridgePath);
+        var bridgeSource = string.Join(
+            Environment.NewLine,
+            File.ReadAllText(hostCapabilityBridgePath),
+            File.ReadAllText(hostCapabilityContractsPath));
+        AssertSourceContains(bridgeSource, "ToExportRecord", PhaseTransitionConsistency, $"{hostCapabilityBridgePath} (+contracts)");
+        AssertSourceContains(bridgeSource, "WebViewHostCapabilityDiagnosticExportRecord", PhaseTransitionConsistency, $"{hostCapabilityBridgePath} (+contracts)");
     }
 
     [Fact]
