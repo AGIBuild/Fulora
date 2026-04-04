@@ -5,30 +5,6 @@
   <sub>A typed, policy-driven hybrid app platform for .NET and Avalonia.</sub>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/nuget/v/Agibuild.Fulora.Avalonia?logo=nuget&label=NuGet&color=004880&style=flat-square" />
-  <img src="https://img.shields.io/nuget/dt/Agibuild.Fulora.Avalonia?logo=nuget&label=Downloads&color=00a86b&style=flat-square" />
-  <a href="https://github.com/AGIBuild/Fulora/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AGIBuild/Fulora/ci.yml?label=CI&logo=github&style=flat-square" /></a>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Windows-WebView2-0078D4?style=flat-square&logo=windows" />
-  <img src="https://img.shields.io/badge/macOS-WKWebView-000000?style=flat-square&logo=apple" />
-  <img src="https://img.shields.io/badge/Linux-WebKitGTK-FCC624?style=flat-square&logo=linux&logoColor=black" />
-  <img src="https://img.shields.io/badge/iOS-WKWebView-000000?style=flat-square&logo=apple" />
-  <img src="https://img.shields.io/badge/Android-WebView-3DDC84?style=flat-square&logo=android&logoColor=white" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Funit-tests.json&style=flat-square" alt="Unit Tests" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fintegration-tests.json&style=flat-square" alt="Integration Tests" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fline-coverage.json&style=flat-square" alt="Line Coverage" />
-  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
-</p>
-
----
-
 Fulora is a typed app builder for shipping Avalonia desktop apps with modern web frontends, app services, and native capabilities from one workflow.
 
 It helps app teams go from scaffold to packaged desktop build without stitching together their own host-web bridge, dev server flow, and native integration story.
@@ -51,6 +27,30 @@ That gives you a React-based desktop app with the Fulora host, local dev loop, a
 Need a little more than just a WebView? Fulora gives your app typed app services for host-to-web communication, plus native capabilities like auth flows, dialogs, files, notifications, screenshots, PDF, cookies, and plugin-based extensions.
 
 Go deeper with [Getting Started](docs/articles/getting-started.md), the [Documentation Index](docs/index.md), [Bridge guide](docs/articles/bridge-guide.md), and [SPA hosting](docs/articles/spa-hosting.md).
+
+---
+
+<p align="center">
+  <img src="https://img.shields.io/nuget/v/Agibuild.Fulora.Avalonia?logo=nuget&label=NuGet&color=004880&style=flat-square" />
+  <img src="https://img.shields.io/nuget/dt/Agibuild.Fulora.Avalonia?logo=nuget&label=Downloads&color=00a86b&style=flat-square" />
+  <a href="https://github.com/AGIBuild/Fulora/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AGIBuild/Fulora/ci.yml?label=CI&logo=github&style=flat-square" /></a>
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Windows-WebView2-0078D4?style=flat-square&logo=windows" />
+  <img src="https://img.shields.io/badge/macOS-WKWebView-000000?style=flat-square&logo=apple" />
+  <img src="https://img.shields.io/badge/Linux-WebKitGTK-FCC624?style=flat-square&logo=linux&logoColor=black" />
+  <img src="https://img.shields.io/badge/iOS-WKWebView-000000?style=flat-square&logo=apple" />
+  <img src="https://img.shields.io/badge/Android-WebView-3DDC84?style=flat-square&logo=android&logoColor=white" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Funit-tests.json&style=flat-square" alt="Unit Tests" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fintegration-tests.json&style=flat-square" alt="Integration Tests" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fline-coverage.json&style=flat-square" alt="Line Coverage" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAGIBuild%2FAgibuild.Fulora%2Fbadges%2Fbranch-coverage.json&style=flat-square" alt="Branch Coverage" />
+</p>
 
 ---
 
