@@ -16,8 +16,8 @@ public class CliToolTests
         var dir = AppContext.BaseDirectory;
         while (dir is not null)
         {
-            var gitPath = Path.Combine(dir, ".git");
-            if (Directory.Exists(gitPath) || File.Exists(gitPath))
+            var cliProjectPath = Path.Combine(dir, "src", "Agibuild.Fulora.Cli", "Agibuild.Fulora.Cli.csproj");
+            if (File.Exists(cliProjectPath))
                 return dir;
             dir = Directory.GetParent(dir)?.FullName;
         }
@@ -88,9 +88,8 @@ public class CliToolTests
         var (stdout, _, exitCode) = await RunCliAsync("--help");
 
         Assert.Equal(0, exitCode);
-        Assert.Contains("scaffold", stdout, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("develop", stdout, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("package", stdout, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Agibuild.Fulora CLI — scaffold, develop, and package apps", stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("manage hybrid apps", stdout, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
