@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Agibuild.Fulora.Cli.Commands;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -73,13 +74,21 @@ public class CliToolTests
     }
 
     [Fact]
-    public async Task New_command_help_shows_frontend_but_not_required_shell_preset()
+    public async Task New_command_help_shows_frontend_and_shell_preset_options()
     {
         var (stdout, _, exitCode) = await RunCliAsync("new --help");
 
         Assert.Equal(0, exitCode);
         Assert.Contains("--frontend", stdout);
-        Assert.DoesNotContain("Required", stdout[(stdout.IndexOf("--shell-preset", StringComparison.Ordinal))..], StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("--shell-preset", stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void New_command_defaults_shell_preset_to_app_shell_when_omitted()
+    {
+        var args = NewCommand.BuildTemplateArguments("SampleApp", "react", shellPreset: null);
+
+        Assert.Contains("--shellPreset app-shell", args, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -5,6 +5,8 @@ namespace Agibuild.Fulora.Cli.Commands;
 
 internal static class NewCommand
 {
+    internal const string DefaultShellPreset = "app-shell";
+
     public static Command Create()
     {
         var nameArg = new Argument<string>("name") { Description = "Project name" };
@@ -28,14 +30,11 @@ internal static class NewCommand
 
         command.SetAction(async (parseResult, ct) =>
         {
-            var name = parseResult.GetValue(nameArg);
-            var frontend = parseResult.GetValue(frontendOpt);
-            var shellPreset = parseResult.GetValue(shellPresetOpt) ?? "app-shell";
-
+            var name = parseResult.GetValue(nameArg)!;
+            var frontend = parseResult.GetValue(frontendOpt)!;
             Console.WriteLine($"Creating project '{name}' with {frontend} frontend...");
 
-            var dotnetArgs = $"new agibuild-hybrid -n {name} --framework {frontend}";
-            dotnetArgs += $" --shellPreset {shellPreset}";
+            var dotnetArgs = BuildTemplateArguments(name, frontend, parseResult.GetValue(shellPresetOpt));
 
             var exitCode = await RunProcessAsync("dotnet", dotnetArgs, ct: ct);
             if (exitCode != 0)
@@ -55,6 +54,12 @@ internal static class NewCommand
         });
 
         return command;
+    }
+
+    internal static string BuildTemplateArguments(string name, string frontend, string? shellPreset)
+    {
+        var resolvedShellPreset = string.IsNullOrWhiteSpace(shellPreset) ? DefaultShellPreset : shellPreset;
+        return $"new agibuild-hybrid -n {name} --framework {frontend} --shellPreset {resolvedShellPreset}";
     }
 
     internal static async Task<int> RunProcessAsync(
