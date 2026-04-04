@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.CommandLine.Parsing;
 using System.Diagnostics;
 
 namespace Agibuild.Fulora.Cli.Commands;
@@ -7,6 +8,10 @@ internal static class PackageCommand
 {
     public static Command Create()
     {
+        var profileOpt = new Option<string?>("--profile")
+        {
+            Description = "Packaging profile (recommended: desktop-public, desktop-internal, mac-notarized)"
+        };
         var projectOpt = new Option<string?>("--project", "-p")
         {
             Description = "Path to the .csproj (required)"
@@ -42,7 +47,11 @@ internal static class PackageCommand
             DefaultValueFactory = _ => "stable"
         };
 
-        var command = new Command("package") { Description = "Package application for distribution (dotnet publish + vpk pack)" };
+        var command = new Command("package")
+        {
+            Description = "Package application for distribution. Start with --profile desktop-public, desktop-internal, or mac-notarized."
+        };
+        command.Options.Add(profileOpt);
         command.Options.Add(projectOpt);
         command.Options.Add(runtimeOpt);
         command.Options.Add(versionOpt);
@@ -54,14 +63,20 @@ internal static class PackageCommand
 
         command.SetAction(async (parseResult, ct) =>
         {
+            var profileName = parseResult.GetValue(profileOpt);
             var project = parseResult.GetValue(projectOpt);
-            var runtime = parseResult.GetValue(runtimeOpt);
             var version = parseResult.GetValue(versionOpt);
             var output = parseResult.GetValue(outputOpt);
             var icon = parseResult.GetValue(iconOpt);
             var signParams = parseResult.GetValue(signParamsOpt);
-            var notarize = parseResult.GetValue(notarizeOpt);
-            var channel = parseResult.GetValue(channelOpt);
+            if (!TryResolveProfile(profileName, out var profile))
+            {
+                return 1;
+            }
+
+            var runtime = GetValue(runtimeOpt, parseResult, profile.Runtime);
+            var notarize = GetValue(notarizeOpt, parseResult, profile.Notarize);
+            var channel = GetValue(channelOpt, parseResult, profile.Channel)!;
 
             if (string.IsNullOrWhiteSpace(project))
             {
@@ -186,6 +201,34 @@ internal static class PackageCommand
                 return vpk;
         }
         return null;
+    }
+
+    private static bool TryResolveProfile(string? profileName, out PackageProfile profile)
+    {
+        if (string.IsNullOrWhiteSpace(profileName))
+        {
+            profile = new PackageProfile(string.Empty, "stable", null, false);
+            return true;
+        }
+
+        if (PackageProfileDefaults.TryResolve(profileName, out profile))
+        {
+            return true;
+        }
+
+        Console.Error.WriteLine($"Unknown package profile '{profileName}'. Supported profiles: desktop-internal, desktop-public, mac-notarized.");
+        return false;
+    }
+
+    private static T GetValue<T>(Option<T> option, ParseResult parseResult, T? profileDefault)
+    {
+        var optionResult = parseResult.GetResult(option);
+        if (optionResult is OptionResult { Implicit: false })
+        {
+            return parseResult.GetValue(option)!;
+        }
+
+        return profileDefault is not null ? profileDefault : parseResult.GetValue(option)!;
     }
 
     private static void CopyDirectory(string source, string dest)

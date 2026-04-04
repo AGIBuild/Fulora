@@ -426,6 +426,24 @@ public class AppDistributionTests
     }
 
     [Fact]
+    public void PackageCommand_creates_valid_command_with_profile_option()
+    {
+        var command = PackageCommand.Create();
+
+        var optionNames = command.Options.Select(o => o.Name).ToHashSet();
+        Assert.Contains("--profile", optionNames);
+    }
+
+    [Fact]
+    public void ResolveProfile_desktop_public_sets_stable_channel_defaults()
+    {
+        var profile = PackageProfileDefaults.Resolve("desktop-public");
+
+        Assert.Equal("stable", profile.Channel);
+        Assert.False(profile.Notarize);
+    }
+
+    [Fact]
     public async Task CheckForUpdateAsync_with_velopack_feed_returns_update()
     {
         var feedJson = """{ "Assets": [{ "Type": "Full", "Version": "2.0.0", "FileName": "app-2.0.0.nupkg", "Size": 1024, "SHA256": "abc" }] }""";

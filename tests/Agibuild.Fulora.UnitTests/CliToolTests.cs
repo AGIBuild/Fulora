@@ -215,6 +215,16 @@ public class CliToolTests
     }
 
     [Fact]
+    public async Task Package_command_help_shows_profile_examples()
+    {
+        var (stdout, _, exitCode) = await RunCliAsync("package --help");
+
+        Assert.Equal(0, exitCode);
+        Assert.Contains("--profile", stdout);
+        Assert.Contains("desktop-public", stdout);
+    }
+
+    [Fact]
     public void Cli_project_exists_and_is_packable()
     {
         var csproj = GetCliProjectPath();
