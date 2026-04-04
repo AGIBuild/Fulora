@@ -15,10 +15,9 @@ internal static class NewCommand
         };
         frontendOpt.AcceptOnlyFromAmong("react", "vue", "vanilla");
 
-        var shellPresetOpt = new Option<string>("--shell-preset")
+        var shellPresetOpt = new Option<string?>("--shell-preset")
         {
             Description = "Desktop shell preset: baseline or app-shell",
-            Required = true,
         };
         shellPresetOpt.AcceptOnlyFromAmong("baseline", "app-shell");
 
@@ -31,7 +30,7 @@ internal static class NewCommand
         {
             var name = parseResult.GetValue(nameArg);
             var frontend = parseResult.GetValue(frontendOpt);
-            var shellPreset = parseResult.GetValue(shellPresetOpt);
+            var shellPreset = parseResult.GetValue(shellPresetOpt) ?? "app-shell";
 
             Console.WriteLine($"Creating project '{name}' with {frontend} frontend...");
 

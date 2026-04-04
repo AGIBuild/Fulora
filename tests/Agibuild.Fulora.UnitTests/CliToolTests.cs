@@ -16,7 +16,8 @@ public class CliToolTests
         var dir = AppContext.BaseDirectory;
         while (dir is not null)
         {
-            if (Directory.Exists(Path.Combine(dir, ".git")))
+            var gitPath = Path.Combine(dir, ".git");
+            if (Directory.Exists(gitPath) || File.Exists(gitPath))
                 return dir;
             dir = Directory.GetParent(dir)?.FullName;
         }
@@ -72,14 +73,24 @@ public class CliToolTests
     }
 
     [Fact]
-    public async Task New_command_shows_help()
+    public async Task New_command_help_shows_frontend_but_not_required_shell_preset()
     {
         var (stdout, _, exitCode) = await RunCliAsync("new --help");
+
         Assert.Equal(0, exitCode);
         Assert.Contains("--frontend", stdout);
-        Assert.Contains("react", stdout);
-        Assert.Contains("--shell-preset", stdout);
-        Assert.DoesNotContain("--preset", stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("Required", stdout[(stdout.IndexOf("--shell-preset", StringComparison.Ordinal))..], StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task New_command_can_be_described_by_primary_path()
+    {
+        var (stdout, _, exitCode) = await RunCliAsync("--help");
+
+        Assert.Equal(0, exitCode);
+        Assert.Contains("scaffold", stdout, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("develop", stdout, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("package", stdout, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

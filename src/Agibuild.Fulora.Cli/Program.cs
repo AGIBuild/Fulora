@@ -1,7 +1,7 @@
 using System.CommandLine;
 using Agibuild.Fulora.Cli.Commands;
 
-var rootCommand = new RootCommand("Agibuild.Fulora CLI — scaffold, develop, and manage hybrid apps");
+var rootCommand = new RootCommand("Agibuild.Fulora CLI — scaffold, develop, and package apps");
 
 rootCommand.Subcommands.Add(NewCommand.Create());
 rootCommand.Subcommands.Add(GenerateCommand.Create());
