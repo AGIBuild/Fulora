@@ -225,6 +225,16 @@ public class CliToolTests
     }
 
     [Fact]
+    public async Task Package_command_unknown_profile_returns_stable_error()
+    {
+        var (stdout, stderr, exitCode) = await RunCliAsync("package --profile unknown-profile");
+
+        Assert.NotEqual(0, exitCode);
+        Assert.Contains("Unknown package profile", stdout + stderr, StringComparison.Ordinal);
+        Assert.Contains("desktop-public", stdout + stderr, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Cli_project_exists_and_is_packable()
     {
         var csproj = GetCliProjectPath();

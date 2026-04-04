@@ -203,7 +203,7 @@ internal static class PackageCommand
         return null;
     }
 
-    private static bool TryResolveProfile(string? profileName, out PackageProfile profile)
+    internal static bool TryResolveProfile(string? profileName, out PackageProfile profile)
     {
         if (string.IsNullOrWhiteSpace(profileName))
         {
@@ -220,7 +220,7 @@ internal static class PackageCommand
         return false;
     }
 
-    private static T GetValue<T>(Option<T> option, ParseResult parseResult, T? profileDefault)
+    internal static T GetValue<T>(Option<T> option, ParseResult parseResult, T? profileDefault)
     {
         var optionResult = parseResult.GetResult(option);
         if (optionResult is OptionResult { Implicit: false })

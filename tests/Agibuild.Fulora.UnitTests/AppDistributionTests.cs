@@ -444,6 +444,45 @@ public class AppDistributionTests
     }
 
     [Fact]
+    public void PackageCommand_profile_defaults_allow_explicit_false_notarize_override()
+    {
+        var command = PackageCommand.Create();
+        var notarizeOption = Assert.IsType<Option<bool>>(command.Options.Single(o => o.Name == "--notarize"));
+        var profile = PackageProfileDefaults.Resolve("mac-notarized");
+        var root = new RootCommand("test");
+        root.Subcommands.Add(command);
+        var parseResult = root.Parse("package --profile mac-notarized --notarize false");
+
+        var optionResult = parseResult.GetResult(notarizeOption);
+
+        Assert.NotNull(optionResult);
+        Assert.False(optionResult!.Implicit);
+        Assert.False(PackageCommand.GetValue(notarizeOption, parseResult, profile.Notarize));
+    }
+
+    [Fact]
+    public void PackageCommand_profile_defaults_allow_explicit_runtime_and_channel_overrides()
+    {
+        var command = PackageCommand.Create();
+        var runtimeOption = Assert.IsType<Option<string>>(command.Options.Single(o => o.Name == "--runtime"));
+        var channelOption = Assert.IsType<Option<string>>(command.Options.Single(o => o.Name == "--channel"));
+        var profile = PackageProfileDefaults.Resolve("desktop-public");
+        var root = new RootCommand("test");
+        root.Subcommands.Add(command);
+        var parseResult = root.Parse("package --profile desktop-public --runtime linux-x64 --channel preview");
+
+        var runtimeResult = parseResult.GetResult(runtimeOption);
+        var channelResult = parseResult.GetResult(channelOption);
+
+        Assert.NotNull(runtimeResult);
+        Assert.NotNull(channelResult);
+        Assert.False(runtimeResult!.Implicit);
+        Assert.False(channelResult!.Implicit);
+        Assert.Equal("linux-x64", PackageCommand.GetValue(runtimeOption, parseResult, profile.Runtime));
+        Assert.Equal("preview", PackageCommand.GetValue(channelOption, parseResult, profile.Channel));
+    }
+
+    [Fact]
     public async Task CheckForUpdateAsync_with_velopack_feed_returns_update()
     {
         var feedJson = """{ "Assets": [{ "Type": "Full", "Version": "2.0.0", "FileName": "app-2.0.0.nupkg", "Size": 1024, "SHA256": "abc" }] }""";
