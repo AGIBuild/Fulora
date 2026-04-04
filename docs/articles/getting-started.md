@@ -12,31 +12,6 @@ For most teams, the fastest route is:
 
 That path gives you a working app first. The bridge details are still important, but you do not need to learn them before you can get started.
 
-## What you'll end up with
-
-A desktop application where:
-
-- The **UI** is a React (or Vue, or vanilla) SPA running inside a native WebView
-- The **backend** is C# code running in the same process — no HTTP server, no REST API
-- Communication is through **typed bridge contracts** that are code-generated at compile time
-
-```
-┌───────────────────────────────────┐
-│  Native Avalonia Window           │
-│  ┌─────────────────────────────┐  │
-│  │  React SPA in WebView       │  │
-│  │                             │  │
-│  │  await GreeterService       │  │
-│  │    .greet("World")          │  │
-│  └──────────┬──────────────────┘  │
-│             │ type-safe bridge     │
-│  ┌──────────▼──────────────────┐  │
-│  │  C# GreeterServiceImpl     │  │
-│  │  → "Hello, World!"         │  │
-│  └─────────────────────────────┘  │
-└───────────────────────────────────┘
-```
-
 ## Prerequisites
 
 - .NET 10 SDK
@@ -82,6 +57,31 @@ Alternatively, use `dotnet new` directly:
 dotnet new agibuild-hybrid -n MyApp
 cd MyApp
 dotnet run --project MyApp.Desktop
+```
+
+## What you'll end up with
+
+After the three steps above, you have a native desktop window hosting your web app, with Fulora services ready for normal app development.
+
+- The **UI** runs inside a native WebView
+- The **backend** runs in-process in C#
+- Fulora connects them with generated bridge contracts underneath
+
+```
+┌───────────────────────────────────┐
+│  Native Avalonia Window           │
+│  ┌─────────────────────────────┐  │
+│  │  React SPA in WebView       │  │
+│  │                             │  │
+│  │  await GreeterService       │  │
+│  │    .greet("World")          │  │
+│  └──────────┬──────────────────┘  │
+│             │ type-safe bridge     │
+│  ┌──────────▼──────────────────┐  │
+│  │  C# GreeterServiceImpl     │  │
+│  │  → "Hello, World!"         │  │
+│  └─────────────────────────────┘  │
+└───────────────────────────────────┘
 ```
 
 ## Fulora services already use the bridge underneath
