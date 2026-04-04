@@ -29,9 +29,34 @@
 
 ---
 
+Fulora is a typed app builder for shipping Avalonia desktop apps with modern web frontends, app services, and native capabilities from one workflow.
+
+It helps app teams go from scaffold to packaged desktop build without stitching together their own host-web bridge, dev server flow, and native integration story.
+
+## Start in 60 Seconds
+
+The fastest path is to create an app, run it locally, then package it for desktop distribution.
+
+```bash
+dotnet tool install -g Agibuild.Fulora.Cli
+dotnet new install Agibuild.Fulora.Templates
+fulora new MyApp --frontend react
+cd MyApp
+fulora dev
+fulora package --profile desktop-public
+```
+
+That gives you a React-based desktop app with the Fulora host, local dev loop, and a packaging path you can hand to teammates or testers.
+
+Need a little more than just a WebView? Fulora gives your app typed app services for host-to-web communication, plus native capabilities like auth flows, dialogs, files, notifications, screenshots, PDF, cookies, and plugin-based extensions.
+
+Go deeper with [Getting Started](docs/articles/getting-started.md), the [Documentation Index](docs/index.md), [Bridge guide](docs/articles/bridge-guide.md), and [SPA hosting](docs/articles/spa-hosting.md).
+
+---
+
 ## Why Fulora
 
-You have a fast-moving web team and a battle-tested .NET desktop stack.  
+You have a fast-moving web team and a battle-tested .NET desktop stack.
 Most hybrid approaches force a compromise: either weak host-web contracts, or a rewrite when complexity grows.
 
 Fulora is built for the middle path that scales:
@@ -42,22 +67,6 @@ Fulora is built for the middle path that scales:
 - Enforce host capabilities through policy-first execution
 
 From "just embed one page" to "run a full product shell", teams can grow through capability tiers while keeping a stable platform contract.
-
----
-
-## Start in 60 Seconds
-
-Choose the onboarding path that matches where you are today.
-
-**Recommended (CLI + template):**
-
-```bash
-dotnet tool install -g Agibuild.Fulora.Cli
-dotnet new install Agibuild.Fulora.Templates
-fulora new MyApp --frontend react
-cd MyApp
-fulora dev
-```
 
 **Alternative (template only):**
 
