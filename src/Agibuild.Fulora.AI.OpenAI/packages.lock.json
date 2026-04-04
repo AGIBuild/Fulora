@@ -4,11 +4,11 @@
     "net10.0": {
       "Microsoft.Extensions.AI.OpenAI": {
         "type": "Direct",
-        "requested": "[10.4.0, )",
-        "resolved": "10.4.0",
-        "contentHash": "7R1fyxwF8KtQi8k2ih3Y6dHZiUfnnmZIgXY7hQ+dFlPkVZoefgKAzdnnrFZzYOjXPeJxh3gqAQ4psXnp59wwqw==",
+        "requested": "[10.4.1, )",
+        "resolved": "10.4.1",
+        "contentHash": "C+xo+ds4PxSzTEywLcM0hbJJboEuLT5na/Q49rMNi3Y0hsoBuMXIZCvWXOyvNXunvngOwZYvkicEod/g8Gll6w==",
         "dependencies": {
-          "Microsoft.Extensions.AI.Abstractions": "10.4.0",
+          "Microsoft.Extensions.AI.Abstractions": "10.4.1",
           "OpenAI": "2.9.1"
         }
       },
@@ -230,9 +230,9 @@
       "agibuild.fulora.ai": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
-          "Microsoft.Extensions.AI": "[10.4.0, )",
-          "Microsoft.Extensions.AI.Abstractions": "[10.4.0, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
+          "Microsoft.Extensions.AI": "[10.4.1, )",
+          "Microsoft.Extensions.AI.Abstractions": "[10.4.1, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Extensions.Options.DataAnnotations": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Extensions.Resilience": "[10.4.0, )"
@@ -243,11 +243,11 @@
       },
       "Microsoft.Extensions.AI": {
         "type": "CentralTransitive",
-        "requested": "[10.4.0, )",
-        "resolved": "10.4.0",
-        "contentHash": "7kKIuaUMFWikveZUjSrs53XfMVV7IDGSDaGp6/y/hV0HXsA7N2oIODZWxtEkEj8Q4cd/Oc/VlsVlg8efof7gFA==",
+        "requested": "[10.4.1, )",
+        "resolved": "10.4.1",
+        "contentHash": "io38o6v3Tpbh++UqIcievOOTRwEyBpbNcudpZDjOo+DnAEQQvc3WqlChPipWLYH65cl9m8jiqH6ahHeasZzmOA==",
         "dependencies": {
-          "Microsoft.Extensions.AI.Abstractions": "10.4.0",
+          "Microsoft.Extensions.AI.Abstractions": "10.4.1",
           "Microsoft.Extensions.Caching.Abstractions": "10.0.4",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.4",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.4",
@@ -256,9 +256,9 @@
       },
       "Microsoft.Extensions.AI.Abstractions": {
         "type": "CentralTransitive",
-        "requested": "[10.4.0, )",
-        "resolved": "10.4.0",
-        "contentHash": "t3S2H4do4YeNheIfE3GEl3MnKIrnxpbLu7a88spfApYR3in9ddhIq/GMtxgMaFjn/PUMTCFv5YH7Y6Q91dsDXQ=="
+        "requested": "[10.4.1, )",
+        "resolved": "10.4.1",
+        "contentHash": "ZxhU/wg9BOc3ohibhLl18toPLWm96ysQoE+3OhCgrZ0TUPZd7bsUmGteeatz08yweyuPIEhtyUzEZTF+3bMWEQ=="
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "CentralTransitive",
