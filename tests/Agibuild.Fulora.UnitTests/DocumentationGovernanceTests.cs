@@ -77,10 +77,27 @@ public sealed class DocumentationGovernanceTests
         var indexPath = Path.Combine(repoRoot, "docs", "index.md");
         Assert.True(File.Exists(indexPath), "Missing docs/index.md");
 
-        var content = File.ReadAllText(indexPath);
-        Assert.Contains("I am building an app", content, StringComparison.Ordinal);
-        Assert.Contains("I am building a plugin", content, StringComparison.Ordinal);
-        Assert.Contains("I am working on the platform", content, StringComparison.Ordinal);
+        var startBuildingSection = ParseMarkdownSection(File.ReadAllLines(indexPath), "## Start Building");
+        var entryRows = ParseMarkdownTableRows(startBuildingSection)
+            .ToDictionary(
+                row => row[0],
+                row => row[1],
+                StringComparer.Ordinal);
+
+        Assert.True(
+            entryRows.TryGetValue("I am building an app", out var appEntry),
+            "docs/index.md Start Building section must include an 'I am building an app' entry.");
+        Assert.Contains("articles/getting-started.md", appEntry, StringComparison.Ordinal);
+
+        Assert.True(
+            entryRows.TryGetValue("I am building a plugin", out var pluginEntry),
+            "docs/index.md Start Building section must include an 'I am building a plugin' entry.");
+        Assert.Contains("plugin-authoring-guide.md", pluginEntry, StringComparison.Ordinal);
+
+        Assert.True(
+            entryRows.TryGetValue("I am working on the platform", out var platformEntry),
+            "docs/index.md Start Building section must include an 'I am working on the platform' entry.");
+        Assert.Contains("product-platform-roadmap.md", platformEntry, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -760,6 +777,7 @@ public sealed class DocumentationGovernanceTests
     {
         var sectionLines = new List<string>();
         var inSection = false;
+        var headingFound = false;
 
         foreach (var rawLine in lines)
         {
@@ -768,7 +786,10 @@ public sealed class DocumentationGovernanceTests
             if (!inSection)
             {
                 if (string.Equals(line.Trim(), heading, StringComparison.Ordinal))
+                {
                     inSection = true;
+                    headingFound = true;
+                }
 
                 continue;
             }
@@ -779,7 +800,36 @@ public sealed class DocumentationGovernanceTests
             sectionLines.Add(rawLine);
         }
 
-        Assert.NotEmpty(sectionLines);
+        Assert.True(headingFound, $"Missing markdown heading: {heading}");
+        Assert.True(sectionLines.Count > 0, $"Markdown heading '{heading}' exists but its section is empty.");
         return string.Join(Environment.NewLine, sectionLines);
+    }
+
+    private static IReadOnlyList<string[]> ParseMarkdownTableRows(string section)
+    {
+        var rows = new List<string[]>();
+
+        foreach (var rawLine in section.Split(Environment.NewLine))
+        {
+            var line = rawLine.Trim();
+            if (!line.StartsWith("|", StringComparison.Ordinal) || !line.EndsWith("|", StringComparison.Ordinal))
+                continue;
+
+            var cells = line[1..^1]
+                .Split('|')
+                .Select(x => x.Trim())
+                .ToArray();
+
+            if (cells.Length < 2)
+                continue;
+
+            var isSeparatorRow = cells.All(cell => cell.Length > 0 && cell.All(ch => ch == '-' || ch == ':' || ch == ' '));
+            if (isSeparatorRow)
+                continue;
+
+            rows.Add(cells);
+        }
+
+        return rows;
     }
 }
