@@ -36,11 +36,11 @@
       },
       "Avalonia.Themes.Fluent": {
         "type": "Direct",
-        "requested": "[12.0.0-preview2, )",
-        "resolved": "12.0.0-preview2",
-        "contentHash": "H60ed3Sgx7BXZ+VkLAaHzJyOJ+Xl/m0baqI67UzAh29m5YHcOpvWTlVWM91+sPaM5/3ANqpZEaeEbS0mXtxmEA==",
+        "requested": "[12.0.0-rc1, )",
+        "resolved": "12.0.0-rc1",
+        "contentHash": "UFgSXcPzgSq+9BfBdWEH9R2QgFyOxqsEmFO7nblf5nfvK1kVUbWk7rJ+6N1THbS3MaUcbFcditM5OhJc0d1JeQ==",
         "dependencies": {
-          "Avalonia": "12.0.0-preview2"
+          "Avalonia": "12.0.0-rc1"
         }
       },
       "Microsoft.NET.Test.Sdk": {
@@ -313,7 +313,7 @@
           "Agibuild.Fulora.Testing": "[1.5.10-local, )",
           "Avalonia": "[12.0.0-rc1, )",
           "Avalonia.Fonts.Inter": "[12.0.0-rc1, )",
-          "Avalonia.Themes.Fluent": "[12.0.0-preview2, )",
+          "Avalonia.Themes.Fluent": "[12.0.0-rc1, )",
           "CommunityToolkit.Mvvm": "[8.4.0, )",
           "Serilog": "[4.3.2-dev-02419, )",
           "Serilog.Sinks.File": "[8.0.0-nblumhardt-02322, )"
