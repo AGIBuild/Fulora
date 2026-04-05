@@ -267,7 +267,7 @@ jobs:
 
       - name: Report test results
         if: always() && !cancelled()
-        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         with:
           name: Tests (macOS)
           path: artifacts/test-results/**/*.trx
@@ -308,7 +308,7 @@ jobs:
 
       - name: Report test results
         if: always() && !cancelled()
-        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         with:
           name: Tests (Windows)
           path: artifacts/test-results/**/*.trx
@@ -364,7 +364,7 @@ jobs:
 
       - name: Report test results
         if: always() && !cancelled()
-        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         with:
           name: Tests (Linux)
           path: artifacts/test-results/**/*.trx
@@ -783,7 +783,7 @@ jobs:
           path: artifacts/release-bundle
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@57aae528053a48a3f6235f2d9461b05fbcb7366d # v0.23.1
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         with:
           artifact-name: sbom-spdx.json
           output-file: sbom-spdx.json
@@ -878,4 +878,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
