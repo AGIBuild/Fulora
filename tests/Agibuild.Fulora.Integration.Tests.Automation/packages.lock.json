@@ -285,7 +285,7 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.10-local, )"
+          "Agibuild.Fulora.Core": "[1.5.11-local, )"
         }
       },
       "agibuild.fulora.avalonia": {
@@ -306,15 +306,15 @@
       "agibuild.fulora.integration.tests": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
-          "Agibuild.Fulora.Avalonia": "[1.5.10-local, )",
-          "Agibuild.Fulora.Core": "[1.5.10-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.10-local, )",
-          "Agibuild.Fulora.Testing": "[1.5.10-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.11-local, )",
+          "Agibuild.Fulora.Avalonia": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.11-local, )",
+          "Agibuild.Fulora.Testing": "[1.5.11-local, )",
           "Avalonia": "[12.0.0-rc1, )",
           "Avalonia.Fonts.Inter": "[12.0.0-rc1, )",
           "Avalonia.Themes.Fluent": "[12.0.0-rc1, )",
-          "CommunityToolkit.Mvvm": "[8.4.0, )",
+          "CommunityToolkit.Mvvm": "[8.4.2, )",
           "Serilog": "[4.3.2-dev-02419, )",
           "Serilog.Sinks.File": "[8.0.0-nblumhardt-02322, )"
         }
@@ -322,24 +322,24 @@
       "agibuild.fulora.plugin.localstorage": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Bridge.Generator": "[1.5.10-local, )",
-          "Agibuild.Fulora.Core": "[1.5.10-local, )"
+          "Agibuild.Fulora.Bridge.Generator": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )"
         }
       },
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
-          "Agibuild.Fulora.Core": "[1.5.10-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
       "agibuild.fulora.testing": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.10-local, )",
-          "Agibuild.Fulora.Core": "[1.5.10-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.10-local, )"
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.11-local, )"
         }
       },
       "Avalonia": {
@@ -355,9 +355,9 @@
       },
       "CommunityToolkit.Mvvm": {
         "type": "CentralTransitive",
-        "requested": "[8.4.0, )",
-        "resolved": "8.4.0",
-        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+        "requested": "[8.4.2, )",
+        "resolved": "8.4.2",
+        "contentHash": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg=="
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "CentralTransitive",

@@ -64,8 +64,8 @@
       },
       "Avalonia.Remote.Protocol": {
         "type": "Transitive",
-        "resolved": "12.0.0-preview2",
-        "contentHash": "L+Bhi8I2tnwAJBQhRpUEbyK8DZeYRIVcFGVv1lPwodpp+QddF1/GBWGBIWb12xV2Z6Cw2qh2U8zp6ZGrkcYG4w=="
+        "resolved": "12.0.0-rc1",
+        "contentHash": "/hXGRnxsaemSRe/A8hOWwa7DxoOBiTGUIt/ENpE9VEoQKaXqvkJtWW6Vx5Cchiynx0ODKgRhVjIDxL62sLQk2Q=="
       },
       "Avalonia.Skia": {
         "type": "Transitive",
@@ -187,29 +187,21 @@
         "resolved": "11.0.0-preview.2.26159.112",
         "contentHash": "5xr0B5D23NoH3jcHO3SVPchTo0dwD+wqpqrysAZeOKY+XEOheKZN0bApd/EoWj+ym5NtmiNxCtYVZtDpo8FUlQ=="
       },
-      "System.IO.Pipelines": {
-        "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "FHNOatmUq0sqJOkTx+UF/9YK1f180cnW5FVqnQMvYUN0elp6wFzbtPSiqbo1/ru8ICp43JM1i7kKkk6GsNGHlA=="
-      },
       "Tmds.DBus.Protocol": {
         "type": "Transitive",
         "resolved": "0.90.3",
-        "contentHash": "T5BqXZb3Lqg+5yKInnW+hPtv/lzW8S8tZbLKFCbzgFF6iy4w5O3MDNzppgQfudR1nqMSpSDjX7w9OmDljV4GyA==",
-        "dependencies": {
-          "System.IO.Pipelines": "8.0.0"
-        }
+        "contentHash": "T5BqXZb3Lqg+5yKInnW+hPtv/lzW8S8tZbLKFCbzgFF6iy4w5O3MDNzppgQfudR1nqMSpSDjX7w9OmDljV4GyA=="
       },
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.6-local, )"
+          "Agibuild.Fulora.Core": "[1.5.11-local, )"
         }
       },
       "agibuild.fulora.avalonia": {
         "type": "Project",
         "dependencies": {
-          "Avalonia": "[12.0.0-preview2, )",
+          "Avalonia": "[12.0.0-rc1, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Web.WebView2": "[1.0.3848-prerelease, )",
           "SharpHook": "[7.1.1, )"
@@ -221,15 +213,15 @@
       "agibuild.fulora.integration.tests": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Avalonia": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.6-local, )",
-          "Agibuild.Fulora.Testing": "[1.5.6-local, )",
-          "Avalonia": "[12.0.0-preview2, )",
-          "Avalonia.Fonts.Inter": "[12.0.0-preview2, )",
-          "Avalonia.Themes.Fluent": "[12.0.0-preview2, )",
-          "CommunityToolkit.Mvvm": "[8.4.0, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.11-local, )",
+          "Agibuild.Fulora.Avalonia": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.11-local, )",
+          "Agibuild.Fulora.Testing": "[1.5.11-local, )",
+          "Avalonia": "[12.0.0-rc1, )",
+          "Avalonia.Fonts.Inter": "[12.0.0-rc1, )",
+          "Avalonia.Themes.Fluent": "[12.0.0-rc1, )",
+          "CommunityToolkit.Mvvm": "[8.4.2, )",
           "Serilog": "[4.3.2-dev-02419, )",
           "Serilog.Sinks.File": "[8.0.0-nblumhardt-02322, )"
         }
@@ -237,37 +229,37 @@
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )"
         }
       },
       "agibuild.fulora.testing": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.6-local, )",
-          "Agibuild.Fulora.Core": "[1.5.6-local, )",
-          "Agibuild.Fulora.Runtime": "[1.5.6-local, )"
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.5.11-local, )",
+          "Agibuild.Fulora.Core": "[1.5.11-local, )",
+          "Agibuild.Fulora.Runtime": "[1.5.11-local, )"
         }
       },
       "Avalonia": {
         "type": "CentralTransitive",
-        "requested": "[12.0.0-preview2, )",
-        "resolved": "12.0.0-preview2",
-        "contentHash": "9sO4VHqXez5auHFtiHFWsSLnhAS9zL4TPOK7EpbcB2psnFDP/Q2zaTO8J/r6C9dlRQkqJYZMbiCUvqBc1G8GOg==",
+        "requested": "[12.0.0-rc1, )",
+        "resolved": "12.0.0-rc1",
+        "contentHash": "FrZ3rQNIj8+BIDc1g7BPNsNSrSSPHX5dN1ferqNPfzSlaQNayLTCrtlC0WPwamVg7p3DVBKMyx87/0GC+BEmmg==",
         "dependencies": {
           "Avalonia.BuildServices": "11.3.2",
-          "Avalonia.Remote.Protocol": "12.0.0-preview2",
+          "Avalonia.Remote.Protocol": "12.0.0-rc1",
           "MicroCom.Runtime": "0.11.0"
         }
       },
       "Avalonia.Fonts.Inter": {
         "type": "CentralTransitive",
-        "requested": "[12.0.0-preview2, )",
-        "resolved": "12.0.0-preview2",
-        "contentHash": "H/eGLQcP1DcFWYBwU8p6zABqTwIdbzFOhhH0i/uuwxZXfHBPEqRKwN2syRZ4pn7KV5KHmEcGAE7YvwemyJDOCw==",
+        "requested": "[12.0.0-rc1, )",
+        "resolved": "12.0.0-rc1",
+        "contentHash": "EYtgnYv70sae+UHUlbmpQm034ufORtVJjnKyF8zAblqnRt7bprv0SYF/sK1UzOdb20iI/kcnq7n2Kk19HB2DOA==",
         "dependencies": {
-          "Avalonia": "12.0.0-preview2"
+          "Avalonia": "12.0.0-rc1"
         }
       },
       "Avalonia.HarfBuzz": {
@@ -284,18 +276,18 @@
       },
       "Avalonia.Themes.Fluent": {
         "type": "CentralTransitive",
-        "requested": "[12.0.0-preview2, )",
-        "resolved": "12.0.0-preview2",
-        "contentHash": "H60ed3Sgx7BXZ+VkLAaHzJyOJ+Xl/m0baqI67UzAh29m5YHcOpvWTlVWM91+sPaM5/3ANqpZEaeEbS0mXtxmEA==",
+        "requested": "[12.0.0-rc1, )",
+        "resolved": "12.0.0-rc1",
+        "contentHash": "UFgSXcPzgSq+9BfBdWEH9R2QgFyOxqsEmFO7nblf5nfvK1kVUbWk7rJ+6N1THbS3MaUcbFcditM5OhJc0d1JeQ==",
         "dependencies": {
-          "Avalonia": "12.0.0-preview2"
+          "Avalonia": "12.0.0-rc1"
         }
       },
       "CommunityToolkit.Mvvm": {
         "type": "CentralTransitive",
-        "requested": "[8.4.0, )",
-        "resolved": "8.4.0",
-        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+        "requested": "[8.4.2, )",
+        "resolved": "8.4.2",
+        "contentHash": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg=="
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "CentralTransitive",
