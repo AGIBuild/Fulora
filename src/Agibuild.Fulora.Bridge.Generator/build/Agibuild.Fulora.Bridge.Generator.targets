@@ -29,6 +29,10 @@
       OutputDirectory="$(BridgeTypeScriptOutputDir)"
       FieldName="Mock"
       OutputFileName="bridge.mock.ts" />
+    <WriteBridgeManifestTask
+      AssemblyPath="$(TargetPath)"
+      OutputDirectory="$(BridgeTypeScriptOutputDir)"
+      OutputFileName="bridge.manifest.json" />
   </Target>
 
   <UsingTask TaskName="WriteBridgeArtifactTask"
@@ -115,6 +119,80 @@ try
 catch (Exception ex)
 {
     Log.LogWarning("Bridge: Failed to generate .d.ts: {0}", ex.Message);
+}
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="WriteBridgeManifestTask"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <AssemblyPath ParameterType="System.String" Required="true" />
+      <OutputDirectory ParameterType="System.String" Required="true" />
+      <OutputFileName ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Reflection" />
+      <Using Namespace="System.Security.Cryptography" />
+      <Using Namespace="System.Text" />
+      <Using Namespace="System.Text.Json" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+try
+{
+    var asm = Assembly.LoadFrom(AssemblyPath);
+    var type = Array.Find(asm.GetTypes(), t => t.Name == "BridgeTypeScriptDeclarations");
+    if (type == null) return true;
+
+    string ReadField(string fieldName)
+    {
+        var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.Static);
+        var content = field?.GetValue(null) as string;
+        return string.IsNullOrWhiteSpace(content) ? string.Empty : content;
+    }
+
+    var all = ReadField("All");
+    var client = ReadField("Client");
+    var mock = ReadField("Mock");
+    if (string.IsNullOrEmpty(all) || string.IsNullOrEmpty(client) || string.IsNullOrEmpty(mock))
+        return true;
+
+    string HashBytes(byte[] bytes) => Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+    var assemblyDirectory = Path.GetDirectoryName(Path.GetFullPath(AssemblyPath)) ?? string.Empty;
+    var parts = assemblyDirectory.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+    var binIndex = Array.FindLastIndex(parts, p => string.Equals(p, "bin", StringComparison.OrdinalIgnoreCase));
+    var buildConfiguration = binIndex >= 0 && parts.Length > binIndex + 1 ? parts[binIndex + 1] : "unknown";
+    var targetFramework = binIndex >= 0 && parts.Length > binIndex + 2 ? parts[binIndex + 2] : "unknown";
+
+    var manifest = new
+    {
+        schemaVersion = 1,
+        generatedAtUtc = DateTime.UtcNow.ToString("O"),
+        bridgeProjectFileName = Path.GetFileName(AssemblyPath).Replace(".dll", ".csproj"),
+        artifactDirectory = Path.GetFullPath(OutputDirectory),
+        buildConfiguration = buildConfiguration,
+        targetFramework = targetFramework,
+        assemblyFileName = Path.GetFileName(AssemblyPath),
+        assemblySha256 = HashBytes(File.ReadAllBytes(AssemblyPath)),
+        artifacts = new Dictionary<string, string>
+        {
+            ["bridge.d.ts"] = HashBytes(Encoding.UTF8.GetBytes(all)),
+            ["bridge.client.ts"] = HashBytes(Encoding.UTF8.GetBytes(client)),
+            ["bridge.mock.ts"] = HashBytes(Encoding.UTF8.GetBytes(mock)),
+        }
+    };
+
+    Directory.CreateDirectory(OutputDirectory);
+    var outputPath = Path.Combine(OutputDirectory, OutputFileName);
+    File.WriteAllText(outputPath, JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true }));
+    Log.LogMessage(MessageImportance.High, "Bridge: Generated {0}", outputPath);
+}
+catch (Exception ex)
+{
+    Log.LogWarning("Bridge: Failed to generate manifest: {0}", ex.Message);
 }
       ]]></Code>
     </Task>

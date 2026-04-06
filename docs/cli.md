@@ -33,6 +33,7 @@ Start the Vite dev server and Avalonia desktop app together. Run from the soluti
 ```bash
 fulora dev
 fulora dev --web ./MyApp.Web.Vite.React --desktop ./MyApp.Desktop/MyApp.Desktop.csproj
+fulora dev --preflight-only
 ```
 
 | Option | Description |
@@ -40,8 +41,11 @@ fulora dev --web ./MyApp.Web.Vite.React --desktop ./MyApp.Desktop/MyApp.Desktop.
 | `--web` | Web project directory (auto-detected) |
 | `--desktop` | Desktop `.csproj` path (auto-detected) |
 | `--npm-script` | npm script name (default: `dev`) |
+| `--preflight-only` | Run bridge/dev preflight checks and exit without starting the dev processes |
 
 Press **Ctrl+C** to stop both processes.
+
+Use `--preflight-only` when you want to validate bridge artifact consistency and project wiring without launching Vite or the desktop host.
 
 ### `fulora package`
 
@@ -50,6 +54,7 @@ Package your app for distribution. The recommended first path is to start with a
 ```bash
 fulora package --project ./src/MyApp.Desktop/MyApp.Desktop.csproj --profile desktop-public
 fulora package --project ./src/MyApp.Desktop/MyApp.Desktop.csproj --profile mac-notarized
+fulora package --project ./src/MyApp.Desktop/MyApp.Desktop.csproj --profile desktop-public --preflight-only
 ```
 
 Available profiles today:
@@ -69,8 +74,17 @@ Available profiles today:
 | `--sign-params`, `-n` | Raw signing parameters passed to `vpk` |
 | `--notarize` | Enable macOS notarization |
 | `--channel`, `-c` | Release channel |
+| `--preflight-only` | Run packaging and bridge consistency preflight checks, then exit without publishing or packing |
 
 If `vpk` is not installed, `fulora package` falls back to copying the `dotnet publish` output into the output directory.
+
+The command now emits **preflight notes** before packaging when the selected profile implies extra setup. Examples:
+
+- `desktop-public` without `vpk` → warns that Fulora will copy publish output instead of producing installer/update packages
+- `mac-notarized` without `vpk` → warns that the fallback output will not be notarized
+- `mac-notarized` on a non-macOS host → warns that notarization usually needs a macOS host
+
+Use `--preflight-only` when you want those checks without triggering `dotnet publish` or `vpk`.
 
 ## Advanced Workflows
 
@@ -78,7 +92,12 @@ Use these commands after the main path is already working.
 
 ### `fulora generate types`
 
-Build the Bridge project and extract generated TypeScript declarations.
+Build the Bridge project and extract the generated bridge artifacts:
+
+- `bridge.d.ts`
+- `bridge.client.ts`
+- `bridge.mock.ts`
+- `bridge.manifest.json`
 
 ```bash
 fulora generate types
@@ -88,7 +107,9 @@ fulora gen types --project ./MyApp.Bridge/MyApp.Bridge.csproj --output ./MyApp.W
 | Option | Description |
 |---|---|
 | `--project`, `-p` | Bridge `.csproj` path (auto-detected) |
-| `--output`, `-o` | Output directory for generated `.d.ts` files (auto-detected) |
+| `--output`, `-o` | Output directory for generated bridge artifacts (auto-detected; prefers `src/bridge/generated` when present) |
+
+The generated `bridge.manifest.json` records the bridge project identity, artifact directory, build configuration, target framework, bridge assembly hash, and artifact hashes so `fulora dev` and `fulora package` can detect missing or stale generated outputs without relying only on timestamps.
 
 ### `fulora add service <name>`
 

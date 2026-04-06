@@ -1,1 +1,2 @@
-export { greeterService } from "./generated/bridge.client";
+export { createFuloraClient, greeterService, services } from "./client";
+export type { GreeterService } from "./generated/bridge";

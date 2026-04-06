@@ -1,4 +1,4 @@
-export { aiChatService, windowShellBridgeService } from './generated/bridge.client';
+export { aiChatService, createFuloraClient, services, windowShellBridgeService } from './client';
 
 export type {
   AiModelState,
@@ -6,4 +6,4 @@ export type {
   TransparencyLevel,
   WindowShellState,
   WindowShellSettings,
-} from './generated/bridge.d';
+} from './client';

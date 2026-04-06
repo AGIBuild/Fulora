@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useBridgeReady } from "./hooks/useBridge";
-import { greeterService } from "./bridge/services";
+import { services } from "./bridge/client";
 
 export function App() {
   const { ready, error } = useBridgeReady();
@@ -9,7 +9,7 @@ export function App() {
 
   async function handleGreet() {
     try {
-      const result = await greeterService.greet({ name: name || "World" });
+      const result = await services.greeter.greet({ name: name || "World" });
       setGreeting(result);
     } catch (err) {
       setGreeting(`Error: ${(err as Error).message}`);

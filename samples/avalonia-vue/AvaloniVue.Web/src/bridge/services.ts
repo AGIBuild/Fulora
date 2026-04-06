@@ -2,12 +2,14 @@
  * Re-export generated bridge contracts as the only app-layer consumption surface.
  */
 export {
+  createFuloraClient,
+  services,
   appShellService,
   chatService,
   fileService,
   settingsService,
   systemInfoService,
-} from './generated/bridge.client';
+} from './client';
 
 export type {
   AppInfo,
@@ -19,4 +21,4 @@ export type {
   PageDefinition,
   RuntimeMetrics,
   SystemInfo,
-} from './generated/bridge.d';
+} from './client';

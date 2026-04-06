@@ -153,7 +153,9 @@ WebView.Bridge.Expose<IGreeterService>(new GreeterServiceImpl());
 Call it from JavaScript — the bridge client is auto-generated:
 
 ```javascript
-const result = await GreeterService.greet("World");
+import { services } from "./bridge/client";
+
+const result = await services.greeter.greet({ name: "World" });
 // → "Hello, World!"
 ```
 

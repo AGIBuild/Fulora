@@ -1,2 +1,2 @@
-export { todoService } from './generated/bridge.client';
-export type { TodoItem } from './generated/bridge.d';
+export { createFuloraClient, services, todoService } from './client';
+export type { TodoItem } from './client';

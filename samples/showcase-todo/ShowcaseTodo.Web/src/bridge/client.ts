@@ -1,10 +1,62 @@
-import { createBridgeProfile } from '@agibuild/bridge/profile';
+import {
+  BridgeReadyTimeoutError,
+  createBridgeClient,
+  type BridgeReadyOptions,
+  withErrorNormalization,
+  withLogging,
+} from '@agibuild/bridge';
+import { todoService } from './generated/bridge.client';
 import { installBridgeMock } from './generated/bridge.mock';
 
-export const bridgeProfile = createBridgeProfile({
-  enableLogging: import.meta.env.DEV,
-  logging: { maxParamLength: 120 },
-  installMock: installBridgeMock,
-});
+export type { TodoItem } from './generated/bridge.d';
 
-export const bridge = bridgeProfile.bridge;
+const bridgeClient = createBridgeClient();
+
+if (import.meta.env.DEV) {
+  bridgeClient.use(withLogging({ maxParamLength: 120 }));
+}
+
+bridgeClient.use(withErrorNormalization());
+
+let mockInstalled = false;
+
+function installMockOnce() {
+  if (mockInstalled) {
+    return;
+  }
+
+  installBridgeMock();
+  mockInstalled = true;
+}
+
+export const bridge = bridgeClient;
+
+export const bridgeProfile = {
+  bridge,
+  get isMockMode() {
+    return mockInstalled;
+  },
+  async ready(options?: BridgeReadyOptions) {
+    try {
+      await bridge.ready(options);
+    } catch (err) {
+      if (!mockInstalled && err instanceof BridgeReadyTimeoutError) {
+        installMockOnce();
+        await bridge.ready(options);
+        return;
+      }
+
+      throw err;
+    }
+  },
+};
+
+export function createFuloraClient() {
+  return {
+    todo: todoService,
+  } as const;
+}
+
+export const services = createFuloraClient();
+
+export { todoService };

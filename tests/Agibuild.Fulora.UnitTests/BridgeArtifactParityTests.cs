@@ -96,6 +96,11 @@ public sealed class BridgeArtifactParityTests
         Assert.Contains("load(query: string, options?: { signal?: AbortSignal }): Promise<string>;", declarations);
         Assert.Contains("stream(): AsyncIterable<number>;", declarations);
 
+        Assert.Contains("export function createFuloraClient()", client);
+        Assert.Contains("export const services = createFuloraClient();", client);
+        Assert.Contains("export const docService = services.doc;", client);
+        Assert.Contains("const bridgeWindow = () => window as unknown as BridgeWindow;", client);
+        Assert.Contains("doc: {", client);
         Assert.Contains("return rpc().invoke('DocService.load', { query }, options && options.signal)", client);
         Assert.Contains("return rpc()._createAsyncIterable('DocService.stream', undefined) as AsyncIterable<number>;", client);
 

@@ -4,12 +4,14 @@
  */
 
 export {
+  createFuloraClient,
+  services,
   appShellService,
   systemInfoService,
   chatService,
   fileService,
   settingsService,
-} from './generated/bridge.client';
+} from './client';
 
 export type {
   AppInfo,
@@ -21,4 +23,4 @@ export type {
   PageDefinition,
   RuntimeMetrics,
   SystemInfo,
-} from './generated/bridge.d';
+} from './client';

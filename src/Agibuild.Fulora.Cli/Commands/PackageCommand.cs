@@ -46,6 +46,10 @@ internal static class PackageCommand
             Description = "Release channel",
             DefaultValueFactory = _ => "stable"
         };
+        var preflightOnlyOpt = new Option<bool>("--preflight-only")
+        {
+            Description = "Run packaging and bridge consistency preflight checks, then exit without publishing or packing"
+        };
 
         var command = new Command("package")
         {
@@ -60,6 +64,7 @@ internal static class PackageCommand
         command.Options.Add(signParamsOpt);
         command.Options.Add(notarizeOpt);
         command.Options.Add(channelOpt);
+        command.Options.Add(preflightOnlyOpt);
 
         command.SetAction(async (parseResult, ct) =>
         {
@@ -69,6 +74,7 @@ internal static class PackageCommand
             var output = parseResult.GetValue(outputOpt);
             var icon = parseResult.GetValue(iconOpt);
             var signParams = parseResult.GetValue(signParamsOpt);
+            var preflightOnly = parseResult.GetValue(preflightOnlyOpt);
             if (!TryResolveProfile(profileName, out var profile))
             {
                 return 1;
@@ -99,6 +105,23 @@ internal static class PackageCommand
             var packVersion = version ?? GetProjectVersion(projectPath) ?? "1.0.0";
             var outputDir = Path.GetFullPath(output ?? Path.Combine(projectDir, "Releases"));
             var publishDir = Path.Combine(Path.GetTempPath(), "FuloraPackage", Guid.NewGuid().ToString("N"));
+            var vpkPath = FindVpk();
+
+            foreach (var note in CollectPreflightNotes(profileName, runtime ?? "win-x64", notarize, signParams, vpkPath is not null, OperatingSystem.IsMacOS()))
+            {
+                Console.WriteLine($"Preflight: {note}");
+            }
+
+            foreach (var note in CollectBridgeArtifactPreflightNotes(projectPath))
+            {
+                Console.WriteLine(note);
+            }
+
+            if (preflightOnly)
+            {
+                Console.WriteLine("Preflight complete.");
+                return 0;
+            }
 
             try
             {
@@ -122,7 +145,6 @@ internal static class PackageCommand
                     mainExe = fallback is not null ? Path.GetFileName(fallback) : mainExe;
                 }
 
-                var vpkPath = FindVpk();
                 if (vpkPath is not null)
                 {
                     var vpkArgs = $"pack -u {packId} -v {packVersion} -p \"{publishDir}\" -e \"{mainExe}\" -o \"{outputDir}\" -c {channel}";
@@ -201,6 +223,67 @@ internal static class PackageCommand
                 return vpk;
         }
         return null;
+    }
+
+    internal static IReadOnlyList<string> CollectPreflightNotes(
+        string? profileName,
+        string runtime,
+        bool notarize,
+        string? signParams,
+        bool hasVpk,
+        bool isMacOS)
+    {
+        var notes = new List<string>();
+        var normalizedProfile = profileName?.Trim();
+
+        if (string.Equals(normalizedProfile, "desktop-public", StringComparison.OrdinalIgnoreCase) && !hasVpk)
+        {
+            notes.Add("desktop-public is running without `vpk`; Fulora will copy publish output instead of producing installer/update packages.");
+        }
+
+        if (string.Equals(normalizedProfile, "mac-notarized", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!isMacOS)
+            {
+                notes.Add("mac-notarized usually expects a macOS host; the current host may not be able to complete the notarization flow.");
+            }
+
+            if (!hasVpk)
+            {
+                notes.Add("mac-notarized requested without `vpk`; the fallback publish copy will not be notarized.");
+            }
+
+            if (!notarize)
+            {
+                notes.Add("mac-notarized profile is selected, but notarization is explicitly disabled.");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(signParams) && !hasVpk)
+        {
+            notes.Add("Signing parameters were provided, but `vpk` is unavailable, so signing arguments will not be applied.");
+        }
+
+        if (runtime.StartsWith("osx", StringComparison.OrdinalIgnoreCase) && !isMacOS)
+        {
+            notes.Add("Packaging for a macOS runtime on a non-macOS host may require additional signing/notarization steps on macOS.");
+        }
+
+        return notes;
+    }
+
+    internal static IReadOnlyList<string> CollectBridgeArtifactPreflightNotes(string projectPath)
+    {
+        var projectDirectory = Path.GetDirectoryName(Path.GetFullPath(projectPath));
+        var solutionRoot = projectDirectory is null ? null : Directory.GetParent(projectDirectory)?.FullName;
+        if (string.IsNullOrWhiteSpace(solutionRoot))
+            return [];
+
+        var bridgeProject = GenerateCommand.DetectBridgeProject(solutionRoot);
+        if (string.IsNullOrWhiteSpace(bridgeProject))
+            return [];
+
+        return BridgeArtifactConsistency.FormatWarnings(GenerateCommand.CollectArtifactConsistencyWarnings(bridgeProject));
     }
 
     internal static bool TryResolveProfile(string? profileName, out PackageProfile profile)

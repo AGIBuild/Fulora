@@ -3,11 +3,65 @@
  * Configures cross-cutting concerns (logging, error normalization) before any service calls.
  */
 
-import { createBridgeProfile } from '@agibuild/bridge/profile';
+import {
+  createBridgeClient,
+  type BridgeReadyOptions,
+  withErrorNormalization,
+  withLogging,
+} from '@agibuild/bridge';
+import {
+  appShellService,
+  chatService,
+  fileService,
+  settingsService,
+  systemInfoService,
+} from './generated/bridge.client';
 
-export const bridgeProfile = createBridgeProfile({
-  enableLogging: import.meta.env.DEV,
-  logging: { maxParamLength: 100 },
-});
+export type {
+  AppInfo,
+  AppSettings,
+  ChatMessage,
+  ChatRequest,
+  ChatResponse,
+  FileEntry,
+  PageDefinition,
+  RuntimeMetrics,
+  SystemInfo,
+} from './generated/bridge.d';
 
-export const bridge = bridgeProfile.bridge;
+const bridgeClient = createBridgeClient();
+
+if (import.meta.env.DEV) {
+  bridgeClient.use(withLogging({ maxParamLength: 100 }));
+}
+
+bridgeClient.use(withErrorNormalization());
+
+export const bridge = bridgeClient;
+
+export const bridgeProfile = {
+  bridge,
+  ready(options?: BridgeReadyOptions) {
+    return bridge.ready(options);
+  },
+};
+
+export function createFuloraClient() {
+  return {
+    appShell: appShellService,
+    chat: chatService,
+    file: fileService,
+    settings: settingsService,
+    systemInfo: systemInfoService,
+  } as const;
+}
+
+export const services = createFuloraClient();
+
+export {
+  appShellService,
+  chatService,
+  fileService,
+  settingsService,
+  systemInfoService,
+};

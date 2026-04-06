@@ -45,7 +45,9 @@ webView.Bridge.Expose<ICalculatorService>(new CalculatorService());
 ### 2) Call from JavaScript
 
 ```javascript
-const sum = await window.agWebView.rpc.invoke("Calculator.add", { a: 3, b: 4 });
+import { services } from "./bridge/client";
+
+const sum = await services.calculator.add({ a: 3, b: 4 });
 ```
 
 ### 3) Call JavaScript service from C# (`[JsImport]`)

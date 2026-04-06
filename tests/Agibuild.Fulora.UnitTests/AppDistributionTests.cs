@@ -659,4 +659,50 @@ public class AppDistributionTests
         var exitCode = parseResult.Invoke();
         Assert.NotEqual(0, exitCode);
     }
+
+    [Fact]
+    public void PackageCommand_collects_preflight_notes_for_desktop_public_without_vpk()
+    {
+        var notes = PackageCommand.CollectPreflightNotes(
+            profileName: "desktop-public",
+            runtime: "win-x64",
+            notarize: false,
+            signParams: null,
+            hasVpk: false,
+            isMacOS: false);
+
+        Assert.Contains(notes, note => note.Contains("desktop-public", StringComparison.Ordinal));
+        Assert.Contains(notes, note => note.Contains("vpk", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void PackageCommand_collects_preflight_notes_for_mac_notarized_without_vpk()
+    {
+        var notes = PackageCommand.CollectPreflightNotes(
+            profileName: "mac-notarized",
+            runtime: "osx-arm64",
+            notarize: true,
+            signParams: null,
+            hasVpk: false,
+            isMacOS: true);
+
+        Assert.Contains(notes, note => note.Contains("notarized", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(notes, note => note.Contains("vpk", StringComparison.Ordinal));
+        Assert.Contains(notes, note => note.Contains("not be notarized", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void PackageCommand_collects_preflight_notes_for_mac_notarized_on_non_macos_host()
+    {
+        var notes = PackageCommand.CollectPreflightNotes(
+            profileName: "mac-notarized",
+            runtime: "osx-arm64",
+            notarize: true,
+            signParams: null,
+            hasVpk: true,
+            isMacOS: false);
+
+        Assert.Contains(notes, note => note.Contains("macOS", StringComparison.Ordinal));
+        Assert.Contains(notes, note => note.Contains("current host", StringComparison.OrdinalIgnoreCase));
+    }
 }

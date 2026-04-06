@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useBridgeReady } from "./composables/useBridge";
-import { greeterService } from "./bridge/services";
+import { services } from "./bridge/client";
 
 const { ready, error } = useBridgeReady();
 const name = ref("");
@@ -35,7 +35,7 @@ const greeting = ref<string | null>(null);
 
 async function handleGreet() {
   try {
-    greeting.value = await greeterService.greet({ name: name.value || "World" });
+    greeting.value = await services.greeter.greet({ name: name.value || "World" });
   } catch (err) {
     greeting.value = `Error: ${(err as Error).message}`;
   }

@@ -25,13 +25,43 @@ internal static class TypeScriptClientEmitter
             return sb.ToString();
 
         EmitTypeImports(sb, ir);
-        sb.AppendLine("const rpc = () => window.agWebView.rpc;");
+        sb.AppendLine("type BridgeRpc = {");
+        sb.AppendLine("  invoke(method: string, params?: Record<string, unknown>, signal?: AbortSignal): Promise<unknown>;");
+        sb.AppendLine("  _createAsyncIterable(method: string, params?: Record<string, unknown>): AsyncIterable<unknown>;");
+        sb.AppendLine("};");
+        sb.AppendLine();
+        sb.AppendLine("type BridgeWindow = Window & {");
+        sb.AppendLine("  agWebView: {");
+        sb.AppendLine("    rpc: BridgeRpc;");
+        sb.AppendLine("    bridge: Record<string, Record<string, unknown>>;");
+        sb.AppendLine("  };");
+        sb.AppendLine("};");
+        sb.AppendLine();
+        sb.AppendLine("const bridgeWindow = () => window as unknown as BridgeWindow;");
+        sb.AppendLine("const rpc = () => bridgeWindow().agWebView.rpc;");
+        sb.AppendLine("const bridge = () => bridgeWindow().agWebView.bridge;");
+        sb.AppendLine();
+        sb.AppendLine("export function createFuloraClient() {");
+        sb.AppendLine("  return {");
+
+        for (int i = 0; i < exports.Count; i++)
+        {
+            EmitServiceProxy(sb, exports[i], i == exports.Count - 1);
+        }
+
+        sb.AppendLine("  };");
+        sb.AppendLine("}");
+        sb.AppendLine();
+        sb.AppendLine("export type FuloraClient = ReturnType<typeof createFuloraClient>;");
+        sb.AppendLine();
+        sb.AppendLine("export const services = createFuloraClient();");
         sb.AppendLine();
 
         foreach (var service in exports)
         {
-            EmitServiceProxy(sb, service);
-            sb.AppendLine();
+            var legacyName = GetLegacyExportName(service);
+            var collectionKey = GetCollectionKeyName(service);
+            sb.AppendLine($"export const {legacyName} = services.{collectionKey};");
         }
 
         return sb.ToString();
@@ -96,28 +126,29 @@ internal static class TypeScriptClientEmitter
             CollectReferencedDtoNames(argument, declaredDtoNames, referencedDtoNames);
     }
 
-    private static void EmitServiceProxy(StringBuilder sb, BridgeInterfaceModel service)
+    private static void EmitServiceProxy(StringBuilder sb, BridgeInterfaceModel service, bool isLast)
     {
-        var varName = ModelExtractor.ToCamelCase(service.ServiceName);
-        sb.AppendLine($"export const {varName} = {{");
+        var collectionKey = GetCollectionKeyName(service);
+        var legacyName = GetLegacyExportName(service);
+        sb.AppendLine($"    {collectionKey}: {{");
 
         for (int i = 0; i < service.Methods.Length; i++)
         {
             var method = service.Methods[i];
-            EmitMethodProxy(sb, method);
+            EmitMethodProxy(sb, method, "      ");
             if (i < service.Methods.Length - 1 || service.Events.Length > 0)
                 sb.AppendLine();
         }
 
         foreach (var evt in service.Events)
         {
-            sb.AppendLine($"  get {evt.CamelCaseName}() {{ return window.agWebView.bridge.{varName}.{evt.CamelCaseName}; }},");
+            sb.AppendLine($"      get {evt.CamelCaseName}() {{ return bridge().{legacyName}.{evt.CamelCaseName}; }},");
         }
 
-        sb.AppendLine("};");
+        sb.AppendLine(isLast ? "    }" : "    },");
     }
 
-    private static void EmitMethodProxy(StringBuilder sb, BridgeMethodModel method)
+    private static void EmitMethodProxy(StringBuilder sb, BridgeMethodModel method, string indent)
     {
         var regularParams = method.Parameters.Where(p => !p.IsCancellationToken).ToList();
         var hasCancellation = method.HasCancellationToken;
@@ -149,25 +180,26 @@ internal static class TypeScriptClientEmitter
                 : "Promise<void>";
         }
 
-        sb.AppendLine($"  {method.CamelCaseName}({tsParams}): {tsReturn} {{");
+        sb.AppendLine($"{indent}{method.CamelCaseName}({tsParams}): {tsReturn} {{");
 
         if (method.IsAsyncEnumerable)
         {
-            EmitAsyncEnumerableBody(sb, method, regularParams);
+            EmitAsyncEnumerableBody(sb, method, regularParams, indent);
         }
         else
         {
-            EmitInvokeBody(sb, method, regularParams, hasCancellation);
+            EmitInvokeBody(sb, method, regularParams, hasCancellation, indent);
         }
 
-        sb.AppendLine("  },");
+        sb.AppendLine($"{indent}}},");
     }
 
     private static void EmitInvokeBody(
         StringBuilder sb,
         BridgeMethodModel method,
         List<BridgeParameterModel> regularParams,
-        bool hasCancellation)
+        bool hasCancellation,
+        string indent)
     {
         var paramsArg = regularParams.Count > 0
             ? "{ " + string.Join(", ", regularParams.Select(p => p.CamelCaseName)) + " }"
@@ -175,18 +207,19 @@ internal static class TypeScriptClientEmitter
 
         if (hasCancellation)
         {
-            sb.AppendLine($"    return rpc().invoke('{method.RpcMethodName}', {paramsArg}, options && options.signal) as {GetReturnCast(method)};");
+            sb.AppendLine($"{indent}  return rpc().invoke('{method.RpcMethodName}', {paramsArg}, options && options.signal) as {GetReturnCast(method)};");
         }
         else
         {
-            sb.AppendLine($"    return rpc().invoke('{method.RpcMethodName}', {paramsArg}) as {GetReturnCast(method)};");
+            sb.AppendLine($"{indent}  return rpc().invoke('{method.RpcMethodName}', {paramsArg}) as {GetReturnCast(method)};");
         }
     }
 
     private static void EmitAsyncEnumerableBody(
         StringBuilder sb,
         BridgeMethodModel method,
-        List<BridgeParameterModel> regularParams)
+        List<BridgeParameterModel> regularParams,
+        string indent)
     {
         var innerTs = method.AsyncEnumerableInnerTypeRef is null
             ? "unknown"
@@ -196,7 +229,7 @@ internal static class TypeScriptClientEmitter
             ? "{ " + string.Join(", ", regularParams.Select(p => p.CamelCaseName)) + " }"
             : "undefined";
 
-        sb.AppendLine($"    return rpc()._createAsyncIterable('{method.RpcMethodName}', {paramsArg}) as AsyncIterable<{innerTs}>;");
+        sb.AppendLine($"{indent}  return rpc()._createAsyncIterable('{method.RpcMethodName}', {paramsArg}) as AsyncIterable<{innerTs}>;");
     }
 
     private static string GetReturnCast(BridgeMethodModel method)
@@ -210,4 +243,16 @@ internal static class TypeScriptClientEmitter
         => method.InnerReturnTypeRef is null
             ? "void"
             : TypeScriptEmitter.TypeRefToTypeScript(method.InnerReturnTypeRef);
+
+    private static string GetLegacyExportName(BridgeInterfaceModel service)
+        => ModelExtractor.ToCamelCase(service.ServiceName);
+
+    private static string GetCollectionKeyName(BridgeInterfaceModel service)
+    {
+        var name = service.ServiceName.EndsWith("Service", System.StringComparison.Ordinal)
+            ? service.ServiceName.Substring(0, service.ServiceName.Length - "Service".Length)
+            : service.ServiceName;
+
+        return ModelExtractor.ToCamelCase(name);
+    }
 }

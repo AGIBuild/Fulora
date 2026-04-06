@@ -5,6 +5,8 @@ namespace Agibuild.Fulora.Cli.Commands;
 
 internal static class DevCommand
 {
+    internal delegate Task<int> ProcessRunner(string fileName, string arguments, string? workingDirectory, CancellationToken ct);
+
     public static Command Create()
     {
         var webDirOpt = new Option<string?>("--web")
@@ -20,17 +22,23 @@ internal static class DevCommand
             Description = "npm script to start the dev server",
             DefaultValueFactory = _ => "dev"
         };
+        var preflightOnlyOpt = new Option<bool>("--preflight-only")
+        {
+            Description = "Run bridge/dev preflight checks and exit without starting the dev processes"
+        };
 
         var command = new Command("dev") { Description = "Start Vite dev server and Avalonia desktop app together" };
         command.Options.Add(webDirOpt);
         command.Options.Add(desktopDirOpt);
         command.Options.Add(npmScriptOpt);
+        command.Options.Add(preflightOnlyOpt);
 
         command.SetAction(async (parseResult, ct) =>
         {
             var webDir = parseResult.GetValue(webDirOpt);
             var desktopDir = parseResult.GetValue(desktopDirOpt);
             var npmScript = parseResult.GetValue(npmScriptOpt) ?? "dev";
+            var preflightOnly = parseResult.GetValue(preflightOnlyOpt);
 
             var web = webDir ?? DetectWebProject();
             var desktop = desktopDir ?? DetectDesktopProject();
@@ -45,6 +53,21 @@ internal static class DevCommand
             {
                 Console.Error.WriteLine("Could not find Desktop .csproj. Use --desktop to specify.");
                 return 1;
+            }
+
+            var preflightExitCode = await PrepareBridgeArtifactsAsync(
+                explicitBridgeProject: null,
+                output: Console.Out,
+                error: Console.Error,
+                runProcessAsync: NewCommand.RunProcessAsync,
+                ct);
+            if (preflightExitCode != 0)
+                return preflightExitCode;
+
+            if (preflightOnly)
+            {
+                Console.WriteLine("Preflight complete.");
+                return 0;
             }
 
             Console.WriteLine($"Starting dev server in {Path.GetFileName(web)}...");
@@ -78,6 +101,49 @@ internal static class DevCommand
         });
 
         return command;
+    }
+
+    internal static async Task<int> PrepareBridgeArtifactsAsync(
+        string? explicitBridgeProject,
+        TextWriter output,
+        TextWriter error,
+        ProcessRunner runProcessAsync,
+        CancellationToken ct)
+    {
+        ArgumentNullException.ThrowIfNull(output);
+        ArgumentNullException.ThrowIfNull(error);
+        ArgumentNullException.ThrowIfNull(runProcessAsync);
+
+        var bridgeProject = explicitBridgeProject ?? GenerateCommand.DetectBridgeProject();
+        if (bridgeProject is null)
+        {
+            output.WriteLine("No Bridge .csproj detected; skipping bridge artifact preflight.");
+            return 0;
+        }
+
+        output.WriteLine($"Refreshing bridge artifacts from {Path.GetFileName(bridgeProject)}...");
+        var bridgeProjectDirectory = Path.GetDirectoryName(bridgeProject);
+        var exitCode = await runProcessAsync("dotnet", $"build \"{bridgeProject}\" -v q -m:1 -nodeReuse:false", bridgeProjectDirectory, ct);
+        if (exitCode == 0)
+        {
+            output.WriteLine("Bridge artifacts ready.");
+            EmitArtifactConsistencyWarnings(bridgeProject, output);
+            return 0;
+        }
+
+        error.WriteLine("Bridge artifact generation failed during dev preflight.");
+        error.WriteLine($"Fix the bridge build and rerun `fulora dev`, or inspect generation manually with `fulora generate types --project \"{bridgeProject}\"`.");
+        return exitCode;
+    }
+
+    private static void EmitArtifactConsistencyWarnings(string bridgeProject, TextWriter output)
+    {
+        var warnings = GenerateCommand.CollectArtifactConsistencyWarnings(bridgeProject);
+        if (warnings.Count == 0)
+            return;
+
+        foreach (var line in BridgeArtifactConsistency.FormatWarnings(warnings))
+            output.WriteLine(line);
     }
 
     private static async Task RunProcessUntilCancelledAsync(

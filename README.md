@@ -136,9 +136,9 @@ webView.Bridge.Expose<IGreeterService>(new GreeterService());
 Call from JavaScript:
 
 ```javascript
-const msg = await window.agWebView.rpc.invoke("GreeterService.greet", {
-    name: "World"
-});
+import { services } from "./bridge/client";
+
+const msg = await services.greeter.greet({ name: "World" });
 ```
 
 Call JavaScript from C#:

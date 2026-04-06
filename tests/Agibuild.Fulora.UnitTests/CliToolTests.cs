@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using Agibuild.Fulora.Cli.Commands;
 using Xunit;
 
@@ -10,6 +11,15 @@ public class CliToolTests
     {
         var repoRoot = FindRepoRoot();
         return Path.Combine(repoRoot, "src", "Agibuild.Fulora.Cli", "Agibuild.Fulora.Cli.csproj");
+    }
+
+    private static string GetCliBinaryPath()
+    {
+        var repoRoot = FindRepoRoot();
+        var path = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Cli", "bin", "Debug", "net10.0", "Agibuild.Fulora.Cli.dll");
+        if (!File.Exists(path))
+            throw new FileNotFoundException($"CLI binary not found at {path}");
+        return path;
     }
 
     private static string FindRepoRoot()
@@ -27,7 +37,7 @@ public class CliToolTests
 
     private static async Task<(string Stdout, string Stderr, int ExitCode)> RunCliAsync(string args, string? workingDirectory = null)
     {
-        var psi = new ProcessStartInfo("dotnet", $"run --project \"{GetCliProjectPath()}\" -- {args}")
+        var psi = new ProcessStartInfo("dotnet", $"\"{GetCliBinaryPath()}\" {args}")
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -36,10 +46,11 @@ public class CliToolTests
         };
 
         using var process = Process.Start(psi)!;
-        var stdout = await process.StandardOutput.ReadToEndAsync();
-        var stderr = await process.StandardError.ReadToEndAsync();
+        var stdoutTask = process.StandardOutput.ReadToEndAsync();
+        var stderrTask = process.StandardError.ReadToEndAsync();
+        await Task.WhenAll(stdoutTask, stderrTask);
         await process.WaitForExitAsync();
-        return (stdout, stderr, process.ExitCode);
+        return (stdoutTask.Result, stderrTask.Result, process.ExitCode);
     }
 
     private static (string BridgeProjectPath, string DesktopProjectPath, string WebSrcPath) CreateScaffoldWorkspace(string root, string appName)
@@ -60,6 +71,83 @@ public class CliToolTests
             Path.Combine(bridgeDir, $"{appName}.Bridge.csproj"),
             Path.Combine(desktopDir, $"{appName}.Desktop.csproj"),
             webSrcDir);
+    }
+
+    private static (string BridgeProjectPath, string OutputDirectory) CreateBridgeGenerationWorkspace(string root, string appName)
+    {
+        var repoRoot = FindRepoRoot();
+        var bridgeDir = Path.Combine(root, $"{appName}.Bridge");
+        var outputDir = Path.Combine(root, $"{appName}.Web", "src", "bridge", "generated");
+        Directory.CreateDirectory(bridgeDir);
+        Directory.CreateDirectory(outputDir);
+
+        var coreProject = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Core", "Agibuild.Fulora.Core.csproj");
+        var generatorProject = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Bridge.Generator", "Agibuild.Fulora.Bridge.Generator.csproj");
+
+        File.WriteAllText(
+            Path.Combine(bridgeDir, $"{appName}.Bridge.csproj"),
+            $"""
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+              <ItemGroup>
+                <ProjectReference Include="{coreProject}" />
+                <ProjectReference Include="{generatorProject}" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+              </ItemGroup>
+            </Project>
+            """);
+
+        File.WriteAllText(
+            Path.Combine(bridgeDir, "IHelloService.cs"),
+            """
+            using Agibuild.Fulora;
+            using System.Threading.Tasks;
+
+            namespace SampleApp.Bridge;
+
+            [JsExport]
+            public interface IHelloService
+            {
+                Task<string> SayHello(string name);
+            }
+            """);
+
+        return (Path.Combine(bridgeDir, $"{appName}.Bridge.csproj"), outputDir);
+    }
+
+    private static string InvokeDetectWebArtifactsDirectory(string bridgeProjectPath)
+    {
+        var method = typeof(GenerateCommand).GetMethod("DetectWebTypesDirectory", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(method);
+        return Assert.IsType<string>(method!.Invoke(null, [bridgeProjectPath]));
+    }
+
+    private static void MakeBridgeProjectBuildable(string bridgeProjectPath)
+    {
+        File.WriteAllText(
+            bridgeProjectPath,
+            """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+            </Project>
+            """);
+    }
+
+    private static void WriteBridgeManifest(string generatedDir, string assemblyPath)
+    {
+        var artifacts = GenerateCommand.ExpectedArtifactFileNames.ToDictionary(
+            fileName => fileName,
+            fileName => File.ReadAllText(Path.Combine(generatedDir, fileName)),
+            StringComparer.Ordinal);
+        var manifest = GenerateCommand.CreateArtifactManifest("SampleApp.Bridge.csproj", generatedDir, assemblyPath, artifacts);
+        GenerateCommand.WriteArtifactManifest(generatedDir, manifest);
     }
 
     [Fact]
@@ -207,11 +295,480 @@ public class CliToolTests
     }
 
     [Fact]
+    public async Task Generate_types_command_writes_artifacts_and_manifest_end_to_end()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateBridgeGenerationWorkspace(tempDir, "SampleApp");
+
+            var (stdout, stderr, exitCode) = await RunCliAsync(
+                $"generate types --project \"{workspace.BridgeProjectPath}\" --output \"{workspace.OutputDirectory}\"",
+                tempDir);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal(string.Empty, stderr);
+            Assert.Contains("bridge.d.ts", stdout, StringComparison.Ordinal);
+            Assert.Contains("bridge.client.ts", stdout, StringComparison.Ordinal);
+            Assert.Contains("bridge.mock.ts", stdout, StringComparison.Ordinal);
+            Assert.Contains("bridge.manifest.json", stdout, StringComparison.Ordinal);
+
+            Assert.True(File.Exists(Path.Combine(workspace.OutputDirectory, "bridge.d.ts")));
+            Assert.True(File.Exists(Path.Combine(workspace.OutputDirectory, "bridge.client.ts")));
+            Assert.True(File.Exists(Path.Combine(workspace.OutputDirectory, "bridge.mock.ts")));
+            Assert.True(File.Exists(Path.Combine(workspace.OutputDirectory, "bridge.manifest.json")));
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Generate_types_command_can_read_all_emitted_bridge_artifacts_from_assembly()
+    {
+        var artifacts = GenerateCommand.ReadGeneratedArtifactsFromAssembly(Assembly.GetExecutingAssembly().Location);
+
+        Assert.Equal(3, artifacts.Count);
+        Assert.Contains("bridge.d.ts", artifacts.Keys);
+        Assert.Contains("bridge.client.ts", artifacts.Keys);
+        Assert.Contains("bridge.mock.ts", artifacts.Keys);
+        Assert.Contains("Auto-generated", artifacts["bridge.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("export function createFuloraClient()", artifacts["bridge.client.ts"], StringComparison.Ordinal);
+        Assert.Contains("installBridgeMock", artifacts["bridge.mock.ts"], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Generate_types_command_can_round_trip_bridge_artifact_manifest()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var artifacts = GenerateCommand.ReadGeneratedArtifactsFromAssembly(Assembly.GetExecutingAssembly().Location);
+            var manifest = GenerateCommand.CreateArtifactManifest(
+                "Agibuild.Fulora.UnitTests.csproj",
+                tempDir,
+                Assembly.GetExecutingAssembly().Location,
+                artifacts);
+
+            GenerateCommand.WriteArtifactManifest(tempDir, manifest);
+            var loaded = GenerateCommand.ReadArtifactManifest(tempDir);
+
+            Assert.NotNull(loaded);
+            Assert.Equal(1, loaded!.SchemaVersion);
+            Assert.Equal("Agibuild.Fulora.UnitTests.csproj", loaded.BridgeProjectFileName);
+            Assert.Equal(Path.GetFullPath(tempDir), loaded.ArtifactDirectory);
+            Assert.Equal("Debug", loaded.BuildConfiguration);
+            Assert.Equal("net10.0", loaded.TargetFramework);
+            Assert.Equal(Path.GetFileName(Assembly.GetExecutingAssembly().Location), loaded.AssemblyFileName);
+            Assert.Equal(3, loaded.Artifacts.Count);
+            Assert.Contains("bridge.client.ts", loaded.Artifacts.Keys);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Bridge_artifact_consistency_formats_warnings_with_stable_prefix()
+    {
+        var formatted = BridgeArtifactConsistency.FormatWarnings(
+            new[]
+            {
+                "missing bridge artifact manifest in /tmp/demo: bridge.manifest.json. Run `fulora generate types --project \"Demo.Bridge.csproj\"`."
+            });
+
+        Assert.Single(formatted);
+        Assert.StartsWith("Bridge consistency: ", formatted[0], StringComparison.Ordinal);
+        Assert.Contains("bridge.manifest.json", formatted[0], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Generate_types_auto_detect_prefers_src_bridge_generated_directory()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+            var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+            Directory.CreateDirectory(generatedDir);
+
+            var detected = InvokeDetectWebArtifactsDirectory(workspace.BridgeProjectPath);
+
+            Assert.Equal(Path.GetFullPath(generatedDir), Path.GetFullPath(detected));
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task Dev_command_shows_help()
     {
         var (stdout, _, exitCode) = await RunCliAsync("dev --help");
         Assert.Equal(0, exitCode);
         Assert.Contains("Vite", stdout);
+    }
+
+    [Fact]
+    public async Task Dev_command_preflight_only_runs_checks_and_exits_without_starting_servers()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+            MakeBridgeProjectBuildable(workspace.BridgeProjectPath);
+            var webDir = Path.GetDirectoryName(workspace.WebSrcPath)!;
+
+            var (stdout, stderr, exitCode) = await RunCliAsync(
+                $"dev --preflight-only --web \"{webDir}\" --desktop \"{workspace.DesktopProjectPath}\"",
+                tempDir);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal(string.Empty, stderr);
+            Assert.Contains("Refreshing bridge artifacts", stdout, StringComparison.Ordinal);
+            Assert.Contains("Preflight complete.", stdout, StringComparison.Ordinal);
+            Assert.DoesNotContain("Starting dev server", stdout, StringComparison.Ordinal);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Dev_command_bridge_preflight_skips_when_no_bridge_project_is_present()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        var originalCwd = Directory.GetCurrentDirectory();
+        using var stdout = new StringWriter();
+        using var stderr = new StringWriter();
+
+        try
+        {
+            Directory.SetCurrentDirectory(tempDir);
+
+            var exitCode = await DevCommand.PrepareBridgeArtifactsAsync(
+                explicitBridgeProject: null,
+                output: stdout,
+                error: stderr,
+                runProcessAsync: (_, _, _, _) => throw new InvalidOperationException("Should not run without a bridge project."),
+                CancellationToken.None);
+
+            Assert.Equal(0, exitCode);
+            Assert.Contains("skipping bridge artifact preflight", stdout.ToString(), StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(string.Empty, stderr.ToString());
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(originalCwd);
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Dev_command_bridge_preflight_builds_detected_bridge_project_before_launch()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+        var originalCwd = Directory.GetCurrentDirectory();
+        using var stdout = new StringWriter();
+        using var stderr = new StringWriter();
+
+        string? capturedFileName = null;
+        string? capturedArguments = null;
+        string? capturedWorkingDirectory = null;
+
+        try
+        {
+            Directory.SetCurrentDirectory(tempDir);
+
+            var exitCode = await DevCommand.PrepareBridgeArtifactsAsync(
+                explicitBridgeProject: null,
+                output: stdout,
+                error: stderr,
+                runProcessAsync: (fileName, arguments, workingDirectory, _) =>
+                {
+                    capturedFileName = fileName;
+                    capturedArguments = arguments;
+                    capturedWorkingDirectory = workingDirectory;
+                    return Task.FromResult(0);
+                },
+                CancellationToken.None);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal("dotnet", capturedFileName);
+            Assert.Contains("build \"", capturedArguments, StringComparison.Ordinal);
+            Assert.Contains($"{Path.GetFileName(workspace.BridgeProjectPath)}\" -v q", capturedArguments, StringComparison.Ordinal);
+            Assert.Contains(
+                Path.GetFileName(Path.GetDirectoryName(workspace.BridgeProjectPath)!),
+                capturedWorkingDirectory,
+                StringComparison.Ordinal);
+            Assert.Contains("Refreshing bridge artifacts", stdout.ToString(), StringComparison.Ordinal);
+            Assert.Contains("Bridge artifacts ready", stdout.ToString(), StringComparison.Ordinal);
+            Assert.Equal(string.Empty, stderr.ToString());
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(originalCwd);
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Dev_command_bridge_preflight_reports_actionable_error_when_bridge_build_fails()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+        var originalCwd = Directory.GetCurrentDirectory();
+        using var stdout = new StringWriter();
+        using var stderr = new StringWriter();
+
+        try
+        {
+            Directory.SetCurrentDirectory(tempDir);
+
+            var exitCode = await DevCommand.PrepareBridgeArtifactsAsync(
+                explicitBridgeProject: null,
+                output: stdout,
+                error: stderr,
+                runProcessAsync: (_, _, _, _) => Task.FromResult(23),
+                CancellationToken.None);
+
+            Assert.Equal(23, exitCode);
+            Assert.Contains("Bridge artifact generation failed", stderr.ToString(), StringComparison.Ordinal);
+            Assert.Contains("fulora generate types --project", stderr.ToString(), StringComparison.Ordinal);
+            Assert.Contains(workspace.BridgeProjectPath, stderr.ToString(), StringComparison.Ordinal);
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(originalCwd);
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Dev_command_bridge_preflight_warns_when_expected_generated_artifacts_are_missing()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+        var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+        Directory.CreateDirectory(generatedDir);
+
+        var originalCwd = Directory.GetCurrentDirectory();
+        using var stdout = new StringWriter();
+        using var stderr = new StringWriter();
+
+        try
+        {
+            Directory.SetCurrentDirectory(tempDir);
+
+            var exitCode = await DevCommand.PrepareBridgeArtifactsAsync(
+                explicitBridgeProject: null,
+                output: stdout,
+                error: stderr,
+                runProcessAsync: (_, _, _, _) => Task.FromResult(0),
+                CancellationToken.None);
+
+            Assert.Equal(0, exitCode);
+            Assert.Contains("missing generated bridge artifacts", stdout.ToString(), StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("fulora generate types --project", stdout.ToString(), StringComparison.Ordinal);
+            Assert.Equal(string.Empty, stderr.ToString());
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(originalCwd);
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Dev_command_bridge_preflight_warns_when_generated_artifacts_are_stale_relative_to_bridge_build()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+        var bridgeDir = Path.GetDirectoryName(workspace.BridgeProjectPath)!;
+        var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+        Directory.CreateDirectory(generatedDir);
+
+        foreach (var fileName in GenerateCommand.ExpectedArtifactFileNames)
+        {
+            var artifactPath = Path.Combine(generatedDir, fileName);
+            File.WriteAllText(artifactPath, $"// {fileName}");
+        }
+
+        var assemblyDir = Path.Combine(bridgeDir, "bin", "Debug", "net10.0");
+        Directory.CreateDirectory(assemblyDir);
+        var assemblyPath = Path.Combine(assemblyDir, "SampleApp.Bridge.dll");
+        File.WriteAllText(assemblyPath, "stub");
+        WriteBridgeManifest(generatedDir, assemblyPath);
+
+        File.WriteAllText(Path.Combine(generatedDir, GenerateCommand.ExpectedArtifactFileNames[0]), "// mutated after manifest");
+
+        var originalCwd = Directory.GetCurrentDirectory();
+        using var stdout = new StringWriter();
+        using var stderr = new StringWriter();
+
+        try
+        {
+            Directory.SetCurrentDirectory(tempDir);
+
+            var exitCode = await DevCommand.PrepareBridgeArtifactsAsync(
+                explicitBridgeProject: null,
+                output: stdout,
+                error: stderr,
+                runProcessAsync: (_, _, _, _) => Task.FromResult(0),
+                CancellationToken.None);
+
+            Assert.Equal(0, exitCode);
+            Assert.Contains("stale generated bridge artifacts", stdout.ToString(), StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("fulora generate types --project", stdout.ToString(), StringComparison.Ordinal);
+            Assert.Equal(string.Empty, stderr.ToString());
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(originalCwd);
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Generate_types_consistency_reports_manifest_bridge_project_mismatch()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+            var bridgeDir = Path.GetDirectoryName(workspace.BridgeProjectPath)!;
+            var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+            Directory.CreateDirectory(generatedDir);
+
+            foreach (var fileName in GenerateCommand.ExpectedArtifactFileNames)
+                File.WriteAllText(Path.Combine(generatedDir, fileName), $"// {fileName}");
+
+            var assemblyDir = Path.Combine(bridgeDir, "bin", "Debug", "net10.0");
+            Directory.CreateDirectory(assemblyDir);
+            var assemblyPath = Path.Combine(assemblyDir, "SampleApp.Bridge.dll");
+            File.WriteAllText(assemblyPath, "stub");
+
+            var manifest = GenerateCommand.CreateArtifactManifest("Wrong.Bridge.csproj", generatedDir, assemblyPath,
+                GenerateCommand.ExpectedArtifactFileNames.ToDictionary(
+                    fileName => fileName,
+                    fileName => File.ReadAllText(Path.Combine(generatedDir, fileName)),
+                    StringComparer.Ordinal));
+            GenerateCommand.WriteArtifactManifest(generatedDir, manifest);
+
+            var warnings = GenerateCommand.CollectArtifactConsistencyWarnings(workspace.BridgeProjectPath);
+
+            Assert.Contains(warnings, warning => warning.Contains("bridge project", StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Generate_types_consistency_reports_manifest_artifact_directory_mismatch()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+            var bridgeDir = Path.GetDirectoryName(workspace.BridgeProjectPath)!;
+            var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+            Directory.CreateDirectory(generatedDir);
+
+            foreach (var fileName in GenerateCommand.ExpectedArtifactFileNames)
+                File.WriteAllText(Path.Combine(generatedDir, fileName), $"// {fileName}");
+
+            var assemblyDir = Path.Combine(bridgeDir, "bin", "Debug", "net10.0");
+            Directory.CreateDirectory(assemblyDir);
+            var assemblyPath = Path.Combine(assemblyDir, "SampleApp.Bridge.dll");
+            File.WriteAllText(assemblyPath, "stub");
+
+            var manifest = GenerateCommand.CreateArtifactManifest("SampleApp.Bridge.csproj", Path.Combine(tempDir, "other"), assemblyPath,
+                GenerateCommand.ExpectedArtifactFileNames.ToDictionary(
+                    fileName => fileName,
+                    fileName => File.ReadAllText(Path.Combine(generatedDir, fileName)),
+                    StringComparer.Ordinal));
+            GenerateCommand.WriteArtifactManifest(generatedDir, manifest);
+
+            var warnings = GenerateCommand.CollectArtifactConsistencyWarnings(workspace.BridgeProjectPath);
+
+            Assert.Contains(warnings, warning => warning.Contains("artifact directory", StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Generate_types_consistency_reports_manifest_build_identity_mismatch()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+            var bridgeDir = Path.GetDirectoryName(workspace.BridgeProjectPath)!;
+            var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+            Directory.CreateDirectory(generatedDir);
+
+            foreach (var fileName in GenerateCommand.ExpectedArtifactFileNames)
+                File.WriteAllText(Path.Combine(generatedDir, fileName), $"// {fileName}");
+
+            var assemblyDir = Path.Combine(bridgeDir, "bin", "Debug", "net10.0");
+            Directory.CreateDirectory(assemblyDir);
+            var assemblyPath = Path.Combine(assemblyDir, "SampleApp.Bridge.dll");
+            File.WriteAllText(assemblyPath, "stub");
+
+            var manifest = GenerateCommand.CreateArtifactManifest("SampleApp.Bridge.csproj", generatedDir, assemblyPath,
+                GenerateCommand.ExpectedArtifactFileNames.ToDictionary(
+                    fileName => fileName,
+                    fileName => File.ReadAllText(Path.Combine(generatedDir, fileName)),
+                    StringComparer.Ordinal)) with
+            {
+                BuildConfiguration = "Release",
+                TargetFramework = "net9.0"
+            };
+            GenerateCommand.WriteArtifactManifest(generatedDir, manifest);
+
+            var warnings = GenerateCommand.CollectArtifactConsistencyWarnings(workspace.BridgeProjectPath);
+
+            Assert.Contains(warnings, warning => warning.Contains("build configuration mismatch", StringComparison.OrdinalIgnoreCase));
+            Assert.Contains(warnings, warning => warning.Contains("target framework mismatch", StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
     }
 
     [Fact]
@@ -222,6 +779,70 @@ public class CliToolTests
         Assert.Equal(0, exitCode);
         Assert.Contains("--profile", stdout);
         Assert.Contains("desktop-public", stdout);
+    }
+
+    [Fact]
+    public async Task Package_command_preflight_only_runs_checks_and_exits_without_publish()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+
+            var (stdout, stderr, exitCode) = await RunCliAsync(
+                $"package --project \"{workspace.DesktopProjectPath}\" --profile desktop-public --preflight-only",
+                tempDir);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal(string.Empty, stderr);
+            Assert.Contains("Preflight:", stdout, StringComparison.Ordinal);
+            Assert.Contains("Preflight complete.", stdout, StringComparison.Ordinal);
+            Assert.DoesNotContain("Running: dotnet publish", stdout, StringComparison.Ordinal);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Package_command_bridge_preflight_warns_when_generated_artifacts_are_stale()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"fulora-cli-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+
+        try
+        {
+            var workspace = CreateScaffoldWorkspace(tempDir, "SampleApp");
+            var bridgeDir = Path.GetDirectoryName(workspace.BridgeProjectPath)!;
+            var generatedDir = Path.Combine(Path.GetDirectoryName(workspace.WebSrcPath)!, "src", "bridge", "generated");
+            Directory.CreateDirectory(generatedDir);
+
+            foreach (var fileName in GenerateCommand.ExpectedArtifactFileNames)
+            {
+                var artifactPath = Path.Combine(generatedDir, fileName);
+                File.WriteAllText(artifactPath, $"// {fileName}");
+            }
+
+            var assemblyDir = Path.Combine(bridgeDir, "bin", "Debug", "net10.0");
+            Directory.CreateDirectory(assemblyDir);
+            var assemblyPath = Path.Combine(assemblyDir, "SampleApp.Bridge.dll");
+            File.WriteAllText(assemblyPath, "stub");
+            WriteBridgeManifest(generatedDir, assemblyPath);
+
+            File.WriteAllText(Path.Combine(generatedDir, GenerateCommand.ExpectedArtifactFileNames[1]), "// mutated after manifest");
+
+            var notes = PackageCommand.CollectBridgeArtifactPreflightNotes(workspace.DesktopProjectPath);
+
+            Assert.Contains(notes, note => note.Contains("stale generated bridge artifacts", StringComparison.OrdinalIgnoreCase));
+            Assert.Contains(notes, note => note.Contains("fulora generate types --project", StringComparison.Ordinal));
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
     }
 
     [Fact]

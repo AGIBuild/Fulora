@@ -18,6 +18,10 @@ fulora package --project ./src/MyApp.Desktop/MyApp.Desktop.csproj \
   --profile desktop-public \
   --version 1.0.0 \
   --output ./Releases
+
+fulora package --project ./src/MyApp.Desktop/MyApp.Desktop.csproj \
+  --profile desktop-public \
+  --preflight-only
 ```
 
 Profiles are the productized shipping path in Fulora. They bundle the recommended defaults for a release scenario so you do not need to remember low-level flags every time.
@@ -29,6 +33,8 @@ Current built-in profiles:
 - `mac-notarized` for macOS releases that should default to notarization
 
 You can still override profile defaults with explicit flags. For example, `--runtime linux-x64` or `--channel preview` wins over the profile setting.
+
+If you want to verify packaging prerequisites without running publish/pack yet, use `--preflight-only`.
 
 ### 2. Package command options
 
@@ -51,6 +57,14 @@ You can still override profile defaults with explicit flags. For example, `--run
 - **Linux**: `.AppImage`
 
 If `vpk` is not installed, `fulora package` falls back to copying the `dotnet publish` output into the output directory.
+
+Fulora now prints **preflight notes** before packaging when the chosen profile implies extra setup. Typical examples:
+
+- `desktop-public` without `vpk`: you will get copied publish output, not installer/update packages
+- `mac-notarized` without `vpk`: the fallback output will not be notarized
+- `mac-notarized` on a non-macOS host: you may need to finish signing/notarization on macOS
+
+`fulora package` also checks the bridge artifact manifest (`bridge.manifest.json`) when it can locate a sibling Bridge project. That lets it warn about missing or stale generated bridge files before packaging continues.
 
 ## Raw Signing And Notarization Flags
 

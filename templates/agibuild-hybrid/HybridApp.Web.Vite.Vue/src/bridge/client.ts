@@ -1,8 +1,36 @@
-import { createBridgeProfile } from "@agibuild/bridge/profile";
+import {
+  createBridgeClient,
+  type BridgeReadyOptions,
+  withErrorNormalization,
+  withLogging,
+} from "@agibuild/bridge";
+import { greeterService } from "./generated/bridge.client";
 
-export const bridgeProfile = createBridgeProfile({
-  enableLogging: import.meta.env.DEV,
-  logging: { maxParamLength: 200 },
-});
+export type { GreeterService } from "./generated/bridge";
 
-export const bridge = bridgeProfile.bridge;
+const bridgeClient = createBridgeClient();
+
+if (import.meta.env.DEV) {
+  bridgeClient.use(withLogging({ maxParamLength: 200 }));
+}
+
+bridgeClient.use(withErrorNormalization());
+
+export const bridge = bridgeClient;
+
+export const bridgeProfile = {
+  bridge,
+  ready(options?: BridgeReadyOptions) {
+    return bridge.ready(options);
+  },
+};
+
+export function createFuloraClient() {
+  return {
+    greeter: greeterService,
+  } as const;
+}
+
+export const services = createFuloraClient();
+
+export { greeterService };

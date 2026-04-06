@@ -6,7 +6,7 @@ import type { GreeterService } from "./bridge";
 type BridgeRpc = { invoke(method: string, params?: unknown): Promise<unknown> };
 type BridgeWindow = Window & { agWebView: { rpc: BridgeRpc } };
 
-const rpc = () => (window as BridgeWindow).agWebView.rpc;
+const rpc = () => (window as unknown as BridgeWindow).agWebView.rpc;
 
 export const greeterService: GreeterService = {
   greet(params) {
