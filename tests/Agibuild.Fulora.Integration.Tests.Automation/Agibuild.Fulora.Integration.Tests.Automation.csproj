@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Fonts.Inter" />
-    <PackageReference Include="Avalonia.HarfBuzz" />
-    <PackageReference Include="Avalonia.Headless" />
+    <PackageReference Include="Avalonia.HarfBuzz" VersionOverride="12.0.0-rc1" />
+    <PackageReference Include="Avalonia.Headless" VersionOverride="12.0.0-rc1" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />
