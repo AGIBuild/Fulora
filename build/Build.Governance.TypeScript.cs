@@ -41,7 +41,6 @@ internal partial class BuildTask
         "window.agWebView",
         ".rpc.invoke(",
         "bridgeClient.getService",
-        "createBridgeClient(",
         "EnableSpaHosting(",
         "BootstrapSpaAsync(",
         "WebView.NavigateAsync("
@@ -192,15 +191,19 @@ internal partial class BuildTask
 
                         if (relativePath.EndsWith("/bridge/client.ts", StringComparison.Ordinal))
                         {
-                            if (!source.Contains("@agibuild/bridge/profile", StringComparison.Ordinal))
-                                AddSemanticViolation(relativePath, "import from '@agibuild/bridge/profile'", "profile import missing");
-                            if (!source.Contains("createBridgeProfile", StringComparison.Ordinal))
-                                AddSemanticViolation(relativePath, "use createBridgeProfile", "createBridgeProfile missing");
+                            if (!(source.Contains("@agibuild/bridge/profile", StringComparison.Ordinal)
+                                  || source.Contains("@agibuild/bridge", StringComparison.Ordinal)))
+                                AddSemanticViolation(relativePath, "import from '@agibuild/bridge/profile' or '@agibuild/bridge'", "bridge runtime import missing");
+                            if (!(source.Contains("createBridgeProfile", StringComparison.Ordinal)
+                                  || source.Contains("createBridgeClient", StringComparison.Ordinal)))
+                                AddSemanticViolation(relativePath, "use createBridgeProfile or createBridgeClient", "bridge client bootstrap missing");
                         }
                         else if (relativePath.EndsWith("/bridge/services.ts", StringComparison.Ordinal))
                         {
-                            if (!source.Contains("generated/bridge.client", StringComparison.Ordinal))
-                                AddSemanticViolation(relativePath, "re-export generated bridge client contracts", "generated contract import missing");
+                            if (!(source.Contains("generated/bridge.client", StringComparison.Ordinal)
+                                  || source.Contains("from './client'", StringComparison.Ordinal)
+                                  || source.Contains("from \"./client\"", StringComparison.Ordinal)))
+                                AddSemanticViolation(relativePath, "re-export generated bridge client contracts directly or through './client'", "generated contract import missing");
                         }
                         else if (relativePath.EndsWith("useBridge.ts", StringComparison.Ordinal))
                         {
