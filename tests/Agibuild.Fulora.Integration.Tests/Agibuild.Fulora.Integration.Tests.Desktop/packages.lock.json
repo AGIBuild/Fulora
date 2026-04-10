@@ -187,11 +187,6 @@
         "resolved": "11.0.0-preview.2.26159.112",
         "contentHash": "5xr0B5D23NoH3jcHO3SVPchTo0dwD+wqpqrysAZeOKY+XEOheKZN0bApd/EoWj+ym5NtmiNxCtYVZtDpo8FUlQ=="
       },
-      "Tmds.DBus.Protocol": {
-        "type": "Transitive",
-        "resolved": "0.90.3",
-        "contentHash": "T5BqXZb3Lqg+5yKInnW+hPtv/lzW8S8tZbLKFCbzgFF6iy4w5O3MDNzppgQfudR1nqMSpSDjX7w9OmDljV4GyA=="
-      },
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -331,6 +326,12 @@
         "requested": "[7.1.1, )",
         "resolved": "7.1.1",
         "contentHash": "IgzfEVFCVsO2LtMmAR6fAxEsCTJlqJtXGELLFBynGs6mlZwL/u2c+o3UXpQ7Yrc3+57eurKNSRfIKvaYBtccBA=="
+      },
+      "Tmds.DBus.Protocol": {
+        "type": "CentralTransitive",
+        "requested": "[0.92.0, )",
+        "resolved": "0.92.0",
+        "contentHash": "h7IMakm0PF2jxiagoysoAjrzzLQ0UBdnSXQL5kb17YW0Fvyo12Tg96A99QkzwktWRrd7H+Uw9EzjasNLUfGYlA=="
       }
     }
   }

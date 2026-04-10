@@ -98,29 +98,13 @@ public sealed class RuntimeBridgeServiceCoverageGapTests
     [Fact]
     public void FindGeneratedProxy_attribute_match_path_returns_null()
     {
-        var method = typeof(RuntimeBridgeService).GetMethod(
-            "FindGeneratedProxy",
-            BindingFlags.NonPublic | BindingFlags.Static);
-        Assert.NotNull(method);
-
-        var generic = method!.MakeGenericMethod(typeof(IGeneratedProxyMarkerImport));
-        var result = generic.Invoke(null, null);
-
-        Assert.Null(result);
+        Assert.True(RuntimeBridgeGeneratedPath.HasGeneratedProxy<IGeneratedProxyMarkerImport>());
     }
 
     [Fact]
     public void FindGeneratedProxy_no_attribute_path_returns_null()
     {
-        var method = typeof(RuntimeBridgeService).GetMethod(
-            "FindGeneratedProxy",
-            BindingFlags.NonPublic | BindingFlags.Static);
-        Assert.NotNull(method);
-
-        var generic = method!.MakeGenericMethod(typeof(IGeneratedProxyMissingImport));
-        var result = generic.Invoke(null, null);
-
-        Assert.Null(result);
+        Assert.False(RuntimeBridgeGeneratedPath.HasGeneratedProxy<IGeneratedProxyMissingImport>());
     }
 
     [Fact]
@@ -155,7 +139,7 @@ public sealed class RuntimeBridgeServiceCoverageGapTests
 
     private static object?[] InvokeDeserializeParameters(ParameterInfo[] parameters, JsonElement? args)
     {
-        var method = typeof(RuntimeBridgeService).GetMethod(
+        var method = typeof(RuntimeBridgeDynamicFallback).GetMethod(
             "DeserializeParameters",
             BindingFlags.NonPublic | BindingFlags.Static);
         Assert.NotNull(method);

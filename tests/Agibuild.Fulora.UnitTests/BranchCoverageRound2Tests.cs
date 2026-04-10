@@ -327,7 +327,7 @@ public sealed class BranchCoverageRound2Tests
             .GetMethod(nameof(DefaultProbe.WithDefaults))!
             .GetParameters();
 
-        var method = typeof(RuntimeBridgeService).GetMethod(
+        var method = typeof(RuntimeBridgeDynamicFallback).GetMethod(
             "DeserializeParameters",
             BindingFlags.NonPublic | BindingFlags.Static);
         Assert.NotNull(method);
@@ -346,7 +346,7 @@ public sealed class BranchCoverageRound2Tests
             .GetMethod(nameof(DefaultProbe.NoDefaults))!
             .GetParameters();
 
-        var method = typeof(RuntimeBridgeService).GetMethod(
+        var method = typeof(RuntimeBridgeDynamicFallback).GetMethod(
             "DeserializeParameters",
             BindingFlags.NonPublic | BindingFlags.Static);
         Assert.NotNull(method);

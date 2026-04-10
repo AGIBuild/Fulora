@@ -45,10 +45,10 @@ public class AotCompatibilityTests
     public void BridgeService_registration_uses_IBridgeServiceRegistration()
     {
         var runtimeAssembly = typeof(ServiceWorkerRegistrar).Assembly;
-        var bridgeServiceType = runtimeAssembly.GetType("Agibuild.Fulora.RuntimeBridgeService", throwOnError: false);
-        Assert.NotNull(bridgeServiceType);
+        var generatedPathType = runtimeAssembly.GetType("Agibuild.Fulora.RuntimeBridgeGeneratedPath", throwOnError: false);
+        Assert.NotNull(generatedPathType);
 
-        var findMethod = bridgeServiceType.GetMethod("FindGeneratedRegistration",
+        var findMethod = generatedPathType.GetMethod("FindRegistration",
             BindingFlags.NonPublic | BindingFlags.Static);
         Assert.NotNull(findMethod);
 
@@ -109,12 +109,70 @@ public class AotCompatibilityTests
         Assert.NotNull(dam);
     }
 
+    [Fact]
+    public void RuntimeBridgeService_reflection_fallback_is_guarded_for_AOT()
+    {
+        var runtimeSourceDir = GetRuntimeSourceDirectory();
+        if (runtimeSourceDir is null)
+            return;
+
+        var source = File.ReadAllText(Path.Combine(runtimeSourceDir, "RuntimeBridgeService.cs"));
+        var strategySource = File.ReadAllText(Path.Combine(runtimeSourceDir, "IRuntimeBridgeStrategy.cs"));
+        var defaultsSource = File.ReadAllText(Path.Combine(runtimeSourceDir, "RuntimeBridgeStrategyDefaults.cs"));
+        var fallbackSource = File.ReadAllText(Path.Combine(runtimeSourceDir, "RuntimeBridgeDynamicFallback.cs"));
+        var generatedSource = File.ReadAllText(Path.Combine(runtimeSourceDir, "RuntimeBridgeGeneratedPath.cs"));
+        Assert.Contains("IRuntimeBridgeStrategy", source);
+        Assert.Contains("RuntimeBridgeStrategyDefaults", source);
+        Assert.Contains("TryExpose", strategySource);
+        Assert.Contains("TryCreateProxy", strategySource);
+        Assert.Contains("RuntimeBridgeDynamicFallback", defaultsSource);
+        Assert.Contains("RuntimeBridgeGeneratedPath", defaultsSource);
+        Assert.DoesNotContain("RuntimeFeature.IsDynamicCodeSupported", source);
+        Assert.DoesNotContain("private void ExposeViaReflection", source);
+        Assert.DoesNotContain("private T CreateImportProxy", source);
+        Assert.DoesNotContain("FindGeneratedRegistration", source);
+        Assert.DoesNotContain("FindGeneratedProxy", source);
+        Assert.Contains("RequiresDynamicCode", fallbackSource);
+        Assert.Contains("RuntimeFeature.IsDynamicCodeSupported", fallbackSource);
+        Assert.Contains("FindRegistration", generatedSource);
+    }
+
+    [Fact]
+    public void WebViewRpcService_dynamic_result_serialization_is_guarded_for_AOT()
+    {
+        var runtimeSourceDir = GetRuntimeSourceDirectory();
+        if (runtimeSourceDir is null)
+            return;
+
+        var source = File.ReadAllText(Path.Combine(runtimeSourceDir, "WebViewRpcService.cs"));
+        Assert.Contains("RuntimeFeature.IsDynamicCodeSupported", source);
+        Assert.Contains("SerializeResultToElement", source);
+    }
+
     private static string? GetCoreSourceDirectory()
     {
         var candidates = new[]
         {
             Path.Combine(Directory.GetCurrentDirectory(), "src", "Agibuild.Fulora.Core"),
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "src", "Agibuild.Fulora.Core"),
+        };
+
+        foreach (var dir in candidates)
+        {
+            var resolved = Path.GetFullPath(dir);
+            if (Directory.Exists(resolved))
+                return resolved;
+        }
+
+        return null;
+    }
+
+    private static string? GetRuntimeSourceDirectory()
+    {
+        var candidates = new[]
+        {
+            Path.Combine(Directory.GetCurrentDirectory(), "src", "Agibuild.Fulora.Runtime"),
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "src", "Agibuild.Fulora.Runtime"),
         };
 
         foreach (var dir in candidates)

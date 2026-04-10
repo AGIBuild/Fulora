@@ -20,20 +20,11 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
     private readonly IWebViewRpcService _rpc;
     private readonly Func<string, Task<string?>> _invokeScript;
     private readonly ILogger _logger;
-    private readonly bool _enableDevTools;
     private readonly IBridgeTracer _tracer;
+    private readonly IReadOnlyList<IRuntimeBridgeStrategy> _strategies;
 
     private readonly ConcurrentDictionary<Type, ExposedService> _exportedServices = new();
     private readonly ConcurrentDictionary<Type, object> _importProxies = new();
-
-    /// <summary>
-    /// Shared JSON options: camelCase-insensitive for seamless JS ↔ C# mapping.
-    /// </summary>
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    };
 
     private volatile bool _disposed;
 
@@ -41,19 +32,31 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
         IWebViewRpcService rpc,
         Func<string, Task<string?>> invokeScript,
         ILogger logger,
+        IEnumerable<IRuntimeBridgeStrategy> strategies)
+        : this(rpc, invokeScript, logger, enableDevTools: false, tracer: null, strategies)
+    {
+    }
+
+    internal RuntimeBridgeService(
+        IWebViewRpcService rpc,
+        Func<string, Task<string?>> invokeScript,
+        ILogger logger,
         bool enableDevTools = false,
-        IBridgeTracer? tracer = null)
+        IBridgeTracer? tracer = null,
+        IEnumerable<IRuntimeBridgeStrategy>? strategies = null)
     {
         _rpc = rpc ?? throw new ArgumentNullException(nameof(rpc));
         _invokeScript = invokeScript ?? throw new ArgumentNullException(nameof(invokeScript));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _enableDevTools = enableDevTools;
         _tracer = tracer ?? NullBridgeTracer.Instance;
+        _strategies = (strategies ?? RuntimeBridgeStrategyDefaults.Create(_rpc, _invokeScript, _logger, _tracer)).ToArray();
     }
 
     // ==================== Expose (JsExport) ====================
 
-    public void Expose<T>(T implementation, BridgeOptions? options = null) where T : class
+    public void Expose<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(
+        T implementation,
+        BridgeOptions? options = null) where T : class
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(implementation);
@@ -67,38 +70,17 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
         try
         {
-            // Try source-generated registration first (AOT safe, no reflection).
-            var generated = FindGeneratedRegistration<T>();
-            if (generated is not null)
+            foreach (var strategy in _strategies)
             {
-                IWebViewRpcService targetRpc = _rpc;
-                var pipeline = BuildMiddlewarePipeline(options);
-                if (pipeline is not null)
-                    targetRpc = new MiddlewareRpcWrapper(targetRpc, pipeline, generated.ServiceName);
+                if (!strategy.TryExpose(implementation, options, out var exposedService))
+                    continue;
 
-                if (_tracer is not NullBridgeTracer)
-                    targetRpc = new TracingRpcWrapper(targetRpc, _tracer, generated.ServiceName);
-
-                generated.RegisterHandlers(targetRpc, implementation);
-
-                var jsStub = generated.GetJsStub();
-                _ = _invokeScript(jsStub);
-                _exportedServices[interfaceType] = new ExposedService(
-                    generated.ServiceName,
-                    generated.MethodNames.ToList(),
-                    jsStub,
-                    generated.UnregisterHandlers,
-                    () => generated.DisconnectEvents(implementation),
-                    implementation);
-
-                _tracer.OnServiceExposed(generated.ServiceName, generated.MethodNames.Count, isSourceGenerated: true);
-                _logger.LogDebug("Bridge: exposed {Service} with {Count} methods (source-generated)",
-                    generated.ServiceName, generated.MethodNames.Count);
+                _exportedServices[interfaceType] = exposedService;
                 return;
             }
 
-            // Fallback: reflection-based registration.
-            ExposeViaReflection(implementation, interfaceType, options);
+            throw new InvalidOperationException(
+                $"No bridge strategy could expose service interface '{interfaceType.FullName}'.");
         }
         catch
         {
@@ -107,55 +89,9 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
         }
     }
 
-    [UnconditionalSuppressMessage("Trimming", "IL2070",
-        Justification = "Reflection-based fallback path; source-generated path is preferred for AOT/trim scenarios.")]
-    private void ExposeViaReflection<T>(T implementation, Type interfaceType, BridgeOptions? options = null) where T : class
-    {
-        var serviceName = GetServiceName<JsExportAttribute>(interfaceType);
-        var registeredMethods = new List<string>();
-        var pipeline = BuildMiddlewarePipeline(options);
-        var useTracing = _tracer is not NullBridgeTracer;
-
-        try
-        {
-            foreach (var method in interfaceType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
-            {
-                var rpcMethodName = $"{serviceName}.{ToCamelCase(method.Name)}";
-                var handler = CreateHandler(method, implementation);
-                if (pipeline is not null)
-                {
-                    var methodName = ToCamelCase(method.Name);
-                    handler = WrapWithMiddleware(handler, pipeline, serviceName, methodName);
-                }
-                if (useTracing)
-                {
-                    var methodName = ToCamelCase(method.Name);
-                    handler = WrapWithTracing(handler, _tracer, serviceName, methodName);
-                }
-                _rpc.Handle(rpcMethodName, handler);
-                registeredMethods.Add(rpcMethodName);
-            }
-
-            var jsStub = GenerateJsStub(serviceName, interfaceType);
-            _ = _invokeScript(jsStub);
-
-            _exportedServices[interfaceType] = new ExposedService(serviceName, registeredMethods, jsStub, Implementation: implementation);
-
-            _tracer.OnServiceExposed(serviceName, registeredMethods.Count, isSourceGenerated: false);
-            _logger.LogDebug("Bridge: exposed {Service} with {Count} methods (reflection)",
-                serviceName, registeredMethods.Count);
-        }
-        catch
-        {
-            foreach (var m in registeredMethods)
-                _rpc.UnregisterHandler(m);
-            throw;
-        }
-    }
-
     // ==================== GetProxy (JsImport) ====================
 
-    public T GetProxy<T>() where T : class
+    public T GetProxy<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>() where T : class
     {
         ThrowIfDisposed();
 
@@ -164,16 +100,16 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
         return (T)_importProxies.GetOrAdd(interfaceType, _ =>
         {
-            // Try source-generated proxy first (AOT safe, no DispatchProxy).
-            var generatedProxy = FindAndCreateGeneratedProxy<T>();
-            if (generatedProxy is not null)
+            foreach (var strategy in _strategies)
             {
-                _logger.LogDebug("Bridge: using source-generated proxy for {Service}", typeof(T).Name);
-                return generatedProxy;
+                if (!strategy.TryCreateProxy<T>(out var proxy))
+                    continue;
+
+                return proxy!;
             }
 
-            // Fallback: DispatchProxy-based.
-            return CreateImportProxy<T>();
+            throw new InvalidOperationException(
+                $"No bridge strategy could create a proxy for service interface '{interfaceType.FullName}'.");
         });
     }
 
@@ -266,169 +202,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
     // ==================== Private helpers ====================
 
-    [UnconditionalSuppressMessage("Trimming", "IL2075",
-        Justification = "Task<T>.Result property is guaranteed to exist by the runtime.")]
-    private static Func<JsonElement?, Task<object?>> CreateHandler(MethodInfo method, object target)
-    {
-        var parameters = method.GetParameters();
-
-        return async args =>
-        {
-            try
-            {
-                var invokeArgs = DeserializeParameters(parameters, args);
-                var result = method.Invoke(target, invokeArgs);
-
-                // Handle Task and Task<T> return types.
-                if (result is Task task)
-                {
-                    await task.ConfigureAwait(false);
-
-                    var taskType = task.GetType();
-                    if (taskType.IsGenericType)
-                    {
-                        // Task<T> — extract the Result.
-                        var resultProperty = taskType.GetProperty("Result");
-                        return resultProperty?.GetValue(task);
-                    }
-
-                    // Task (void) — no return value.
-                    return null;
-                }
-
-                return result;
-            }
-            catch (TargetInvocationException ex) when (ex.InnerException is not null)
-            {
-                // Unwrap the reflection-induced wrapper.
-                throw ex.InnerException;
-            }
-        };
-    }
-
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "Reflection-based fallback; source-generated path is preferred for AOT/trim.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2072",
-        Justification = "Value types always have a parameterless constructor.")]
-    private static object?[] DeserializeParameters(ParameterInfo[] parameters, JsonElement? args)
-    {
-        if (parameters.Length == 0)
-            return [];
-
-        if (args is null || args.Value.ValueKind == JsonValueKind.Null || args.Value.ValueKind == JsonValueKind.Undefined)
-        {
-            // All parameters must be optional or nullable for this to work.
-            var defaults = new object?[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                defaults[i] = parameters[i].HasDefaultValue ? parameters[i].DefaultValue : null;
-            }
-            return defaults;
-        }
-
-        // Named parameters (object format).
-        if (args.Value.ValueKind == JsonValueKind.Object)
-        {
-            var result = new object?[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                var p = parameters[i];
-                var camelName = ToCamelCase(p.Name!);
-
-                if (args.Value.TryGetProperty(camelName, out var prop))
-                {
-                    result[i] = prop.Deserialize(p.ParameterType, JsonOptions);
-                }
-                else if (args.Value.TryGetProperty(p.Name!, out var exactProp))
-                {
-                    // Fallback: exact name match.
-                    result[i] = exactProp.Deserialize(p.ParameterType, JsonOptions);
-                }
-                else if (p.HasDefaultValue)
-                {
-                    result[i] = p.DefaultValue;
-                }
-                else
-                {
-                    result[i] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null;
-                }
-            }
-            return result;
-        }
-
-        // Positional parameters (array format) — fallback.
-        if (args.Value.ValueKind == JsonValueKind.Array)
-        {
-            var result = new object?[parameters.Length];
-            int i = 0;
-            foreach (var element in args.Value.EnumerateArray())
-            {
-                if (i >= parameters.Length) break;
-                result[i] = element.Deserialize(parameters[i].ParameterType, JsonOptions);
-                i++;
-            }
-            // Fill remaining with defaults.
-            for (; i < parameters.Length; i++)
-            {
-                result[i] = parameters[i].HasDefaultValue ? parameters[i].DefaultValue : null;
-            }
-            return result;
-        }
-
-        // Single parameter shorthand.
-        if (parameters.Length == 1)
-        {
-            return [args.Value.Deserialize(parameters[0].ParameterType, JsonOptions)];
-        }
-
-        return new object?[parameters.Length];
-    }
-
-    [UnconditionalSuppressMessage("Trimming", "IL2091",
-        Justification = "DispatchProxy fallback; source-generated proxy is preferred for AOT/trim.")]
-    private T CreateImportProxy<T>() where T : class
-    {
-        var interfaceType = typeof(T);
-        var serviceName = GetServiceName<JsImportAttribute>(interfaceType);
-
-        IWebViewRpcService rpcForProxy = _rpc;
-        if (_tracer is not NullBridgeTracer)
-            rpcForProxy = new TracingRpcWrapper(rpcForProxy, _tracer, serviceName);
-
-        var proxy = DispatchProxy.Create<T, BridgeImportProxy>();
-        var bridgeProxy = (BridgeImportProxy)(object)proxy;
-        bridgeProxy.Initialize(rpcForProxy, serviceName);
-
-        _logger.LogDebug("Bridge: created import proxy for {Service}", serviceName);
-        return proxy;
-    }
-
-    private static string GenerateJsStub(
-        string serviceName,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] Type interfaceType)
-    {
-        var methods = interfaceType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
-        var methodLines = new List<string>();
-
-        foreach (var m in methods)
-        {
-            var camelName = ToCamelCase(m.Name);
-            methodLines.Add(
-                $"        {camelName}: function(params) {{ return window.agWebView.rpc.invoke('{serviceName}.{camelName}', params); }}");
-        }
-
-        return $$"""
-            (function() {
-                if (!window.agWebView) window.agWebView = {};
-                if (!window.agWebView.bridge) window.agWebView.bridge = {};
-                window.agWebView.bridge.{{serviceName}} = {
-            {{string.Join(",\n", methodLines)}}
-                };
-            })();
-            """;
-    }
-
-    private static string GetServiceName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TAttr>(Type interfaceType) where TAttr : Attribute
+    internal static string GetServiceName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TAttr>(Type interfaceType) where TAttr : Attribute
     {
         var attr = interfaceType.GetCustomAttribute<TAttr>();
         var nameProperty = typeof(TAttr).GetProperty("Name");
@@ -472,75 +246,6 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
                 $"Interface '{interfaceType.Name}' must be decorated with [JsImport] to use with Bridge.GetProxy<T>().");
     }
 
-    // ==================== Source-generated code discovery ====================
-
-    [UnconditionalSuppressMessage("Trimming", "IL2072",
-        Justification = "RegistrationType is a source-generated type known to have a parameterless constructor.")]
-    private static IBridgeServiceRegistration<T>? FindGeneratedRegistration<T>() where T : class
-    {
-        var interfaceType = typeof(T);
-
-        // Scan calling assembly for [assembly: BridgeRegistration(typeof(T), typeof(Reg))]
-        foreach (var assembly in new[] { interfaceType.Assembly, Assembly.GetCallingAssembly() })
-        {
-            foreach (var attr in assembly.GetCustomAttributes<BridgeRegistrationAttribute>())
-            {
-                if (attr.InterfaceType == interfaceType)
-                {
-                    return (IBridgeServiceRegistration<T>)Activator.CreateInstance(attr.RegistrationType)!;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private static T? FindGeneratedProxy<T>() where T : class
-    {
-        var interfaceType = typeof(T);
-
-        foreach (var assembly in new[] { interfaceType.Assembly, Assembly.GetCallingAssembly() })
-        {
-            foreach (var attr in assembly.GetCustomAttributes<BridgeProxyAttribute>())
-            {
-                if (attr.InterfaceType == interfaceType)
-                {
-                    // Generated proxy has a constructor taking IWebViewRpcService.
-                    // But we don't have the RPC reference here — need to pass it in.
-                    return null; // Handled separately below.
-                }
-            }
-        }
-
-        return null;
-    }
-
-    [UnconditionalSuppressMessage("Trimming", "IL2072",
-        Justification = "ProxyType is a source-generated type known to have a constructor taking IWebViewRpcService.")]
-    private T? FindAndCreateGeneratedProxy<T>() where T : class
-    {
-        var interfaceType = typeof(T);
-        IWebViewRpcService rpcForProxy = _rpc;
-        if (_tracer is not NullBridgeTracer)
-        {
-            var serviceName = GetServiceName<JsImportAttribute>(interfaceType);
-            rpcForProxy = new TracingRpcWrapper(rpcForProxy, _tracer, serviceName);
-        }
-
-        foreach (var assembly in new[] { interfaceType.Assembly, Assembly.GetCallingAssembly() })
-        {
-            foreach (var attr in assembly.GetCustomAttributes<BridgeProxyAttribute>())
-            {
-                if (attr.InterfaceType == interfaceType)
-                {
-                    return (T)Activator.CreateInstance(attr.ProxyType, rpcForProxy)!;
-                }
-            }
-        }
-
-        return null;
-    }
-
     private void ThrowIfDisposed()
     {
         ObjectDisposedException.ThrowIf(_disposed, nameof(RuntimeBridgeService));
@@ -548,7 +253,7 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
 
     // ==================== Middleware ====================
 
-    private static List<IBridgeMiddleware>? BuildMiddlewarePipeline(BridgeOptions? options)
+    internal static List<IBridgeMiddleware>? BuildMiddlewarePipeline(BridgeOptions? options)
     {
         var middlewares = new List<IBridgeMiddleware>();
 
@@ -629,64 +334,5 @@ internal sealed class RuntimeBridgeService : IBridgeService, IDisposable
                 throw;
             }
         };
-    }
-}
-
-/// <summary>
-/// <see cref="DispatchProxy"/> implementation for <see cref="JsImportAttribute"/> interfaces.
-/// Routes every method call to the RPC service.
-/// </summary>
-public class BridgeImportProxy : DispatchProxy
-{
-    private IWebViewRpcService? _rpc;
-    private string _serviceName = "";
-
-    internal void Initialize(IWebViewRpcService rpc, string serviceName)
-    {
-        _rpc = rpc;
-        _serviceName = serviceName;
-    }
-
-    /// <inheritdoc />
-    protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
-    {
-        if (_rpc is null || targetMethod is null)
-            throw new InvalidOperationException("Bridge proxy has not been initialized.");
-
-        var methodName = $"{_serviceName}.{RuntimeBridgeService.ToCamelCase(targetMethod.Name)}";
-        var parameters = targetMethod.GetParameters();
-
-        // Build named params object.
-        Dictionary<string, object?>? namedParams = null;
-        if (args is not null && args.Length > 0)
-        {
-            namedParams = new Dictionary<string, object?>(args.Length);
-            for (int i = 0; i < args.Length && i < parameters.Length; i++)
-            {
-                namedParams[RuntimeBridgeService.ToCamelCase(parameters[i].Name!)] = args[i];
-            }
-        }
-
-        var returnType = targetMethod.ReturnType;
-
-        // Task (void)
-        if (returnType == typeof(Task))
-        {
-            return _rpc.InvokeAsync(methodName, namedParams);
-        }
-
-        // Task<T>
-        if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
-        {
-            var resultType = returnType.GetGenericArguments()[0];
-            var invokeMethod = typeof(IWebViewRpcService)
-                .GetMethod(nameof(IWebViewRpcService.InvokeAsync), 1, [typeof(string), typeof(object)])!
-                .MakeGenericMethod(resultType);
-            return invokeMethod.Invoke(_rpc, [methodName, namedParams]);
-        }
-
-        throw new NotSupportedException(
-            $"[JsImport] method '{targetMethod.DeclaringType?.Name}.{targetMethod.Name}' must return Task or Task<T>. " +
-            "Synchronous return types are not supported.");
     }
 }
