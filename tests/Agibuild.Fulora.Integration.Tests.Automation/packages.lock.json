@@ -36,11 +36,11 @@
       },
       "Avalonia.Themes.Fluent": {
         "type": "Direct",
-        "requested": "[12.0.0-rc1, )",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "UFgSXcPzgSq+9BfBdWEH9R2QgFyOxqsEmFO7nblf5nfvK1kVUbWk7rJ+6N1THbS3MaUcbFcditM5OhJc0d1JeQ==",
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "mwliOPzvG6Skr/RLWoArpBGothoaD2oVKzU8V1FrxAiHfsy14g/skvXsQkO724+VXCOJyq0AtKfxk0IMkcqMQg==",
         "dependencies": {
-          "Avalonia": "12.0.0-rc1"
+          "Avalonia": "12.0.0"
         }
       },
       "Microsoft.NET.Test.Sdk": {
@@ -86,8 +86,8 @@
       },
       "Avalonia.Remote.Protocol": {
         "type": "Transitive",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "/hXGRnxsaemSRe/A8hOWwa7DxoOBiTGUIt/ENpE9VEoQKaXqvkJtWW6Vx5Cchiynx0ODKgRhVjIDxL62sLQk2Q=="
+        "resolved": "12.0.0",
+        "contentHash": "4uafS+y4s/FPJiOms5ZMFSWUNsx0QdWnkcbdiimch73WnApccgbWb6p082tCAPvSw6SbqoQB5IHgHsHGI7gPSw=="
       },
       "HarfBuzzSharp": {
         "type": "Transitive",
@@ -120,8 +120,8 @@
       },
       "MicroCom.Runtime": {
         "type": "Transitive",
-        "resolved": "0.11.0",
-        "contentHash": "MEnrZ3UIiH40hjzMDsxrTyi8dtqB5ziv3iBeeU4bXsL/7NLSal9F1lZKpK+tfBRnUoDSdtcW3KufE4yhATOMCA=="
+        "resolved": "0.11.4",
+        "contentHash": "yZ8+Lgwo+KtRI29TB2mIOEMzV+csMJ+pKZg4YHReAP3vRewWLKKeYfrBDo5FS69rWnEbCfU3sbM+ZEQr+GDLtg=="
       },
       "Microsoft.ApplicationInsights": {
         "type": "Transitive",
@@ -291,7 +291,7 @@
       "agibuild.fulora.avalonia": {
         "type": "Project",
         "dependencies": {
-          "Avalonia": "[12.0.0-rc1, )",
+          "Avalonia": "[12.0.0, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.2.26159.112, )",
           "Microsoft.Web.WebView2": "[1.0.3856.49, )",
           "SharpHook": "[7.1.1, )"
@@ -311,9 +311,9 @@
           "Agibuild.Fulora.Core": "[1.5.11-local, )",
           "Agibuild.Fulora.Runtime": "[1.5.11-local, )",
           "Agibuild.Fulora.Testing": "[1.5.11-local, )",
-          "Avalonia": "[12.0.0-rc1, )",
+          "Avalonia": "[12.0.0, )",
           "Avalonia.Fonts.Inter": "[12.0.0-rc1, )",
-          "Avalonia.Themes.Fluent": "[12.0.0-rc1, )",
+          "Avalonia.Themes.Fluent": "[12.0.0, )",
           "CommunityToolkit.Mvvm": "[8.4.0, )",
           "Serilog": "[4.3.2-dev-02419, )",
           "Serilog.Sinks.File": "[8.0.0-nblumhardt-02322, )"
@@ -344,13 +344,13 @@
       },
       "Avalonia": {
         "type": "CentralTransitive",
-        "requested": "[12.0.0-rc1, )",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "FrZ3rQNIj8+BIDc1g7BPNsNSrSSPHX5dN1ferqNPfzSlaQNayLTCrtlC0WPwamVg7p3DVBKMyx87/0GC+BEmmg==",
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "/dTINvK2kc8wiV1k6owfJS9gVLwt5vzv3gZEJbl/k7exfIIp+XqSwQQuZq9IFsV8A1Kn+p9btnPDtG4xtPUCaA==",
         "dependencies": {
           "Avalonia.BuildServices": "11.3.2",
-          "Avalonia.Remote.Protocol": "12.0.0-rc1",
-          "MicroCom.Runtime": "0.11.0"
+          "Avalonia.Remote.Protocol": "12.0.0",
+          "MicroCom.Runtime": "0.11.4"
         }
       },
       "CommunityToolkit.Mvvm": {
