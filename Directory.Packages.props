@@ -48,7 +48,7 @@
     <PackageVersion Include="System.CommandLine" Version="3.0.0-preview.2.26159.112" />
   </ItemGroup>
   <ItemGroup Label="AI providers">
-    <PackageVersion Include="OllamaSharp" Version="5.4.23" />
+    <PackageVersion Include="OllamaSharp" Version="5.4.25" />
   </ItemGroup>
   <ItemGroup Label="Telemetry">
     <PackageVersion Include="OpenTelemetry.Api" Version="1.15.0" />
