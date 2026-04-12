@@ -9,28 +9,21 @@ internal static class MacOSAdapterModule
     [ModuleInitializer]
     internal static void Register()
     {
-        if (!OperatingSystem.IsMacOS())
-        {
-            return;
-        }
-
         if (string.Equals(Environment.GetEnvironmentVariable("AGIBUILD_WEBVIEW_DIAG"), "1", StringComparison.Ordinal))
         {
             Console.WriteLine("[Agibuild.WebView] macOS adapter module initializer running.");
             Console.WriteLine($"[Agibuild.WebView] Registry assembly: {typeof(WebViewAdapterRegistry).Assembly.FullName}");
         }
 
-        RegisterMacOS();
+        WebViewAdapterRegistry.RegisterProvider(new MacOSPlatformProvider());
     }
 
     [SupportedOSPlatform("macos")]
-    private static void RegisterMacOS()
+    private sealed class MacOSPlatformProvider : IWebViewPlatformProvider
     {
-        WebViewAdapterRegistry.Register(new WebViewAdapterRegistration(
-            Platform: WebViewAdapterPlatform.MacOS,
-            AdapterId: "wkwebview",
-            Factory: static () => new MacOSWebViewAdapter(),
-            Priority: 100));
+        public string Id => "macos.wkwebview";
+        public int Priority => 100;
+        public bool CanHandleCurrentPlatform() => OperatingSystem.IsMacOS();
+        public IWebViewAdapter CreateAdapter() => new MacOSWebViewAdapter();
     }
 }
-

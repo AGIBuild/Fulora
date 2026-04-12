@@ -24,6 +24,7 @@ internal sealed record WebViewAdapterRegistration(
 internal static class WebViewAdapterRegistry
 {
     private static readonly ConcurrentDictionary<(WebViewAdapterPlatform Platform, string AdapterId), WebViewAdapterRegistration> Registrations = new();
+    private static readonly ConcurrentDictionary<string, IWebViewPlatformProvider> Providers = new(StringComparer.Ordinal);
 
     public static void Register(WebViewAdapterRegistration registration)
     {
@@ -39,13 +40,33 @@ internal static class WebViewAdapterRegistry
         Registrations.TryAdd((registration.Platform, registration.AdapterId), registration);
     }
 
+    public static void RegisterProvider(IWebViewPlatformProvider provider)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentException.ThrowIfNullOrWhiteSpace(provider.Id);
+
+        Providers.TryAdd(provider.Id, provider);
+    }
+
     public static bool HasAnyForCurrentPlatform()
-        => Registrations.Keys.Any(k => k.Platform == GetCurrentPlatform());
+        => Providers.Values.Any(static provider => provider.CanHandleCurrentPlatform())
+            || Registrations.Keys.Any(k => k.Platform == GetCurrentPlatform());
 
     public static bool TryCreateForCurrentPlatform(out IWebViewAdapter adapter, out string? failureReason)
     {
-        var platform = GetCurrentPlatform();
+        var provider = Providers.Values
+            .Where(static provider => provider.CanHandleCurrentPlatform())
+            .OrderByDescending(static provider => provider.Priority)
+            .FirstOrDefault();
 
+        if (provider is not null)
+        {
+            adapter = provider.CreateAdapter();
+            failureReason = null;
+            return true;
+        }
+
+        var platform = GetCurrentPlatform();
         var best = Registrations.Values
             .Where(r => r.Platform == platform)
             .OrderByDescending(r => r.Priority)
@@ -90,4 +111,3 @@ internal static class WebViewAdapterRegistry
         return WebViewAdapterPlatform.Gtk;
     }
 }
-

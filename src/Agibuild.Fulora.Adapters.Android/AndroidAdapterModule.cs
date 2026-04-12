@@ -9,27 +9,21 @@ internal static class AndroidAdapterModule
     [ModuleInitializer]
     internal static void Register()
     {
-        if (!OperatingSystem.IsAndroid())
-        {
-            return;
-        }
-
         if (string.Equals(Environment.GetEnvironmentVariable("AGIBUILD_WEBVIEW_DIAG"), "1", StringComparison.Ordinal))
         {
             Console.WriteLine("[Agibuild.WebView] Android adapter module initializer running.");
             Console.WriteLine($"[Agibuild.WebView] Registry assembly: {typeof(WebViewAdapterRegistry).Assembly.FullName}");
         }
 
-        RegisterAndroid();
+        WebViewAdapterRegistry.RegisterProvider(new AndroidPlatformProvider());
     }
 
     [SupportedOSPlatform("android")]
-    private static void RegisterAndroid()
+    private sealed class AndroidPlatformProvider : IWebViewPlatformProvider
     {
-        WebViewAdapterRegistry.Register(new WebViewAdapterRegistration(
-            Platform: WebViewAdapterPlatform.Android,
-            AdapterId: "android-webview",
-            Factory: static () => new AndroidWebViewAdapter(),
-            Priority: 100));
+        public string Id => "android.webview";
+        public int Priority => 100;
+        public bool CanHandleCurrentPlatform() => OperatingSystem.IsAndroid();
+        public IWebViewAdapter CreateAdapter() => new AndroidWebViewAdapter();
     }
 }

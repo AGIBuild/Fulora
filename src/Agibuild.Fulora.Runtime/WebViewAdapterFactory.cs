@@ -24,6 +24,15 @@ internal static class WebViewAdapterFactory
         throw new PlatformNotSupportedException(reason);
     }
 
+    private static readonly string[] CandidateAssemblyNames =
+    [
+        "Agibuild.Fulora.Adapters.Windows",
+        "Agibuild.Fulora.Adapters.MacOS",
+        "Agibuild.Fulora.Adapters.iOS",
+        "Agibuild.Fulora.Adapters.Android",
+        "Agibuild.Fulora.Adapters.Gtk"
+    ];
+
     private static void EnsurePlatformAdaptersLoaded()
     {
         if (WebViewAdapterRegistry.HasAnyForCurrentPlatform())
@@ -31,40 +40,10 @@ internal static class WebViewAdapterFactory
             return;
         }
 
-        foreach (var assemblyName in GetCandidateAssemblyNamesForCurrentPlatform())
+        foreach (var assemblyName in CandidateAssemblyNames)
         {
             TryLoadByName(assemblyName);
         }
-    }
-
-    private static IEnumerable<string> GetCandidateAssemblyNamesForCurrentPlatform()
-    {
-        // iOS check must come before macOS because IsMacOS() returns true on Mac Catalyst.
-        if (OperatingSystem.IsIOS())
-        {
-            yield return "Agibuild.Fulora.Adapters.iOS";
-            yield break;
-        }
-
-        if (OperatingSystem.IsMacOS())
-        {
-            yield return "Agibuild.Fulora.Adapters.MacOS";
-            yield break;
-        }
-
-        if (OperatingSystem.IsWindows())
-        {
-            yield return "Agibuild.Fulora.Adapters.Windows";
-            yield break;
-        }
-
-        if (OperatingSystem.IsAndroid())
-        {
-            yield return "Agibuild.Fulora.Adapters.Android";
-            yield break;
-        }
-
-        yield return "Agibuild.Fulora.Adapters.Gtk";
     }
 
     private static void TryLoadByName(string assemblyName)
@@ -127,4 +106,3 @@ internal static class WebViewAdapterFactory
         }
     }
 }
-

@@ -7,6 +7,41 @@ namespace Agibuild.Fulora.UnitTests;
 public sealed class WebViewAdapterRegistryTests
 {
     [Fact]
+    public void RegisterProvider_null_throws_ArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => WebViewAdapterRegistry.RegisterProvider(null!));
+    }
+
+    [Fact]
+    public void TryCreateForCurrentPlatform_prefers_matching_provider_with_highest_priority()
+    {
+        var lower = new StubPlatformProvider("low", canHandle: true, priority: int.MinValue, () => new MarkerAdapter("low"));
+        var higher = new StubPlatformProvider("high", canHandle: true, priority: int.MaxValue, () => new MarkerAdapter("high"));
+
+        WebViewAdapterRegistry.RegisterProvider(lower);
+        WebViewAdapterRegistry.RegisterProvider(higher);
+
+        var result = WebViewAdapterRegistry.TryCreateForCurrentPlatform(out var adapter, out var reason);
+
+        Assert.True(result);
+        Assert.Null(reason);
+        Assert.Equal("high", Assert.IsType<MarkerAdapter>(adapter).Id);
+    }
+
+    [Fact]
+    public void TryCreateForCurrentPlatform_ignores_provider_that_cannot_handle_current_platform()
+    {
+        WebViewAdapterRegistry.RegisterProvider(new StubPlatformProvider("off", canHandle: false, priority: int.MaxValue, () => new MarkerAdapter("off")));
+        WebViewAdapterRegistry.RegisterProvider(new StubPlatformProvider("on", canHandle: true, priority: 0, () => new MarkerAdapter("on")));
+
+        var result = WebViewAdapterRegistry.TryCreateForCurrentPlatform(out var adapter, out var reason);
+
+        Assert.True(result);
+        Assert.Null(reason);
+        Assert.Equal("on", Assert.IsType<MarkerAdapter>(adapter).Id);
+    }
+
+    [Fact]
     public void Register_null_throws_ArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => WebViewAdapterRegistry.Register(null!));
@@ -137,5 +172,22 @@ public sealed class WebViewAdapterRegistryTests
         Assert.NotEqual(WebViewAdapterPlatform.MacOS, ios);
         Assert.NotEqual(WebViewAdapterPlatform.Android, ios);
         Assert.NotEqual(WebViewAdapterPlatform.Gtk, ios);
+    }
+
+    private sealed class StubPlatformProvider(
+        string id,
+        bool canHandle,
+        int priority,
+        Func<IWebViewAdapter> factory) : IWebViewPlatformProvider
+    {
+        public string Id => id;
+        public int Priority => priority;
+        public bool CanHandleCurrentPlatform() => canHandle;
+        public IWebViewAdapter CreateAdapter() => factory();
+    }
+
+    private sealed class MarkerAdapter(string id) : MockWebViewAdapter
+    {
+        public string Id { get; } = id;
     }
 }

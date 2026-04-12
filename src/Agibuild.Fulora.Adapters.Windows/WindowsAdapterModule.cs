@@ -9,27 +9,21 @@ internal static class WindowsAdapterModule
     [ModuleInitializer]
     internal static void Register()
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            return;
-        }
-
         if (string.Equals(Environment.GetEnvironmentVariable("AGIBUILD_WEBVIEW_DIAG"), "1", StringComparison.Ordinal))
         {
             Console.WriteLine("[Agibuild.WebView] Windows adapter module initializer running.");
             Console.WriteLine($"[Agibuild.WebView] Registry assembly: {typeof(WebViewAdapterRegistry).Assembly.FullName}");
         }
 
-        RegisterWindows();
+        WebViewAdapterRegistry.RegisterProvider(new WindowsPlatformProvider());
     }
 
     [SupportedOSPlatform("windows")]
-    private static void RegisterWindows()
+    private sealed class WindowsPlatformProvider : IWebViewPlatformProvider
     {
-        WebViewAdapterRegistry.Register(new WebViewAdapterRegistration(
-            Platform: WebViewAdapterPlatform.Windows,
-            AdapterId: "webview2",
-            Factory: static () => new WindowsWebViewAdapter(),
-            Priority: 100));
+        public string Id => "windows.webview2";
+        public int Priority => 100;
+        public bool CanHandleCurrentPlatform() => OperatingSystem.IsWindows();
+        public IWebViewAdapter CreateAdapter() => new WindowsWebViewAdapter();
     }
 }
