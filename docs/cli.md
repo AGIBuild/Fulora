@@ -26,6 +26,18 @@ fulora new MyApp --frontend vue --shell-preset app-shell
 | `--frontend`, `-f` | **Required.** `react`, `vue`, or `vanilla` |
 | `--shell-preset` | Desktop shell preset: `baseline` or `app-shell` |
 
+Generated React/Vue apps now include a modern frontend script baseline:
+
+```bash
+npm run dev:mock
+npm run test
+npm run test:browser
+npm run test:e2e
+npm run check
+```
+
+Use `dev:mock` when you want to work on the frontend without launching the desktop host. Use `test:browser` and `test:e2e` for browser-mode and Playwright smoke coverage that match the shipped template defaults.
+
 ### `fulora attach web`
 
 Attach an existing web app to a Fulora desktop host without rewriting the frontend first.

@@ -24,6 +24,17 @@ fulora package --profile desktop-public
 
 That gives you a React-based desktop app with the Fulora host, local dev loop, and a packaging path you can hand to teammates or testers.
 
+The generated web app also ships with modern quality rails out of the box:
+
+```bash
+npm run dev:mock
+npm run test
+npm run test:browser
+npm run test:e2e
+```
+
+That means a new Fulora app starts with a mock-first frontend workflow, unit coverage, browser-mode checks, and Playwright smoke coverage instead of leaving those rails as follow-up work.
+
 Need a little more than just a WebView? Fulora gives your app typed app services for host-to-web communication, plus native capabilities delivered through core features and official plugins, including auth flows, dialogs, screenshots, PDF, cookies, files, notifications, and more.
 
 Go deeper with [Getting Started](docs/articles/getting-started.md), the [Documentation Index](docs/index.md), [Bridge guide](docs/articles/bridge-guide.md), and [SPA hosting](docs/articles/spa-hosting.md).

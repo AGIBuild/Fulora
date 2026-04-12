@@ -57,6 +57,28 @@ After these three steps, you have:
 - A web frontend and native host already wired together
 - Fulora services ready for normal app development
 
+## The generated app already includes modern quality rails
+
+The default template does more than just boot a window. It also gives you a modern web workflow with mock-first development and built-in test layers:
+
+```bash
+npm run dev:mock
+npm run test
+npm run test:browser
+npm run test:e2e
+npm run check
+```
+
+Those commands map to:
+
+- `dev:mock` — run the frontend against the generated mock bridge without launching the desktop host
+- `test` — unit-level Vitest coverage
+- `test:browser` — Vitest Browser Mode checks backed by Playwright
+- `test:e2e` — Playwright smoke coverage against the mock-mode app
+- `check` — Biome + TypeScript verification
+
+This lets teams start from a production-minded frontend baseline instead of adding linting, browser tests, and e2e smoke checks later.
+
 Alternatively, use `dotnet new` directly:
 
 ```bash

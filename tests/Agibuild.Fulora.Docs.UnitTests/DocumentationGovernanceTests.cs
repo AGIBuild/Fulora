@@ -504,6 +504,47 @@ public sealed class DocumentationGovernanceTests
     }
 
     [Fact]
+    public void Primary_path_docs_present_modern_template_quality_rails()
+    {
+        var repoRoot = FindRepoRoot();
+        var paths = new[]
+        {
+            Path.Combine(repoRoot, "README.md"),
+            Path.Combine(repoRoot, "docs", "articles", "getting-started.md"),
+            Path.Combine(repoRoot, "docs", "cli.md")
+        };
+
+        foreach (var path in paths)
+        {
+            Assert.True(File.Exists(path), $"Missing modern workflow doc: {path}");
+            var content = File.ReadAllText(path);
+            Assert.Contains("dev:mock", content, StringComparison.Ordinal);
+            Assert.Contains("test:browser", content, StringComparison.Ordinal);
+            Assert.Contains("test:e2e", content, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void JavaScript_package_docs_use_fulora_client_branding()
+    {
+        var repoRoot = FindRepoRoot();
+        var paths = new[]
+        {
+            Path.Combine(repoRoot, "docs", "plugin-authoring-guide.md"),
+            Path.Combine(repoRoot, "docs", "MIGRATION_GUIDE.md"),
+            Path.Combine(repoRoot, "docs", "release-checklist.md")
+        };
+
+        foreach (var path in paths)
+        {
+            Assert.True(File.Exists(path), $"Missing JS package doc: {path}");
+            var content = File.ReadAllText(path);
+            Assert.Contains("@fulora/client", content, StringComparison.Ordinal);
+            Assert.DoesNotContain("@agibuild/bridge", content, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
     public void Architecture_article_aligns_with_platform_layering_terms()
     {
         var repoRoot = FindRepoRoot();
