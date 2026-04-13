@@ -77,6 +77,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     private WebViewOverlayHost? _overlayHost;
     private EventHandler? _layoutUpdatedHandler;
     private EventHandler<PixelPointEventArgs>? _hostWindowPositionChangedHandler;
+    private readonly WebViewControlRuntime _controlRuntime = new();
 
     // ---------------------------------------------------------------------------
     //  Constructor
@@ -221,7 +222,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public ICookieManager? TryGetCookieManager()
     {
-        return _core?.TryGetCookieManager();
+        return _controlRuntime.TryGetCookieManager();
     }
 
     /// <summary>
@@ -229,14 +230,14 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public ICommandManager? TryGetCommandManager()
     {
-        return _core?.TryGetCommandManager();
+        return _controlRuntime.TryGetCommandManager();
     }
 
     /// <summary>
     /// Gets the RPC service for bidirectional JS ↔ C# method calls.
     /// Returns <c>null</c> until the WebMessage bridge is enabled.
     /// </summary>
-    public IWebViewRpcService? Rpc => _core?.Rpc;
+    public IWebViewRpcService? Rpc => _controlRuntime.Rpc;
 
     /// <summary>
     /// Sets the bridge tracer for observability. Must be set before the first access to
@@ -244,17 +245,9 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public IBridgeTracer? BridgeTracer
     {
-        get => _core?.BridgeTracer;
-        set
-        {
-            if (_core is not null)
-                _core.BridgeTracer = value;
-            else
-                _pendingBridgeTracer = value;
-        }
+        get => _controlRuntime.BridgeTracer;
+        set => _controlRuntime.BridgeTracer = value;
     }
-
-    private IBridgeTracer? _pendingBridgeTracer;
 
     /// <summary>
     /// Gets the type-safe bridge service for exposing C# services to JS (<see cref="JsExportAttribute"/>)
@@ -262,14 +255,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// Accessing this property auto-enables the WebMessage bridge if not already enabled.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown when the control has not been attached yet.</exception>
-    public IBridgeService Bridge
-    {
-        get
-        {
-            EnsureCore();
-            return _core!.Bridge;
-        }
-    }
+    public IBridgeService Bridge => _controlRuntime.Bridge;
 
     /// <summary>
     /// Opens the browser developer tools (inspector) at runtime.
@@ -277,8 +263,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task OpenDevToolsAsync()
     {
-        EnsureCore();
-        return _core!.OpenDevToolsAsync();
+        return _controlRuntime.OpenDevToolsAsync();
     }
 
     /// <summary>
@@ -287,8 +272,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task CloseDevToolsAsync()
     {
-        EnsureCore();
-        return _core!.CloseDevToolsAsync();
+        return _controlRuntime.CloseDevToolsAsync();
     }
 
     /// <summary>
@@ -297,8 +281,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task<bool> IsDevToolsOpenAsync()
     {
-        EnsureCore();
-        return _core!.IsDevToolsOpenAsync();
+        return _controlRuntime.IsDevToolsOpenAsync();
     }
 
     /// <summary>
@@ -307,9 +290,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task<byte[]> CaptureScreenshotAsync()
     {
-        if (_core is null)
-            throw new InvalidOperationException("WebView is not initialized.");
-        return _core.CaptureScreenshotAsync();
+        return _controlRuntime.CaptureScreenshotAsync();
     }
 
     /// <summary>
@@ -318,9 +299,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null)
     {
-        if (_core is null)
-            throw new InvalidOperationException("WebView is not initialized.");
-        return _core.PrintToPdfAsync(options);
+        return _controlRuntime.PrintToPdfAsync(options);
     }
 
     /// <summary>
@@ -328,9 +307,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
     {
-        if (_core is null)
-            throw new InvalidOperationException("WebView is not initialized.");
-        return _core.FindInPageAsync(text, options);
+        return _controlRuntime.FindInPageAsync(text, options);
     }
 
     /// <summary>
@@ -338,9 +315,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task StopFindInPageAsync(bool clearHighlights = true)
     {
-        if (_core is null)
-            throw new InvalidOperationException("WebView is not initialized.");
-        return _core.StopFindInPageAsync(clearHighlights);
+        return _controlRuntime.StopFindInPageAsync(clearHighlights);
     }
 
     /// <summary>
@@ -348,9 +323,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task<string> AddPreloadScriptAsync(string javaScript)
     {
-        if (_core is null)
-            throw new InvalidOperationException("WebView is not initialized.");
-        return _core.AddPreloadScriptAsync(javaScript);
+        return _controlRuntime.AddPreloadScriptAsync(javaScript);
     }
 
     /// <summary>
@@ -358,9 +331,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task RemovePreloadScriptAsync(string scriptId)
     {
-        if (_core is null)
-            throw new InvalidOperationException("WebView is not initialized.");
-        return _core.RemovePreloadScriptAsync(scriptId);
+        return _controlRuntime.RemovePreloadScriptAsync(scriptId);
     }
 
     /// <summary>
@@ -476,7 +447,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public INativeHandle? TryGetWebViewHandle()
     {
-        return _core?.TryGetWebViewHandle();
+        return _controlRuntime.TryGetWebViewHandle();
     }
 
     /// <summary>
@@ -484,12 +455,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public Task<INativeHandle?> TryGetWebViewHandleAsync()
     {
-        if (_core is null)
-        {
-            return Task.FromResult<INativeHandle?>(null);
-        }
-
-        return _core.TryGetWebViewHandleAsync();
+        return _controlRuntime.TryGetWebViewHandleAsync();
     }
 
     /// <summary>
@@ -498,7 +464,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public void SetCustomUserAgent(string? userAgent)
     {
-        _core?.SetCustomUserAgent(userAgent);
+        _controlRuntime.SetCustomUserAgent(userAgent);
     }
 
     /// <summary>
@@ -508,9 +474,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public void EnableWebMessageBridge(WebMessageBridgeOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options);
-        EnsureCore();
-        _core!.EnableWebMessageBridge(options);
+        _controlRuntime.EnableWebMessageBridge(options);
     }
 
     /// <summary>
@@ -519,8 +483,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public void DisableWebMessageBridge()
     {
-        EnsureCore();
-        _core!.DisableWebMessageBridge();
+        _controlRuntime.DisableWebMessageBridge();
     }
 
     /// <summary>
@@ -529,45 +492,37 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public void EnableSpaHosting(SpaHostingOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options);
-        EnsureCore();
-        _core!.EnableSpaHosting(options);
+        _controlRuntime.EnableSpaHosting(options);
     }
 
     /// <inheritdoc />
     public Task<string?> InvokeScriptAsync(string script)
     {
-        ArgumentNullException.ThrowIfNull(script);
-        EnsureCore();
-        return _core!.InvokeScriptAsync(script);
+        return _controlRuntime.InvokeScriptAsync(script);
     }
 
     /// <inheritdoc />
     public Task<bool> GoBackAsync()
     {
-        if (_core is null) return Task.FromResult(false);
-        return _core.GoBackAsync();
+        return _controlRuntime.GoBackAsync();
     }
 
     /// <inheritdoc />
     public Task<bool> GoForwardAsync()
     {
-        if (_core is null) return Task.FromResult(false);
-        return _core.GoForwardAsync();
+        return _controlRuntime.GoForwardAsync();
     }
 
     /// <inheritdoc />
     public Task<bool> RefreshAsync()
     {
-        if (_core is null) return Task.FromResult(false);
-        return _core.RefreshAsync();
+        return _controlRuntime.RefreshAsync();
     }
 
     /// <inheritdoc />
     public Task<bool> StopAsync()
     {
-        if (_core is null) return Task.FromResult(false);
-        return _core.StopAsync();
+        return _controlRuntime.StopAsync();
     }
 
     // --- Events (bubbled from WebViewCore) ---
@@ -632,12 +587,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
                          ?? (ILogger<WebViewCore>)NullLogger<WebViewCore>.Instance;
 
             _core = WebViewCore.CreateForControl(dispatcher, logger, EnvironmentOptions);
-
-            if (_pendingBridgeTracer is not null)
-            {
-                _core.BridgeTracer = _pendingBridgeTracer;
-                _pendingBridgeTracer = null;
-            }
+            _controlRuntime.AttachCore(_core);
 
             // Subscribe before Attach so we receive AdapterCreated raised during Attach().
             SubscribeCoreEvents();
@@ -660,12 +610,14 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             _core = null;
             _coreAttached = false;
             _adapterUnavailable = true;
+            _controlRuntime.MarkAdapterUnavailable();
         }
         catch
         {
             _core?.Dispose();
             _core = null;
             _coreAttached = false;
+            _controlRuntime.ClearCore();
             throw;
         }
 
@@ -691,6 +643,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
 
         _core?.Dispose();
         _core = null;
+        _controlRuntime.ClearCore();
 
         base.DestroyNativeControlCore(control);
     }
@@ -750,7 +703,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
 
     private void EnsureCore()
     {
-        if (_core is null)
+        if (_controlRuntime.Core is null)
         {
             if (_adapterUnavailable)
             {
