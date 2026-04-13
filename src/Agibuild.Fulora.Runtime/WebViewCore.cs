@@ -89,6 +89,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     private readonly ICookieManager? _cookieManager;
     private readonly ICommandManager? _commandManager;
     private readonly WebViewCoreFeatureRuntime _featureRuntime;
+    private readonly WebViewCoreCapabilityRuntime _capabilityRuntime;
 
     /// <summary>Whether the current adapter supports drag-and-drop.</summary>
     internal bool HasDragDropSupport => _featureRuntime.HasDragDropSupport;
@@ -170,6 +171,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
 
         _featureRuntime = new WebViewCoreFeatureRuntime(this, _adapter, _dispatcher, _logger, _environmentOptions);
         _bridgeRuntime = new WebViewCoreBridgeRuntime(this, _logger, _environmentOptions.EnableDevTools);
+        _capabilityRuntime = new WebViewCoreCapabilityRuntime(_featureRuntime, _bridgeRuntime, _cookieManager, _commandManager);
         _adapterEventRuntime = new WebViewCoreAdapterEventRuntime(this, _dispatcher, _logger);
         _navigationRuntime = new WebViewCoreNavigationRuntime(this, _dispatcher, _logger);
 
@@ -461,48 +463,48 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
         => _navigationRuntime.OnNativeNavigationStartingOnUiThread(info);
 
     /// <inheritdoc />
-    public ICookieManager? TryGetCookieManager() => _cookieManager;
+    public ICookieManager? TryGetCookieManager() => _capabilityRuntime.TryGetCookieManager();
 
     /// <inheritdoc />
-    public ICommandManager? TryGetCommandManager() => _commandManager;
+    public ICommandManager? TryGetCommandManager() => _capabilityRuntime.TryGetCommandManager();
 
     /// <inheritdoc />
-    public IWebViewRpcService? Rpc => _bridgeRuntime.Rpc;
+    public IWebViewRpcService? Rpc => _capabilityRuntime.Rpc;
 
     // ==================== DevTools ====================
 
     /// <inheritdoc />
     public Task OpenDevToolsAsync()
-        => _featureRuntime.OpenDevToolsAsync();
+        => _capabilityRuntime.OpenDevToolsAsync();
 
     /// <inheritdoc />
     public Task CloseDevToolsAsync()
-        => _featureRuntime.CloseDevToolsAsync();
+        => _capabilityRuntime.CloseDevToolsAsync();
 
     /// <inheritdoc />
     public Task<bool> IsDevToolsOpenAsync()
-        => _featureRuntime.IsDevToolsOpenAsync();
+        => _capabilityRuntime.IsDevToolsOpenAsync();
 
     // ==================== Bridge ====================
 
     /// <inheritdoc />
     public IBridgeTracer? BridgeTracer
     {
-        get => _bridgeRuntime.BridgeTracer;
-        set => _bridgeRuntime.BridgeTracer = value;
+        get => _capabilityRuntime.BridgeTracer;
+        set => _capabilityRuntime.BridgeTracer = value;
     }
 
     /// <inheritdoc />
     public IBridgeService Bridge
-        => _bridgeRuntime.Bridge;
+        => _capabilityRuntime.Bridge;
 
     /// <inheritdoc />
     public Task<byte[]> CaptureScreenshotAsync()
-        => _featureRuntime.CaptureScreenshotAsync();
+        => _capabilityRuntime.CaptureScreenshotAsync();
 
     /// <inheritdoc />
     public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null)
-        => _featureRuntime.PrintToPdfAsync(options);
+        => _capabilityRuntime.PrintToPdfAsync(options);
 
     // ==================== Zoom ====================
 
@@ -514,11 +516,11 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     /// Returns 1.0 if the adapter does not support zoom.
     /// </summary>
     public Task<double> GetZoomFactorAsync()
-        => _featureRuntime.GetZoomFactorAsync();
+        => _capabilityRuntime.GetZoomFactorAsync();
 
     /// <inheritdoc />
     public Task SetZoomFactorAsync(double zoomFactor)
-        => _featureRuntime.SetZoomFactorAsync(zoomFactor);
+        => _capabilityRuntime.SetZoomFactorAsync(zoomFactor);
 
     /// <summary>Raised when the user triggers a context menu (right-click, long-press).</summary>
     public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested;
@@ -541,7 +543,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IFindInPageAdapter"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="text"/> is null or empty.</exception>
     public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
-        => _featureRuntime.FindInPageAsync(text, options);
+        => _capabilityRuntime.FindInPageAsync(text, options);
 
     /// <summary>
     /// Clears find-in-page highlights and resets search state.
@@ -549,7 +551,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     /// <param name="clearHighlights">Whether to remove visual highlights. Default: true.</param>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IFindInPageAdapter"/>.</exception>
     public Task StopFindInPageAsync(bool clearHighlights = true)
-        => _featureRuntime.StopFindInPageAsync(clearHighlights);
+        => _capabilityRuntime.StopFindInPageAsync(clearHighlights);
 
     /// <summary>
     /// Registers a JavaScript snippet to run at document start on every page load.
@@ -558,7 +560,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     /// <returns>An opaque script ID that can be passed to <see cref="RemovePreloadScriptAsync"/>.</returns>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IPreloadScriptAdapter"/>.</exception>
     public Task<string> AddPreloadScriptAsync(string javaScript)
-        => _featureRuntime.AddPreloadScriptAsync(javaScript);
+        => _capabilityRuntime.AddPreloadScriptAsync(javaScript);
 
     /// <summary>
     /// Removes a previously registered preload script by its ID.
@@ -566,14 +568,14 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     /// <param name="scriptId">The ID returned by <see cref="AddPreloadScriptAsync"/>.</param>
     /// <exception cref="NotSupportedException">The adapter does not implement <see cref="IPreloadScriptAdapter"/>.</exception>
     public Task RemovePreloadScriptAsync(string scriptId)
-        => _featureRuntime.RemovePreloadScriptAsync(scriptId);
+        => _capabilityRuntime.RemovePreloadScriptAsync(scriptId);
 
     /// <summary>
     /// Asynchronously retrieves the native platform WebView handle.
     /// This is the primary any-thread API surface and always marshals adapter access to the UI thread.
     /// </summary>
     public Task<INativeHandle?> TryGetWebViewHandleAsync()
-        => _featureRuntime.TryGetWebViewHandleAsync();
+        => _capabilityRuntime.TryGetWebViewHandleAsync();
 
     /// <summary>
     /// Compatibility wrapper around <see cref="TryGetWebViewHandleAsync"/> for synchronous call sites.
@@ -587,22 +589,22 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebV
     /// Pass <c>null</c> to revert to the platform default.
     /// </summary>
     public void SetCustomUserAgent(string? userAgent)
-        => _featureRuntime.SetCustomUserAgent(userAgent);
+        => _capabilityRuntime.SetCustomUserAgent(userAgent);
 
     /// <inheritdoc />
     public void EnableWebMessageBridge(WebMessageBridgeOptions options)
-        => _bridgeRuntime.EnableWebMessageBridge(options);
+        => _capabilityRuntime.EnableWebMessageBridge(options);
 
     /// <inheritdoc />
     public void DisableWebMessageBridge()
-        => _bridgeRuntime.DisableWebMessageBridge();
+        => _capabilityRuntime.DisableWebMessageBridge();
 
     /// <summary>
     /// Re-injects the base RPC JS stub and all exposed service stubs when the bridge is enabled.
     /// Called after successful navigation to restore <c>window.agWebView</c> in the new JS context.
     /// </summary>
     internal void ReinjectBridgeStubsIfEnabled()
-        => _bridgeRuntime.ReinjectBridgeStubsIfEnabled();
+        => _capabilityRuntime.ReinjectBridgeStubsIfEnabled();
 
     // ==================== SPA Hosting ====================
 

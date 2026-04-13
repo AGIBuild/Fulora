@@ -19,7 +19,7 @@ internal interface IWebViewCoreBridgeHost
     void ThrowIfNotOnUiThread(string apiName);
 }
 
-internal sealed class WebViewCoreBridgeRuntime : IDisposable
+internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridgeOperations
 {
     private readonly IWebViewCoreBridgeHost _host;
     private readonly ILogger _logger;

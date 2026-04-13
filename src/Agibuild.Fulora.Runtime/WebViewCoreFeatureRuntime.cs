@@ -30,7 +30,7 @@ internal interface IWebViewCoreFeatureHost
     void RaiseDropCompleted(DropEventArgs args);
 }
 
-internal sealed class WebViewCoreFeatureRuntime : IDisposable
+internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatureOperations
 {
     private const double MinZoom = 0.25;
     private const double MaxZoom = 5.0;
