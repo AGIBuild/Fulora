@@ -71,14 +71,13 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     private EventHandler<DragEventArgs>? _dragOverHandlers;
     private EventHandler<EventArgs>? _dragLeftHandlers;
     private EventHandler<DropEventArgs>? _dropCompletedHandlers;
-    private Window? _hostWindow;
-    private EventHandler<WindowClosingEventArgs>? _hostWindowClosingHandler;
     private WebViewOverlayHost? _overlayHost;
     private EventHandler? _layoutUpdatedHandler;
     private EventHandler<PixelPointEventArgs>? _hostWindowPositionChangedHandler;
     private readonly WebViewControlRuntime _controlRuntime = new();
     private readonly WebViewControlEventRuntime _eventRuntime;
     private readonly WebViewControlLifecycleRuntime _lifecycleRuntime;
+    private readonly WebViewHostClosingRuntime _hostClosingRuntime;
 
     // ---------------------------------------------------------------------------
     //  Constructor
@@ -127,6 +126,27 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             setCoreAttached: attached => _coreAttached = attached,
             setAdapterUnavailable: unavailable => _adapterUnavailable = unavailable,
             createDispatcher: static () => new SynchronizationContextWebViewDispatcher());
+
+        _hostClosingRuntime = new WebViewHostClosingRuntime(
+            resolveHostWindow: () => TopLevel.GetTopLevel(this) as Window,
+            subscribe: static (window, handler) =>
+            {
+                if (window is Window avaloniaWindow)
+                {
+                    EventHandler<WindowClosingEventArgs> wrapped = (_, e) => handler(e.IsProgrammatic, e.CloseReason);
+                    avaloniaWindow.Closing += wrapped;
+                    return wrapped;
+                }
+
+                return null;
+            },
+            unsubscribe: static (window, subscriptionToken) =>
+            {
+                if (window is Window avaloniaWindow && subscriptionToken is EventHandler<WindowClosingEventArgs> wrapped)
+                    avaloniaWindow.Closing -= wrapped;
+            },
+            isCoreAttached: () => _coreAttached,
+            detachForClosing: (isProgrammatic, closeReason) => DetachForHostWindowClosing(isProgrammatic, closeReason));
     }
 
     // ---------------------------------------------------------------------------
@@ -597,7 +617,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        HookHostWindowClosing();
+        _hostClosingRuntime.RefreshHook();
         SubscribeLayoutOverlayEvents();
     }
 
@@ -607,7 +627,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         UnsubscribeLayoutOverlayEvents();
-        UnhookHostWindowClosing();
+        _hostClosingRuntime.Unhook();
         base.OnDetachedFromVisualTree(e);
     }
 
@@ -621,7 +641,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         _lifecycleRuntime.AttachToNativeControl(handle);
 
         if (_coreAttached)
-            HookHostWindowClosing();
+            _hostClosingRuntime.RefreshHook();
 
         return handle;
     }
@@ -631,7 +651,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
-        UnhookHostWindowClosing();
+        _hostClosingRuntime.Unhook();
 
         _overlayHost?.Dispose();
         _overlayHost = null;
@@ -749,7 +769,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        UnhookHostWindowClosing();
+        _hostClosingRuntime.Unhook();
 
         _overlayHost?.Dispose();
         _overlayHost = null;
@@ -759,20 +779,13 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     // Close events can be user-triggered, app-triggered, or OS-triggered.
     // For Chromium/WebView2 teardown safety, all close paths should detach early.
     internal static bool ShouldDetachForHostWindowClosing(bool isProgrammatic, WindowCloseReason closeReason)
-        => true;
+        => WebViewHostClosingRuntime.ShouldDetachForHostWindowClosing(isProgrammatic, closeReason);
 
     internal bool HandleHostWindowClosing(bool isProgrammatic, WindowCloseReason closeReason)
+        => _hostClosingRuntime.HandleHostWindowClosing(isProgrammatic, closeReason);
+
+    private bool DetachForHostWindowClosing(bool isProgrammatic, WindowCloseReason closeReason)
     {
-        if (!ShouldDetachForHostWindowClosing(isProgrammatic, closeReason))
-        {
-            return false;
-        }
-
-        if (!_coreAttached)
-        {
-            return false;
-        }
-
         try
         {
             _core?.Detach();
@@ -783,36 +796,6 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         {
             return false;
         }
-    }
-
-    private void HookHostWindowClosing()
-    {
-        var window = TopLevel.GetTopLevel(this) as Window;
-        if (ReferenceEquals(window, _hostWindow))
-            return;
-
-        UnhookHostWindowClosing();
-
-        if (window is null)
-            return;
-
-        _hostWindow = window;
-        _hostWindowClosingHandler = (_, e) =>
-        {
-            _ = HandleHostWindowClosing(e.IsProgrammatic, e.CloseReason);
-        };
-        _hostWindow.Closing += _hostWindowClosingHandler;
-    }
-
-    private void UnhookHostWindowClosing()
-    {
-        if (_hostWindow is not null && _hostWindowClosingHandler is not null)
-        {
-            _hostWindow.Closing -= _hostWindowClosingHandler;
-        }
-
-        _hostWindow = null;
-        _hostWindowClosingHandler = null;
     }
 
     private void SubscribeLayoutOverlayEvents()
