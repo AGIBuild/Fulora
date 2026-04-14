@@ -7,7 +7,7 @@ namespace Agibuild.Fulora;
 /// <summary>
 /// Core runtime implementation of <see cref="IWebView"/> over a platform adapter.
 /// </summary>
-public sealed class WebViewCore : ISpaHostingWebView, IWebViewAdapterHost, IWebViewCoreFeatureHost, IWebViewCoreBridgeHost, IWebViewCoreAdapterEventHost, IWebViewCoreNavigationHost, IWebViewCoreSpaHostingHost, IDisposable
+public sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvents, IWebViewAdapterHost, IWebViewCoreFeatureHost, IWebViewCoreBridgeHost, IWebViewCoreAdapterEventHost, IWebViewCoreNavigationHost, IWebViewCoreSpaHostingHost, IDisposable
 {
     private static readonly Uri AboutBlank = new("about:blank");
 

@@ -66,6 +66,8 @@ internal sealed class WebViewControlRuntime
     public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
         => RequireCore().FindInPageAsync(text, options);
 
+    public Task SetZoomFactorAsync(double zoomFactor) => RequireCore().SetZoomFactorAsync(zoomFactor);
+
     public Task StopFindInPageAsync(bool clearHighlights = true) => RequireCore().StopFindInPageAsync(clearHighlights);
 
     public Task<string> AddPreloadScriptAsync(string javaScript) => RequireCore().AddPreloadScriptAsync(javaScript);

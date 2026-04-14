@@ -78,6 +78,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     private EventHandler? _layoutUpdatedHandler;
     private EventHandler<PixelPointEventArgs>? _hostWindowPositionChangedHandler;
     private readonly WebViewControlRuntime _controlRuntime = new();
+    private readonly WebViewControlEventRuntime _eventRuntime;
 
     // ---------------------------------------------------------------------------
     //  Constructor
@@ -88,6 +89,33 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         SourceProperty.Changed.AddClassHandler<WebView>((wv, e) => wv.OnSourceChanged(e));
         ZoomFactorProperty.Changed.AddClassHandler<WebView>((wv, e) => wv.OnZoomFactorChanged(e));
         OverlayContentProperty.Changed.AddClassHandler<WebView>((wv, e) => wv.OnOverlayContentChanged(e));
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="WebView"/> control shell.
+    /// </summary>
+    public WebView()
+    {
+        _eventRuntime = new WebViewControlEventRuntime(
+            raiseNavigationStarted: args => OnCoreNavigationStarted(args),
+            raiseNavigationCompleted: args => OnCoreNavigationCompleted(args),
+            raiseNewWindowRequested: args => OnCoreNewWindowRequested(args),
+            raiseWebMessageReceived: args => WebMessageReceived?.Invoke(this, args),
+            raiseWebResourceRequested: args => WebResourceRequested?.Invoke(this, args),
+            raiseEnvironmentRequested: args => EnvironmentRequested?.Invoke(this, args),
+            raiseDownloadRequested: args => DownloadRequested?.Invoke(this, args),
+            raisePermissionRequested: args => PermissionRequested?.Invoke(this, args),
+            raiseAdapterCreated: args => AdapterCreated?.Invoke(this, args),
+            raiseAdapterDestroyed: () => AdapterDestroyed?.Invoke(this, EventArgs.Empty),
+            raiseZoomFactorChanged: newZoom => OnCoreZoomFactorChanged(newZoom),
+            getContextMenuHandlers: () => _contextMenuRequestedHandlers,
+            getDragEnteredHandlers: () => _dragEnteredHandlers,
+            getDragOverHandlers: () => _dragOverHandlers,
+            getDragLeftHandlers: () => _dragLeftHandlers,
+            getDropCompletedHandlers: () => _dropCompletedHandlers,
+            navigateInPlaceAsync: uri => _controlRuntime.NavigateAsync(uri),
+            getInitialZoomFactor: () => ZoomFactor,
+            applyInitialZoomFactor: zoom => _ = _controlRuntime.SetZoomFactorAsync(zoom));
     }
 
     // ---------------------------------------------------------------------------
@@ -590,7 +618,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             _controlRuntime.AttachCore(_core);
 
             // Subscribe before Attach so we receive AdapterCreated raised during Attach().
-            SubscribeCoreEvents();
+            _eventRuntime.Attach(_core);
 
             _core.Attach(new AvaloniaNativeHandleAdapter(handle));
             _coreAttached = true;
@@ -630,7 +658,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
         UnhookHostWindowClosing();
-        UnsubscribeCoreEvents();
+        _eventRuntime.Detach(_core);
 
         _overlayHost?.Dispose();
         _overlayHost = null;
@@ -694,13 +722,6 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         }
     }
 
-    private void OnCoreZoomFactorChanged(object? sender, double newZoom)
-    {
-        // Sync adapter-initiated zoom back to the Avalonia property
-        SetCurrentValue(ZoomFactorProperty, newZoom);
-        ZoomFactorChanged?.Invoke(this, newZoom);
-    }
-
     private void EnsureCore()
     {
         if (_controlRuntime.Core is null)
@@ -723,99 +744,25 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     {
         ArgumentNullException.ThrowIfNull(core);
         _core = core;
+        _controlRuntime.AttachCore(core);
         _adapterUnavailable = false;
     }
 
-    internal void TestOnlySubscribeCoreEvents() => SubscribeCoreEvents();
-
-    internal void TestOnlyUnsubscribeCoreEvents() => UnsubscribeCoreEvents();
-
-    private void SubscribeCoreEvents()
+    internal void TestOnlySubscribeCoreEvents()
     {
-        if (_core is null) return;
-
-        _core.NavigationStarted += OnCoreNavigationStarted;
-        _core.NavigationCompleted += OnCoreNavigationCompleted;
-        _core.NewWindowRequested += OnCoreNewWindowRequested;
-        _core.WebMessageReceived += OnCoreWebMessageReceived;
-        _core.WebResourceRequested += OnCoreWebResourceRequested;
-        _core.EnvironmentRequested += OnCoreEnvironmentRequested;
-        _core.DownloadRequested += OnCoreDownloadRequested;
-        _core.PermissionRequested += OnCorePermissionRequested;
-        _core.AdapterCreated += OnCoreAdapterCreated;
-        _core.AdapterDestroyed += OnCoreAdapterDestroyed;
-        _core.ZoomFactorChanged += OnCoreZoomFactorChanged;
-        if (_contextMenuRequestedHandlers is not null)
-        {
-            _core.ContextMenuRequested += _contextMenuRequestedHandlers;
-        }
-        if (_dragEnteredHandlers is not null)
-        {
-            _core.DragEntered += _dragEnteredHandlers;
-        }
-        if (_dragOverHandlers is not null)
-        {
-            _core.DragOver += _dragOverHandlers;
-        }
-        if (_dragLeftHandlers is not null)
-        {
-            _core.DragLeft += _dragLeftHandlers;
-        }
-        if (_dropCompletedHandlers is not null)
-        {
-            _core.DropCompleted += _dropCompletedHandlers;
-        }
-
-        // Apply initial zoom if set via XAML before core existed
-        var zoom = ZoomFactor;
-        if (Math.Abs(zoom - 1.0) > 0.001)
-            _ = _core.SetZoomFactorAsync(zoom);
+        if (_core is not null)
+            _eventRuntime.Attach(_core);
     }
 
-    private void UnsubscribeCoreEvents()
-    {
-        if (_core is null) return;
+    internal void TestOnlyUnsubscribeCoreEvents() => _eventRuntime.Detach(_core);
 
-        _core.NavigationStarted -= OnCoreNavigationStarted;
-        _core.NavigationCompleted -= OnCoreNavigationCompleted;
-        _core.NewWindowRequested -= OnCoreNewWindowRequested;
-        _core.WebMessageReceived -= OnCoreWebMessageReceived;
-        _core.WebResourceRequested -= OnCoreWebResourceRequested;
-        _core.EnvironmentRequested -= OnCoreEnvironmentRequested;
-        _core.DownloadRequested -= OnCoreDownloadRequested;
-        _core.PermissionRequested -= OnCorePermissionRequested;
-        _core.AdapterCreated -= OnCoreAdapterCreated;
-        _core.AdapterDestroyed -= OnCoreAdapterDestroyed;
-        _core.ZoomFactorChanged -= OnCoreZoomFactorChanged;
-        if (_contextMenuRequestedHandlers is not null)
-        {
-            _core.ContextMenuRequested -= _contextMenuRequestedHandlers;
-        }
-        if (_dragEnteredHandlers is not null)
-        {
-            _core.DragEntered -= _dragEnteredHandlers;
-        }
-        if (_dragOverHandlers is not null)
-        {
-            _core.DragOver -= _dragOverHandlers;
-        }
-        if (_dragLeftHandlers is not null)
-        {
-            _core.DragLeft -= _dragLeftHandlers;
-        }
-        if (_dropCompletedHandlers is not null)
-        {
-            _core.DropCompleted -= _dropCompletedHandlers;
-        }
-    }
-
-    private void OnCoreNavigationStarted(object? sender, NavigationStartingEventArgs e)
+    private void OnCoreNavigationStarted(NavigationStartingEventArgs e)
     {
         NavigationStarted?.Invoke(this, e);
         RaisePropertyChanged(IsLoadingProperty, false, true);
     }
 
-    private void OnCoreNavigationCompleted(object? sender, NavigationCompletedEventArgs e)
+    private void OnCoreNavigationCompleted(NavigationCompletedEventArgs e)
     {
         NavigationCompleted?.Invoke(this, e);
         RaisePropertyChanged(IsLoadingProperty, true, false);
@@ -823,37 +770,14 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         RaisePropertyChanged(CanGoForwardProperty, !CanGoForward, CanGoForward);
     }
 
-    private void OnCoreNewWindowRequested(object? sender, NewWindowRequestedEventArgs e)
+    private void OnCoreNewWindowRequested(NewWindowRequestedEventArgs e)
+        => NewWindowRequested?.Invoke(this, e);
+
+    private void OnCoreZoomFactorChanged(double newZoom)
     {
-        NewWindowRequested?.Invoke(this, e);
-
-        // If the consumer did not handle the event, navigate in the current view.
-        if (!e.Handled && e.Uri is not null && _core is not null)
-        {
-            _ = _core.NavigateAsync(e.Uri);
-        }
+        SetCurrentValue(ZoomFactorProperty, newZoom);
+        ZoomFactorChanged?.Invoke(this, newZoom);
     }
-
-    private void OnCoreWebMessageReceived(object? sender, WebMessageReceivedEventArgs e)
-        => WebMessageReceived?.Invoke(this, e);
-
-    private void OnCoreWebResourceRequested(object? sender, WebResourceRequestedEventArgs e)
-        => WebResourceRequested?.Invoke(this, e);
-
-    private void OnCoreEnvironmentRequested(object? sender, EnvironmentRequestedEventArgs e)
-        => EnvironmentRequested?.Invoke(this, e);
-
-    private void OnCoreDownloadRequested(object? sender, DownloadRequestedEventArgs e)
-        => DownloadRequested?.Invoke(this, e);
-
-    private void OnCorePermissionRequested(object? sender, PermissionRequestedEventArgs e)
-        => PermissionRequested?.Invoke(this, e);
-
-    private void OnCoreAdapterCreated(object? sender, AdapterCreatedEventArgs e)
-        => AdapterCreated?.Invoke(this, e);
-
-    private void OnCoreAdapterDestroyed(object? sender, EventArgs e)
-        => AdapterDestroyed?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Releases the native WebView resources and detaches from the host window lifecycle.
@@ -862,7 +786,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     {
         GC.SuppressFinalize(this);
         UnhookHostWindowClosing();
-        UnsubscribeCoreEvents();
+        _eventRuntime.Detach(_core);
 
         _overlayHost?.Dispose();
         _overlayHost = null;
