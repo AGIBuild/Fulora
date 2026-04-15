@@ -66,13 +66,9 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     private bool _coreAttached;
     private bool _adapterUnavailable;
     private ILoggerFactory? _loggerFactory;
-    private EventHandler<ContextMenuRequestedEventArgs>? _contextMenuRequestedHandlers;
-    private EventHandler<DragEventArgs>? _dragEnteredHandlers;
-    private EventHandler<DragEventArgs>? _dragOverHandlers;
-    private EventHandler<EventArgs>? _dragLeftHandlers;
-    private EventHandler<DropEventArgs>? _dropCompletedHandlers;
     private readonly WebViewControlRuntime _controlRuntime = new();
     private readonly WebViewControlStateRuntime _stateRuntime;
+    private readonly WebViewControlInteractionRuntime _interactionRuntime = new();
     private readonly WebViewControlEventRuntime _eventRuntime;
     private readonly WebViewControlLifecycleRuntime _lifecycleRuntime;
     private readonly WebViewHostClosingRuntime _hostClosingRuntime;
@@ -120,11 +116,11 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             raiseAdapterCreated: args => AdapterCreated?.Invoke(this, args),
             raiseAdapterDestroyed: () => AdapterDestroyed?.Invoke(this, EventArgs.Empty),
             raiseZoomFactorChanged: newZoom => _stateRuntime.HandleCoreZoomFactorChanged(newZoom),
-            getContextMenuHandlers: () => _contextMenuRequestedHandlers,
-            getDragEnteredHandlers: () => _dragEnteredHandlers,
-            getDragOverHandlers: () => _dragOverHandlers,
-            getDragLeftHandlers: () => _dragLeftHandlers,
-            getDropCompletedHandlers: () => _dropCompletedHandlers,
+            getContextMenuHandlers: () => _interactionRuntime.ContextMenuRequestedHandlers,
+            getDragEnteredHandlers: () => _interactionRuntime.DragEnteredHandlers,
+            getDragOverHandlers: () => _interactionRuntime.DragOverHandlers,
+            getDragLeftHandlers: () => _interactionRuntime.DragLeftHandlers,
+            getDropCompletedHandlers: () => _interactionRuntime.DropCompletedHandlers,
             navigateInPlaceAsync: uri => _controlRuntime.NavigateAsync(uri),
             getInitialZoomFactor: () => ZoomFactor,
             applyInitialZoomFactor: zoom => _ = _controlRuntime.SetZoomFactorAsync(zoom));
@@ -430,106 +426,36 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested
     {
-        add
-        {
-            _contextMenuRequestedHandlers += value;
-            if (_core is not null)
-            {
-                _core.ContextMenuRequested += value;
-            }
-        }
-        remove
-        {
-            _contextMenuRequestedHandlers -= value;
-            if (_core is not null)
-            {
-                _core.ContextMenuRequested -= value;
-            }
-        }
+        add => _interactionRuntime.AddContextMenuRequestedHandler(_core, value!);
+        remove => _interactionRuntime.RemoveContextMenuRequestedHandler(_core, value!);
     }
 
     /// <summary>Raised when a drag operation enters the WebView bounds.</summary>
     public event EventHandler<DragEventArgs>? DragEntered
     {
-        add
-        {
-            _dragEnteredHandlers += value;
-            if (_core is not null)
-            {
-                _core.DragEntered += value;
-            }
-        }
-        remove
-        {
-            _dragEnteredHandlers -= value;
-            if (_core is not null)
-            {
-                _core.DragEntered -= value;
-            }
-        }
+        add => _interactionRuntime.AddDragEnteredHandler(_core, value!);
+        remove => _interactionRuntime.RemoveDragEnteredHandler(_core, value!);
     }
 
     /// <summary>Raised when a drag operation moves over the WebView.</summary>
     public event EventHandler<DragEventArgs>? DragOver
     {
-        add
-        {
-            _dragOverHandlers += value;
-            if (_core is not null)
-            {
-                _core.DragOver += value;
-            }
-        }
-        remove
-        {
-            _dragOverHandlers -= value;
-            if (_core is not null)
-            {
-                _core.DragOver -= value;
-            }
-        }
+        add => _interactionRuntime.AddDragOverHandler(_core, value!);
+        remove => _interactionRuntime.RemoveDragOverHandler(_core, value!);
     }
 
     /// <summary>Raised when a drag operation leaves the WebView bounds.</summary>
     public event EventHandler<EventArgs>? DragLeft
     {
-        add
-        {
-            _dragLeftHandlers += value;
-            if (_core is not null)
-            {
-                _core.DragLeft += value;
-            }
-        }
-        remove
-        {
-            _dragLeftHandlers -= value;
-            if (_core is not null)
-            {
-                _core.DragLeft -= value;
-            }
-        }
+        add => _interactionRuntime.AddDragLeftHandler(_core, value!);
+        remove => _interactionRuntime.RemoveDragLeftHandler(_core, value!);
     }
 
     /// <summary>Raised when a drop operation completes on the WebView.</summary>
     public event EventHandler<DropEventArgs>? DropCompleted
     {
-        add
-        {
-            _dropCompletedHandlers += value;
-            if (_core is not null)
-            {
-                _core.DropCompleted += value;
-            }
-        }
-        remove
-        {
-            _dropCompletedHandlers -= value;
-            if (_core is not null)
-            {
-                _core.DropCompleted -= value;
-            }
-        }
+        add => _interactionRuntime.AddDropCompletedHandler(_core, value!);
+        remove => _interactionRuntime.RemoveDropCompletedHandler(_core, value!);
     }
 
     /// <summary>
