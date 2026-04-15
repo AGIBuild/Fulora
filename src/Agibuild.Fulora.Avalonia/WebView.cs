@@ -91,15 +91,16 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             isCoreAttached: () => _controlRuntime.IsAvailable,
             navigateAsync: uri => _controlRuntime.NavigateAsync(uri),
             setZoomFactorAsync: zoom => _controlRuntime.SetZoomFactorAsync(zoom),
-            raiseNavigationStarted: args => NavigationStarted?.Invoke(this, args),
-            raiseNavigationCompleted: args => NavigationCompleted?.Invoke(this, args),
             getCanGoBack: () => _controlRuntime.CanGoBack,
             getCanGoForward: () => _controlRuntime.CanGoForward,
-            raiseIsLoadingChanged: (oldValue, newValue) => RaisePropertyChanged(IsLoadingProperty, oldValue, newValue),
-            raiseCanGoBackChanged: (oldValue, newValue) => RaisePropertyChanged(CanGoBackProperty, oldValue, newValue),
-            raiseCanGoForwardChanged: (oldValue, newValue) => RaisePropertyChanged(CanGoForwardProperty, oldValue, newValue),
-            setZoomFactorValue: zoom => SetCurrentValue(ZoomFactorProperty, zoom),
-            raiseZoomFactorChanged: zoom => ZoomFactorChanged?.Invoke(this, zoom));
+            shellCallbacks: new WebViewControlStateCallbacks(
+                raiseNavigationStarted: args => NavigationStarted?.Invoke(this, args),
+                raiseNavigationCompleted: args => NavigationCompleted?.Invoke(this, args),
+                raiseIsLoadingChanged: (oldValue, newValue) => RaisePropertyChanged(IsLoadingProperty, oldValue, newValue),
+                raiseCanGoBackChanged: (oldValue, newValue) => RaisePropertyChanged(CanGoBackProperty, oldValue, newValue),
+                raiseCanGoForwardChanged: (oldValue, newValue) => RaisePropertyChanged(CanGoForwardProperty, oldValue, newValue),
+                setZoomFactorValue: zoom => SetCurrentValue(ZoomFactorProperty, zoom),
+                raiseZoomFactorChanged: zoom => ZoomFactorChanged?.Invoke(this, zoom)));
 
         _eventRuntime = new WebViewControlEventRuntime(
             callbacks: new WebViewControlEventCallbacks(

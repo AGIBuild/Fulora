@@ -121,14 +121,15 @@ public sealed class WebViewControlStateRuntimeTests
             isCoreAttached: isCoreAttached ?? (() => true),
             navigateAsync: navigateAsync ?? (_ => Task.CompletedTask),
             setZoomFactorAsync: setZoomFactorAsync ?? (_ => Task.CompletedTask),
-            raiseNavigationStarted: raiseNavigationStarted ?? (_ => { }),
-            raiseNavigationCompleted: raiseNavigationCompleted ?? (_ => { }),
             getCanGoBack: getCanGoBack ?? (() => false),
             getCanGoForward: getCanGoForward ?? (() => false),
-            raiseIsLoadingChanged: raiseIsLoadingChanged ?? ((_, _) => { }),
-            raiseCanGoBackChanged: raiseCanGoBackChanged ?? ((_, _) => { }),
-            raiseCanGoForwardChanged: raiseCanGoForwardChanged ?? ((_, _) => { }),
-            setZoomFactorValue: setZoomFactorValue ?? (_ => { }),
-            raiseZoomFactorChanged: raiseZoomFactorChanged ?? (_ => { }));
+            shellCallbacks: new WebViewControlStateCallbacks(
+                raiseNavigationStarted: raiseNavigationStarted ?? (_ => { }),
+                raiseNavigationCompleted: raiseNavigationCompleted ?? (_ => { }),
+                raiseIsLoadingChanged: raiseIsLoadingChanged ?? ((_, _) => { }),
+                raiseCanGoBackChanged: raiseCanGoBackChanged ?? ((_, _) => { }),
+                raiseCanGoForwardChanged: raiseCanGoForwardChanged ?? ((_, _) => { }),
+                setZoomFactorValue: setZoomFactorValue ?? (_ => { }),
+                raiseZoomFactorChanged: raiseZoomFactorChanged ?? (_ => { })));
     }
 }

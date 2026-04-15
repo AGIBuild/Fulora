@@ -5,42 +5,24 @@ internal sealed class WebViewControlStateRuntime
     private readonly Func<bool> _isCoreAttached;
     private readonly Func<Uri, Task> _navigateAsync;
     private readonly Func<double, Task> _setZoomFactorAsync;
-    private readonly Action<NavigationStartingEventArgs> _raiseNavigationStarted;
-    private readonly Action<NavigationCompletedEventArgs> _raiseNavigationCompleted;
     private readonly Func<bool> _getCanGoBack;
     private readonly Func<bool> _getCanGoForward;
-    private readonly Action<bool, bool> _raiseIsLoadingChanged;
-    private readonly Action<bool, bool> _raiseCanGoBackChanged;
-    private readonly Action<bool, bool> _raiseCanGoForwardChanged;
-    private readonly Action<double> _setZoomFactorValue;
-    private readonly Action<double> _raiseZoomFactorChanged;
+    private readonly WebViewControlStateCallbacks _shellCallbacks;
 
     public WebViewControlStateRuntime(
         Func<bool> isCoreAttached,
         Func<Uri, Task> navigateAsync,
         Func<double, Task> setZoomFactorAsync,
-        Action<NavigationStartingEventArgs> raiseNavigationStarted,
-        Action<NavigationCompletedEventArgs> raiseNavigationCompleted,
         Func<bool> getCanGoBack,
         Func<bool> getCanGoForward,
-        Action<bool, bool> raiseIsLoadingChanged,
-        Action<bool, bool> raiseCanGoBackChanged,
-        Action<bool, bool> raiseCanGoForwardChanged,
-        Action<double> setZoomFactorValue,
-        Action<double> raiseZoomFactorChanged)
+        WebViewControlStateCallbacks shellCallbacks)
     {
         _isCoreAttached = isCoreAttached ?? throw new ArgumentNullException(nameof(isCoreAttached));
         _navigateAsync = navigateAsync ?? throw new ArgumentNullException(nameof(navigateAsync));
         _setZoomFactorAsync = setZoomFactorAsync ?? throw new ArgumentNullException(nameof(setZoomFactorAsync));
-        _raiseNavigationStarted = raiseNavigationStarted ?? throw new ArgumentNullException(nameof(raiseNavigationStarted));
-        _raiseNavigationCompleted = raiseNavigationCompleted ?? throw new ArgumentNullException(nameof(raiseNavigationCompleted));
         _getCanGoBack = getCanGoBack ?? throw new ArgumentNullException(nameof(getCanGoBack));
         _getCanGoForward = getCanGoForward ?? throw new ArgumentNullException(nameof(getCanGoForward));
-        _raiseIsLoadingChanged = raiseIsLoadingChanged ?? throw new ArgumentNullException(nameof(raiseIsLoadingChanged));
-        _raiseCanGoBackChanged = raiseCanGoBackChanged ?? throw new ArgumentNullException(nameof(raiseCanGoBackChanged));
-        _raiseCanGoForwardChanged = raiseCanGoForwardChanged ?? throw new ArgumentNullException(nameof(raiseCanGoForwardChanged));
-        _setZoomFactorValue = setZoomFactorValue ?? throw new ArgumentNullException(nameof(setZoomFactorValue));
-        _raiseZoomFactorChanged = raiseZoomFactorChanged ?? throw new ArgumentNullException(nameof(raiseZoomFactorChanged));
+        _shellCallbacks = shellCallbacks ?? throw new ArgumentNullException(nameof(shellCallbacks));
     }
 
     public void HandleSourceChanged(object? newValue)
@@ -63,26 +45,26 @@ internal sealed class WebViewControlStateRuntime
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        _raiseNavigationStarted(args);
-        _raiseIsLoadingChanged(false, true);
+        _shellCallbacks.RaiseNavigationStarted(args);
+        _shellCallbacks.RaiseIsLoadingChanged(false, true);
     }
 
     public void HandleCoreNavigationCompleted(NavigationCompletedEventArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        _raiseNavigationCompleted(args);
-        _raiseIsLoadingChanged(true, false);
+        _shellCallbacks.RaiseNavigationCompleted(args);
+        _shellCallbacks.RaiseIsLoadingChanged(true, false);
 
         var canGoBack = _getCanGoBack();
         var canGoForward = _getCanGoForward();
-        _raiseCanGoBackChanged(!canGoBack, canGoBack);
-        _raiseCanGoForwardChanged(!canGoForward, canGoForward);
+        _shellCallbacks.RaiseCanGoBackChanged(!canGoBack, canGoBack);
+        _shellCallbacks.RaiseCanGoForwardChanged(!canGoForward, canGoForward);
     }
 
     public void HandleCoreZoomFactorChanged(double newZoom)
     {
-        _setZoomFactorValue(newZoom);
-        _raiseZoomFactorChanged(newZoom);
+        _shellCallbacks.SetZoomFactorValue(newZoom);
+        _shellCallbacks.RaiseZoomFactorChanged(newZoom);
     }
 }
