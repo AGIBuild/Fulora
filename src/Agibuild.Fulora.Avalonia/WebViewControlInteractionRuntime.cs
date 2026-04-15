@@ -1,5 +1,10 @@
 namespace Agibuild.Fulora;
 
+/// <summary>
+/// Maintains the per-event aggregates for the five interaction events that WebView
+/// exposes outside the core event pipeline. Handlers are stored here and routed to
+/// the core via the stable wrappers owned by <see cref="WebViewControlEventRuntime"/>.
+/// </summary>
 internal sealed class WebViewControlInteractionRuntime
 {
     private EventHandler<ContextMenuRequestedEventArgs>? _contextMenuRequestedHandlers;
@@ -14,61 +19,51 @@ internal sealed class WebViewControlInteractionRuntime
     public EventHandler<EventArgs>? DragLeftHandlers => _dragLeftHandlers;
     public EventHandler<DropEventArgs>? DropCompletedHandlers => _dropCompletedHandlers;
 
-    public void AddContextMenuRequestedHandler(IWebViewCoreControlEvents? core, EventHandler<ContextMenuRequestedEventArgs> handler)
-        => AddHandler(ref _contextMenuRequestedHandlers, core, handler, static (events, value) => events.ContextMenuRequested += value);
+    public void AddContextMenuRequestedHandler(EventHandler<ContextMenuRequestedEventArgs> handler)
+        => AddToAggregate(ref _contextMenuRequestedHandlers, handler);
 
-    public void RemoveContextMenuRequestedHandler(IWebViewCoreControlEvents? core, EventHandler<ContextMenuRequestedEventArgs> handler)
-        => RemoveHandler(ref _contextMenuRequestedHandlers, core, handler, static (events, value) => events.ContextMenuRequested -= value);
+    public void RemoveContextMenuRequestedHandler(EventHandler<ContextMenuRequestedEventArgs> handler)
+        => RemoveFromAggregate(ref _contextMenuRequestedHandlers, handler);
 
-    public void AddDragEnteredHandler(IWebViewCoreControlEvents? core, EventHandler<DragEventArgs> handler)
-        => AddHandler(ref _dragEnteredHandlers, core, handler, static (events, value) => events.DragEntered += value);
+    public void AddDragEnteredHandler(EventHandler<DragEventArgs> handler)
+        => AddToAggregate(ref _dragEnteredHandlers, handler);
 
-    public void RemoveDragEnteredHandler(IWebViewCoreControlEvents? core, EventHandler<DragEventArgs> handler)
-        => RemoveHandler(ref _dragEnteredHandlers, core, handler, static (events, value) => events.DragEntered -= value);
+    public void RemoveDragEnteredHandler(EventHandler<DragEventArgs> handler)
+        => RemoveFromAggregate(ref _dragEnteredHandlers, handler);
 
-    public void AddDragOverHandler(IWebViewCoreControlEvents? core, EventHandler<DragEventArgs> handler)
-        => AddHandler(ref _dragOverHandlers, core, handler, static (events, value) => events.DragOver += value);
+    public void AddDragOverHandler(EventHandler<DragEventArgs> handler)
+        => AddToAggregate(ref _dragOverHandlers, handler);
 
-    public void RemoveDragOverHandler(IWebViewCoreControlEvents? core, EventHandler<DragEventArgs> handler)
-        => RemoveHandler(ref _dragOverHandlers, core, handler, static (events, value) => events.DragOver -= value);
+    public void RemoveDragOverHandler(EventHandler<DragEventArgs> handler)
+        => RemoveFromAggregate(ref _dragOverHandlers, handler);
 
-    public void AddDragLeftHandler(IWebViewCoreControlEvents? core, EventHandler<EventArgs> handler)
-        => AddHandler(ref _dragLeftHandlers, core, handler, static (events, value) => events.DragLeft += value);
+    public void AddDragLeftHandler(EventHandler<EventArgs> handler)
+        => AddToAggregate(ref _dragLeftHandlers, handler);
 
-    public void RemoveDragLeftHandler(IWebViewCoreControlEvents? core, EventHandler<EventArgs> handler)
-        => RemoveHandler(ref _dragLeftHandlers, core, handler, static (events, value) => events.DragLeft -= value);
+    public void RemoveDragLeftHandler(EventHandler<EventArgs> handler)
+        => RemoveFromAggregate(ref _dragLeftHandlers, handler);
 
-    public void AddDropCompletedHandler(IWebViewCoreControlEvents? core, EventHandler<DropEventArgs> handler)
-        => AddHandler(ref _dropCompletedHandlers, core, handler, static (events, value) => events.DropCompleted += value);
+    public void AddDropCompletedHandler(EventHandler<DropEventArgs> handler)
+        => AddToAggregate(ref _dropCompletedHandlers, handler);
 
-    public void RemoveDropCompletedHandler(IWebViewCoreControlEvents? core, EventHandler<DropEventArgs> handler)
-        => RemoveHandler(ref _dropCompletedHandlers, core, handler, static (events, value) => events.DropCompleted -= value);
+    public void RemoveDropCompletedHandler(EventHandler<DropEventArgs> handler)
+        => RemoveFromAggregate(ref _dropCompletedHandlers, handler);
 
-    private static void AddHandler<TEventArgs>(
+    private static void AddToAggregate<TEventArgs>(
         ref EventHandler<TEventArgs>? aggregate,
-        IWebViewCoreControlEvents? core,
-        EventHandler<TEventArgs> handler,
-        Action<IWebViewCoreControlEvents, EventHandler<TEventArgs>> attach)
+        EventHandler<TEventArgs> handler)
         where TEventArgs : EventArgs
     {
         ArgumentNullException.ThrowIfNull(handler);
-
         aggregate += handler;
-        if (core is not null)
-            attach(core, handler);
     }
 
-    private static void RemoveHandler<TEventArgs>(
+    private static void RemoveFromAggregate<TEventArgs>(
         ref EventHandler<TEventArgs>? aggregate,
-        IWebViewCoreControlEvents? core,
-        EventHandler<TEventArgs> handler,
-        Action<IWebViewCoreControlEvents, EventHandler<TEventArgs>> detach)
+        EventHandler<TEventArgs> handler)
         where TEventArgs : EventArgs
     {
         ArgumentNullException.ThrowIfNull(handler);
-
         aggregate -= handler;
-        if (core is not null)
-            detach(core, handler);
     }
 }

@@ -18,6 +18,11 @@ internal sealed class WebViewControlEventRuntime
     private readonly Func<EventHandler<DragEventArgs>?> _getDragOverHandlers;
     private readonly Func<EventHandler<EventArgs>?> _getDragLeftHandlers;
     private readonly Func<EventHandler<DropEventArgs>?> _getDropCompletedHandlers;
+    private readonly EventHandler<ContextMenuRequestedEventArgs> _contextMenuWrapper;
+    private readonly EventHandler<DragEventArgs> _dragEnteredWrapper;
+    private readonly EventHandler<DragEventArgs> _dragOverWrapper;
+    private readonly EventHandler<EventArgs> _dragLeftWrapper;
+    private readonly EventHandler<DropEventArgs> _dropCompletedWrapper;
     private readonly Func<Uri, Task> _navigateInPlaceAsync;
     private readonly Func<double> _getInitialZoomFactor;
     private readonly Action<double> _applyInitialZoomFactor;
@@ -60,6 +65,16 @@ internal sealed class WebViewControlEventRuntime
         _getDragOverHandlers = interactionHandlers.GetDragOverHandlers;
         _getDragLeftHandlers = interactionHandlers.GetDragLeftHandlers;
         _getDropCompletedHandlers = interactionHandlers.GetDropCompletedHandlers;
+
+        // Stable wrappers read the current aggregate on every invocation, so
+        // handlers added or removed between Attach and Detach are always respected
+        // without relying on a snapshot captured at Attach time.
+        _contextMenuWrapper = (s, e) => _getContextMenuHandlers()?.Invoke(s, e);
+        _dragEnteredWrapper = (s, e) => _getDragEnteredHandlers()?.Invoke(s, e);
+        _dragOverWrapper = (s, e) => _getDragOverHandlers()?.Invoke(s, e);
+        _dragLeftWrapper = (s, e) => _getDragLeftHandlers()?.Invoke(s, e);
+        _dropCompletedWrapper = (s, e) => _getDropCompletedHandlers()?.Invoke(s, e);
+
         _navigateInPlaceAsync = navigationHooks.NavigateInPlaceAsync;
         _getInitialZoomFactor = navigationHooks.GetInitialZoomFactor;
         _applyInitialZoomFactor = navigationHooks.ApplyInitialZoomFactor;
@@ -103,16 +118,11 @@ internal sealed class WebViewControlEventRuntime
         core.AdapterDestroyed += _adapterDestroyed;
         core.ZoomFactorChanged += _zoomFactorChanged;
 
-        if (_getContextMenuHandlers() is { } context)
-            core.ContextMenuRequested += context;
-        if (_getDragEnteredHandlers() is { } dragEntered)
-            core.DragEntered += dragEntered;
-        if (_getDragOverHandlers() is { } dragOver)
-            core.DragOver += dragOver;
-        if (_getDragLeftHandlers() is { } dragLeft)
-            core.DragLeft += dragLeft;
-        if (_getDropCompletedHandlers() is { } drop)
-            core.DropCompleted += drop;
+        core.ContextMenuRequested += _contextMenuWrapper;
+        core.DragEntered += _dragEnteredWrapper;
+        core.DragOver += _dragOverWrapper;
+        core.DragLeft += _dragLeftWrapper;
+        core.DropCompleted += _dropCompletedWrapper;
 
         var zoom = _getInitialZoomFactor();
         if (Math.Abs(zoom - 1.0) > 0.001)
@@ -139,16 +149,11 @@ internal sealed class WebViewControlEventRuntime
         if (_adapterDestroyed is not null) core.AdapterDestroyed -= _adapterDestroyed;
         if (_zoomFactorChanged is not null) core.ZoomFactorChanged -= _zoomFactorChanged;
 
-        if (_getContextMenuHandlers() is { } context)
-            core.ContextMenuRequested -= context;
-        if (_getDragEnteredHandlers() is { } dragEntered)
-            core.DragEntered -= dragEntered;
-        if (_getDragOverHandlers() is { } dragOver)
-            core.DragOver -= dragOver;
-        if (_getDragLeftHandlers() is { } dragLeft)
-            core.DragLeft -= dragLeft;
-        if (_getDropCompletedHandlers() is { } drop)
-            core.DropCompleted -= drop;
+        core.ContextMenuRequested -= _contextMenuWrapper;
+        core.DragEntered -= _dragEnteredWrapper;
+        core.DragOver -= _dragOverWrapper;
+        core.DragLeft -= _dragLeftWrapper;
+        core.DropCompleted -= _dropCompletedWrapper;
 
         _attachedCore = null;
     }

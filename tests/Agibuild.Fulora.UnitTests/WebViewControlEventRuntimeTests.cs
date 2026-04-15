@@ -148,7 +148,7 @@ public sealed class WebViewControlEventRuntimeTests
         EventHandler<ContextMenuRequestedEventArgs> firstHandler = (_, _) => firstHandlerCalls++;
         EventHandler<ContextMenuRequestedEventArgs> secondHandler = (_, _) => secondHandlerCalls++;
 
-        interactionRuntime.AddContextMenuRequestedHandler(core: null, firstHandler);
+        interactionRuntime.AddContextMenuRequestedHandler(firstHandler);
 
         var runtime = new WebViewControlEventRuntime(
             callbacks: new WebViewControlEventCallbacks(
@@ -177,8 +177,8 @@ public sealed class WebViewControlEventRuntimeTests
         var core = new StubCoreEvents();
         runtime.Attach(core);
 
-        interactionRuntime.AddContextMenuRequestedHandler(core, secondHandler);
-        interactionRuntime.RemoveContextMenuRequestedHandler(core, firstHandler);
+        interactionRuntime.AddContextMenuRequestedHandler(secondHandler);
+        interactionRuntime.RemoveContextMenuRequestedHandler(firstHandler);
 
         core.RaiseContextMenuRequested(new ContextMenuRequestedEventArgs());
 
@@ -201,7 +201,7 @@ public sealed class WebViewControlEventRuntimeTests
         EventHandler<DropEventArgs> firstHandler = (_, _) => firstHandlerCalls++;
         EventHandler<DropEventArgs> secondHandler = (_, _) => secondHandlerCalls++;
 
-        interactionRuntime.AddDropCompletedHandler(core: null, firstHandler);
+        interactionRuntime.AddDropCompletedHandler(firstHandler);
 
         var runtime = new WebViewControlEventRuntime(
             callbacks: new WebViewControlEventCallbacks(
@@ -230,8 +230,8 @@ public sealed class WebViewControlEventRuntimeTests
         var core = new StubCoreEvents();
         runtime.Attach(core);
 
-        interactionRuntime.AddDropCompletedHandler(core, secondHandler);
-        interactionRuntime.RemoveDropCompletedHandler(core, firstHandler);
+        interactionRuntime.AddDropCompletedHandler(secondHandler);
+        interactionRuntime.RemoveDropCompletedHandler(firstHandler);
 
         core.RaiseDropCompleted(new DropEventArgs
         {
@@ -260,7 +260,7 @@ public sealed class WebViewControlEventRuntimeTests
         EventHandler<EventArgs> firstHandler = (_, _) => firstHandlerCalls++;
         EventHandler<EventArgs> secondHandler = (_, _) => secondHandlerCalls++;
 
-        interactionRuntime.AddDragLeftHandler(core: null, firstHandler);
+        interactionRuntime.AddDragLeftHandler(firstHandler);
 
         var runtime = new WebViewControlEventRuntime(
             callbacks: new WebViewControlEventCallbacks(
@@ -289,8 +289,8 @@ public sealed class WebViewControlEventRuntimeTests
         var core = new StubCoreEvents();
         runtime.Attach(core);
 
-        interactionRuntime.AddDragLeftHandler(core, secondHandler);
-        interactionRuntime.RemoveDragLeftHandler(core, firstHandler);
+        interactionRuntime.AddDragLeftHandler(secondHandler);
+        interactionRuntime.RemoveDragLeftHandler(firstHandler);
 
         core.RaiseDragLeft();
 
@@ -313,7 +313,7 @@ public sealed class WebViewControlEventRuntimeTests
         EventHandler<DragEventArgs> firstHandler = (_, _) => firstHandlerCalls++;
         EventHandler<DragEventArgs> secondHandler = (_, _) => secondHandlerCalls++;
 
-        interactionRuntime.AddDragEnteredHandler(core: null, firstHandler);
+        interactionRuntime.AddDragEnteredHandler(firstHandler);
 
         var runtime = new WebViewControlEventRuntime(
             callbacks: new WebViewControlEventCallbacks(
@@ -342,8 +342,8 @@ public sealed class WebViewControlEventRuntimeTests
         var core = new StubCoreEvents();
         runtime.Attach(core);
 
-        interactionRuntime.AddDragEnteredHandler(core, secondHandler);
-        interactionRuntime.RemoveDragEnteredHandler(core, firstHandler);
+        interactionRuntime.AddDragEnteredHandler(secondHandler);
+        interactionRuntime.RemoveDragEnteredHandler(firstHandler);
 
         core.RaiseDragEntered(new DragEventArgs
         {
@@ -374,7 +374,7 @@ public sealed class WebViewControlEventRuntimeTests
         EventHandler<DragEventArgs> firstHandler = (_, _) => firstHandlerCalls++;
         EventHandler<DragEventArgs> secondHandler = (_, _) => secondHandlerCalls++;
 
-        interactionRuntime.AddDragOverHandler(core: null, firstHandler);
+        interactionRuntime.AddDragOverHandler(firstHandler);
 
         var runtime = new WebViewControlEventRuntime(
             callbacks: new WebViewControlEventCallbacks(
@@ -403,8 +403,8 @@ public sealed class WebViewControlEventRuntimeTests
         var core = new StubCoreEvents();
         runtime.Attach(core);
 
-        interactionRuntime.AddDragOverHandler(core, secondHandler);
-        interactionRuntime.RemoveDragOverHandler(core, firstHandler);
+        interactionRuntime.AddDragOverHandler(secondHandler);
+        interactionRuntime.RemoveDragOverHandler(firstHandler);
 
         core.RaiseDragOver(new DragEventArgs
         {
@@ -425,6 +425,56 @@ public sealed class WebViewControlEventRuntimeTests
         Assert.Equal(0, firstHandlerCalls);
         Assert.Equal(1, secondHandlerCalls);
     }
+
+    [Fact]
+    public void RemoveContextMenuHandler_stops_forwarding_when_multiple_handlers_added_before_attach()
+    {
+        var firstCalls = 0;
+        var secondCalls = 0;
+        var interactionRuntime = new WebViewControlInteractionRuntime();
+        EventHandler<ContextMenuRequestedEventArgs> first = (_, _) => firstCalls++;
+        EventHandler<ContextMenuRequestedEventArgs> second = (_, _) => secondCalls++;
+
+        // Both added BEFORE Attach → aggregate becomes a combined delegate [first, second],
+        // not the individual handlers; removal after Attach must still work.
+        interactionRuntime.AddContextMenuRequestedHandler(first);
+        interactionRuntime.AddContextMenuRequestedHandler(second);
+
+        var runtime = new WebViewControlEventRuntime(
+            callbacks: new WebViewControlEventCallbacks(
+                raiseNavigationStarted: _ => { },
+                raiseNavigationCompleted: _ => { },
+                raiseNewWindowRequested: _ => { },
+                raiseWebMessageReceived: _ => { },
+                raiseWebResourceRequested: _ => { },
+                raiseEnvironmentRequested: _ => { },
+                raiseDownloadRequested: _ => { },
+                raisePermissionRequested: _ => { },
+                raiseAdapterCreated: _ => { },
+                raiseAdapterDestroyed: () => { },
+                raiseZoomFactorChanged: _ => { }),
+            interactionHandlers: new WebViewControlInteractionAccessors(
+                getContextMenuHandlers: () => interactionRuntime.ContextMenuRequestedHandlers,
+                getDragEnteredHandlers: () => interactionRuntime.DragEnteredHandlers,
+                getDragOverHandlers: () => interactionRuntime.DragOverHandlers,
+                getDragLeftHandlers: () => interactionRuntime.DragLeftHandlers,
+                getDropCompletedHandlers: () => interactionRuntime.DropCompletedHandlers),
+            navigationHooks: new WebViewControlNavigationHooks(
+                navigateInPlaceAsync: _ => Task.CompletedTask,
+                getInitialZoomFactor: () => 1.0,
+                applyInitialZoomFactor: _ => { }));
+
+        var core = new StubCoreEvents();
+        runtime.Attach(core);
+
+        interactionRuntime.RemoveContextMenuRequestedHandler(first);
+
+        core.RaiseContextMenuRequested(new ContextMenuRequestedEventArgs());
+
+        Assert.Equal(0, firstCalls);
+        Assert.Equal(1, secondCalls);
+    }
+
 
 #pragma warning disable CS0067
     private static WebViewControlEventRuntime CreateRuntime(

@@ -399,36 +399,36 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public event EventHandler<ContextMenuRequestedEventArgs>? ContextMenuRequested
     {
-        add => _interactionRuntime.AddContextMenuRequestedHandler(_controlRuntime.Core, value!);
-        remove => _interactionRuntime.RemoveContextMenuRequestedHandler(_controlRuntime.Core, value!);
+        add => _interactionRuntime.AddContextMenuRequestedHandler(value!);
+        remove => _interactionRuntime.RemoveContextMenuRequestedHandler(value!);
     }
 
     /// <summary>Raised when a drag operation enters the WebView bounds.</summary>
     public event EventHandler<DragEventArgs>? DragEntered
     {
-        add => _interactionRuntime.AddDragEnteredHandler(_controlRuntime.Core, value!);
-        remove => _interactionRuntime.RemoveDragEnteredHandler(_controlRuntime.Core, value!);
+        add => _interactionRuntime.AddDragEnteredHandler(value!);
+        remove => _interactionRuntime.RemoveDragEnteredHandler(value!);
     }
 
     /// <summary>Raised when a drag operation moves over the WebView.</summary>
     public event EventHandler<DragEventArgs>? DragOver
     {
-        add => _interactionRuntime.AddDragOverHandler(_controlRuntime.Core, value!);
-        remove => _interactionRuntime.RemoveDragOverHandler(_controlRuntime.Core, value!);
+        add => _interactionRuntime.AddDragOverHandler(value!);
+        remove => _interactionRuntime.RemoveDragOverHandler(value!);
     }
 
     /// <summary>Raised when a drag operation leaves the WebView bounds.</summary>
     public event EventHandler<EventArgs>? DragLeft
     {
-        add => _interactionRuntime.AddDragLeftHandler(_controlRuntime.Core, value!);
-        remove => _interactionRuntime.RemoveDragLeftHandler(_controlRuntime.Core, value!);
+        add => _interactionRuntime.AddDragLeftHandler(value!);
+        remove => _interactionRuntime.RemoveDragLeftHandler(value!);
     }
 
     /// <summary>Raised when a drop operation completes on the WebView.</summary>
     public event EventHandler<DropEventArgs>? DropCompleted
     {
-        add => _interactionRuntime.AddDropCompletedHandler(_controlRuntime.Core, value!);
-        remove => _interactionRuntime.RemoveDropCompletedHandler(_controlRuntime.Core, value!);
+        add => _interactionRuntime.AddDropCompletedHandler(value!);
+        remove => _interactionRuntime.RemoveDropCompletedHandler(value!);
     }
 
     /// <summary>

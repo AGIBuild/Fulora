@@ -5,25 +5,24 @@ namespace Agibuild.Fulora.UnitTests;
 public sealed class WebViewControlInteractionRuntimeTests
 {
     [Fact]
-    public void AddContextMenuRequestedHandler_stores_handler_before_core_attach()
+    public void AddContextMenuRequestedHandler_stores_handler_in_aggregate()
     {
         var runtime = new WebViewControlInteractionRuntime();
         EventHandler<ContextMenuRequestedEventArgs> handler = (_, _) => { };
 
-        runtime.AddContextMenuRequestedHandler(core: null, handler);
+        runtime.AddContextMenuRequestedHandler(handler);
 
         Assert.NotNull(runtime.ContextMenuRequestedHandlers);
     }
 
     [Fact]
-    public void AddDragEnteredHandler_subscribes_immediately_when_core_is_attached()
+    public void AddDragEnteredHandler_stores_handler_in_aggregate()
     {
         var runtime = new WebViewControlInteractionRuntime();
-        var core = new StubCoreEvents();
         var callCount = 0;
 
-        runtime.AddDragEnteredHandler(core, (_, _) => callCount++);
-        core.RaiseDragEntered(new DragEventArgs
+        runtime.AddDragEnteredHandler((_, _) => callCount++);
+        runtime.DragEnteredHandlers?.Invoke(null!, new DragEventArgs
         {
             Payload = new DragDropPayload(),
             AllowedEffects = DragDropEffects.Copy
@@ -33,21 +32,14 @@ public sealed class WebViewControlInteractionRuntimeTests
     }
 
     [Fact]
-    public void RemoveDropCompletedHandler_unsubscribes_from_attached_core()
+    public void RemoveDropCompletedHandler_removes_handler_from_aggregate()
     {
         var runtime = new WebViewControlInteractionRuntime();
-        var core = new StubCoreEvents();
-        var callCount = 0;
-        EventHandler<DropEventArgs> handler = (_, _) => callCount++;
+        EventHandler<DropEventArgs> handler = (_, _) => { };
 
-        runtime.AddDropCompletedHandler(core, handler);
-        runtime.RemoveDropCompletedHandler(core, handler);
-        core.RaiseDropCompleted(new DropEventArgs
-        {
-            Payload = new DragDropPayload()
-        });
+        runtime.AddDropCompletedHandler(handler);
+        runtime.RemoveDropCompletedHandler(handler);
 
-        Assert.Equal(0, callCount);
         Assert.Null(runtime.DropCompletedHandlers);
     }
 
