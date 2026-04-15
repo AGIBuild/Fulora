@@ -62,7 +62,7 @@ public sealed class BranchCoverageRound3Tests
     {
         // Register an adapter for the current OS so this assertion is deterministic in CI matrix runs.
         var reg = new WebViewAdapterRegistration(
-            GetCurrentPlatformForTest(), "branch-coverage-test-adapter",
+            WebViewLegacyAdapterCompatibility.GetCurrentPlatform(), "branch-coverage-test-adapter",
             () => new MockWebViewAdapter(), Priority: int.MaxValue);
         WebViewAdapterRegistry.Register(reg);
 
@@ -73,31 +73,6 @@ public sealed class BranchCoverageRound3Tests
     }
 
     #endregion
-
-    private static WebViewAdapterPlatform GetCurrentPlatformForTest()
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            return WebViewAdapterPlatform.Windows;
-        }
-
-        if (OperatingSystem.IsIOS())
-        {
-            return WebViewAdapterPlatform.iOS;
-        }
-
-        if (OperatingSystem.IsMacOS())
-        {
-            return WebViewAdapterPlatform.MacOS;
-        }
-
-        if (OperatingSystem.IsAndroid())
-        {
-            return WebViewAdapterPlatform.Android;
-        }
-
-        return WebViewAdapterPlatform.Gtk;
-    }
 
     #region Easy: ActivationRequest explicit receivedAtUtc
 

@@ -52,7 +52,7 @@ public sealed class WebViewAdapterRegistryTests
 
         WebViewAdapterRegistry.RegisterProvider(new StubPlatformProvider("provider-low", canHandle: true, priority: 10, () => new MarkerAdapter("provider-low")));
         WebViewAdapterRegistry.Register(new WebViewAdapterRegistration(
-            GetCurrentPlatformForTest(),
+            WebViewLegacyAdapterCompatibility.GetCurrentPlatform(),
             "legacy-high",
             () => new MarkerAdapter("legacy-high"),
             Priority: int.MaxValue));
@@ -62,6 +62,25 @@ public sealed class WebViewAdapterRegistryTests
         Assert.True(result);
         Assert.Null(reason);
         Assert.Equal("legacy-high", Assert.IsType<MarkerAdapter>(adapter).Id);
+    }
+
+    [Fact]
+    public void TryCreateForCurrentPlatform_prefers_provider_when_priority_ties_with_legacy_registration()
+    {
+        WebViewAdapterRegistry.ResetForTests();
+
+        WebViewAdapterRegistry.RegisterProvider(new StubPlatformProvider("provider", canHandle: true, priority: 50, () => new MarkerAdapter("provider")));
+        WebViewAdapterRegistry.Register(new WebViewAdapterRegistration(
+            WebViewLegacyAdapterCompatibility.GetCurrentPlatform(),
+            "legacy",
+            () => new MarkerAdapter("legacy"),
+            Priority: 50));
+
+        var result = WebViewAdapterRegistry.TryCreateForCurrentPlatform(out var adapter, out var reason);
+
+        Assert.True(result);
+        Assert.Null(reason);
+        Assert.Equal("provider", Assert.IsType<MarkerAdapter>(adapter).Id);
     }
 
     [Fact]
@@ -212,18 +231,5 @@ public sealed class WebViewAdapterRegistryTests
     private sealed class MarkerAdapter(string id) : MockWebViewAdapter
     {
         public string Id { get; } = id;
-    }
-
-    private static WebViewAdapterPlatform GetCurrentPlatformForTest()
-    {
-        if (OperatingSystem.IsWindows())
-            return WebViewAdapterPlatform.Windows;
-        if (OperatingSystem.IsIOS())
-            return WebViewAdapterPlatform.iOS;
-        if (OperatingSystem.IsMacOS())
-            return WebViewAdapterPlatform.MacOS;
-        if (OperatingSystem.IsAndroid())
-            return WebViewAdapterPlatform.Android;
-        return WebViewAdapterPlatform.Gtk;
     }
 }

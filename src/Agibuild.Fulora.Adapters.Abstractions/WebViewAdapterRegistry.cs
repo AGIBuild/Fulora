@@ -56,19 +56,18 @@ internal static class WebViewAdapterRegistry
 
     public static bool HasAnyForCurrentPlatform()
     {
-        var platform = GetCurrentPlatform();
         return WebViewAdapterCandidateResolver.HasCandidates(
             Providers.Values.Where(static provider => provider.CanHandleCurrentPlatform()),
-            Registrations.Values.Where(registration => registration.Platform == platform));
+            WebViewLegacyAdapterCompatibility.GetCurrentPlatformRegistrations(Registrations.Values));
     }
 
     public static bool TryCreateForCurrentPlatform(out IWebViewAdapter adapter, out string? failureReason)
     {
-        var platform = GetCurrentPlatform();
+        var platform = WebViewLegacyAdapterCompatibility.GetCurrentPlatform();
 
         if (WebViewAdapterCandidateResolver.TryCreateAdapter(
                 Providers.Values.Where(static provider => provider.CanHandleCurrentPlatform()),
-                Registrations.Values.Where(registration => registration.Platform == platform),
+                WebViewLegacyAdapterCompatibility.GetCurrentPlatformRegistrations(Registrations.Values),
                 $"No WebView adapter registered for platform '{platform}'.",
                 out var resolvedAdapter,
                 out failureReason))
@@ -79,32 +78,5 @@ internal static class WebViewAdapterRegistry
 
         adapter = null!;
         return false;
-    }
-
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    private static WebViewAdapterPlatform GetCurrentPlatform()
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            return WebViewAdapterPlatform.Windows;
-        }
-
-        // iOS check must come before macOS because IsMacOS() returns true on Mac Catalyst.
-        if (OperatingSystem.IsIOS())
-        {
-            return WebViewAdapterPlatform.iOS;
-        }
-
-        if (OperatingSystem.IsMacOS())
-        {
-            return WebViewAdapterPlatform.MacOS;
-        }
-
-        if (OperatingSystem.IsAndroid())
-        {
-            return WebViewAdapterPlatform.Android;
-        }
-
-        return WebViewAdapterPlatform.Gtk;
     }
 }
