@@ -71,13 +71,11 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     private EventHandler<DragEventArgs>? _dragOverHandlers;
     private EventHandler<EventArgs>? _dragLeftHandlers;
     private EventHandler<DropEventArgs>? _dropCompletedHandlers;
-    private WebViewOverlayHost? _overlayHost;
-    private EventHandler? _layoutUpdatedHandler;
-    private EventHandler<PixelPointEventArgs>? _hostWindowPositionChangedHandler;
     private readonly WebViewControlRuntime _controlRuntime = new();
     private readonly WebViewControlEventRuntime _eventRuntime;
     private readonly WebViewControlLifecycleRuntime _lifecycleRuntime;
     private readonly WebViewHostClosingRuntime _hostClosingRuntime;
+    private readonly WebViewOverlayRuntime _overlayRuntime;
 
     // ---------------------------------------------------------------------------
     //  Constructor
@@ -147,6 +145,24 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             },
             isCoreAttached: () => _coreAttached,
             detachForClosing: (isProgrammatic, closeReason) => DetachForHostWindowClosing(isProgrammatic, closeReason));
+
+        _overlayRuntime = new WebViewOverlayRuntime(
+            createOverlayHost: () => new WebViewOverlayHost(this),
+            hasVisualRoot: () => VisualRoot is not null,
+            getTopLevelWindow: () => TopLevel.GetTopLevel(this) as Window,
+            subscribeLayoutUpdated: handler => LayoutUpdated += handler,
+            unsubscribeLayoutUpdated: handler => LayoutUpdated -= handler,
+            subscribeWindowPositionChanged: static (window, handler) =>
+            {
+                if (window is Window avaloniaWindow)
+                    avaloniaWindow.PositionChanged += handler;
+            },
+            unsubscribeWindowPositionChanged: static (window, handler) =>
+            {
+                if (window is Window avaloniaWindow)
+                    avaloniaWindow.PositionChanged -= handler;
+            },
+            refreshOverlayLayout: UpdateOverlayLayout);
     }
 
     // ---------------------------------------------------------------------------
@@ -618,7 +634,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     {
         base.OnAttachedToVisualTree(e);
         _hostClosingRuntime.RefreshHook();
-        SubscribeLayoutOverlayEvents();
+        _overlayRuntime.AttachVisualHooks();
     }
 
     /// <summary>
@@ -626,7 +642,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        UnsubscribeLayoutOverlayEvents();
+        _overlayRuntime.DetachVisualHooks();
         _hostClosingRuntime.Unhook();
         base.OnDetachedFromVisualTree(e);
     }
@@ -653,8 +669,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     {
         _hostClosingRuntime.Unhook();
 
-        _overlayHost?.Dispose();
-        _overlayHost = null;
+        _overlayRuntime.DisposeOverlayHost();
         _lifecycleRuntime.DestroyAttachedCore(_core, _coreAttached);
 
         base.DestroyNativeControlCore(control);
@@ -687,24 +702,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     }
 
     private void OnOverlayContentChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        var newContent = e.NewValue;
-
-        if (newContent is not null)
-        {
-            _overlayHost ??= new WebViewOverlayHost(this);
-            _overlayHost.Content = newContent;
-
-            // Trigger immediate position update if already in the visual tree.
-            if (VisualRoot is not null)
-                OnLayoutUpdatedForOverlay(this, EventArgs.Empty);
-        }
-        else
-        {
-            _overlayHost?.Dispose();
-            _overlayHost = null;
-        }
-    }
+        => _overlayRuntime.UpdateOverlayContent(e.NewValue);
 
     private void EnsureCore()
     {
@@ -770,9 +768,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     {
         GC.SuppressFinalize(this);
         _hostClosingRuntime.Unhook();
-
-        _overlayHost?.Dispose();
-        _overlayHost = null;
+        _overlayRuntime.Dispose();
         _lifecycleRuntime.DestroyAttachedCore(_core, _coreAttached);
     }
 
@@ -798,42 +794,10 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         }
     }
 
-    private void SubscribeLayoutOverlayEvents()
+    private void UpdateOverlayLayout()
     {
-        if (_layoutUpdatedHandler is not null)
-            return;
-
-        _layoutUpdatedHandler = OnLayoutUpdatedForOverlay;
-        LayoutUpdated += _layoutUpdatedHandler;
-
-        var window = TopLevel.GetTopLevel(this) as Window;
-        if (window is not null && _hostWindowPositionChangedHandler is null)
-        {
-            _hostWindowPositionChangedHandler = (_, _) => OnLayoutUpdatedForOverlay(this, EventArgs.Empty);
-            window.PositionChanged += _hostWindowPositionChangedHandler;
-        }
-    }
-
-    private void UnsubscribeLayoutOverlayEvents()
-    {
-        if (_layoutUpdatedHandler is not null)
-        {
-            LayoutUpdated -= _layoutUpdatedHandler;
-            _layoutUpdatedHandler = null;
-        }
-
-        if (_hostWindowPositionChangedHandler is not null)
-        {
-            var window = TopLevel.GetTopLevel(this) as Window;
-            if (window is not null)
-                window.PositionChanged -= _hostWindowPositionChangedHandler;
-            _hostWindowPositionChangedHandler = null;
-        }
-    }
-
-    private void OnLayoutUpdatedForOverlay(object? sender, EventArgs e)
-    {
-        if (_overlayHost is null)
+        var overlayHost = _overlayRuntime.OverlayHost;
+        if (overlayHost is null)
             return;
 
         var topLevel = VisualRoot as TopLevel;
@@ -842,8 +806,8 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             : default;
         var dpiScale = topLevel?.RenderScaling ?? 1.0;
 
-        _overlayHost.UpdatePosition(Bounds, screenOffset, dpiScale);
-        _overlayHost.SyncVisibilityWith(IsVisible);
+        overlayHost.UpdatePosition(Bounds, screenOffset, dpiScale);
+        overlayHost.SyncVisibilityWith(IsVisible);
     }
 
 }
