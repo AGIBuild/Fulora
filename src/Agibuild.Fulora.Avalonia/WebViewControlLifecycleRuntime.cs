@@ -11,7 +11,6 @@ internal sealed class WebViewControlLifecycleRuntime
     private readonly Func<ILoggerFactory?> _getLoggerFactory;
     private readonly Func<IWebViewEnvironmentOptions?> _getEnvironmentOptions;
     private readonly Func<Uri?> _getPendingSource;
-    private readonly Action<WebViewCore?> _setCore;
     private readonly Action<bool> _setCoreAttached;
     private readonly Action<bool> _setAdapterUnavailable;
     private readonly Func<IWebViewDispatcher> _createDispatcher;
@@ -24,7 +23,6 @@ internal sealed class WebViewControlLifecycleRuntime
         Func<ILoggerFactory?> getLoggerFactory,
         Func<IWebViewEnvironmentOptions?> getEnvironmentOptions,
         Func<Uri?> getPendingSource,
-        Action<WebViewCore?> setCore,
         Action<bool> setCoreAttached,
         Action<bool> setAdapterUnavailable,
         Func<IWebViewDispatcher> createDispatcher,
@@ -36,7 +34,6 @@ internal sealed class WebViewControlLifecycleRuntime
         _getLoggerFactory = getLoggerFactory ?? throw new ArgumentNullException(nameof(getLoggerFactory));
         _getEnvironmentOptions = getEnvironmentOptions ?? throw new ArgumentNullException(nameof(getEnvironmentOptions));
         _getPendingSource = getPendingSource ?? throw new ArgumentNullException(nameof(getPendingSource));
-        _setCore = setCore ?? throw new ArgumentNullException(nameof(setCore));
         _setCoreAttached = setCoreAttached ?? throw new ArgumentNullException(nameof(setCoreAttached));
         _setAdapterUnavailable = setAdapterUnavailable ?? throw new ArgumentNullException(nameof(setAdapterUnavailable));
         _createDispatcher = createDispatcher ?? throw new ArgumentNullException(nameof(createDispatcher));
@@ -57,7 +54,6 @@ internal sealed class WebViewControlLifecycleRuntime
                          ?? (ILogger<WebViewCore>)NullLogger<WebViewCore>.Instance;
 
             core = _createCore(dispatcher, logger, _getEnvironmentOptions());
-            _setCore(core);
             _controlRuntime.AttachCore(core);
             _eventRuntime.Attach(core);
 
@@ -73,7 +69,6 @@ internal sealed class WebViewControlLifecycleRuntime
         {
             _eventRuntime.Detach(core);
             core?.Dispose();
-            _setCore(null);
             _setCoreAttached(false);
             _setAdapterUnavailable(true);
             _controlRuntime.MarkAdapterUnavailable();
@@ -82,7 +77,6 @@ internal sealed class WebViewControlLifecycleRuntime
         {
             _eventRuntime.Detach(core);
             core?.Dispose();
-            _setCore(null);
             _setCoreAttached(false);
             _setAdapterUnavailable(false);
             _controlRuntime.ClearCore();
@@ -90,8 +84,11 @@ internal sealed class WebViewControlLifecycleRuntime
         }
     }
 
-    public void DestroyAttachedCore(WebViewCore? core, bool coreAttached)
+    public void DestroyAttachedCore()
     {
+        var core = _controlRuntime.Core;
+        var coreAttached = _controlRuntime.IsCoreAttached;
+
         _eventRuntime.Detach(core);
 
         if (coreAttached)
@@ -101,7 +98,6 @@ internal sealed class WebViewControlLifecycleRuntime
         }
 
         core?.Dispose();
-        _setCore(null);
         _controlRuntime.ClearCore();
     }
 

@@ -128,7 +128,6 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             getLoggerFactory: () => _loggerFactory,
             getEnvironmentOptions: () => EnvironmentOptions,
             getPendingSource: () => Source,
-            setCore: _ => { },
             setCoreAttached: attached => _controlRuntime.SetCoreAttached(attached),
             setAdapterUnavailable: _ => { },
             createDispatcher: static () => new SynchronizationContextWebViewDispatcher());
@@ -583,7 +582,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         _hostClosingRuntime.Unhook();
 
         _overlayRuntime.DisposeOverlayHost();
-        _lifecycleRuntime.DestroyAttachedCore(_controlRuntime.Core, _controlRuntime.IsCoreAttached);
+        _lifecycleRuntime.DestroyAttachedCore();
 
         base.DestroyNativeControlCore(control);
     }
@@ -629,7 +628,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
         GC.SuppressFinalize(this);
         _hostClosingRuntime.Unhook();
         _overlayRuntime.Dispose();
-        _lifecycleRuntime.DestroyAttachedCore(_controlRuntime.Core, _controlRuntime.IsCoreAttached);
+        _lifecycleRuntime.DestroyAttachedCore();
     }
 
     // Close events can be user-triggered, app-triggered, or OS-triggered.
