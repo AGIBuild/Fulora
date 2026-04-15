@@ -645,6 +645,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     {
         try
         {
+            _eventRuntime.Detach();
             _controlRuntime.Core?.Detach();
             _controlRuntime.SetCoreAttached(false);
             return true;

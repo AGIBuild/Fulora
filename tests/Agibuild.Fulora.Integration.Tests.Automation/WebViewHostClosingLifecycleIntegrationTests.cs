@@ -65,6 +65,73 @@ public sealed class WebViewHostClosingLifecycleIntegrationTests
     }
 
     [AvaloniaFact]
+    public void HandleHostWindowClosing_stops_forwarding_core_events_after_early_detach()
+    {
+        AvaloniaUiThreadRunner.Run(() =>
+        {
+            var dispatcher = new TestDispatcher();
+            var adapter = MockWebViewAdapter.Create();
+            var core = new WebViewCore(adapter, dispatcher);
+            core.Attach(new TestPlatformHandle(IntPtr.Zero, "test-parent"));
+
+            var control = new WebView();
+            var navigationStartedCalls = 0;
+            control.NavigationStarted += (_, _) => navigationStartedCalls++;
+            control.TestOnlyAttachCore(core);
+            control.TestOnlySetCoreAttached(true);
+            control.TestOnlySubscribeCoreEvents();
+
+            ((IWebViewCoreNavigationHost)core).RaiseNavigationStarting(
+                new NavigationStartingEventArgs(Guid.NewGuid(), new Uri("https://before-close.test")));
+            Assert.Equal(1, navigationStartedCalls);
+
+            var detached = control.HandleHostWindowClosing(
+                isProgrammatic: false,
+                closeReason: unchecked((WindowCloseReason)(-1)));
+
+            Assert.True(detached);
+            Assert.Equal(1, adapter.DetachCallCount);
+            Assert.False(GetCoreAttached(control));
+
+            ((IWebViewCoreNavigationHost)core).RaiseNavigationStarting(
+                new NavigationStartingEventArgs(Guid.NewGuid(), new Uri("https://after-close.test")));
+            Assert.Equal(1, navigationStartedCalls);
+
+            core.Dispose();
+        });
+    }
+
+    [AvaloniaFact]
+    public void HandleHostWindowClosing_does_not_forward_adapter_destroyed_during_early_detach()
+    {
+        AvaloniaUiThreadRunner.Run(() =>
+        {
+            var dispatcher = new TestDispatcher();
+            var adapter = MockWebViewAdapter.Create();
+            var core = new WebViewCore(adapter, dispatcher);
+            core.Attach(new TestPlatformHandle(IntPtr.Zero, "test-parent"));
+
+            var control = new WebView();
+            var adapterDestroyedCalls = 0;
+            control.AdapterDestroyed += (_, _) => adapterDestroyedCalls++;
+            control.TestOnlyAttachCore(core);
+            control.TestOnlySetCoreAttached(true);
+            control.TestOnlySubscribeCoreEvents();
+
+            var detached = control.HandleHostWindowClosing(
+                isProgrammatic: false,
+                closeReason: unchecked((WindowCloseReason)(-1)));
+
+            Assert.True(detached);
+            Assert.Equal(1, adapter.DetachCallCount);
+            Assert.False(GetCoreAttached(control));
+            Assert.Equal(0, adapterDestroyedCalls);
+
+            core.Dispose();
+        });
+    }
+
+    [AvaloniaFact]
     public void WebView2SmokeView_detaches_adapter_on_host_window_closing()
     {
         AvaloniaUiThreadRunner.Run(() =>
