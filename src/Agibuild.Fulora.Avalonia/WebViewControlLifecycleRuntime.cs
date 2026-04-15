@@ -12,7 +12,6 @@ internal sealed class WebViewControlLifecycleRuntime
     private readonly Func<IWebViewEnvironmentOptions?> _getEnvironmentOptions;
     private readonly Func<Uri?> _getPendingSource;
     private readonly Action<bool> _setCoreAttached;
-    private readonly Action<bool> _setAdapterUnavailable;
     private readonly Func<IWebViewDispatcher> _createDispatcher;
     private readonly Func<IWebViewDispatcher, ILogger<WebViewCore>, IWebViewEnvironmentOptions?, WebViewCore> _createCore;
     private readonly Func<IPlatformHandle, INativeHandle> _wrapPlatformHandle;
@@ -24,7 +23,6 @@ internal sealed class WebViewControlLifecycleRuntime
         Func<IWebViewEnvironmentOptions?> getEnvironmentOptions,
         Func<Uri?> getPendingSource,
         Action<bool> setCoreAttached,
-        Action<bool> setAdapterUnavailable,
         Func<IWebViewDispatcher> createDispatcher,
         Func<IWebViewDispatcher, ILogger<WebViewCore>, IWebViewEnvironmentOptions?, WebViewCore>? createCore = null,
         Func<IPlatformHandle, INativeHandle>? wrapPlatformHandle = null)
@@ -35,7 +33,6 @@ internal sealed class WebViewControlLifecycleRuntime
         _getEnvironmentOptions = getEnvironmentOptions ?? throw new ArgumentNullException(nameof(getEnvironmentOptions));
         _getPendingSource = getPendingSource ?? throw new ArgumentNullException(nameof(getPendingSource));
         _setCoreAttached = setCoreAttached ?? throw new ArgumentNullException(nameof(setCoreAttached));
-        _setAdapterUnavailable = setAdapterUnavailable ?? throw new ArgumentNullException(nameof(setAdapterUnavailable));
         _createDispatcher = createDispatcher ?? throw new ArgumentNullException(nameof(createDispatcher));
         _createCore = createCore ?? WebViewCore.CreateForControl;
         _wrapPlatformHandle = wrapPlatformHandle ?? (handle => new AvaloniaNativeHandle(handle));
@@ -59,7 +56,6 @@ internal sealed class WebViewControlLifecycleRuntime
 
             core.Attach(_wrapPlatformHandle(parentHandle));
             _setCoreAttached(true);
-            _setAdapterUnavailable(false);
 
             var pendingSource = _getPendingSource();
             if (pendingSource is not null)
@@ -70,7 +66,6 @@ internal sealed class WebViewControlLifecycleRuntime
             _eventRuntime.Detach();
             core?.Dispose();
             _setCoreAttached(false);
-            _setAdapterUnavailable(true);
             _controlRuntime.MarkAdapterUnavailable();
         }
         catch
@@ -78,7 +73,6 @@ internal sealed class WebViewControlLifecycleRuntime
             _eventRuntime.Detach();
             core?.Dispose();
             _setCoreAttached(false);
-            _setAdapterUnavailable(false);
             _controlRuntime.ClearCore();
             throw;
         }

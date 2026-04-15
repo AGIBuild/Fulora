@@ -27,7 +27,6 @@ public sealed class WebViewControlLifecycleRuntimeTests
             getEnvironmentOptions: () => null,
             getPendingSource: () => new Uri("https://example.test/replayed"),
             setCoreAttached: _ => { },
-            setAdapterUnavailable: _ => { },
             createDispatcher: () => _dispatcher,
             createCore: (_, _, _) => new WebViewCore(adapter, _dispatcher),
             wrapPlatformHandle: handle => new TestNativeHandle(handle.Handle, handle.HandleDescriptor ?? string.Empty));
@@ -40,29 +39,56 @@ public sealed class WebViewControlLifecycleRuntimeTests
     }
 
     [Fact]
-    public void AttachToNativeControl_marks_adapter_unavailable_when_platform_not_supported()
+    public void AttachToNativeControl_success_does_not_depend_on_a_shell_adapter_callback()
+    {
+        var adapter = MockWebViewAdapter.Create();
+        var controlRuntime = new WebViewControlRuntime();
+        var eventRuntime = new WebViewControlEventRuntime(
+            _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, () => { }, _ => { },
+            () => null, () => null, () => null, () => null, () => null,
+            _ => Task.CompletedTask, () => 1.0, _ => { });
+
+        var lifecycle = new WebViewControlLifecycleRuntime(
+            controlRuntime,
+            eventRuntime,
+            getLoggerFactory: () => NullLoggerFactory.Instance,
+            getEnvironmentOptions: () => null,
+            getPendingSource: () => null,
+            setCoreAttached: attached => controlRuntime.SetCoreAttached(attached),
+            createDispatcher: () => _dispatcher,
+            createCore: (_, _, _) => new WebViewCore(adapter, _dispatcher),
+            wrapPlatformHandle: handle => new TestNativeHandle(handle.Handle, handle.HandleDescriptor ?? string.Empty));
+
+        lifecycle.AttachToNativeControl(new TestAvaloniaPlatformHandle(IntPtr.Zero, "test-parent"));
+
+        Assert.NotNull(controlRuntime.Core);
+        Assert.Equal(1, adapter.AttachCallCount);
+        Assert.True(controlRuntime.IsCoreAttached);
+    }
+
+    [Fact]
+    public void AttachToNativeControl_platform_not_supported_marks_runtime_unavailable_without_a_shell_adapter_callback()
     {
         var controlRuntime = new WebViewControlRuntime();
         var eventRuntime = new WebViewControlEventRuntime(
             _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, _ => { }, () => { }, _ => { },
             () => null, () => null, () => null, () => null, () => null,
             _ => Task.CompletedTask, () => 1.0, _ => { });
-        var unavailable = false;
+
         var lifecycle = new WebViewControlLifecycleRuntime(
             controlRuntime,
             eventRuntime,
             () => NullLoggerFactory.Instance,
             () => null,
             () => null,
-            _ => { },
-            value => unavailable = value,
+            attached => controlRuntime.SetCoreAttached(attached),
             () => _dispatcher,
             createCore: (_, _, _) => throw new PlatformNotSupportedException());
 
         lifecycle.AttachToNativeControl(new TestAvaloniaPlatformHandle(IntPtr.Zero, "test-parent"));
 
-        Assert.True(unavailable);
         Assert.Null(controlRuntime.Core);
+        Assert.False(controlRuntime.IsCoreAttached);
         Assert.Throws<PlatformNotSupportedException>(() => { _ = controlRuntime.Bridge; });
     }
 
@@ -80,7 +106,6 @@ public sealed class WebViewControlLifecycleRuntimeTests
             () => NullLoggerFactory.Instance,
             () => null,
             () => null,
-            _ => { },
             _ => { },
             () => _dispatcher,
             createCore: (_, _, _) => throw new InvalidOperationException("boom"));
@@ -104,7 +129,7 @@ public sealed class WebViewControlLifecycleRuntimeTests
             _ => Task.CompletedTask, () => 1.0, _ => { });
         var lifecycle = new WebViewControlLifecycleRuntime(
             controlRuntime, eventRuntime,
-            () => NullLoggerFactory.Instance, () => null, () => null, _ => { }, _ => { }, () => _dispatcher,
+            () => NullLoggerFactory.Instance, () => null, () => null, _ => { }, () => _dispatcher,
             createCore: (_, _, _) => new WebViewCore(adapter, _dispatcher),
             wrapPlatformHandle: handle => new TestNativeHandle(handle.Handle, handle.HandleDescriptor ?? string.Empty));
         var core = new WebViewCore(adapter, _dispatcher);

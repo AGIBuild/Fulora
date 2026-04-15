@@ -129,7 +129,6 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             getEnvironmentOptions: () => EnvironmentOptions,
             getPendingSource: () => Source,
             setCoreAttached: attached => _controlRuntime.SetCoreAttached(attached),
-            setAdapterUnavailable: _ => { },
             createDispatcher: static () => new SynchronizationContextWebViewDispatcher());
 
         _hostClosingRuntime = new WebViewHostClosingRuntime(
