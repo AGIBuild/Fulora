@@ -72,6 +72,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     private EventHandler<EventArgs>? _dragLeftHandlers;
     private EventHandler<DropEventArgs>? _dropCompletedHandlers;
     private readonly WebViewControlRuntime _controlRuntime = new();
+    private readonly WebViewControlStateRuntime _stateRuntime;
     private readonly WebViewControlEventRuntime _eventRuntime;
     private readonly WebViewControlLifecycleRuntime _lifecycleRuntime;
     private readonly WebViewHostClosingRuntime _hostClosingRuntime;
@@ -93,9 +94,23 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     /// </summary>
     public WebView()
     {
+        _stateRuntime = new WebViewControlStateRuntime(
+            isCoreAttached: () => _core is not null && _coreAttached,
+            navigateAsync: uri => _core!.NavigateAsync(uri),
+            setZoomFactorAsync: zoom => _core!.SetZoomFactorAsync(zoom),
+            raiseNavigationStarted: args => NavigationStarted?.Invoke(this, args),
+            raiseNavigationCompleted: args => NavigationCompleted?.Invoke(this, args),
+            getCanGoBack: () => CanGoBack,
+            getCanGoForward: () => CanGoForward,
+            raiseIsLoadingChanged: (oldValue, newValue) => RaisePropertyChanged(IsLoadingProperty, oldValue, newValue),
+            raiseCanGoBackChanged: (oldValue, newValue) => RaisePropertyChanged(CanGoBackProperty, oldValue, newValue),
+            raiseCanGoForwardChanged: (oldValue, newValue) => RaisePropertyChanged(CanGoForwardProperty, oldValue, newValue),
+            setZoomFactorValue: zoom => SetCurrentValue(ZoomFactorProperty, zoom),
+            raiseZoomFactorChanged: zoom => ZoomFactorChanged?.Invoke(this, zoom));
+
         _eventRuntime = new WebViewControlEventRuntime(
-            raiseNavigationStarted: args => OnCoreNavigationStarted(args),
-            raiseNavigationCompleted: args => OnCoreNavigationCompleted(args),
+            raiseNavigationStarted: args => _stateRuntime.HandleCoreNavigationStarted(args),
+            raiseNavigationCompleted: args => _stateRuntime.HandleCoreNavigationCompleted(args),
             raiseNewWindowRequested: args => OnCoreNewWindowRequested(args),
             raiseWebMessageReceived: args => WebMessageReceived?.Invoke(this, args),
             raiseWebResourceRequested: args => WebResourceRequested?.Invoke(this, args),
@@ -104,7 +119,7 @@ public class WebView : NativeControlHost, ISpaHostingWebView
             raisePermissionRequested: args => PermissionRequested?.Invoke(this, args),
             raiseAdapterCreated: args => AdapterCreated?.Invoke(this, args),
             raiseAdapterDestroyed: () => AdapterDestroyed?.Invoke(this, EventArgs.Empty),
-            raiseZoomFactorChanged: newZoom => OnCoreZoomFactorChanged(newZoom),
+            raiseZoomFactorChanged: newZoom => _stateRuntime.HandleCoreZoomFactorChanged(newZoom),
             getContextMenuHandlers: () => _contextMenuRequestedHandlers,
             getDragEnteredHandlers: () => _dragEnteredHandlers,
             getDragOverHandlers: () => _dragOverHandlers,
@@ -680,26 +695,10 @@ public class WebView : NativeControlHost, ISpaHostingWebView
     // ---------------------------------------------------------------------------
 
     private void OnSourceChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        if (_core is null || !_coreAttached)
-        {
-            return;
-        }
-
-        if (e.NewValue is Uri newUri)
-        {
-            _ = _core.NavigateAsync(newUri);
-        }
-    }
+        => _stateRuntime.HandleSourceChanged(e.NewValue);
 
     private void OnZoomFactorChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        if (_core is null || !_coreAttached) return;
-        if (e.NewValue is double newZoom)
-        {
-            _ = _core.SetZoomFactorAsync(newZoom);
-        }
-    }
+        => _stateRuntime.HandleZoomFactorChanged(e.NewValue);
 
     private void OnOverlayContentChanged(AvaloniaPropertyChangedEventArgs e)
         => _overlayRuntime.UpdateOverlayContent(e.NewValue);
@@ -738,28 +737,8 @@ public class WebView : NativeControlHost, ISpaHostingWebView
 
     internal void TestOnlyUnsubscribeCoreEvents() => _eventRuntime.Detach(_core);
 
-    private void OnCoreNavigationStarted(NavigationStartingEventArgs e)
-    {
-        NavigationStarted?.Invoke(this, e);
-        RaisePropertyChanged(IsLoadingProperty, false, true);
-    }
-
-    private void OnCoreNavigationCompleted(NavigationCompletedEventArgs e)
-    {
-        NavigationCompleted?.Invoke(this, e);
-        RaisePropertyChanged(IsLoadingProperty, true, false);
-        RaisePropertyChanged(CanGoBackProperty, !CanGoBack, CanGoBack);
-        RaisePropertyChanged(CanGoForwardProperty, !CanGoForward, CanGoForward);
-    }
-
     private void OnCoreNewWindowRequested(NewWindowRequestedEventArgs e)
         => NewWindowRequested?.Invoke(this, e);
-
-    private void OnCoreZoomFactorChanged(double newZoom)
-    {
-        SetCurrentValue(ZoomFactorProperty, newZoom);
-        ZoomFactorChanged?.Invoke(this, newZoom);
-    }
 
     /// <summary>
     /// Releases the native WebView resources and detaches from the host window lifecycle.
