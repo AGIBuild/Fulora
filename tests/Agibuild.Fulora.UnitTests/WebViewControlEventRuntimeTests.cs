@@ -90,6 +90,55 @@ public sealed class WebViewControlEventRuntimeTests
         Assert.Equal(1, messages);
     }
 
+    [Fact]
+    public void Attach_to_same_core_does_not_duplicate_forwarders()
+    {
+        var messages = 0;
+        var runtime = CreateRuntime(
+            raiseWebMessageReceived: _ => messages++,
+            getInitialZoomFactor: () => 1.0);
+
+        var core = new StubCoreEvents();
+        runtime.Attach(core);
+        runtime.Attach(core);
+
+        core.RaiseWebMessageReceived(new WebMessageReceivedEventArgs());
+
+        Assert.Equal(1, messages);
+    }
+
+    [Fact]
+    public void Attach_to_same_core_does_not_reapply_initial_zoom()
+    {
+        var zoomApplyCount = 0;
+        var runtime = CreateRuntime(
+            getInitialZoomFactor: () => 1.5,
+            applyInitialZoomFactor: _ => zoomApplyCount++);
+
+        var core = new StubCoreEvents();
+        runtime.Attach(core);
+        runtime.Attach(core);
+
+        Assert.Equal(1, zoomApplyCount);
+    }
+
+    [Fact]
+    public void Attach_to_same_core_does_not_duplicate_interaction_handlers()
+    {
+        var contextMenuCalls = 0;
+        var runtime = CreateRuntime(
+            getContextMenuHandlers: () => (_, _) => contextMenuCalls++,
+            getInitialZoomFactor: () => 1.0);
+
+        var core = new StubCoreEvents();
+        runtime.Attach(core);
+        runtime.Attach(core);
+
+        core.RaiseContextMenuRequested(new ContextMenuRequestedEventArgs());
+
+        Assert.Equal(1, contextMenuCalls);
+    }
+
 #pragma warning disable CS0067
     private static WebViewControlEventRuntime CreateRuntime(
         Action<NewWindowRequestedEventArgs>? raiseNewWindowRequested = null,

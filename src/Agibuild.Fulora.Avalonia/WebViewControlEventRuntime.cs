@@ -69,8 +69,10 @@ internal sealed class WebViewControlEventRuntime
     {
         ArgumentNullException.ThrowIfNull(core);
 
-        if (!ReferenceEquals(_attachedCore, core))
-            Detach();
+        if (ReferenceEquals(_attachedCore, core))
+            return;
+
+        Detach();
 
         _navigationStarted = (_, e) => _raiseNavigationStarted(e);
         _navigationCompleted = (_, e) => _raiseNavigationCompleted(e);
