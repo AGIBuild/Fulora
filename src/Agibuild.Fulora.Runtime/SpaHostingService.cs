@@ -121,26 +121,36 @@ internal sealed class SpaHostingService : IDisposable
             _logger.LogDebug("SPA: fallback → {Path}", path);
         }
 
+        bool served;
         if (_devProxy is not null)
         {
-            return HandleViaDevProxy(e, path);
+            served = HandleViaDevProxy(e, path);
         }
-
-        if (HandleViaExternalAssets(e, path))
+        else if (HandleViaExternalAssets(e, path))
         {
-            return true;
+            served = true;
         }
-
-        if (_options.EmbeddedResourcePrefix is null || _options.ResourceAssembly is null)
+        else if (_options.EmbeddedResourcePrefix is null || _options.ResourceAssembly is null)
         {
             e.ResponseStatusCode = 404;
             e.ResponseBody = new MemoryStream(Encoding.UTF8.GetBytes("Not Found"));
             e.ResponseContentType = "text/plain";
             e.Handled = true;
-            return true;
+            served = true;
+        }
+        else
+        {
+            served = HandleViaEmbeddedResource(e, path);
         }
 
-        return HandleViaEmbeddedResource(e, path);
+        if (served && _options.ServiceWorker is { } swOptions &&
+            e.ResponseContentType?.StartsWith("text/html", StringComparison.OrdinalIgnoreCase) == true &&
+            e.ResponseBody is not null)
+        {
+            e.ResponseBody = InjectSwRegistrationScript(e.ResponseBody, swOptions);
+        }
+
+        return served;
     }
 
     // ==================== Embedded resource serving ====================
@@ -333,6 +343,26 @@ internal sealed class SpaHostingService : IDisposable
         e.ResponseHeaders ??= new Dictionary<string, string>();
         e.ResponseHeaders["Cache-Control"] = "no-cache";
         return true;
+    }
+
+    private static Stream InjectSwRegistrationScript(Stream htmlBody, ServiceWorkerOptions sw)
+    {
+        var registrationScript = ServiceWorkerRegistrar.GenerateRegistrationScript(sw);
+        var tag = $"<script>{registrationScript}</script>";
+
+        string html;
+        using (var reader = new StreamReader(htmlBody, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: false))
+            html = reader.ReadToEnd();
+
+        var insertAt = html.IndexOf("</head>", StringComparison.OrdinalIgnoreCase);
+        if (insertAt < 0)
+            insertAt = html.IndexOf("</body>", StringComparison.OrdinalIgnoreCase);
+
+        var injected = insertAt >= 0
+            ? string.Concat(html.AsSpan(0, insertAt), tag, html.AsSpan(insertAt))
+            : html + tag;
+
+        return new MemoryStream(Encoding.UTF8.GetBytes(injected));
     }
 
     // ==================== Helpers ====================

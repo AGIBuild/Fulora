@@ -300,6 +300,63 @@ public sealed partial class RuntimeCoverageTests
     }
 
     [Fact]
+    public void TryHandle_injects_sw_registration_script_into_html_when_configured()
+    {
+        using var svc = new SpaHostingService(new SpaHostingOptions
+        {
+            EmbeddedResourcePrefix = "HtmlTestResources",
+            ResourceAssembly = typeof(RuntimeCoverageTests).Assembly,
+            ServiceWorker = new ServiceWorkerOptions { ScriptPath = "/sw.js" }
+        }, NullTestLogger.Instance);
+
+        var e = MakeSpaArgs("app://localhost/index.html");
+        svc.TryHandle(e);
+
+        Assert.Equal(200, e.ResponseStatusCode);
+        using var reader = new StreamReader(e.ResponseBody!);
+        var html = reader.ReadToEnd();
+        Assert.Contains("navigator.serviceWorker.register", html);
+        Assert.Contains("</head>", html);
+    }
+
+    [Fact]
+    public void TryHandle_does_not_inject_sw_script_into_non_html_responses()
+    {
+        using var svc = new SpaHostingService(new SpaHostingOptions
+        {
+            EmbeddedResourcePrefix = "TestResources",
+            ResourceAssembly = typeof(SpaHostingTests).Assembly,
+            ServiceWorker = new ServiceWorkerOptions { ScriptPath = "/sw.js" }
+        }, NullTestLogger.Instance);
+
+        var e = MakeSpaArgs("app://localhost/test.txt");
+        svc.TryHandle(e);
+
+        Assert.Equal(200, e.ResponseStatusCode);
+        using var reader = new StreamReader(e.ResponseBody!);
+        var content = reader.ReadToEnd();
+        Assert.DoesNotContain("navigator.serviceWorker.register", content);
+    }
+
+    [Fact]
+    public void TryHandle_does_not_inject_sw_script_when_sw_not_configured()
+    {
+        using var svc = new SpaHostingService(new SpaHostingOptions
+        {
+            EmbeddedResourcePrefix = "HtmlTestResources",
+            ResourceAssembly = typeof(RuntimeCoverageTests).Assembly,
+        }, NullTestLogger.Instance);
+
+        var e = MakeSpaArgs("app://localhost/index.html");
+        svc.TryHandle(e);
+
+        Assert.Equal(200, e.ResponseStatusCode);
+        using var reader = new StreamReader(e.ResponseBody!);
+        var html = reader.ReadToEnd();
+        Assert.DoesNotContain("navigator.serviceWorker.register", html);
+    }
+
+    [Fact]
     public void TryHandle_DevProxy_unreachable_returns_502()
     {
         // Point to a non-listening port — the HTTP call will fail with connection refused.

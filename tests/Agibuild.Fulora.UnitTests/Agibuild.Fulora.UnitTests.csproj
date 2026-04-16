@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="TestResources\**" />
+    <EmbeddedResource Include="HtmlTestResources\**" />
   </ItemGroup>
 
   <ItemGroup>
