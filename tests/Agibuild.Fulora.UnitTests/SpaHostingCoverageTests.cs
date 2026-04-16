@@ -644,4 +644,191 @@ public sealed partial class RuntimeCoverageTests
 
         listener.Stop();
     }
+
+    // ==================== HandleViaExternalAssets ====================
+
+    [Fact]
+    public void TryHandle_external_assets_provider_returns_empty_falls_through()
+    {
+        using var svc = new SpaHostingService(new SpaHostingOptions
+        {
+            ActiveAssetDirectoryProvider = () => "",
+            EmbeddedResourcePrefix = "TestResources",
+            ResourceAssembly = typeof(SpaHostingTests).Assembly,
+        }, NullTestLogger.Instance);
+
+        var e = MakeSpaArgs("app://localhost/index.html");
+        svc.TryHandle(e);
+
+        // Empty provider → falls through to embedded resources, so handled is true.
+        Assert.True(e.Handled);
+    }
+
+    [Fact]
+    public void TryHandle_external_assets_directory_not_found_returns_404()
+    {
+        var nonExistentDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+
+        using var svc = new SpaHostingService(new SpaHostingOptions
+        {
+            ActiveAssetDirectoryProvider = () => nonExistentDir,
+        }, NullTestLogger.Instance);
+
+        var e = MakeSpaArgs("app://localhost/app.js");
+        var handled = svc.TryHandle(e);
+
+        Assert.True(handled);
+        Assert.Equal(404, e.ResponseStatusCode);
+        Assert.Equal("text/plain", e.ResponseContentType);
+    }
+
+    [Fact]
+    public void TryHandle_external_assets_path_traversal_blocked_at_os_level()
+    {
+        // The URI parser normalizes '..' segments before they reach HandleViaExternalAssets,
+        // so a traversal attempt via URL resolves to a harmless (not-found) path.
+        // The 400 guard in the code protects against raw (non-URI) path inputs, e.g.
+        // Windows backslash traversal that Path.GetFullPath would resolve outside the root.
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        try
+        {
+            using var svc = new SpaHostingService(new SpaHostingOptions
+            {
+                ActiveAssetDirectoryProvider = () => tempDir,
+            }, NullTestLogger.Instance);
+
+            // URI parser normalises /../../../etc/passwd → /etc/passwd, which is not in
+            // tempDir → file missing → 404 (no fallback either).
+            var e = MakeSpaArgs("app://localhost/../../../etc/passwd");
+            var handled = svc.TryHandle(e);
+
+            Assert.True(handled);
+            Assert.Equal(404, e.ResponseStatusCode);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void TryHandle_external_assets_serves_existing_file()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        var filePath = Path.Combine(tempDir, "app.js");
+        File.WriteAllText(filePath, "console.log('hello');");
+        try
+        {
+            using var svc = new SpaHostingService(new SpaHostingOptions
+            {
+                ActiveAssetDirectoryProvider = () => tempDir,
+            }, NullTestLogger.Instance);
+
+            var e = MakeSpaArgs("app://localhost/app.js");
+            var handled = svc.TryHandle(e);
+
+            Assert.True(handled);
+            Assert.Equal(200, e.ResponseStatusCode);
+            Assert.Equal("application/javascript", e.ResponseContentType);
+            Assert.NotNull(e.ResponseBody);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void TryHandle_external_assets_missing_file_falls_back_to_index()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        File.WriteAllText(Path.Combine(tempDir, "index.html"), "<html></html>");
+        try
+        {
+            using var svc = new SpaHostingService(new SpaHostingOptions
+            {
+                ActiveAssetDirectoryProvider = () => tempDir,
+            }, NullTestLogger.Instance);
+
+            // Request a deep-link route (no extension) — should serve index.html
+            var e = MakeSpaArgs("app://localhost/missing.js");
+            var handled = svc.TryHandle(e);
+
+            Assert.True(handled);
+            Assert.Equal(200, e.ResponseStatusCode);
+            Assert.Equal("text/html", e.ResponseContentType);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void TryHandle_external_assets_missing_file_and_fallback_returns_404()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        try
+        {
+            using var svc = new SpaHostingService(new SpaHostingOptions
+            {
+                ActiveAssetDirectoryProvider = () => tempDir,
+            }, NullTestLogger.Instance);
+
+            var e = MakeSpaArgs("app://localhost/missing.js");
+            var handled = svc.TryHandle(e);
+
+            Assert.True(handled);
+            Assert.Equal(404, e.ResponseStatusCode);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void TryHandle_external_assets_hashed_filename_gets_immutable_cache()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        var hashedFile = Path.Combine(tempDir, "chunk.a1b2c3d4e5f6.js");
+        File.WriteAllText(hashedFile, "/* chunk */");
+        try
+        {
+            using var svc = new SpaHostingService(new SpaHostingOptions
+            {
+                ActiveAssetDirectoryProvider = () => tempDir,
+            }, NullTestLogger.Instance);
+
+            var e = MakeSpaArgs("app://localhost/chunk.a1b2c3d4e5f6.js");
+            svc.TryHandle(e);
+
+            Assert.Equal(200, e.ResponseStatusCode);
+            Assert.NotNull(e.ResponseHeaders);
+            Assert.Equal("public, max-age=31536000, immutable", e.ResponseHeaders!["Cache-Control"]);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    // ==================== IsHashedFilename boundary ====================
+
+    [Theory]
+    [InlineData("app.1234567.js", false)]   // 7 hex chars after dot → not hashed
+    [InlineData("app.12345678.js", true)]   // 8 hex chars after dot → hashed
+    [InlineData("chunk-12345.js", false)]  // 5 hex chars after dash → not hashed
+    [InlineData("chunk-123456.js", true)]  // 6 hex chars after dash → hashed
+    [InlineData("app.1234567g.js", false)] // 8 chars but 'g' is not hex → not hashed
+    [InlineData("app.js", false)]          // no hash segment → not hashed
+    public void IsHashedFilename_boundary_cases(string filename, bool expected)
+    {
+        Assert.Equal(expected, SpaHostingService.IsHashedFilename(filename));
+    }
 }
