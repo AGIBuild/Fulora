@@ -12,6 +12,7 @@ public sealed class WebViewCoreBridgeRuntimeTests
         var host = new TestBridgeHost();
         using var runtime = new WebViewCoreBridgeRuntime(
             host,
+            new TestDispatcher(),
             NullLogger.Instance,
             enableDevToolsByDefault: true);
 
@@ -30,6 +31,7 @@ public sealed class WebViewCoreBridgeRuntimeTests
         var host = new TestBridgeHost();
         using var runtime = new WebViewCoreBridgeRuntime(
             host,
+            new TestDispatcher(),
             NullLogger.Instance,
             enableDevToolsByDefault: false);
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
@@ -51,6 +53,7 @@ public sealed class WebViewCoreBridgeRuntimeTests
         var diagnosticsSink = new MemoryFuloraDiagnosticsSink();
         using var runtime = new WebViewCoreBridgeRuntime(
             host,
+            new TestDispatcher(),
             NullLogger.Instance,
             enableDevToolsByDefault: false);
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
@@ -75,6 +78,78 @@ public sealed class WebViewCoreBridgeRuntimeTests
         Assert.Equal("https://blocked.example", diagnosticEvent.Attributes["origin"]);
     }
 
+    [Fact]
+    public void HandleAdapterWebMessageReceived_when_host_disposed_does_not_dispatch()
+    {
+        // B1 regression guard: the dispatch-symmetry refactor moved SafeDispatch filtering from
+        // WebViewCore into WebViewCoreBridgeRuntime. If the host is disposed before the adapter
+        // event arrives, the UI-thread path must never be invoked (otherwise bridge state may be
+        // touched after teardown). Bridge must be enabled first because EnableWebMessageBridge
+        // itself guards with ThrowIfDisposed.
+        var host = new TestBridgeHost();
+        using var runtime = new WebViewCoreBridgeRuntime(
+            host,
+            new TestDispatcher(),
+            NullLogger.Instance,
+            enableDevToolsByDefault: false);
+        runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
+        {
+            AllowedOrigins = new HashSet<string> { "*" }
+        });
+        host.IsDisposed = true;
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        runtime.HandleAdapterWebMessageReceived(message);
+
+        Assert.Null(host.LastForwardedMessage);
+    }
+
+    [Fact]
+    public void HandleAdapterWebMessageReceived_when_adapter_destroyed_does_not_dispatch()
+    {
+        // B1 regression guard: mirrors disposed path for the adapter-destroyed signal so both
+        // short-circuit conditions documented in UiThreadHelper.SafeDispatch stay exercised.
+        var host = new TestBridgeHost();
+        using var runtime = new WebViewCoreBridgeRuntime(
+            host,
+            new TestDispatcher(),
+            NullLogger.Instance,
+            enableDevToolsByDefault: false);
+        runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
+        {
+            AllowedOrigins = new HashSet<string> { "*" }
+        });
+        host.IsAdapterDestroyed = true;
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        runtime.HandleAdapterWebMessageReceived(message);
+
+        Assert.Null(host.LastForwardedMessage);
+    }
+
+    [Fact]
+    public void HandleAdapterWebMessageReceived_on_ui_thread_forwards_synchronously()
+    {
+        // B1 regression guard: when dispatcher.CheckAccess() returns true, SafeDispatch must invoke
+        // the UI-thread callback inline rather than queueing it, so the message is forwarded
+        // synchronously (matching the previous WebViewCore behaviour).
+        var host = new TestBridgeHost();
+        using var runtime = new WebViewCoreBridgeRuntime(
+            host,
+            new TestDispatcher(),
+            NullLogger.Instance,
+            enableDevToolsByDefault: false);
+        runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
+        {
+            AllowedOrigins = new HashSet<string> { "*" }
+        });
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        runtime.HandleAdapterWebMessageReceived(message);
+
+        Assert.Same(message, host.LastForwardedMessage);
+    }
+
     private sealed class TestBridgeHost : IWebViewCoreBridgeHost
     {
         private readonly int _uiThreadId = Environment.CurrentManagedThreadId;
@@ -82,6 +157,8 @@ public sealed class WebViewCoreBridgeRuntimeTests
         public Guid ChannelId { get; } = Guid.NewGuid();
 
         public bool IsDisposed { get; set; }
+
+        public bool IsAdapterDestroyed { get; set; }
 
         public List<string> ObservedBackgroundOperations { get; } = [];
 

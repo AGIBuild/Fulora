@@ -6,6 +6,8 @@ internal interface IWebViewCoreBridgeHost
 {
     bool IsDisposed { get; }
 
+    bool IsAdapterDestroyed { get; }
+
     Guid ChannelId { get; }
 
     Task<string?> InvokeScriptAsync(string script);
@@ -22,6 +24,7 @@ internal interface IWebViewCoreBridgeHost
 internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridgeOperations
 {
     private readonly IWebViewCoreBridgeHost _host;
+    private readonly IWebViewDispatcher _dispatcher;
     private readonly ILogger _logger;
     private readonly bool _enableDevToolsByDefault;
 
@@ -35,10 +38,12 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
 
     public WebViewCoreBridgeRuntime(
         IWebViewCoreBridgeHost host,
+        IWebViewDispatcher dispatcher,
         ILogger logger,
         bool enableDevToolsByDefault)
     {
         _host = host ?? throw new ArgumentNullException(nameof(host));
+        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _enableDevToolsByDefault = enableDevToolsByDefault;
     }
@@ -142,7 +147,27 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
         _logger.LogDebug("Bridge: re-injected JS stubs after navigation");
     }
 
-    public void HandleAdapterWebMessageReceivedOnUiThread(WebMessageReceivedEventArgs args)
+    /// <summary>
+    /// Adapter-thread entry point: logs + dispatches to UI thread, filtering disposed / destroyed hosts.
+    /// Mirrors the pattern used by <see cref="WebViewCoreAdapterEventRuntime"/> so all adapter events
+    /// go through <see cref="UiThreadHelper.SafeDispatch"/> at the runtime layer rather than scattered
+    /// across <see cref="WebViewCore"/>.
+    /// </summary>
+    public void HandleAdapterWebMessageReceived(WebMessageReceivedEventArgs args)
+    {
+        ArgumentNullException.ThrowIfNull(args);
+        _logger.LogDebug("Event WebMessageReceived: origin={Origin}, channelId={ChannelId}", args.Origin, args.ChannelId);
+
+        UiThreadHelper.SafeDispatch(
+            _dispatcher,
+            _host.IsDisposed,
+            _host.IsAdapterDestroyed,
+            () => HandleAdapterWebMessageReceivedOnUiThread(args),
+            _logger,
+            "WebMessageReceived: ignored (disposed or destroyed)");
+    }
+
+    internal void HandleAdapterWebMessageReceivedOnUiThread(WebMessageReceivedEventArgs args)
     {
         if (_host.IsDisposed)
         {

@@ -133,7 +133,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvents,
         _commandManager = _capabilityDetectionRuntime.CreateCommandManager(this);
 
         _featureRuntime = new WebViewCoreFeatureRuntime(this, _adapter, _dispatcher, _logger, _environmentOptions);
-        _bridgeRuntime = new WebViewCoreBridgeRuntime(this, _logger, _environmentOptions.EnableDevTools);
+        _bridgeRuntime = new WebViewCoreBridgeRuntime(this, _dispatcher, _logger, _environmentOptions.EnableDevTools);
         _capabilityRuntime = new WebViewCoreCapabilityRuntime(_featureRuntime, _bridgeRuntime, _cookieManager, _commandManager);
         _adapterEventRuntime = new WebViewCoreAdapterEventRuntime(this, _dispatcher, _logger);
         _navigationRuntime = new WebViewCoreNavigationRuntime(this, _dispatcher, _logger);
@@ -740,20 +740,7 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvents,
         => _adapterEventRuntime.HandleAdapterNewWindowRequested(e);
 
     private void OnAdapterWebMessageReceived(object? sender, WebMessageReceivedEventArgs e)
-    {
-        _logger.LogDebug("Event WebMessageReceived: origin={Origin}, channelId={ChannelId}", e.Origin, e.ChannelId);
-
-        UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _disposed,
-            _adapterDestroyed,
-            () => OnAdapterWebMessageReceivedOnUiThread(e),
-            _logger,
-            "WebMessageReceived: ignored (disposed or destroyed)");
-    }
-
-    private void OnAdapterWebMessageReceivedOnUiThread(WebMessageReceivedEventArgs e)
-        => _bridgeRuntime.HandleAdapterWebMessageReceivedOnUiThread(e);
+        => _bridgeRuntime.HandleAdapterWebMessageReceived(e);
 
     private void OnAdapterWebResourceRequested(object? sender, WebResourceRequestedEventArgs e)
         => _adapterEventRuntime.HandleAdapterWebResourceRequested(e);
@@ -867,6 +854,8 @@ public sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvents,
     bool IWebViewCoreFeatureHost.IsAdapterDestroyed => _adapterDestroyed;
 
     bool IWebViewCoreBridgeHost.IsDisposed => _disposed;
+
+    bool IWebViewCoreBridgeHost.IsAdapterDestroyed => _adapterDestroyed;
 
     Guid IWebViewCoreBridgeHost.ChannelId => ChannelId;
 
