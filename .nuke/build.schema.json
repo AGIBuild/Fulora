@@ -39,6 +39,7 @@
         "FastUnitTests",
         "Format",
         "IntegrationTests",
+        "LocalPreflight",
         "MutationTest",
         "NpmPublish",
         "NugetPackageTest",

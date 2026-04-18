@@ -1,5 +1,5 @@
-using Avalonia.Platform;
 using Agibuild.Fulora.Testing;
+using Avalonia.Platform;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;

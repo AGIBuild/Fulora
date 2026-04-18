@@ -99,8 +99,8 @@ internal sealed class RuntimeBridgeGeneratedPath
     [UnconditionalSuppressMessage("Trimming", "IL2072",
         Justification = "RegistrationType is a source-generated type known to have a parameterless constructor.")]
     internal static IBridgeServiceRegistration<T>? FindRegistration<T>() where T : class
-        {
-            var interfaceType = typeof(T);
+    {
+        var interfaceType = typeof(T);
 
         foreach (var assembly in CandidateAssemblies(interfaceType))
         {

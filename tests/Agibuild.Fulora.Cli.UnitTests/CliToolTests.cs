@@ -1,6 +1,6 @@
+using System.CommandLine.Parsing;
 using System.Reflection;
 using System.Text.Json;
-using System.CommandLine.Parsing;
 using Agibuild.Fulora.Cli;
 using Agibuild.Fulora.Cli.Commands;
 using Xunit;

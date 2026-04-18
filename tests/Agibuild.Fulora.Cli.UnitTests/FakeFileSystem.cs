@@ -1,5 +1,5 @@
-using Agibuild.Fulora.Cli.Commands;
 using System.Text.RegularExpressions;
+using Agibuild.Fulora.Cli.Commands;
 
 namespace Agibuild.Fulora.UnitTests;
 
