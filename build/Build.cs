@@ -102,7 +102,7 @@ internal sealed partial class BuildTask : NukeBuild
     private static AbsolutePath NugetSmokeTelemetryFile => TestResultsDirectory / "nuget-smoke-retry-telemetry.json";
     private static AbsolutePath AutomationLaneManifestFile => TestsDirectory / "automation-lanes.json";
 
-    private static AbsolutePath SolutionFile => RootDirectory / "Agibuild.Fulora.sln";
+    private static AbsolutePath SolutionFile => RootDirectory / "Agibuild.Fulora.slnx";
     private static AbsolutePath CoverageDirectory => ArtifactsDirectory / "coverage";
     private static AbsolutePath CoverageReportDirectory => ArtifactsDirectory / "coverage-report";
 

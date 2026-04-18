@@ -1,0 +1,56 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Agibuild.Fulora.Benchmarks/Agibuild.Fulora.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/plugins/">
+    <Project Path="plugins/Agibuild.Fulora.Plugin.AuthToken/Agibuild.Fulora.Plugin.AuthToken.csproj" />
+    <Project Path="plugins/Agibuild.Fulora.Plugin.Biometric/Agibuild.Fulora.Plugin.Biometric.csproj" />
+    <Project Path="plugins/Agibuild.Fulora.Plugin.Database/Agibuild.Fulora.Plugin.Database.csproj" />
+    <Project Path="plugins/Agibuild.Fulora.Plugin.FileSystem/Agibuild.Fulora.Plugin.FileSystem.csproj" />
+    <Project Path="plugins/Agibuild.Fulora.Plugin.HttpClient/Agibuild.Fulora.Plugin.HttpClient.csproj" />
+    <Project Path="plugins/Agibuild.Fulora.Plugin.LocalStorage/Agibuild.Fulora.Plugin.LocalStorage.csproj" />
+    <Project Path="plugins/Agibuild.Fulora.Plugin.Notifications/Agibuild.Fulora.Plugin.Notifications.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Agibuild.Fulora.Adapters.iOS/Agibuild.Fulora.Adapters.iOS.csproj" />
+    <Project Path="src/Agibuild.Fulora.AI.Ollama/Agibuild.Fulora.AI.Ollama.csproj" />
+    <Project Path="src/Agibuild.Fulora.AI.OpenAI/Agibuild.Fulora.AI.OpenAI.csproj" />
+    <Project Path="src/Agibuild.Fulora.AI/Agibuild.Fulora.AI.csproj" />
+    <Project Path="src/Agibuild.Fulora.Auth.OAuth/Agibuild.Fulora.Auth.OAuth.csproj" />
+    <Project Path="src/Agibuild.Fulora.Avalonia/Agibuild.Fulora.Avalonia.csproj" />
+    <Project Path="src/Agibuild.Fulora.Bridge.Generator/Agibuild.Fulora.Bridge.Generator.csproj" />
+    <Project Path="src/Agibuild.Fulora.Cli/Agibuild.Fulora.Cli.csproj" />
+    <Project Path="src/Agibuild.Fulora.Platforms/Agibuild.Fulora.Platforms.csproj" />
+    <Project Path="src/Agibuild.Fulora.Runtime/Agibuild.Fulora.Runtime.csproj" />
+    <Project Path="src/Agibuild.Fulora.Telemetry.OpenTelemetry/Agibuild.Fulora.Telemetry.OpenTelemetry.csproj" />
+    <Project Path="src/Agibuild.Fulora.Telemetry.Sentry/Agibuild.Fulora.Telemetry.Sentry.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Agibuild.Fulora.Auth.OAuth.Tests/Agibuild.Fulora.Auth.OAuth.Tests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Cli.UnitTests/Agibuild.Fulora.Cli.UnitTests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Integration.NugetPackageTests/Agibuild.Fulora.Integration.NugetPackageTests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Integration.Tests.Automation/Agibuild.Fulora.Integration.Tests.Automation.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests.Android/Agibuild.Fulora.Integration.Tests.Android.csproj">
+      <Deploy Solution="*|Any CPU" />
+    </Project>
+    <Project Path="tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests.Browser/Agibuild.Fulora.Integration.Tests.Browser.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests.Desktop/Agibuild.Fulora.Integration.Tests.Desktop.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests.iOS/Agibuild.Fulora.Integration.Tests.iOS.csproj">
+      <Deploy Solution="*|Any CPU" />
+    </Project>
+    <Project Path="tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Telemetry.OpenTelemetry.Tests/Agibuild.Fulora.Telemetry.OpenTelemetry.Tests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Telemetry.Sentry.Tests/Agibuild.Fulora.Telemetry.Sentry.Tests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Testing/Agibuild.Fulora.Testing.csproj" />
+    <Project Path="tests/Agibuild.Fulora.UnitTests/Agibuild.Fulora.UnitTests.csproj" />
+  </Folder>
+  <Project Path="src/Agibuild.Fulora.Adapters.Abstractions/Agibuild.Fulora.Adapters.Abstractions.csproj" />
+  <Project Path="src/Agibuild.Fulora.Adapters.Android/Agibuild.Fulora.Adapters.Android.csproj" />
+  <Project Path="src/Agibuild.Fulora.Core/Agibuild.Fulora.Core.csproj" />
+  <Project Path="src/Agibuild.Fulora.DependencyInjection/Agibuild.Fulora.DependencyInjection.csproj" />
+</Solution>

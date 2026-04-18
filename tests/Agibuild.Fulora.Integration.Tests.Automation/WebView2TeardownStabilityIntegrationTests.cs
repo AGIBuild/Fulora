@@ -79,8 +79,8 @@ public sealed class WebView2TeardownStabilityIntegrationTests
         var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
         for (var i = 0; i < 12 && dir is not null; i++)
         {
-            var sln = Path.Combine(dir.FullName, "Agibuild.Fulora.sln");
-            if (File.Exists(sln))
+            var marker = Path.Combine(dir.FullName, "Agibuild.Fulora.slnx");
+            if (File.Exists(marker))
             {
                 return dir.FullName;
             }
@@ -88,7 +88,7 @@ public sealed class WebView2TeardownStabilityIntegrationTests
             dir = dir.Parent;
         }
 
-        throw new DirectoryNotFoundException("Could not locate repo root (Agibuild.Fulora.sln) from current directory.");
+        throw new DirectoryNotFoundException("Could not locate repo root (Agibuild.Fulora.slnx) from current directory.");
     }
 
     private static async Task<ProcessResult> RunProcessCaptureAsync(

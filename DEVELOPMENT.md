@@ -52,10 +52,10 @@ dotnet format Agibuild.Fulora.NoMobile.slnf
 
 ## Building Without Mobile SDKs
 
-The default solution `Agibuild.Fulora.sln` includes `Agibuild.Fulora.Adapters.iOS`
+The default solution `Agibuild.Fulora.slnx` includes `Agibuild.Fulora.Adapters.iOS`
 and `Agibuild.Fulora.Adapters.Android`, which require Xcode and the Android
-workload respectively. On hosts without those, opening the `.sln` in an IDE or
-running `dotnet build Agibuild.Fulora.sln` fails with cryptic SDK errors.
+workload respectively. On hosts without those, opening the `.slnx` in an IDE or
+running `dotnet build Agibuild.Fulora.slnx` fails with cryptic SDK errors.
 
 Use the platform-stripped solution filter instead — same projects minus the
 four mobile-only ones:

@@ -1,6 +1,6 @@
 {
   "solution": {
-    "path": "Agibuild.Fulora.sln",
+    "path": "Agibuild.Fulora.slnx",
     "projects": [
       "benchmarks\\Agibuild.Fulora.Benchmarks\\Agibuild.Fulora.Benchmarks.csproj",
       "plugins\\Agibuild.Fulora.Plugin.AuthToken\\Agibuild.Fulora.Plugin.AuthToken.csproj",
