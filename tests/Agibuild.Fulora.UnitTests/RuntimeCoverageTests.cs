@@ -66,7 +66,11 @@ public class FakeMultiParamExport : IMultiParamExport
 /// - RuntimeBridgeService DeserializeParameters edge cases (44.3% → 90%+)
 /// - SpaHostingService dev proxy + edge cases (67.7% → 90%+)
 /// - WebDialog remaining paths (87.5% → 95%+)
+///
+/// [Collection] applies to the whole partial class (declared once on this partial).
+/// See StatefulIOCollection.cs for the rationale on serializing this class.
 /// </summary>
+[Collection(StatefulIOCollection.Name)]
 public sealed partial class RuntimeCoverageTests
 {
     private readonly TestDispatcher _dispatcher = new();

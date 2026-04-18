@@ -5,6 +5,7 @@ using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
 
+[Collection(StatefulIOCollection.Name)]
 public sealed class BridgeDebugServerTests
 {
     [Fact]

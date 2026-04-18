@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
 
+[Collection(StatefulIOCollection.Name)]
 public class CliToolTests
 {
     private static string GetCliProjectPath()
