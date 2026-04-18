@@ -10,10 +10,8 @@ namespace Agibuild.Fulora;
 /// and <c>ThrowIfDisposed</c> methods stay private on the public type and are only observable via
 /// this interface.
 /// </remarks>
-internal interface IWebViewCoreOperationHost
+internal interface IWebViewCoreOperationHost : IWebViewCoreDisposalHost
 {
-    void ThrowIfDisposed();
-
     Task<T> EnqueueOperationAsync<T>(string operationType, Func<Task<T>> func);
 
     Task<object?> EnqueueOperationAsync(string operationType, Func<Task> func);

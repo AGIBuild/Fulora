@@ -584,7 +584,6 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
         => _capabilityRuntime.ReinjectBridgeStubsIfEnabled();
 
     bool IWebViewCoreSpaHostingHost.IsBridgeEnabled => _bridgeRuntime.IsBridgeEnabled;
-    void IWebViewCoreSpaHostingHost.ThrowIfDisposed() => ThrowIfDisposed();
 
     void IWebViewCoreSpaHostingHost.RegisterCustomScheme(CustomSchemeRegistration registration)
     {
@@ -787,13 +786,14 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
         ObjectDisposedException.ThrowIf(_disposed, nameof(WebViewCore));
     }
 
-    bool IWebViewCoreFeatureHost.IsDisposed => _disposed;
+    bool IWebViewCoreLifecycleHost.IsDisposed => _disposed;
 
-    bool IWebViewCoreFeatureHost.IsAdapterDestroyed => _adapterDestroyed;
+    bool IWebViewCoreLifecycleHost.IsAdapterDestroyed => _adapterDestroyed;
 
-    bool IWebViewCoreBridgeHost.IsDisposed => _disposed;
+    void IWebViewCoreDisposalHost.ThrowIfDisposed() => ThrowIfDisposed();
 
-    bool IWebViewCoreBridgeHost.IsAdapterDestroyed => _adapterDestroyed;
+    void IWebViewCoreBackgroundTaskObserver.ObserveBackgroundTask(Task task, string operationType)
+        => ObserveBackgroundTask(task, operationType);
 
     Guid IWebViewCoreBridgeHost.ChannelId => ChannelId;
 
@@ -802,12 +802,6 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
 
     Task<T> IWebViewCoreFeatureHost.EnqueueOperationAsync<T>(string operationType, Func<Task<T>> func)
         => EnqueueOperationAsync(operationType, func);
-
-    void IWebViewCoreFeatureHost.ObserveBackgroundTask(Task task, string operationType)
-        => ObserveBackgroundTask(task, operationType);
-
-    void IWebViewCoreFeatureHost.ThrowIfDisposed()
-        => ThrowIfDisposed();
 
     void IWebViewCoreFeatureHost.RaiseZoomFactorChanged(double zoomFactor)
         => ZoomFactorChanged?.Invoke(this, zoomFactor);
@@ -830,21 +824,11 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
     Task<string?> IWebViewCoreBridgeHost.InvokeScriptAsync(string script)
         => InvokeScriptAsync(script);
 
-    void IWebViewCoreBridgeHost.ObserveBackgroundTask(Task task, string operationType)
-        => ObserveBackgroundTask(task, operationType);
-
     void IWebViewCoreBridgeHost.RaiseWebMessageReceived(WebMessageReceivedEventArgs args)
         => WebMessageReceived?.Invoke(this, args);
 
-    void IWebViewCoreBridgeHost.ThrowIfDisposed()
-        => ThrowIfDisposed();
-
     void IWebViewCoreBridgeHost.ThrowIfNotOnUiThread(string apiName)
         => ThrowIfNotOnUiThread(apiName);
-
-    bool IWebViewCoreAdapterEventHost.IsDisposed => _disposed;
-
-    bool IWebViewCoreAdapterEventHost.IsAdapterDestroyed => _adapterDestroyed;
 
     Task IWebViewCoreAdapterEventHost.NavigateAsync(Uri uri)
         => NavigateAsync(uri);
@@ -863,10 +847,6 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
 
     void IWebViewCoreAdapterEventHost.RaisePermissionRequested(PermissionRequestedEventArgs args)
         => PermissionRequested?.Invoke(this, args);
-
-    bool IWebViewCoreNavigationHost.IsDisposed => _disposed;
-
-    bool IWebViewCoreNavigationHost.IsAdapterDestroyed => _adapterDestroyed;
 
     void IWebViewCoreNavigationHost.RaiseNavigationStarting(NavigationStartingEventArgs args)
         => NavigationStarted?.Invoke(this, args);
@@ -889,8 +869,6 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
     }
 
     // ==================== IWebViewCoreOperationHost (for RuntimeCookieManager / RuntimeCommandManager) ====================
-
-    void IWebViewCoreOperationHost.ThrowIfDisposed() => ThrowIfDisposed();
 
     Task<T> IWebViewCoreOperationHost.EnqueueOperationAsync<T>(string operationType, Func<Task<T>> func)
         => EnqueueOperationAsync(operationType, func);

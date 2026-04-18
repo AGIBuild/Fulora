@@ -2,21 +2,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreBridgeHost
+internal interface IWebViewCoreBridgeHost :
+    IWebViewCoreLifecycleHost,
+    IWebViewCoreDisposalHost,
+    IWebViewCoreBackgroundTaskObserver
 {
-    bool IsDisposed { get; }
-
-    bool IsAdapterDestroyed { get; }
-
     Guid ChannelId { get; }
 
     Task<string?> InvokeScriptAsync(string script);
 
-    void ObserveBackgroundTask(Task task, string operationType);
-
     void RaiseWebMessageReceived(WebMessageReceivedEventArgs args);
-
-    void ThrowIfDisposed();
 
     void ThrowIfNotOnUiThread(string apiName);
 }

@@ -3,19 +3,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreFeatureHost
+internal interface IWebViewCoreFeatureHost :
+    IWebViewCoreLifecycleHost,
+    IWebViewCoreDisposalHost,
+    IWebViewCoreBackgroundTaskObserver
 {
-    bool IsDisposed { get; }
-
-    bool IsAdapterDestroyed { get; }
-
     Task EnqueueOperationAsync(string operationType, Func<Task> func);
 
     Task<T> EnqueueOperationAsync<T>(string operationType, Func<Task<T>> func);
-
-    void ObserveBackgroundTask(Task task, string operationType);
-
-    void ThrowIfDisposed();
 
     void RaiseZoomFactorChanged(double zoomFactor);
 

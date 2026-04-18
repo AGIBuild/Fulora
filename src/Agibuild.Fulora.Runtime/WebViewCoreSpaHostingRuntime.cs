@@ -2,10 +2,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreSpaHostingHost
+internal interface IWebViewCoreSpaHostingHost : IWebViewCoreDisposalHost
 {
     bool IsBridgeEnabled { get; }
-    void ThrowIfDisposed();
     void EnableWebMessageBridge(WebMessageBridgeOptions options);
     void RegisterCustomScheme(CustomSchemeRegistration registration);
     void AddWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler);

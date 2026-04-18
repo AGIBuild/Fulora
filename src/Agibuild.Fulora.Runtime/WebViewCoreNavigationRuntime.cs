@@ -7,12 +7,8 @@ internal readonly record struct WebViewCoreNavigationState(
     Guid CorrelationId,
     Uri RequestUri);
 
-internal interface IWebViewCoreNavigationHost
+internal interface IWebViewCoreNavigationHost : IWebViewCoreLifecycleHost
 {
-    bool IsDisposed { get; }
-
-    bool IsAdapterDestroyed { get; }
-
     void RaiseNavigationStarting(NavigationStartingEventArgs args);
 
     void RaiseNavigationCompleted(NavigationCompletedEventArgs args);

@@ -2,12 +2,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreAdapterEventHost
+internal interface IWebViewCoreAdapterEventHost : IWebViewCoreLifecycleHost
 {
-    bool IsDisposed { get; }
-
-    bool IsAdapterDestroyed { get; }
-
     Task NavigateAsync(Uri uri);
 
     void RaiseNewWindowRequested(NewWindowRequestedEventArgs args);
