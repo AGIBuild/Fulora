@@ -138,10 +138,10 @@ public sealed class BranchCoverageRound3Tests
         core.DownloadRequested += (_, _) => events.Add("DownloadRequested");
         core.PermissionRequested += (_, _) => events.Add("PermissionRequested");
 
-        // Set _adapterDestroyed=true via reflection (without Dispose which also sets _disposed)
-        var field = typeof(WebViewCore).GetField("_adapterDestroyed", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.NotNull(field);
-        field!.SetValue(core, true);
+        // Flip the at-most-once "adapter destroyed" latch on the lifecycle machine directly so the
+        // simulation bypasses Detach()/Dispose() (which would also unsubscribe adapter events and
+        // defeat the point of this test).
+        SetLifecycleFlag(core, "_adapterDestroyed", true);
 
         // Fire all event types — each should hit the _adapterDestroyed path
         adapter.RaiseNavigationCompleted(NavigationCompletedStatus.Success);
@@ -564,10 +564,10 @@ public sealed class BranchCoverageRound3Tests
         core.DownloadRequested += (_, _) => events.Add("DownloadRequested");
         core.PermissionRequested += (_, _) => events.Add("PermissionRequested");
 
-        // Set _disposed=true via reflection without calling Dispose (which would unsubscribe adapter events)
-        var field = typeof(WebViewCore).GetField("_disposed", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.NotNull(field);
-        field!.SetValue(core, true);
+        // Flip the lifecycle machine's disposed latch directly so Dispose() is bypassed (otherwise the
+        // adapter event subscription would be torn down before we can exercise the "disposed but still
+        // receiving events" branch).
+        SetLifecycleFlag(core, "_disposed", true);
 
         // Raise all events — each should be silently ignored due to _disposed=true
         adapter.RaiseNavigationCompleted(NavigationCompletedStatus.Success);
@@ -1381,4 +1381,20 @@ public sealed class BranchCoverageRound3Tests
     }
 
     #endregion
+
+    // Reflection shim: previously these tests poked _disposed / _adapterDestroyed fields directly
+    // on WebViewCore. After the lifecycle flags were moved into WebViewLifecycleStateMachine, the
+    // same simulation needs to hop through the machine. Kept here rather than in a shared helper
+    // because no other test needs this seam.
+    private static void SetLifecycleFlag(WebViewCore core, string flagFieldName, bool value)
+    {
+        var machineField = typeof(WebViewCore).GetField("_lifecycle", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.NotNull(machineField);
+        var machine = machineField!.GetValue(core);
+        Assert.NotNull(machine);
+
+        var innerField = machine!.GetType().GetField(flagFieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.NotNull(innerField);
+        innerField!.SetValue(machine, value);
+    }
 }
