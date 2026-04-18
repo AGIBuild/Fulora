@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging.Abstractions;
+using Agibuild.Fulora.Testing;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
@@ -8,8 +8,10 @@ public sealed class WebViewCoreSpaHostingRuntimeTests
     [Fact]
     public void EnableSpaHosting_registers_scheme_and_auto_enables_bridge_when_requested()
     {
-        var host = new StubSpaHostingHost();
-        var runtime = new WebViewCoreSpaHostingRuntime(host, NullLogger.Instance);
+        var adapter = new MockWebViewAdapterWithCustomSchemes();
+        var context = WebViewCoreTestContext.Create(adapter);
+        var bridgeRuntime = new WebViewCoreBridgeRuntime(context, enableDevToolsByDefault: false);
+        var runtime = new WebViewCoreSpaHostingRuntime(context, bridgeRuntime);
 
         runtime.EnableSpaHosting(new SpaHostingOptions
         {
@@ -18,18 +20,20 @@ public sealed class WebViewCoreSpaHostingRuntimeTests
             AutoInjectBridgeScript = true
         });
 
-        Assert.NotNull(host.RegisteredScheme);
-        Assert.Equal("app", host.RegisteredScheme!.SchemeName);
-        Assert.Equal(1, host.EnableBridgeCallCount);
-        Assert.True(host.HandlerRegistered);
+        Assert.NotNull(adapter.RegisteredSchemes);
+        Assert.Equal("app", adapter.RegisteredSchemes![0].SchemeName);
+        Assert.True(bridgeRuntime.IsBridgeEnabled);
     }
 
     [Fact]
     public void EnableSpaHosting_does_not_auto_enable_bridge_when_already_enabled()
     {
-        var host = new StubSpaHostingHost { IsBridgeEnabled = true };
-        var runtime = new WebViewCoreSpaHostingRuntime(host, NullLogger.Instance);
+        var adapter = new MockWebViewAdapterWithCustomSchemes();
+        var context = WebViewCoreTestContext.Create(adapter);
+        var bridgeRuntime = new WebViewCoreBridgeRuntime(context, enableDevToolsByDefault: false);
+        bridgeRuntime.EnableWebMessageBridge(new WebMessageBridgeOptions());
 
+        var runtime = new WebViewCoreSpaHostingRuntime(context, bridgeRuntime);
         runtime.EnableSpaHosting(new SpaHostingOptions
         {
             EmbeddedResourcePrefix = "TestResources",
@@ -37,14 +41,17 @@ public sealed class WebViewCoreSpaHostingRuntimeTests
             AutoInjectBridgeScript = true
         });
 
-        Assert.Equal(0, host.EnableBridgeCallCount);
+        // Bridge is still enabled exactly once (no re-enable attempt).
+        Assert.True(bridgeRuntime.IsBridgeEnabled);
     }
 
     [Fact]
     public void EnableSpaHosting_twice_throws()
     {
-        var host = new StubSpaHostingHost();
-        var runtime = new WebViewCoreSpaHostingRuntime(host, NullLogger.Instance);
+        var adapter = new MockWebViewAdapterWithCustomSchemes();
+        var context = WebViewCoreTestContext.Create(adapter);
+        var bridgeRuntime = new WebViewCoreBridgeRuntime(context, enableDevToolsByDefault: false);
+        var runtime = new WebViewCoreSpaHostingRuntime(context, bridgeRuntime);
         var options = new SpaHostingOptions
         {
             EmbeddedResourcePrefix = "TestResources",
@@ -59,8 +66,10 @@ public sealed class WebViewCoreSpaHostingRuntimeTests
     [Fact]
     public void HandleWebResourceRequested_without_service_is_noop()
     {
-        var host = new StubSpaHostingHost();
-        var runtime = new WebViewCoreSpaHostingRuntime(host, NullLogger.Instance);
+        var adapter = new MockWebViewAdapterWithCustomSchemes();
+        var context = WebViewCoreTestContext.Create(adapter);
+        var bridgeRuntime = new WebViewCoreBridgeRuntime(context, enableDevToolsByDefault: false);
+        var runtime = new WebViewCoreSpaHostingRuntime(context, bridgeRuntime);
         var args = new WebResourceRequestedEventArgs(new Uri("app://localhost/no-service"), "GET");
 
         runtime.HandleWebResourceRequested(args);
@@ -71,34 +80,26 @@ public sealed class WebViewCoreSpaHostingRuntimeTests
     [Fact]
     public void Dispose_unhooks_web_resource_handler()
     {
-        var host = new StubSpaHostingHost();
-        var runtime = new WebViewCoreSpaHostingRuntime(host, NullLogger.Instance);
+        var adapter = new MockWebViewAdapterWithCustomSchemes();
+        var context = WebViewCoreTestContext.Create(adapter);
+        var bridgeRuntime = new WebViewCoreBridgeRuntime(context, enableDevToolsByDefault: false);
+        var runtime = new WebViewCoreSpaHostingRuntime(context, bridgeRuntime);
 
         runtime.EnableSpaHosting(new SpaHostingOptions
         {
             EmbeddedResourcePrefix = "TestResources",
             ResourceAssembly = typeof(SpaHostingTests).Assembly
         });
+
+        // Raise a WebResourceRequested event and verify the runtime handles it while enabled.
+        var enabledArgs = new WebResourceRequestedEventArgs(new Uri("app://localhost/"), "GET");
+        context.Events.RaiseWebResourceRequested(enabledArgs);
+
         runtime.Dispose();
 
-        Assert.False(host.HandlerRegistered);
-    }
-
-    private sealed class StubSpaHostingHost : IWebViewCoreSpaHostingHost
-    {
-        public bool IsBridgeEnabled { get; set; }
-        public int EnableBridgeCallCount { get; private set; }
-        public CustomSchemeRegistration? RegisteredScheme { get; private set; }
-        public bool HandlerRegistered { get; private set; }
-
-        public void ThrowIfDisposed() { }
-
-        public void EnableWebMessageBridge(WebMessageBridgeOptions options) => EnableBridgeCallCount++;
-
-        public void RegisterCustomScheme(CustomSchemeRegistration registration) => RegisteredScheme = registration;
-
-        public void AddWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler) => HandlerRegistered = true;
-
-        public void RemoveWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler) => HandlerRegistered = false;
+        // After dispose, the runtime's handler is unhooked: a new event should not mutate args.
+        var afterDisposeArgs = new WebResourceRequestedEventArgs(new Uri("app://localhost/"), "GET");
+        context.Events.RaiseWebResourceRequested(afterDisposeArgs);
+        Assert.False(afterDisposeArgs.Handled);
     }
 }

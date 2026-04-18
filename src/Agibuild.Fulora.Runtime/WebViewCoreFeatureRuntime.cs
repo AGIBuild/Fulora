@@ -3,77 +3,40 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreFeatureHost :
-    IWebViewCoreLifecycleHost,
-    IWebViewCoreDisposalHost,
-    IWebViewCoreBackgroundTaskObserver
-{
-    Task EnqueueOperationAsync(string operationType, Func<Task> func);
-
-    Task<T> EnqueueOperationAsync<T>(string operationType, Func<Task<T>> func);
-
-    void RaiseZoomFactorChanged(double zoomFactor);
-
-    void RaiseContextMenuRequested(ContextMenuRequestedEventArgs args);
-
-    void RaiseDragEntered(DragEventArgs args);
-
-    void RaiseDragOver(DragEventArgs args);
-
-    void RaiseDragLeft();
-
-    void RaiseDropCompleted(DropEventArgs args);
-}
-
-internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatureOperations
+internal sealed class WebViewCoreFeatureRuntime : IDisposable
 {
     private const double MinZoom = 0.25;
     private const double MaxZoom = 5.0;
 
-    private readonly IWebViewCoreFeatureHost _host;
-    private readonly IWebViewAdapter _adapter;
-    private readonly AdapterCapabilities _capabilities;
-    private readonly IWebViewDispatcher _dispatcher;
-    private readonly ILogger _logger;
+    private readonly WebViewCoreContext _context;
 
-    public WebViewCoreFeatureRuntime(
-        IWebViewCoreFeatureHost host,
-        IWebViewAdapter adapter,
-        AdapterCapabilities capabilities,
-        IWebViewDispatcher dispatcher,
-        ILogger logger,
-        IWebViewEnvironmentOptions environmentOptions)
+    public WebViewCoreFeatureRuntime(WebViewCoreContext context)
     {
-        _host = host ?? throw new ArgumentNullException(nameof(host));
-        _adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
-        _capabilities = capabilities;
-        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        ArgumentNullException.ThrowIfNull(environmentOptions);
+        _context = context ?? throw new ArgumentNullException(nameof(context));
 
         // Mandatory facets (cookie / command / zoom / find / preload / screenshot / print /
         // context-menu / dev-tools) are inherited by IWebViewAdapter itself, so no probing is
         // required. Only drag-drop and async-preload remain opt-in.
 
-        _adapter.ZoomFactorChanged += OnAdapterZoomFactorChanged;
-        _adapter.ContextMenuRequested += OnAdapterContextMenuRequested;
+        _context.Adapter.ZoomFactorChanged += OnAdapterZoomFactorChanged;
+        _context.Adapter.ContextMenuRequested += OnAdapterContextMenuRequested;
 
-        var globalScripts = environmentOptions.PreloadScripts;
+        var globalScripts = _context.EnvironmentOptions.PreloadScripts;
         foreach (var script in globalScripts)
         {
-            _adapter.AddPreloadScript(script);
+            _context.Adapter.AddPreloadScript(script);
         }
 
         if (globalScripts.Count > 0)
         {
-            _logger.LogDebug("Global preload scripts applied: {Count}", globalScripts.Count);
+            _context.Logger.LogDebug("Global preload scripts applied: {Count}", globalScripts.Count);
         }
 
-        _logger.LogDebug(
+        _context.Logger.LogDebug(
             "Async preload support: {Supported}",
-            _capabilities.AsyncPreloadScript is not null);
+            _context.Capabilities.AsyncPreloadScript is not null);
 
-        if (_capabilities.DragDrop is { } dragDrop)
+        if (_context.Capabilities.DragDrop is { } dragDrop)
         {
             dragDrop.DragEntered += OnAdapterDragEntered;
             dragDrop.DragOver += OnAdapterDragOver;
@@ -81,168 +44,168 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
             dragDrop.DropCompleted += OnAdapterDropCompleted;
         }
 
-        _logger.LogDebug("Drag-drop support: {Supported}", _capabilities.DragDrop is not null);
+        _context.Logger.LogDebug("Drag-drop support: {Supported}", _context.Capabilities.DragDrop is not null);
     }
 
-    public bool HasDragDropSupport => _capabilities.DragDrop is not null;
+    public bool HasDragDropSupport => _context.Capabilities.DragDrop is not null;
 
     public Task OpenDevToolsAsync()
     {
-        return _host.EnqueueOperationAsync(nameof(OpenDevToolsAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(OpenDevToolsAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            _adapter.OpenDevTools();
+            _context.ThrowIfDisposed();
+            _context.Adapter.OpenDevTools();
             return Task.CompletedTask;
         });
     }
 
     public Task CloseDevToolsAsync()
     {
-        return _host.EnqueueOperationAsync(nameof(CloseDevToolsAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(CloseDevToolsAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            _adapter.CloseDevTools();
+            _context.ThrowIfDisposed();
+            _context.Adapter.CloseDevTools();
             return Task.CompletedTask;
         });
     }
 
     public Task<bool> IsDevToolsOpenAsync()
     {
-        return _host.EnqueueOperationAsync(nameof(IsDevToolsOpenAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(IsDevToolsOpenAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            return Task.FromResult(_adapter.IsDevToolsOpen);
+            _context.ThrowIfDisposed();
+            return Task.FromResult(_context.Adapter.IsDevToolsOpen);
         });
     }
 
     public Task<byte[]> CaptureScreenshotAsync()
     {
-        return _host.EnqueueOperationAsync(nameof(CaptureScreenshotAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(CaptureScreenshotAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            return _adapter.CaptureScreenshotAsync();
+            _context.ThrowIfDisposed();
+            return _context.Adapter.CaptureScreenshotAsync();
         });
     }
 
     public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options = null)
     {
-        return _host.EnqueueOperationAsync(nameof(PrintToPdfAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(PrintToPdfAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            return _adapter.PrintToPdfAsync(options);
+            _context.ThrowIfDisposed();
+            return _context.Adapter.PrintToPdfAsync(options);
         });
     }
 
     public Task<double> GetZoomFactorAsync()
     {
-        return _host.EnqueueOperationAsync(nameof(GetZoomFactorAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(GetZoomFactorAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            return Task.FromResult(_adapter.ZoomFactor);
+            _context.ThrowIfDisposed();
+            return Task.FromResult(_context.Adapter.ZoomFactor);
         });
     }
 
     public Task SetZoomFactorAsync(double zoomFactor)
     {
-        return _host.EnqueueOperationAsync(nameof(SetZoomFactorAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(SetZoomFactorAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            _adapter.ZoomFactor = Math.Clamp(zoomFactor, MinZoom, MaxZoom);
+            _context.ThrowIfDisposed();
+            _context.Adapter.ZoomFactor = Math.Clamp(zoomFactor, MinZoom, MaxZoom);
             return Task.CompletedTask;
         });
     }
 
     public Task<FindInPageEventArgs> FindInPageAsync(string text, FindInPageOptions? options = null)
     {
-        return _host.EnqueueOperationAsync(nameof(FindInPageAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(FindInPageAsync), () =>
         {
-            _host.ThrowIfDisposed();
+            _context.ThrowIfDisposed();
             if (string.IsNullOrEmpty(text))
             {
                 throw new ArgumentException("Search text must not be null or empty.", nameof(text));
             }
 
-            return _adapter.FindAsync(text, options);
+            return _context.Adapter.FindAsync(text, options);
         });
     }
 
     public Task StopFindInPageAsync(bool clearHighlights = true)
     {
-        return _host.EnqueueOperationAsync(nameof(StopFindInPageAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(StopFindInPageAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            _adapter.StopFind(clearHighlights);
+            _context.ThrowIfDisposed();
+            _context.Adapter.StopFind(clearHighlights);
             return Task.CompletedTask;
         });
     }
 
     public Task<string> AddPreloadScriptAsync(string javaScript)
     {
-        return _host.EnqueueOperationAsync(nameof(AddPreloadScriptAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(AddPreloadScriptAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            if (_capabilities.AsyncPreloadScript is { } asyncPreload)
+            _context.ThrowIfDisposed();
+            if (_context.Capabilities.AsyncPreloadScript is { } asyncPreload)
             {
                 return asyncPreload.AddPreloadScriptAsync(javaScript);
             }
 
-            return Task.FromResult(_adapter.AddPreloadScript(javaScript));
+            return Task.FromResult(_context.Adapter.AddPreloadScript(javaScript));
         });
     }
 
     public Task RemovePreloadScriptAsync(string scriptId)
     {
-        return _host.EnqueueOperationAsync(nameof(RemovePreloadScriptAsync), () =>
+        return _context.Operations.EnqueueAsync(nameof(RemovePreloadScriptAsync), () =>
         {
-            _host.ThrowIfDisposed();
-            if (_capabilities.AsyncPreloadScript is { } asyncPreload)
+            _context.ThrowIfDisposed();
+            if (_context.Capabilities.AsyncPreloadScript is { } asyncPreload)
             {
                 return asyncPreload.RemovePreloadScriptAsync(scriptId);
             }
 
-            _adapter.RemovePreloadScript(scriptId);
+            _context.Adapter.RemovePreloadScript(scriptId);
             return Task.CompletedTask;
         });
     }
 
     public Task<INativeHandle?> TryGetWebViewHandleAsync()
     {
-        if (_host.IsAdapterDestroyed)
+        if (_context.Lifecycle.IsAdapterDestroyed)
         {
             return Task.FromResult<INativeHandle?>(null);
         }
 
-        if (_dispatcher.CheckAccess())
+        if (_context.Dispatcher.CheckAccess())
         {
-            return Task.FromResult(_adapter.TryGetWebViewHandle());
+            return Task.FromResult(_context.Adapter.TryGetWebViewHandle());
         }
 
-        return _dispatcher.InvokeAsync(() => _adapter.TryGetWebViewHandle());
+        return _context.Dispatcher.InvokeAsync(() => _context.Adapter.TryGetWebViewHandle());
     }
 
     public void SetCustomUserAgent(string? userAgent)
     {
-        _host.ThrowIfDisposed();
+        _context.ThrowIfDisposed();
 
-        if (_dispatcher.CheckAccess())
+        if (_context.Dispatcher.CheckAccess())
         {
-            _adapter.SetCustomUserAgent(userAgent);
+            _context.Adapter.SetCustomUserAgent(userAgent);
         }
         else
         {
-            var dispatchTask = _dispatcher.InvokeAsync(() => _adapter.SetCustomUserAgent(userAgent));
-            _host.ObserveBackgroundTask(dispatchTask, nameof(SetCustomUserAgent));
+            var dispatchTask = _context.Dispatcher.InvokeAsync(() => _context.Adapter.SetCustomUserAgent(userAgent));
+            _context.ObserveBackgroundTask(dispatchTask, nameof(SetCustomUserAgent));
         }
 
-        _logger.LogDebug("CustomUserAgent set to: {UA}", userAgent ?? "(default)");
+        _context.Logger.LogDebug("CustomUserAgent set to: {UA}", userAgent ?? "(default)");
     }
 
     public void Dispose()
     {
-        _adapter.ZoomFactorChanged -= OnAdapterZoomFactorChanged;
-        _adapter.ContextMenuRequested -= OnAdapterContextMenuRequested;
+        _context.Adapter.ZoomFactorChanged -= OnAdapterZoomFactorChanged;
+        _context.Adapter.ContextMenuRequested -= OnAdapterContextMenuRequested;
 
-        if (_capabilities.DragDrop is { } dragDrop)
+        if (_context.Capabilities.DragDrop is { } dragDrop)
         {
             dragDrop.DragEntered -= OnAdapterDragEntered;
             dragDrop.DragOver -= OnAdapterDragOver;
@@ -253,41 +216,41 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
 
     private void OnAdapterZoomFactorChanged(object? sender, double newZoom)
     {
-        if (_host.IsDisposed)
+        if (_context.Lifecycle.IsDisposed)
         {
             return;
         }
 
-        _ = _dispatcher.InvokeAsync(() =>
+        _ = _context.Dispatcher.InvokeAsync(() =>
         {
-            _host.RaiseZoomFactorChanged(newZoom);
+            _context.Events.RaiseZoomFactorChanged(newZoom);
             return Task.CompletedTask;
         });
     }
 
     private void OnAdapterContextMenuRequested(object? sender, ContextMenuRequestedEventArgs args)
     {
-        if (_host.IsDisposed)
+        if (_context.Lifecycle.IsDisposed)
         {
             return;
         }
 
-        _ = _dispatcher.InvokeAsync(() =>
+        _ = _context.Dispatcher.InvokeAsync(() =>
         {
-            _host.RaiseContextMenuRequested(args);
+            _context.Events.RaiseContextMenuRequested(args);
             return Task.CompletedTask;
         });
     }
 
     private void OnAdapterDragEntered(object? sender, DragEventArgs args)
-        => _host.RaiseDragEntered(args);
+        => _context.Events.RaiseDragEntered(args);
 
     private void OnAdapterDragOver(object? sender, DragEventArgs args)
-        => _host.RaiseDragOver(args);
+        => _context.Events.RaiseDragOver(args);
 
     private void OnAdapterDragLeft(object? sender, EventArgs args)
-        => _host.RaiseDragLeft();
+        => _context.Events.RaiseDragLeft();
 
     private void OnAdapterDropCompleted(object? sender, DropEventArgs args)
-        => _host.RaiseDropCompleted(args);
+        => _context.Events.RaiseDropCompleted(args);
 }

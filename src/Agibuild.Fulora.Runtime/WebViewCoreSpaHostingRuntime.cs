@@ -2,43 +2,34 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreSpaHostingHost : IWebViewCoreDisposalHost
-{
-    bool IsBridgeEnabled { get; }
-    void EnableWebMessageBridge(WebMessageBridgeOptions options);
-    void RegisterCustomScheme(CustomSchemeRegistration registration);
-    void AddWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler);
-    void RemoveWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler);
-}
-
 internal sealed class WebViewCoreSpaHostingRuntime : IDisposable
 {
-    private readonly IWebViewCoreSpaHostingHost _host;
-    private readonly ILogger _logger;
+    private readonly WebViewCoreContext _context;
+    private readonly WebViewCoreBridgeRuntime _bridgeRuntime;
     private SpaHostingService? _spaHostingService;
 
-    public WebViewCoreSpaHostingRuntime(IWebViewCoreSpaHostingHost host, ILogger logger)
+    public WebViewCoreSpaHostingRuntime(WebViewCoreContext context, WebViewCoreBridgeRuntime bridgeRuntime)
     {
-        _host = host ?? throw new ArgumentNullException(nameof(host));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _bridgeRuntime = bridgeRuntime ?? throw new ArgumentNullException(nameof(bridgeRuntime));
     }
 
     public void EnableSpaHosting(SpaHostingOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
-        _host.ThrowIfDisposed();
+        _context.ThrowIfDisposed();
 
         if (_spaHostingService is not null)
             throw new InvalidOperationException("SPA hosting is already enabled.");
 
-        _spaHostingService = new SpaHostingService(options, _logger);
-        _host.RegisterCustomScheme(_spaHostingService.GetSchemeRegistration());
-        _host.AddWebResourceRequestedHandler(OnWebResourceRequested);
+        _spaHostingService = new SpaHostingService(options, _context.Logger);
+        _context.Adapter.RegisterCustomSchemes([_spaHostingService.GetSchemeRegistration()]);
+        _context.Events.WebResourceRequested += OnWebResourceRequested;
 
-        if (options.AutoInjectBridgeScript && !_host.IsBridgeEnabled)
-            _host.EnableWebMessageBridge(new WebMessageBridgeOptions());
+        if (options.AutoInjectBridgeScript && !_bridgeRuntime.IsBridgeEnabled)
+            _bridgeRuntime.EnableWebMessageBridge(new WebMessageBridgeOptions());
 
-        _logger.LogDebug("SPA hosting enabled: scheme={Scheme}, devServer={DevServer}",
+        _context.Logger.LogDebug("SPA hosting enabled: scheme={Scheme}, devServer={DevServer}",
             options.Scheme, options.DevServerUrl ?? "(embedded)");
     }
 
@@ -47,7 +38,7 @@ internal sealed class WebViewCoreSpaHostingRuntime : IDisposable
         if (_spaHostingService is null)
             return;
 
-        _host.RemoveWebResourceRequestedHandler(OnWebResourceRequested);
+        _context.Events.WebResourceRequested -= OnWebResourceRequested;
         _spaHostingService.Dispose();
         _spaHostingService = null;
     }

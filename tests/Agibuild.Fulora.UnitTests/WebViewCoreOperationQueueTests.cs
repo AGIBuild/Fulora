@@ -5,23 +5,6 @@ namespace Agibuild.Fulora.UnitTests;
 
 public sealed class WebViewCoreOperationQueueTests
 {
-    private sealed class StubHost : IWebViewCoreOperationQueueHost
-    {
-        public bool IsDisposed { get; set; }
-        public bool IsAdapterDestroyed { get; set; }
-        public bool AcceptOperations { get; set; } = true;
-        public string LifecycleState { get; set; } = "Ready";
-        public int AdmissionChecks;
-
-        bool IWebViewCoreOperationQueueHost.IsOperationAcceptedInCurrentState()
-        {
-            Interlocked.Increment(ref AdmissionChecks);
-            return AcceptOperations;
-        }
-
-        string IWebViewCoreOperationQueueHost.LifecycleStateName => LifecycleState;
-    }
-
     /// <summary>
     /// Dispatcher that always reports UI-thread access and runs work synchronously on the caller's
     /// thread. This bypasses the <c>CheckAccess → InvokeAsync</c> path inside the queue so tests
@@ -36,14 +19,19 @@ public sealed class WebViewCoreOperationQueueTests
         public Task<T> InvokeAsync<T>(Func<Task<T>> func) => func();
     }
 
-    private static WebViewCoreOperationQueue CreateQueue(out StubHost host)
+    private static WebViewCoreOperationQueue CreateQueue(out WebViewLifecycleStateMachine lifecycle)
     {
-        host = new StubHost();
-        return new WebViewCoreOperationQueue(host, new InlineDispatcher(), NullLogger.Instance);
+        lifecycle = new WebViewLifecycleStateMachine();
+
+        // Transition to Ready so operations are admitted by default.
+        lifecycle.TransitionToAttaching();
+        lifecycle.TransitionToReady();
+
+        return new WebViewCoreOperationQueue(lifecycle, new InlineDispatcher(), NullLogger.Instance);
     }
 
     [Fact]
-    public void Constructor_rejects_null_host()
+    public void Constructor_rejects_null_lifecycle()
     {
         Assert.Throws<ArgumentNullException>(
             () => new WebViewCoreOperationQueue(null!, new InlineDispatcher(), NullLogger.Instance));
@@ -53,36 +41,34 @@ public sealed class WebViewCoreOperationQueueTests
     public void Constructor_rejects_null_dispatcher()
     {
         Assert.Throws<ArgumentNullException>(
-            () => new WebViewCoreOperationQueue(new StubHost(), null!, NullLogger.Instance));
+            () => new WebViewCoreOperationQueue(new WebViewLifecycleStateMachine(), null!, NullLogger.Instance));
     }
 
     [Fact]
     public void Constructor_rejects_null_logger()
     {
         Assert.Throws<ArgumentNullException>(
-            () => new WebViewCoreOperationQueue(new StubHost(), new InlineDispatcher(), null!));
+            () => new WebViewCoreOperationQueue(new WebViewLifecycleStateMachine(), new InlineDispatcher(), null!));
     }
 
     [Fact]
-    public async Task EnqueueAsync_returns_disposed_failure_when_host_is_disposed_upfront()
+    public async Task EnqueueAsync_returns_disposed_failure_when_lifecycle_is_disposed_upfront()
     {
-        var queue = CreateQueue(out var host);
-        host.IsDisposed = true;
+        var queue = CreateQueue(out var lifecycle);
+        lifecycle.TryTransitionToDisposed();
 
         var ex = await Assert.ThrowsAsync<ObjectDisposedException>(
             () => queue.EnqueueAsync<int>("Op", () => Task.FromResult(1)));
 
         Assert.True(WebViewOperationFailure.TryGetCategory(ex, out var category));
         Assert.Equal(WebViewOperationFailureCategory.Disposed, category);
-        Assert.Equal(0, host.AdmissionChecks);
     }
 
     [Fact]
-    public async Task EnqueueAsync_returns_not_ready_failure_when_host_rejects_admission()
+    public async Task EnqueueAsync_returns_not_ready_failure_when_lifecycle_rejects_admission()
     {
-        var queue = CreateQueue(out var host);
-        host.AcceptOperations = false;
-        host.LifecycleState = "Detaching";
+        var queue = CreateQueue(out var lifecycle);
+        lifecycle.TransitionToDetaching();
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(
             () => queue.EnqueueAsync<int>("InvokeScriptAsync", () => Task.FromResult(1)));
@@ -181,7 +167,7 @@ public sealed class WebViewCoreOperationQueueTests
     [Fact]
     public async Task EnqueueAsync_propagates_disposal_after_operation_is_already_scheduled()
     {
-        var queue = CreateQueue(out var host);
+        var queue = CreateQueue(out var lifecycle);
         var gate = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         var first = queue.EnqueueAsync("first", async () =>
@@ -190,7 +176,7 @@ public sealed class WebViewCoreOperationQueueTests
             return 1;
         });
 
-        host.IsDisposed = true;
+        lifecycle.TryTransitionToDisposed();
         var second = queue.EnqueueAsync<int>("second", () => Task.FromResult(2));
 
         var ex = await Assert.ThrowsAsync<ObjectDisposedException>(() => second);

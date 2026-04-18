@@ -3,35 +3,10 @@ using Microsoft.Extensions.Logging;
 namespace Agibuild.Fulora;
 
 /// <summary>
-/// Facade that <see cref="WebViewCoreOperationQueue"/> consults to determine whether an operation is
-/// allowed in the current host state.
-/// </summary>
-/// <remarks>
-/// Extends <see cref="IWebViewCoreLifecycleHost"/> with a single admission predicate. Keeping the
-/// admission logic on the host side (rather than duplicating the lifecycle enum inside the queue)
-/// preserves a single source of truth for "is the core accepting new work right now?".
-/// </remarks>
-internal interface IWebViewCoreOperationQueueHost : IWebViewCoreLifecycleHost
-{
-    /// <summary>
-    /// Returns <see langword="true"/> when the host's lifecycle state allows a new operation to be
-    /// enqueued. Called on the caller's thread (may be non-UI) before the queue reserves a slot.
-    /// </summary>
-    bool IsOperationAcceptedInCurrentState();
-
-    /// <summary>
-    /// Human-readable label of the host's current lifecycle state, used only in diagnostic error
-    /// messages and logs (never branched on). Allows the queue to stay ignorant of the host's
-    /// lifecycle enum while still producing the same "not allowed in state 'X'" message callers
-    /// relied on before the queue was extracted.
-    /// </summary>
-    string LifecycleStateName { get; }
-}
-
-/// <summary>
 /// Owns the serialized operation queue that <see cref="WebViewCore"/> exposes via its public async
-/// APIs (<c>NavigateAsync</c>, <c>GoBackAsync</c>, <c>InvokeScriptAsync</c>, ...) and via
-/// <see cref="IWebViewCoreOperationHost"/> for the cookie/command managers.
+/// APIs (<c>NavigateAsync</c>, <c>GoBackAsync</c>, <c>InvokeScriptAsync</c>, ...) and that
+/// <see cref="RuntimeCookieManager"/> / <see cref="RuntimeCommandManager"/> consume via the shared
+/// <see cref="WebViewCoreContext"/>.
 /// </summary>
 /// <remarks>
 /// Responsibilities:
@@ -43,13 +18,13 @@ internal interface IWebViewCoreOperationQueueHost : IWebViewCoreLifecycleHost
 /// <item>Classify uncategorised exceptions into <see cref="WebViewOperationFailureCategory"/> so
 /// callers can switch on the stable category rather than exception types.</item>
 /// </list>
-/// Intentionally stateless beyond the queue tail, sequence, and log correlation — does not own
-/// any cancellation tokens, timers, or adapter references. The host dictates lifecycle concerns
-/// (disposal, admission) so the queue stays a pure serialization primitive.
+/// Intentionally stateless beyond the queue tail, sequence, and log correlation — does not own any
+/// cancellation tokens, timers, or adapter references. The <see cref="WebViewLifecycleStateMachine"/>
+/// dictates disposal and admission, so the queue stays a pure serialization primitive.
 /// </remarks>
 internal sealed class WebViewCoreOperationQueue
 {
-    private readonly IWebViewCoreOperationQueueHost _host;
+    private readonly WebViewLifecycleStateMachine _lifecycle;
     private readonly IWebViewDispatcher _dispatcher;
     private readonly ILogger _logger;
     private readonly object _tailLock = new();
@@ -57,17 +32,13 @@ internal sealed class WebViewCoreOperationQueue
     private long _sequence;
 
     public WebViewCoreOperationQueue(
-        IWebViewCoreOperationQueueHost host,
+        WebViewLifecycleStateMachine lifecycle,
         IWebViewDispatcher dispatcher,
         ILogger logger)
     {
-        ArgumentNullException.ThrowIfNull(host);
-        ArgumentNullException.ThrowIfNull(dispatcher);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        _host = host;
-        _dispatcher = dispatcher;
-        _logger = logger;
+        _lifecycle = lifecycle ?? throw new ArgumentNullException(nameof(lifecycle));
+        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -90,7 +61,7 @@ internal sealed class WebViewCoreOperationQueue
         ArgumentNullException.ThrowIfNull(operationType);
         ArgumentNullException.ThrowIfNull(func);
 
-        if (_host.IsDisposed)
+        if (_lifecycle.IsDisposed)
         {
             return Task.FromException<T>(ClassifyFailure(
                 new ObjectDisposedException(nameof(WebViewCore)),
@@ -98,10 +69,10 @@ internal sealed class WebViewCoreOperationQueue
                 defaultCategory: WebViewOperationFailureCategory.Disposed));
         }
 
-        if (!_host.IsOperationAcceptedInCurrentState())
+        if (!_lifecycle.IsOperationAccepted)
         {
             return Task.FromException<T>(ClassifyFailure(
-                new InvalidOperationException($"Operation '{operationType}' is not allowed in state '{_host.LifecycleStateName}'."),
+                new InvalidOperationException($"Operation '{operationType}' is not allowed in state '{_lifecycle.CurrentStateName}'."),
                 operationType,
                 defaultCategory: WebViewOperationFailureCategory.NotReady));
         }
@@ -154,7 +125,7 @@ internal sealed class WebViewCoreOperationQueue
 
     private Task<T> InvokeAsyncOnUiThread<T>(Func<Task<T>> func)
     {
-        if (_host.IsDisposed)
+        if (_lifecycle.IsDisposed)
         {
             return Task.FromException<T>(ClassifyFailure(
                 new ObjectDisposedException(nameof(WebViewCore)),

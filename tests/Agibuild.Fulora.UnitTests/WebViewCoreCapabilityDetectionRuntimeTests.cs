@@ -1,21 +1,18 @@
 using Agibuild.Fulora.Testing;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
 
 public sealed class WebViewCoreCapabilityDetectionRuntimeTests
 {
-    private readonly TestDispatcher _dispatcher = new();
-
     [Fact]
     public void ApplyEnvironmentOptions_invokes_adapter_options()
     {
         var adapter = MockWebViewAdapter.CreateWithOptions();
-        var runtime = new WebViewCoreCapabilityDetectionRuntime(
+        var context = WebViewCoreTestContext.Create(
             adapter,
-            new WebViewEnvironmentOptions { CustomUserAgent = "Fulora/Test" },
-            NullLogger.Instance);
+            environmentOptions: new WebViewEnvironmentOptions { CustomUserAgent = "Fulora/Test" });
+        var runtime = new WebViewCoreCapabilityDetectionRuntime(context);
 
         runtime.ApplyEnvironmentOptions();
 
@@ -27,16 +24,16 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     public void RegisterConfiguredCustomSchemes_invokes_custom_scheme_adapter()
     {
         var adapter = MockWebViewAdapter.CreateWithCustomSchemes();
-        var runtime = new WebViewCoreCapabilityDetectionRuntime(
+        var context = WebViewCoreTestContext.Create(
             adapter,
-            new WebViewEnvironmentOptions
+            environmentOptions: new WebViewEnvironmentOptions
             {
                 CustomSchemes =
                 [
                     new CustomSchemeRegistration { SchemeName = "app", HasAuthorityComponent = true, TreatAsSecure = true }
                 ]
-            },
-            NullLogger.Instance);
+            });
+        var runtime = new WebViewCoreCapabilityDetectionRuntime(context);
 
         runtime.RegisterConfiguredCustomSchemes();
 
@@ -48,13 +45,10 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     public void CreateCookieManager_returns_manager()
     {
         var adapter = MockWebViewAdapter.CreateWithCookies();
-        var owner = new WebViewCore(adapter, _dispatcher);
-        var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            adapter,
-            new WebViewEnvironmentOptions(),
-            NullLogger.Instance);
+        var context = WebViewCoreTestContext.Create(adapter);
+        var runtime = new WebViewCoreCapabilityDetectionRuntime(context);
 
-        var manager = runtime.CreateCookieManager(owner);
+        var manager = runtime.CreateCookieManager();
 
         Assert.NotNull(manager);
     }
@@ -63,13 +57,10 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     public void CreateCommandManager_returns_manager()
     {
         var adapter = MockWebViewAdapter.CreateWithCommands();
-        var owner = new WebViewCore(adapter, _dispatcher);
-        var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            adapter,
-            new WebViewEnvironmentOptions(),
-            NullLogger.Instance);
+        var context = WebViewCoreTestContext.Create(adapter);
+        var runtime = new WebViewCoreCapabilityDetectionRuntime(context);
 
-        var manager = runtime.CreateCommandManager(owner);
+        var manager = runtime.CreateCommandManager();
 
         Assert.NotNull(manager);
     }

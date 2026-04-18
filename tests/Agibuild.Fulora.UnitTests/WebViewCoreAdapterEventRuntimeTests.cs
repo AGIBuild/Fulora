@@ -1,110 +1,146 @@
 using Agibuild.Fulora.Testing;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
 
 public sealed class WebViewCoreAdapterEventRuntimeTests
 {
-    private readonly TestDispatcher _dispatcher = new();
-
-    [Fact]
-    public void Constructor_requires_host()
+    /// <summary>
+    /// Observer that subscribes to the hub's adapter-facing events so tests can assert on the
+    /// forwarded event arguments and the thread they were raised from.
+    /// </summary>
+    private sealed class AdapterEventObserver
     {
-        Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreAdapterEventRuntime(null!, _dispatcher, NullLogger.Instance));
+        public AdapterEventObserver(WebViewCoreEventHub hub)
+        {
+            hub.NewWindowRequested += (_, args) =>
+            {
+                LastNewWindowArgs = args;
+                OnRaiseNewWindowRequested?.Invoke(args);
+            };
+            hub.WebResourceRequested += (_, args) =>
+            {
+                LastWebResourceArgs = args;
+                LastWebResourceThreadId = Environment.CurrentManagedThreadId;
+            };
+            hub.PermissionRequested += (_, args) => LastPermissionArgs = args;
+            hub.EnvironmentRequested += (_, _) => { };
+            hub.DownloadRequested += (_, _) => { };
+        }
+
+        public Action<NewWindowRequestedEventArgs>? OnRaiseNewWindowRequested { get; set; }
+        public NewWindowRequestedEventArgs? LastNewWindowArgs { get; private set; }
+        public WebResourceRequestedEventArgs? LastWebResourceArgs { get; private set; }
+        public int? LastWebResourceThreadId { get; private set; }
+        public PermissionRequestedEventArgs? LastPermissionArgs { get; private set; }
+    }
+
+    private static (WebViewCoreAdapterEventRuntime Runtime,
+        AdapterEventObserver Observer,
+        WebViewCoreContext Context,
+        TestDispatcher Dispatcher,
+        FakeNavigator Navigator)
+        CreateRuntime(WebViewLifecycleStateMachine? lifecycle = null)
+    {
+        var adapter = MockWebViewAdapter.Create();
+        var dispatcher = new TestDispatcher();
+        var hub = new WebViewCoreEventHub(new object());
+        var context = WebViewCoreTestContext.Create(
+            adapter,
+            dispatcher: dispatcher,
+            lifecycle: lifecycle,
+            events: hub);
+        var observer = new AdapterEventObserver(hub);
+        var navigator = new FakeNavigator();
+        var runtime = new WebViewCoreAdapterEventRuntime(context, navigator.NavigateAsync);
+        return (runtime, observer, context, dispatcher, navigator);
     }
 
     [Fact]
-    public void Constructor_requires_dispatcher()
+    public void Constructor_requires_context()
     {
         Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreAdapterEventRuntime(new TestAdapterEventHost(), null!, NullLogger.Instance));
+            new WebViewCoreAdapterEventRuntime(null!, _ => Task.CompletedTask));
     }
 
     [Fact]
-    public void Constructor_requires_logger()
+    public void Constructor_requires_navigate_callback()
     {
+        var adapter = MockWebViewAdapter.Create();
+        var context = WebViewCoreTestContext.Create(adapter);
         Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreAdapterEventRuntime(new TestAdapterEventHost(), _dispatcher, null!));
+            new WebViewCoreAdapterEventRuntime(context, null!));
     }
 
     [Fact]
     public void HandleNewWindowRequested_when_unhandled_navigates_in_place()
     {
-        var host = new TestAdapterEventHost();
-        var runtime = new WebViewCoreAdapterEventRuntime(host, _dispatcher, NullLogger.Instance);
+        var (runtime, observer, _, _, navigator) = CreateRuntime();
         var args = new NewWindowRequestedEventArgs(new Uri("https://example.test/popup"));
 
         runtime.HandleAdapterNewWindowRequested(args);
 
-        Assert.Same(args, host.LastNewWindowArgs);
-        Assert.Equal(args.Uri, host.LastNavigatedUri);
-        Assert.Equal(1, host.NavigateCallCount);
+        Assert.Same(args, observer.LastNewWindowArgs);
+        Assert.Equal(args.Uri, navigator.LastNavigatedUri);
+        Assert.Equal(1, navigator.NavigateCallCount);
     }
 
     [Fact]
     public void HandleNewWindowRequested_when_handled_skips_fallback_navigation()
     {
-        var host = new TestAdapterEventHost
-        {
-            OnRaiseNewWindowRequested = args => args.Handled = true
-        };
-        var runtime = new WebViewCoreAdapterEventRuntime(host, _dispatcher, NullLogger.Instance);
+        var (runtime, observer, _, _, navigator) = CreateRuntime();
+        observer.OnRaiseNewWindowRequested = args => args.Handled = true;
         var args = new NewWindowRequestedEventArgs(new Uri("https://example.test/popup"));
 
         runtime.HandleAdapterNewWindowRequested(args);
 
-        Assert.Same(args, host.LastNewWindowArgs);
-        Assert.Null(host.LastNavigatedUri);
-        Assert.Equal(0, host.NavigateCallCount);
+        Assert.Same(args, observer.LastNewWindowArgs);
+        Assert.Null(navigator.LastNavigatedUri);
+        Assert.Equal(0, navigator.NavigateCallCount);
     }
 
     [Fact]
     public void HandleNewWindowRequested_queued_then_disposed_is_ignored()
     {
-        var host = new TestAdapterEventHost();
-        var runtime = new WebViewCoreAdapterEventRuntime(host, _dispatcher, NullLogger.Instance);
+        var lifecycle = WebViewCoreTestContext.CreateReadyLifecycle();
+        var (runtime, observer, _, dispatcher, navigator) = CreateRuntime(lifecycle: lifecycle);
         var args = new NewWindowRequestedEventArgs(new Uri("https://example.test/popup"));
 
         RunOnBackgroundThread(() => runtime.HandleAdapterNewWindowRequested(args));
-        host.IsDisposed = true;
-        _dispatcher.RunAll();
+        lifecycle.TryTransitionToDisposed();
+        dispatcher.RunAll();
 
-        Assert.Null(host.LastNewWindowArgs);
-        Assert.Null(host.LastNavigatedUri);
-        Assert.Equal(0, host.NavigateCallCount);
+        Assert.Null(observer.LastNewWindowArgs);
+        Assert.Null(navigator.LastNavigatedUri);
+        Assert.Equal(0, navigator.NavigateCallCount);
     }
 
     [Fact]
     public void HandleWebResourceRequested_on_background_thread_dispatches_to_ui()
     {
-        var host = new TestAdapterEventHost();
-        var runtime = new WebViewCoreAdapterEventRuntime(host, _dispatcher, NullLogger.Instance);
+        var (runtime, observer, _, dispatcher, _) = CreateRuntime();
         var args = new WebResourceRequestedEventArgs(new Uri("https://example.test/resource"), "GET");
 
         RunOnBackgroundThread(() => runtime.HandleAdapterWebResourceRequested(args));
 
-        Assert.Null(host.LastWebResourceArgs);
-        _dispatcher.RunAll();
+        Assert.Null(observer.LastWebResourceArgs);
+        dispatcher.RunAll();
 
-        Assert.Same(args, host.LastWebResourceArgs);
-        Assert.Equal(_dispatcher.UiThreadId, host.LastWebResourceThreadId);
+        Assert.Same(args, observer.LastWebResourceArgs);
+        Assert.Equal(dispatcher.UiThreadId, observer.LastWebResourceThreadId);
     }
 
     [Fact]
     public void HandlePermissionRequested_when_adapter_destroyed_is_ignored()
     {
-        var host = new TestAdapterEventHost
-        {
-            IsAdapterDestroyed = true
-        };
-        var runtime = new WebViewCoreAdapterEventRuntime(host, _dispatcher, NullLogger.Instance);
+        var lifecycle = WebViewCoreTestContext.CreateReadyLifecycle();
+        lifecycle.MarkAdapterDestroyedOnce(() => { });
+        var (runtime, observer, _, _, _) = CreateRuntime(lifecycle: lifecycle);
         var args = new PermissionRequestedEventArgs(WebViewPermissionKind.Camera, new Uri("https://example.test"));
 
         runtime.HandleAdapterPermissionRequested(args);
 
-        Assert.Null(host.LastPermissionArgs);
+        Assert.Null(observer.LastPermissionArgs);
     }
 
     private static void RunOnBackgroundThread(Action action)
@@ -128,25 +164,10 @@ public sealed class WebViewCoreAdapterEventRuntimeTests
         Assert.Null(captured);
     }
 
-    private sealed class TestAdapterEventHost : IWebViewCoreAdapterEventHost
+    private sealed class FakeNavigator
     {
-        public bool IsDisposed { get; set; }
-
-        public bool IsAdapterDestroyed { get; set; }
-
-        public Action<NewWindowRequestedEventArgs>? OnRaiseNewWindowRequested { get; set; }
-
         public Uri? LastNavigatedUri { get; private set; }
-
         public int NavigateCallCount { get; private set; }
-
-        public NewWindowRequestedEventArgs? LastNewWindowArgs { get; private set; }
-
-        public WebResourceRequestedEventArgs? LastWebResourceArgs { get; private set; }
-
-        public int? LastWebResourceThreadId { get; private set; }
-
-        public PermissionRequestedEventArgs? LastPermissionArgs { get; private set; }
 
         public Task NavigateAsync(Uri uri)
         {
@@ -154,28 +175,5 @@ public sealed class WebViewCoreAdapterEventRuntimeTests
             LastNavigatedUri = uri;
             return Task.CompletedTask;
         }
-
-        public void RaiseNewWindowRequested(NewWindowRequestedEventArgs args)
-        {
-            LastNewWindowArgs = args;
-            OnRaiseNewWindowRequested?.Invoke(args);
-        }
-
-        public void RaiseWebResourceRequested(WebResourceRequestedEventArgs args)
-        {
-            LastWebResourceArgs = args;
-            LastWebResourceThreadId = Environment.CurrentManagedThreadId;
-        }
-
-        public void RaiseEnvironmentRequested(EnvironmentRequestedEventArgs args)
-        {
-        }
-
-        public void RaiseDownloadRequested(DownloadRequestedEventArgs args)
-        {
-        }
-
-        public void RaisePermissionRequested(PermissionRequestedEventArgs args)
-            => LastPermissionArgs = args;
     }
 }

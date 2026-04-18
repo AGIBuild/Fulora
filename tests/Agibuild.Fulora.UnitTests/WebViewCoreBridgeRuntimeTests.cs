@@ -1,61 +1,71 @@
 using Agibuild.Fulora.Testing;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Agibuild.Fulora.UnitTests;
 
 public sealed class WebViewCoreBridgeRuntimeTests
 {
-    [Fact]
-    public void Bridge_property_auto_enables_bridge_and_records_stub_injection()
+    private static (WebViewCoreBridgeRuntime Runtime, MockWebViewAdapter Adapter, WebViewCoreContext Context, List<string> InvokedScripts)
+        CreateRuntime(bool enableDevToolsByDefault = false, WebViewLifecycleStateMachine? lifecycle = null)
     {
-        var host = new TestBridgeHost();
-        using var runtime = new WebViewCoreBridgeRuntime(
-            host,
-            new TestDispatcher(),
-            NullLogger.Instance,
-            enableDevToolsByDefault: true);
+        var adapter = MockWebViewAdapter.Create();
+        var invokedScripts = new List<string>();
+        adapter.ScriptCallback = script =>
+        {
+            invokedScripts.Add(script);
+            return null;
+        };
+        var context = WebViewCoreTestContext.Create(adapter, lifecycle: lifecycle);
+        var runtime = new WebViewCoreBridgeRuntime(context, enableDevToolsByDefault);
+        return (runtime, adapter, context, invokedScripts);
+    }
+
+    [Fact]
+    public async Task Bridge_property_auto_enables_bridge_and_records_stub_injection()
+    {
+        var (runtime, _, _, invokedScripts) = CreateRuntime(enableDevToolsByDefault: true);
 
         var bridge = runtime.Bridge;
 
         Assert.NotNull(bridge);
         Assert.NotNull(runtime.Rpc);
         Assert.True(runtime.IsBridgeEnabled);
-        Assert.Contains("EnableWebMessageBridge.JsStub", host.ObservedBackgroundOperations);
-        Assert.Contains(host.InvokedScripts, script => script.Contains("window.agWebView", StringComparison.Ordinal));
+
+        // The JS stub is injected via a fire-and-forget background task. Give the async
+        // operation queue a moment to process the injection before asserting.
+        await Task.Delay(100, TestContext.Current.CancellationToken);
+
+        Assert.Contains(invokedScripts, script => script.Contains("window.agWebView", StringComparison.Ordinal));
+
+        runtime.Dispose();
     }
 
     [Fact]
     public void HandleWebMessage_when_allowed_and_non_rpc_forwards_to_host()
     {
-        var host = new TestBridgeHost();
-        using var runtime = new WebViewCoreBridgeRuntime(
-            host,
-            new TestDispatcher(),
-            NullLogger.Instance,
-            enableDevToolsByDefault: false);
+        var (runtime, _, context, _) = CreateRuntime();
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
         {
             AllowedOrigins = new HashSet<string> { "*" }
         });
 
-        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        WebMessageReceivedEventArgs? forwarded = null;
+        context.Events.WebMessageReceived += (_, args) => forwarded = args;
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", context.ChannelId);
         runtime.HandleAdapterWebMessageReceivedOnUiThread(message);
 
-        Assert.Same(message, host.LastForwardedMessage);
+        Assert.Same(message, forwarded);
+
+        runtime.Dispose();
     }
 
     [Fact]
     public void HandleWebMessage_when_denied_emits_drop_diagnostics()
     {
-        var host = new TestBridgeHost();
+        var (runtime, _, context, _) = CreateRuntime();
         var dropSink = new RecordingDropSink();
         var diagnosticsSink = new MemoryFuloraDiagnosticsSink();
-        using var runtime = new WebViewCoreBridgeRuntime(
-            host,
-            new TestDispatcher(),
-            NullLogger.Instance,
-            enableDevToolsByDefault: false);
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
         {
             AllowedOrigins = new HashSet<string> { "https://allowed.example" },
@@ -67,41 +77,42 @@ public sealed class WebViewCoreBridgeRuntimeTests
             new WebMessageReceivedEventArgs(
                 """{"type":"blocked"}""",
                 "https://blocked.example",
-                host.ChannelId));
+                context.ChannelId));
 
         var drop = Assert.Single(dropSink.Diagnostics);
         Assert.Equal(WebMessageDropReason.OriginNotAllowed, drop.Reason);
 
         var diagnosticEvent = Assert.Single(diagnosticsSink.Events);
         Assert.Equal("runtime.webmessage.dropped", diagnosticEvent.EventName);
-        Assert.Equal(host.ChannelId.ToString("D"), diagnosticEvent.ChannelId);
+        Assert.Equal(context.ChannelId.ToString("D"), diagnosticEvent.ChannelId);
         Assert.Equal("https://blocked.example", diagnosticEvent.Attributes["origin"]);
+
+        runtime.Dispose();
     }
 
     [Fact]
-    public void HandleAdapterWebMessageReceived_when_host_disposed_does_not_dispatch()
+    public void HandleAdapterWebMessageReceived_when_lifecycle_disposed_does_not_dispatch()
     {
-        // B1 regression guard: the dispatch-symmetry refactor moved SafeDispatch filtering from
-        // WebViewCore into WebViewCoreBridgeRuntime. If the host is disposed before the adapter
-        // event arrives, the UI-thread path must never be invoked (otherwise bridge state may be
-        // touched after teardown). Bridge must be enabled first because EnableWebMessageBridge
-        // itself guards with ThrowIfDisposed.
-        var host = new TestBridgeHost();
-        using var runtime = new WebViewCoreBridgeRuntime(
-            host,
-            new TestDispatcher(),
-            NullLogger.Instance,
-            enableDevToolsByDefault: false);
+        // B1 regression guard: if the lifecycle transitions to disposed before an adapter event
+        // arrives, the UI-thread path must never be invoked (otherwise bridge state may be touched
+        // after teardown). Bridge must be enabled first because EnableWebMessageBridge itself guards
+        // with ThrowIfDisposed.
+        var lifecycle = WebViewCoreTestContext.CreateReadyLifecycle();
+        var (runtime, _, context, _) = CreateRuntime(lifecycle: lifecycle);
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
         {
             AllowedOrigins = new HashSet<string> { "*" }
         });
-        host.IsDisposed = true;
 
-        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        WebMessageReceivedEventArgs? forwarded = null;
+        context.Events.WebMessageReceived += (_, args) => forwarded = args;
+
+        lifecycle.TryTransitionToDisposed();
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", context.ChannelId);
         runtime.HandleAdapterWebMessageReceived(message);
 
-        Assert.Null(host.LastForwardedMessage);
+        Assert.Null(forwarded);
     }
 
     [Fact]
@@ -109,22 +120,24 @@ public sealed class WebViewCoreBridgeRuntimeTests
     {
         // B1 regression guard: mirrors disposed path for the adapter-destroyed signal so both
         // short-circuit conditions documented in UiThreadHelper.SafeDispatch stay exercised.
-        var host = new TestBridgeHost();
-        using var runtime = new WebViewCoreBridgeRuntime(
-            host,
-            new TestDispatcher(),
-            NullLogger.Instance,
-            enableDevToolsByDefault: false);
+        var lifecycle = WebViewCoreTestContext.CreateReadyLifecycle();
+        var (runtime, _, context, _) = CreateRuntime(lifecycle: lifecycle);
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
         {
             AllowedOrigins = new HashSet<string> { "*" }
         });
-        host.IsAdapterDestroyed = true;
 
-        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        WebMessageReceivedEventArgs? forwarded = null;
+        context.Events.WebMessageReceived += (_, args) => forwarded = args;
+
+        lifecycle.MarkAdapterDestroyedOnce(() => { });
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", context.ChannelId);
         runtime.HandleAdapterWebMessageReceived(message);
 
-        Assert.Null(host.LastForwardedMessage);
+        Assert.Null(forwarded);
+
+        runtime.Dispose();
     }
 
     [Fact]
@@ -133,61 +146,21 @@ public sealed class WebViewCoreBridgeRuntimeTests
         // B1 regression guard: when dispatcher.CheckAccess() returns true, SafeDispatch must invoke
         // the UI-thread callback inline rather than queueing it, so the message is forwarded
         // synchronously (matching the previous WebViewCore behaviour).
-        var host = new TestBridgeHost();
-        using var runtime = new WebViewCoreBridgeRuntime(
-            host,
-            new TestDispatcher(),
-            NullLogger.Instance,
-            enableDevToolsByDefault: false);
+        var (runtime, _, context, _) = CreateRuntime();
         runtime.EnableWebMessageBridge(new WebMessageBridgeOptions
         {
             AllowedOrigins = new HashSet<string> { "*" }
         });
 
-        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", host.ChannelId);
+        WebMessageReceivedEventArgs? forwarded = null;
+        context.Events.WebMessageReceived += (_, args) => forwarded = args;
+
+        var message = new WebMessageReceivedEventArgs("""{"type":"custom"}""", "*", context.ChannelId);
         runtime.HandleAdapterWebMessageReceived(message);
 
-        Assert.Same(message, host.LastForwardedMessage);
-    }
+        Assert.Same(message, forwarded);
 
-    private sealed class TestBridgeHost : IWebViewCoreBridgeHost
-    {
-        private readonly int _uiThreadId = Environment.CurrentManagedThreadId;
-
-        public Guid ChannelId { get; } = Guid.NewGuid();
-
-        public bool IsDisposed { get; set; }
-
-        public bool IsAdapterDestroyed { get; set; }
-
-        public List<string> ObservedBackgroundOperations { get; } = [];
-
-        public List<string> InvokedScripts { get; } = [];
-
-        public WebMessageReceivedEventArgs? LastForwardedMessage { get; private set; }
-
-        public Task<string?> InvokeScriptAsync(string script)
-        {
-            InvokedScripts.Add(script);
-            return Task.FromResult<string?>(null);
-        }
-
-        public void ObserveBackgroundTask(Task task, string operationType)
-            => ObservedBackgroundOperations.Add(operationType);
-
-        public void RaiseWebMessageReceived(WebMessageReceivedEventArgs args)
-            => LastForwardedMessage = args;
-
-        public void ThrowIfDisposed()
-            => ObjectDisposedException.ThrowIf(IsDisposed, nameof(TestBridgeHost));
-
-        public void ThrowIfNotOnUiThread(string apiName)
-        {
-            if (Environment.CurrentManagedThreadId != _uiThreadId)
-            {
-                throw new InvalidOperationException($"'{apiName}' must be called on the UI thread.");
-            }
-        }
+        runtime.Dispose();
     }
 
     private sealed class RecordingDropSink : IWebMessageDropDiagnosticsSink

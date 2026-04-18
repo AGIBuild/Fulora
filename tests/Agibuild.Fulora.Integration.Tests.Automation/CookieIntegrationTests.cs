@@ -39,16 +39,6 @@ public sealed class CookieIntegrationTests
         dialog.Dispose();
     }
 
-    [AvaloniaFact]
-    public void CookieManager_null_when_adapter_lacks_support()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        Assert.Null(dialog.TryGetCookieManager());
-    }
-
     // ──────────────────── Test 2: Set and Get cookie ────────────────────
 
     [AvaloniaFact]

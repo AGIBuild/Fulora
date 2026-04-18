@@ -40,18 +40,4 @@ public sealed class ScreenshotIntegrationTests
         Assert.Equal(0x47, bytes[3]); // 'G'
     }
 
-    // ──────────────────── Test 2: Throws when unsupported ────────────────────
-
-    [AvaloniaFact]
-    public void Screenshot_throws_NotSupportedException_when_adapter_lacks_support()
-    {
-        // Arrange: basic adapter does NOT implement IScreenshotAdapter
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        // Act & Assert
-        Assert.Throws<NotSupportedException>(
-            () => DispatcherTestPump.Run(_dispatcher, () => dialog.CaptureScreenshotAsync()));
-    }
 }

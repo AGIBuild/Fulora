@@ -3,17 +3,18 @@ using Agibuild.Fulora.Adapters.Abstractions;
 namespace Agibuild.Fulora;
 
 /// <summary>
-/// Runtime wrapper around <see cref="ICommandAdapter"/> that delegates editing commands.
+/// Runtime wrapper around <see cref="ICommandAdapter"/> that delegates editing commands through
+/// the shared <see cref="WebViewCoreContext"/>.
 /// </summary>
 internal sealed class RuntimeCommandManager : ICommandManager
 {
     private readonly ICommandAdapter _commandAdapter;
-    private readonly IWebViewCoreOperationHost _host;
+    private readonly WebViewCoreContext _context;
 
-    public RuntimeCommandManager(ICommandAdapter commandAdapter, IWebViewCoreOperationHost host)
+    public RuntimeCommandManager(ICommandAdapter commandAdapter, WebViewCoreContext context)
     {
         _commandAdapter = commandAdapter ?? throw new ArgumentNullException(nameof(commandAdapter));
-        _host = host ?? throw new ArgumentNullException(nameof(host));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public Task CopyAsync() => ToVoidTask(ExecuteAsync(WebViewCommand.Copy));
@@ -36,7 +37,7 @@ internal sealed class RuntimeCommandManager : ICommandManager
 
     private Task<object?> ExecuteAsync(WebViewCommand command)
     {
-        return _host.EnqueueOperationAsync($"Command.{command}", () =>
+        return _context.Operations.EnqueueAsync($"Command.{command}", () =>
         {
             _commandAdapter.ExecuteCommand(command);
             return Task.CompletedTask;

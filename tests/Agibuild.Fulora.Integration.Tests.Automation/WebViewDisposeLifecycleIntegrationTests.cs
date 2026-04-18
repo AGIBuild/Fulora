@@ -37,7 +37,7 @@ public sealed class WebViewDisposeLifecycleIntegrationTests
             Assert.Equal(1, adapter.DetachCallCount);
             Assert.False(GetCoreAttached(control));
 
-            ((IWebViewCoreNavigationHost)core).RaiseNavigationStarting(
+            core.Events.RaiseNavigationStarted(
                 new NavigationStartingEventArgs(Guid.NewGuid(), new Uri("https://after-dispose.test")));
             Assert.Equal(0, navigationCalls);
         });

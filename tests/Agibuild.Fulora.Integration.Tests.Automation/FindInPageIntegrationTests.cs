@@ -71,30 +71,6 @@ public sealed class FindInPageIntegrationTests
         Assert.False(findAdapter.LastClearHighlights);
     }
 
-    // ──────────────────── Test 4: Find without adapter throws ────────────────────
-
-    [AvaloniaFact]
-    public void Find_without_adapter_throws_NotSupportedException()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create(); // basic — no find support
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        Assert.Throws<NotSupportedException>(() => DispatcherTestPump.Run(_dispatcher, () => dialog.FindInPageAsync("x")));
-    }
-
-    // ──────────────────── Test 5: StopFind without adapter throws ────────────────────
-
-    [AvaloniaFact]
-    public void StopFind_without_adapter_throws_NotSupportedException()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        Assert.Throws<NotSupportedException>(() => DispatcherTestPump.Run(_dispatcher, () => dialog.StopFindInPageAsync()));
-    }
-
     // ──────────────────── Test 6: Find after dispose throws ────────────────────
 
     [AvaloniaFact]

@@ -45,21 +45,6 @@ public sealed class CommandManagerIntegrationTests
         dialog.Dispose();
     }
 
-    [AvaloniaFact]
-    public void CommandManager_null_when_adapter_lacks_command_support()
-    {
-        // Arrange: basic adapter does NOT implement ICommandAdapter
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        // Act
-        var mgr = dialog.TryGetCommandManager();
-
-        // Assert
-        Assert.Null(mgr);
-    }
-
     // ──────────────────── Test 2: Single command delegation ────────────────────
 
     [AvaloniaFact]

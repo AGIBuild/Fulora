@@ -2,25 +2,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
-internal interface IWebViewCoreBridgeHost :
-    IWebViewCoreLifecycleHost,
-    IWebViewCoreDisposalHost,
-    IWebViewCoreBackgroundTaskObserver
+internal sealed class WebViewCoreBridgeRuntime : IDisposable
 {
-    Guid ChannelId { get; }
-
-    Task<string?> InvokeScriptAsync(string script);
-
-    void RaiseWebMessageReceived(WebMessageReceivedEventArgs args);
-
-    void ThrowIfNotOnUiThread(string apiName);
-}
-
-internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridgeOperations
-{
-    private readonly IWebViewCoreBridgeHost _host;
-    private readonly IWebViewDispatcher _dispatcher;
-    private readonly ILogger _logger;
+    private readonly WebViewCoreContext _context;
     private readonly bool _enableDevToolsByDefault;
 
     private bool _webMessageBridgeEnabled;
@@ -32,14 +16,10 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
     private IBridgeTracer? _bridgeTracer;
 
     public WebViewCoreBridgeRuntime(
-        IWebViewCoreBridgeHost host,
-        IWebViewDispatcher dispatcher,
-        ILogger logger,
+        WebViewCoreContext context,
         bool enableDevToolsByDefault)
     {
-        _host = host ?? throw new ArgumentNullException(nameof(host));
-        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
         _enableDevToolsByDefault = enableDevToolsByDefault;
     }
 
@@ -54,7 +34,7 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
         {
             if (_bridgeService is not null)
             {
-                _logger.LogWarning("BridgeTracer set after Bridge was already created — change ignored.");
+                _context.Logger.LogWarning("BridgeTracer set after Bridge was already created — change ignored.");
                 return;
             }
 
@@ -66,7 +46,7 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
     {
         get
         {
-            _host.ThrowIfDisposed();
+            _context.ThrowIfDisposed();
 
             if (_bridgeService is not null)
             {
@@ -83,12 +63,12 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
 
             _bridgeService = new RuntimeBridgeService(
                 _rpcService!,
-                script => _host.InvokeScriptAsync(script),
-                _logger,
+                script => InvokeScriptAsync(script),
+                _context.Logger,
                 enableDevTools: _enableDevToolsByDefault,
                 tracer: _bridgeTracer);
 
-            _logger.LogDebug("Bridge: auto-created RuntimeBridgeService");
+            _context.Logger.LogDebug("Bridge: auto-created RuntimeBridgeService");
             return _bridgeService;
         }
     }
@@ -96,20 +76,20 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
     public void EnableWebMessageBridge(WebMessageBridgeOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
-        _host.ThrowIfDisposed();
-        _host.ThrowIfNotOnUiThread(nameof(EnableWebMessageBridge));
+        _context.ThrowIfDisposed();
+        _context.ThrowIfNotOnUiThread(nameof(EnableWebMessageBridge));
 
         _webMessageBridgeEnabled = true;
-        _webMessagePolicy = new DefaultWebMessagePolicy(options.AllowedOrigins, options.ProtocolVersion, _host.ChannelId);
+        _webMessagePolicy = new DefaultWebMessagePolicy(options.AllowedOrigins, options.ProtocolVersion, _context.ChannelId);
         _webMessageDropDiagnosticsSink = options.DropDiagnosticsSink;
         _fuloraDiagnosticsSink = options.DiagnosticsSink;
-        _rpcService ??= new WebViewRpcService(script => _host.InvokeScriptAsync(script), _logger, options.EnableDevToolsDiagnostics);
+        _rpcService ??= new WebViewRpcService(script => InvokeScriptAsync(script), _context.Logger, options.EnableDevToolsDiagnostics);
 
-        _host.ObserveBackgroundTask(
-            _host.InvokeScriptAsync(WebViewRpcService.JsStub),
+        _context.ObserveBackgroundTask(
+            InvokeScriptAsync(WebViewRpcService.JsStub),
             $"{nameof(EnableWebMessageBridge)}.{nameof(WebViewRpcService.JsStub)}");
 
-        _logger.LogDebug(
+        _context.Logger.LogDebug(
             "WebMessageBridge enabled: originCount={Count}, protocol={Protocol}",
             options.AllowedOrigins?.Count ?? 0,
             options.ProtocolVersion);
@@ -117,8 +97,8 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
 
     public void DisableWebMessageBridge()
     {
-        _host.ThrowIfDisposed();
-        _host.ThrowIfNotOnUiThread(nameof(DisableWebMessageBridge));
+        _context.ThrowIfDisposed();
+        _context.ThrowIfNotOnUiThread(nameof(DisableWebMessageBridge));
 
         _webMessageBridgeEnabled = false;
         _webMessagePolicy = null;
@@ -126,7 +106,7 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
         _fuloraDiagnosticsSink = null;
         _rpcService = null;
 
-        _logger.LogDebug("WebMessageBridge disabled");
+        _context.Logger.LogDebug("WebMessageBridge disabled");
     }
 
     public void ReinjectBridgeStubsIfEnabled()
@@ -136,10 +116,10 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
             return;
         }
 
-        _host.ObserveBackgroundTask(_host.InvokeScriptAsync(WebViewRpcService.JsStub), "ReinjectBridgeStubs.RpcStub");
+        _context.ObserveBackgroundTask(InvokeScriptAsync(WebViewRpcService.JsStub), "ReinjectBridgeStubs.RpcStub");
         _bridgeService?.ReinjectServiceStubs();
 
-        _logger.LogDebug("Bridge: re-injected JS stubs after navigation");
+        _context.Logger.LogDebug("Bridge: re-injected JS stubs after navigation");
     }
 
     /// <summary>
@@ -151,34 +131,34 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
     public void HandleAdapterWebMessageReceived(WebMessageReceivedEventArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
-        _logger.LogDebug("Event WebMessageReceived: origin={Origin}, channelId={ChannelId}", args.Origin, args.ChannelId);
+        _context.Logger.LogDebug("Event WebMessageReceived: origin={Origin}, channelId={ChannelId}", args.Origin, args.ChannelId);
 
         UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _host.IsDisposed,
-            _host.IsAdapterDestroyed,
+            _context.Dispatcher,
+            _context.Lifecycle.IsDisposed,
+            _context.Lifecycle.IsAdapterDestroyed,
             () => HandleAdapterWebMessageReceivedOnUiThread(args),
-            _logger,
+            _context.Logger,
             "WebMessageReceived: ignored (disposed or destroyed)");
     }
 
     internal void HandleAdapterWebMessageReceivedOnUiThread(WebMessageReceivedEventArgs args)
     {
-        if (_host.IsDisposed)
+        if (_context.Lifecycle.IsDisposed)
         {
             return;
         }
 
         if (!_webMessageBridgeEnabled)
         {
-            _logger.LogDebug("WebMessageReceived: bridge not enabled, dropping");
+            _context.Logger.LogDebug("WebMessageReceived: bridge not enabled, dropping");
             return;
         }
 
         var policy = _webMessagePolicy;
         if (policy is null)
         {
-            _logger.LogDebug("WebMessageReceived: no policy, dropping");
+            _context.Logger.LogDebug("WebMessageReceived: no policy, dropping");
             return;
         }
 
@@ -193,17 +173,17 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
         {
             if (_rpcService is not null && _rpcService.TryProcessMessage(args.Body))
             {
-                _logger.LogDebug("WebMessageReceived: handled as RPC message");
+                _context.Logger.LogDebug("WebMessageReceived: handled as RPC message");
                 return;
             }
 
-            _logger.LogDebug("WebMessageReceived: policy allowed, forwarding");
-            _host.RaiseWebMessageReceived(args);
+            _context.Logger.LogDebug("WebMessageReceived: policy allowed, forwarding");
+            _context.Events.RaiseWebMessageReceived(args);
             return;
         }
 
         var reason = decision.DropReason ?? WebMessageDropReason.OriginNotAllowed;
-        _logger.LogDebug("WebMessageReceived: policy denied, reason={Reason}", reason);
+        _context.Logger.LogDebug("WebMessageReceived: policy denied, reason={Reason}", reason);
         _webMessageDropDiagnosticsSink?.OnMessageDropped(new WebMessageDropDiagnostic(reason, args.Origin, args.ChannelId));
         _fuloraDiagnosticsSink?.OnEvent(new FuloraDiagnosticsEvent
         {
@@ -220,6 +200,16 @@ internal sealed class WebViewCoreBridgeRuntime : IDisposable, IWebViewCoreBridge
             }
         });
     }
+
+    /// <summary>
+    /// Invokes a script through the public async pipeline so the call is serialized, dispatched onto
+    /// the UI thread, and classified for failure reporting. Kept private to the bridge runtime — the
+    /// public entry point remains <see cref="WebViewCore.InvokeScriptAsync"/>.
+    /// </summary>
+    private Task<string?> InvokeScriptAsync(string script)
+        => _context.Operations.EnqueueAsync<string?>(
+            "InvokeScriptAsync",
+            () => _context.Adapter.InvokeScriptAsync(script));
 
     public void Dispose()
     {

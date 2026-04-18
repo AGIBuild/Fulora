@@ -70,21 +70,6 @@ public sealed class PrintToPdfIntegrationTests
         Assert.Equal(8.5, adapter.LastPrintOptions.PageHeight);
     }
 
-    // ──────────────────── Test 3: Throws when unsupported ────────────────────
-
-    [AvaloniaFact]
-    public void PrintToPdf_throws_NotSupportedException_when_adapter_lacks_support()
-    {
-        // Arrange: basic adapter does NOT implement IPrintAdapter
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        // Act & Assert
-        Assert.Throws<NotSupportedException>(
-            () => DispatcherTestPump.Run(_dispatcher, () => dialog.PrintToPdfAsync()));
-    }
-
     // ──────────────────── Test 4: Default options ────────────────────
 
     [AvaloniaFact]

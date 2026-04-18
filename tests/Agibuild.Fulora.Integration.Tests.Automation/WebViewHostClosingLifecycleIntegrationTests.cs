@@ -81,7 +81,7 @@ public sealed class WebViewHostClosingLifecycleIntegrationTests
             control.TestOnlySetCoreAttached(true);
             control.TestOnlySubscribeCoreEvents();
 
-            ((IWebViewCoreNavigationHost)core).RaiseNavigationStarting(
+            core.Events.RaiseNavigationStarted(
                 new NavigationStartingEventArgs(Guid.NewGuid(), new Uri("https://before-close.test")));
             Assert.Equal(1, navigationStartedCalls);
 
@@ -93,7 +93,7 @@ public sealed class WebViewHostClosingLifecycleIntegrationTests
             Assert.Equal(1, adapter.DetachCallCount);
             Assert.False(GetCoreAttached(control));
 
-            ((IWebViewCoreNavigationHost)core).RaiseNavigationStarting(
+            core.Events.RaiseNavigationStarted(
                 new NavigationStartingEventArgs(Guid.NewGuid(), new Uri("https://after-close.test")));
             Assert.Equal(1, navigationStartedCalls);
 

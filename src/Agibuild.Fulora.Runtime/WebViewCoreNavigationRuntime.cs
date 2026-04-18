@@ -7,28 +7,17 @@ internal readonly record struct WebViewCoreNavigationState(
     Guid CorrelationId,
     Uri RequestUri);
 
-internal interface IWebViewCoreNavigationHost : IWebViewCoreLifecycleHost
-{
-    void RaiseNavigationStarting(NavigationStartingEventArgs args);
-
-    void RaiseNavigationCompleted(NavigationCompletedEventArgs args);
-
-    void ReinjectBridgeStubsIfEnabled();
-
-    void SetSource(Uri uri);
-
-    void ThrowIfNotOnUiThread(string apiName);
-}
-
 /// <summary>
 /// Navigation coordinator that owns the single active <see cref="NavigationOperation"/> (if any),
 /// marshals navigation start / completion onto the UI thread, and funnels observable events through
-/// the <see cref="IWebViewCoreNavigationHost"/> (<see cref="WebViewCore"/>).
+/// the shared <see cref="WebViewCoreEventHub"/> on <see cref="WebViewCoreContext.Events"/>.
+/// Also owns the observable <see cref="CurrentSource"/>; <see cref="WebViewCore.Source"/> is a pure
+/// pass-through to this property.
 /// </summary>
 /// <remarks>
 /// Intentionally not <see cref="IDisposable"/>: the active-navigation <see cref="TaskCompletionSource"/>
 /// stored inside <see cref="NavigationOperation"/> is released either when the adapter raises
-/// <c>NavigationCompleted</c> or when the host calls <see cref="FaultActiveForDispose"/> from
+/// <c>NavigationCompleted</c> or when <see cref="FaultActiveForDispose"/> is called from
 /// <see cref="WebViewCore.Dispose"/>. This runtime holds only injected references plus the optional
 /// active operation — no unmanaged handles, timers, or background tasks.
 /// </remarks>
@@ -36,26 +25,35 @@ internal sealed class WebViewCoreNavigationRuntime
 {
     private static readonly Uri AboutBlank = new("about:blank");
 
-    private readonly IWebViewCoreNavigationHost _host;
-    private readonly IWebViewDispatcher _dispatcher;
-    private readonly ILogger _logger;
+    private readonly WebViewCoreContext _context;
+    private readonly Action _reinjectBridgeStubs;
 
     private NavigationOperation? _activeNavigation;
+    private Uri _currentSource = AboutBlank;
 
-    public WebViewCoreNavigationRuntime(
-        IWebViewCoreNavigationHost host,
-        IWebViewDispatcher dispatcher,
-        ILogger logger)
+    /// <summary>
+    /// Constructs a runtime bound to the given <paramref name="context"/> and a bridge re-injection
+    /// callback. The callback is invoked exactly once per successful completion; passing an
+    /// <c>Action</c> (rather than a full bridge runtime) keeps navigation independent of the bridge
+    /// runtime type, which makes both sides independently testable and avoids cyclic coupling.
+    /// </summary>
+    public WebViewCoreNavigationRuntime(WebViewCoreContext context, Action reinjectBridgeStubs)
     {
-        _host = host ?? throw new ArgumentNullException(nameof(host));
-        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _reinjectBridgeStubs = reinjectBridgeStubs ?? throw new ArgumentNullException(nameof(reinjectBridgeStubs));
     }
 
     /// <summary>
     /// Whether a navigation is currently in flight.
     /// </summary>
     public bool IsLoading => _activeNavigation is not null;
+
+    /// <summary>
+    /// The most recently observed main-frame source URI. Seeded with <c>about:blank</c>; updated
+    /// whenever a navigation starts and when redirects are observed. Reads are expected on the UI
+    /// thread only (consistent with the <see cref="WebViewCore.Source"/> public API contract).
+    /// </summary>
+    public Uri CurrentSource => _currentSource;
 
     /// <summary>
     /// Creates a new active navigation, overwriting any previous one (callers are expected to have
@@ -93,7 +91,7 @@ internal sealed class WebViewCoreNavigationRuntime
             return false;
         }
 
-        _logger.LogDebug("Stop: canceling active navigation id={NavigationId}", _activeNavigation.NavigationId);
+        _context.Logger.LogDebug("Stop: canceling active navigation id={NavigationId}", _activeNavigation.NavigationId);
         CompleteActiveNavigation(NavigationCompletedStatus.Canceled, error: null);
         return true;
     }
@@ -110,7 +108,7 @@ internal sealed class WebViewCoreNavigationRuntime
             return;
         }
 
-        _logger.LogDebug("Dispose: faulting active navigation id={NavigationId}", operation.NavigationId);
+        _context.Logger.LogDebug("Dispose: faulting active navigation id={NavigationId}", operation.NavigationId);
         operation.TrySetFault(exception);
         _activeNavigation = null;
     }
@@ -130,7 +128,7 @@ internal sealed class WebViewCoreNavigationRuntime
 
         _activeNavigation = null;
 
-        _logger.LogDebug("Event NavigationCompleted: id={NavigationId}, status={Status}, uri={Uri}, error={Error}",
+        _context.Logger.LogDebug("Event NavigationCompleted: id={NavigationId}, status={Status}, uri={Uri}, error={Error}",
             operation.NavigationId, status, operation.RequestUri, error?.Message);
 
         NavigationCompletedEventArgs completedArgs;
@@ -149,7 +147,7 @@ internal sealed class WebViewCoreNavigationRuntime
             error = ex;
         }
 
-        _host.RaiseNavigationCompleted(completedArgs);
+        _context.Events.RaiseNavigationCompleted(completedArgs);
 
         if (status == NavigationCompletedStatus.Failure)
         {
@@ -166,7 +164,7 @@ internal sealed class WebViewCoreNavigationRuntime
         else
         {
             if (status == NavigationCompletedStatus.Success)
-                _host.ReinjectBridgeStubsIfEnabled();
+                _reinjectBridgeStubs();
 
             operation.TrySetSuccess();
         }
@@ -174,36 +172,36 @@ internal sealed class WebViewCoreNavigationRuntime
 
     public ValueTask<NativeNavigationStartingDecision> OnNativeNavigationStartingAsync(NativeNavigationStartingInfo info)
     {
-        _logger.LogDebug("OnNativeNavigationStarting: correlationId={CorrelationId}, uri={Uri}, isMainFrame={IsMainFrame}",
+        _context.Logger.LogDebug("OnNativeNavigationStarting: correlationId={CorrelationId}, uri={Uri}, isMainFrame={IsMainFrame}",
             info.CorrelationId, info.RequestUri, info.IsMainFrame);
 
-        if (_host.IsDisposed)
+        if (_context.Lifecycle.IsDisposed)
         {
-            _logger.LogDebug("OnNativeNavigationStarting: disposed, denying");
+            _context.Logger.LogDebug("OnNativeNavigationStarting: disposed, denying");
             return ValueTask.FromResult(new NativeNavigationStartingDecision(IsAllowed: false, NavigationId: Guid.Empty));
         }
 
-        if (_dispatcher.CheckAccess())
+        if (_context.Dispatcher.CheckAccess())
         {
             return ValueTask.FromResult(OnNativeNavigationStartingOnUiThread(info));
         }
 
         return new ValueTask<NativeNavigationStartingDecision>(
-            _dispatcher.InvokeAsync(() => OnNativeNavigationStartingOnUiThread(info)));
+            _context.Dispatcher.InvokeAsync(() => OnNativeNavigationStartingOnUiThread(info)));
     }
 
     public NativeNavigationStartingDecision OnNativeNavigationStartingOnUiThread(NativeNavigationStartingInfo info)
     {
-        if (_host.IsDisposed)
+        if (_context.Lifecycle.IsDisposed)
         {
             return new NativeNavigationStartingDecision(IsAllowed: false, NavigationId: Guid.Empty);
         }
 
-        _host.ThrowIfNotOnUiThread(nameof(IWebViewAdapterHost.OnNativeNavigationStartingAsync));
+        _context.ThrowIfNotOnUiThread(nameof(IWebViewAdapterHost.OnNativeNavigationStartingAsync));
 
         if (!info.IsMainFrame)
         {
-            _logger.LogDebug("OnNativeNavigationStarting: sub-frame, auto-allow");
+            _context.Logger.LogDebug("OnNativeNavigationStarting: sub-frame, auto-allow");
             return new NativeNavigationStartingDecision(IsAllowed: true, NavigationId: Guid.Empty);
         }
 
@@ -216,57 +214,57 @@ internal sealed class WebViewCoreNavigationRuntime
 
         HandleNavigationSupersession();
 
-        _host.SetSource(requestUri);
+        _currentSource = requestUri;
 
         var navigationId = Guid.NewGuid();
         _ = SetActiveNavigation(navigationId, info.CorrelationId, requestUri);
 
         var startingArgs = new NavigationStartingEventArgs(navigationId, requestUri);
-        _logger.LogDebug("Event NavigationStarted (native): id={NavigationId}, uri={Uri}", navigationId, requestUri);
-        _host.RaiseNavigationStarting(startingArgs);
+        _context.Logger.LogDebug("Event NavigationStarted (native): id={NavigationId}, uri={Uri}", navigationId, requestUri);
+        _context.Events.RaiseNavigationStarted(startingArgs);
 
         if (startingArgs.Cancel)
         {
-            _logger.LogDebug("OnNativeNavigationStarting: canceled by handler, id={NavigationId}", navigationId);
+            _context.Logger.LogDebug("OnNativeNavigationStarting: canceled by handler, id={NavigationId}", navigationId);
             CompleteActiveNavigation(NavigationCompletedStatus.Canceled, error: null);
             return new NativeNavigationStartingDecision(IsAllowed: false, NavigationId: navigationId);
         }
 
-        _logger.LogDebug("OnNativeNavigationStarting: allowed, id={NavigationId}", navigationId);
+        _context.Logger.LogDebug("OnNativeNavigationStarting: allowed, id={NavigationId}", navigationId);
         return new NativeNavigationStartingDecision(IsAllowed: true, NavigationId: navigationId);
     }
 
     public void HandleAdapterNavigationCompleted(NavigationCompletedEventArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
-        _logger.LogDebug("Adapter.NavigationCompleted received: id={NavigationId}, status={Status}, uri={Uri}",
+        _context.Logger.LogDebug("Adapter.NavigationCompleted received: id={NavigationId}, status={Status}, uri={Uri}",
             args.NavigationId, args.Status, args.RequestUri);
 
         UiThreadHelper.SafeDispatch(
-            _dispatcher,
-            _host.IsDisposed,
-            _host.IsAdapterDestroyed,
+            _context.Dispatcher,
+            _context.Lifecycle.IsDisposed,
+            _context.Lifecycle.IsAdapterDestroyed,
             () => HandleAdapterNavigationCompletedOnUiThread(args),
-            _logger,
+            _context.Logger,
             "Adapter.NavigationCompleted: ignored (disposed or destroyed)");
     }
 
     public void HandleAdapterNavigationCompletedOnUiThread(NavigationCompletedEventArgs args)
     {
-        if (_host.IsDisposed)
+        if (_context.Lifecycle.IsDisposed)
         {
             return;
         }
 
         if (!TryGetActiveNavigation(out var activeNavigation))
         {
-            _logger.LogDebug("Adapter.NavigationCompleted: no active navigation, ignoring id={NavigationId}", args.NavigationId);
+            _context.Logger.LogDebug("Adapter.NavigationCompleted: no active navigation, ignoring id={NavigationId}", args.NavigationId);
             return;
         }
 
         if (args.NavigationId != activeNavigation.NavigationId)
         {
-            _logger.LogDebug("Adapter.NavigationCompleted: id mismatch (received={Received}, active={Active}), ignoring",
+            _context.Logger.LogDebug("Adapter.NavigationCompleted: id mismatch (received={Received}, active={Active}), ignoring",
                 args.NavigationId, activeNavigation.NavigationId);
             return;
         }
@@ -297,17 +295,17 @@ internal sealed class WebViewCoreNavigationRuntime
 
     public async Task<Task> StartNavigationRequestCoreAsync(Uri requestUri, Func<Guid, Task> adapterInvoke, bool updateSource)
     {
-        ObjectDisposedException.ThrowIf(_host.IsDisposed, nameof(WebViewCore));
-        _host.ThrowIfNotOnUiThread("async navigation");
+        ObjectDisposedException.ThrowIf(_context.Lifecycle.IsDisposed, nameof(WebViewCore));
+        _context.ThrowIfNotOnUiThread("async navigation");
 
         if (updateSource)
         {
-            _host.SetSource(requestUri.AbsoluteUri != AboutBlank.AbsoluteUri ? requestUri : AboutBlank);
+            _currentSource = requestUri.AbsoluteUri != AboutBlank.AbsoluteUri ? requestUri : AboutBlank;
         }
 
         if (TryGetActiveNavigation(out var activeNavigation))
         {
-            _logger.LogDebug("StartNavigation: superseding active navigation id={NavigationId}", activeNavigation.NavigationId);
+            _context.Logger.LogDebug("StartNavigation: superseding active navigation id={NavigationId}", activeNavigation.NavigationId);
             CompleteActiveNavigation(NavigationCompletedStatus.Superseded, error: null);
         }
 
@@ -315,12 +313,12 @@ internal sealed class WebViewCoreNavigationRuntime
         var operationTask = SetActiveNavigation(navigationId, navigationId, requestUri);
 
         var startingArgs = new NavigationStartingEventArgs(navigationId, requestUri);
-        _logger.LogDebug("Event NavigationStarted (API): id={NavigationId}, uri={Uri}", navigationId, requestUri);
-        _host.RaiseNavigationStarting(startingArgs);
+        _context.Logger.LogDebug("Event NavigationStarted (API): id={NavigationId}, uri={Uri}", navigationId, requestUri);
+        _context.Events.RaiseNavigationStarted(startingArgs);
 
         if (startingArgs.Cancel)
         {
-            _logger.LogDebug("StartNavigation: canceled by handler, id={NavigationId}", navigationId);
+            _context.Logger.LogDebug("StartNavigation: canceled by handler, id={NavigationId}", navigationId);
             CompleteActiveNavigation(NavigationCompletedStatus.Canceled, error: null);
             return operationTask;
         }
@@ -333,7 +331,7 @@ internal sealed class WebViewCoreNavigationRuntime
     {
         if (TryGetActiveNavigation(out var activeNavigation))
         {
-            _logger.LogDebug("StartCommandNavigation: superseding active navigation id={NavigationId}", activeNavigation.NavigationId);
+            _context.Logger.LogDebug("StartCommandNavigation: superseding active navigation id={NavigationId}", activeNavigation.NavigationId);
             CompleteActiveNavigation(NavigationCompletedStatus.Superseded, error: null);
         }
 
@@ -341,12 +339,12 @@ internal sealed class WebViewCoreNavigationRuntime
         _ = SetActiveNavigation(navigationId, navigationId, requestUri);
 
         var args = new NavigationStartingEventArgs(navigationId, requestUri);
-        _logger.LogDebug("Event NavigationStarted (command): id={NavigationId}, uri={Uri}", navigationId, requestUri);
-        _host.RaiseNavigationStarting(args);
+        _context.Logger.LogDebug("Event NavigationStarted (command): id={NavigationId}, uri={Uri}", navigationId, requestUri);
+        _context.Events.RaiseNavigationStarted(args);
 
         if (args.Cancel)
         {
-            _logger.LogDebug("StartCommandNavigation: canceled by handler, id={NavigationId}", navigationId);
+            _context.Logger.LogDebug("StartCommandNavigation: canceled by handler, id={NavigationId}", navigationId);
             CompleteActiveNavigation(NavigationCompletedStatus.Canceled, error: null);
             return Guid.Empty;
         }
@@ -367,21 +365,21 @@ internal sealed class WebViewCoreNavigationRuntime
 
         if (activeNavigation.RequestUri.AbsoluteUri == requestUri.AbsoluteUri)
         {
-            _logger.LogDebug("OnNativeNavigationStarting: same-URL redirect, id={NavigationId}", activeNavigation.NavigationId);
+            _context.Logger.LogDebug("OnNativeNavigationStarting: same-URL redirect, id={NavigationId}", activeNavigation.NavigationId);
             decision = new NativeNavigationStartingDecision(IsAllowed: true, NavigationId: activeNavigation.NavigationId);
             return true;
         }
 
         UpdateActiveNavigationRequestUri(requestUri);
-        _host.SetSource(requestUri);
+        _currentSource = requestUri;
 
         var redirectArgs = new NavigationStartingEventArgs(activeNavigation.NavigationId, requestUri);
-        _logger.LogDebug("Event NavigationStarted (redirect): id={NavigationId}, uri={Uri}", activeNavigation.NavigationId, requestUri);
-        _host.RaiseNavigationStarting(redirectArgs);
+        _context.Logger.LogDebug("Event NavigationStarted (redirect): id={NavigationId}, uri={Uri}", activeNavigation.NavigationId, requestUri);
+        _context.Events.RaiseNavigationStarted(redirectArgs);
 
         if (redirectArgs.Cancel)
         {
-            _logger.LogDebug("OnNativeNavigationStarting: redirect canceled by handler, id={NavigationId}", activeNavigation.NavigationId);
+            _context.Logger.LogDebug("OnNativeNavigationStarting: redirect canceled by handler, id={NavigationId}", activeNavigation.NavigationId);
             var activeNavigationId = activeNavigation.NavigationId;
             CompleteActiveNavigation(NavigationCompletedStatus.Canceled, error: null);
             decision = new NativeNavigationStartingDecision(IsAllowed: false, NavigationId: activeNavigationId);
@@ -399,7 +397,7 @@ internal sealed class WebViewCoreNavigationRuntime
             return;
         }
 
-        _logger.LogDebug("OnNativeNavigationStarting: superseding active navigation id={NavigationId}", activeNavigation.NavigationId);
+        _context.Logger.LogDebug("OnNativeNavigationStarting: superseding active navigation id={NavigationId}", activeNavigation.NavigationId);
         CompleteActiveNavigation(NavigationCompletedStatus.Superseded, error: null);
     }
 
@@ -411,7 +409,7 @@ internal sealed class WebViewCoreNavigationRuntime
         }
         catch (Exception ex)
         {
-            _logger.LogDebug(ex, "StartNavigation: adapter invocation failed, id={NavigationId}", navigationId);
+            _context.Logger.LogDebug(ex, "StartNavigation: adapter invocation failed, id={NavigationId}", navigationId);
             CompleteActiveNavigation(NavigationCompletedStatus.Failure, ex);
         }
     }

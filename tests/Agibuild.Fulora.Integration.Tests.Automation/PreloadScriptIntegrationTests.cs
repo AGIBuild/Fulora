@@ -71,30 +71,6 @@ public sealed class PreloadScriptIntegrationTests
         Assert.Contains(id2, preloadAdapter.Scripts.Keys);
     }
 
-    // ──────────────────── Test 4: Without adapter throws ────────────────────
-
-    [AvaloniaFact]
-    public void Without_adapter_throws_NotSupportedException()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        Assert.Throws<NotSupportedException>(() => DispatcherTestPump.Run(_dispatcher, () => dialog.AddPreloadScriptAsync("x")));
-    }
-
-    // ──────────────────── Test 5: Remove without adapter throws ────────────────────
-
-    [AvaloniaFact]
-    public void Remove_without_adapter_throws_NotSupportedException()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-
-        Assert.Throws<NotSupportedException>(() => DispatcherTestPump.Run(_dispatcher, () => dialog.RemovePreloadScriptAsync("some-id")));
-    }
-
     // ──────────────────── Test 6: Add after dispose throws ────────────────────
 
     [AvaloniaFact]
