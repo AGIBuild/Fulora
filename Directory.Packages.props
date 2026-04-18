@@ -22,17 +22,17 @@
     <PackageVersion Include="Serilog.Sinks.File" Version="8.0.0-nblumhardt-02322" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.Extensions">
-    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.4.1" />
-    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.4.1" />
-    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.4.1" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.2.26159.112" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.2.26159.112" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.3.26207.106" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.3.26207.106" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="11.0.0-preview.2.26159.112" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0-preview.2.26159.112" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-preview.2.26159.112" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-preview.3.26207.106" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="11.0.0-preview.2.26159.112" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="11.0.0-preview.2.26159.112" />
-    <PackageVersion Include="Microsoft.Extensions.Resilience" Version="10.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.Resilience" Version="10.5.0" />
   </ItemGroup>
   <ItemGroup Label="Roslyn and code analysis">
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
