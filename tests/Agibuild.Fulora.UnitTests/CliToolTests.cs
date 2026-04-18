@@ -14,22 +14,43 @@ public class CliToolTests
         return Path.Combine(repoRoot, "src", "Agibuild.Fulora.Cli", "Agibuild.Fulora.Cli.csproj");
     }
 
+    /// <summary>
+    /// Resolves the CLI binary that matches the current test-assembly build
+    /// configuration (Debug vs Release). Matching avoids version drift: a stale
+    /// Release CLI bin alongside a Debug test run can cause assembly-load
+    /// mismatches when the CLI dynamically loads generated bridge assemblies
+    /// built against the current-version Core.
+    /// </summary>
     private static string GetCliBinaryPath()
     {
         var repoRoot = FindRepoRoot();
         var binRoot = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Cli", "bin");
-        var candidates = new[]
-            {
-                Path.Combine(binRoot, "Release", "net10.0", "Agibuild.Fulora.Cli.dll"),
-                Path.Combine(binRoot, "Debug", "net10.0", "Agibuild.Fulora.Cli.dll"),
-            }
-            .Where(File.Exists)
-            .ToArray();
+        var currentConfig = GetCurrentBuildConfiguration();
 
-        if (candidates.Length > 0)
-            return candidates[0];
+        var preferred = Path.Combine(binRoot, currentConfig, "net10.0", "Agibuild.Fulora.Cli.dll");
+        if (File.Exists(preferred))
+            return preferred;
+
+        var fallbackConfig = currentConfig == "Debug" ? "Release" : "Debug";
+        var fallback = Path.Combine(binRoot, fallbackConfig, "net10.0", "Agibuild.Fulora.Cli.dll");
+        if (File.Exists(fallback))
+            return fallback;
 
         throw new FileNotFoundException($"CLI binary not found under {binRoot}");
+    }
+
+    /// <summary>
+    /// Infers the test assembly's current build configuration by reading
+    /// <see cref="AssemblyConfigurationAttribute"/> (set implicitly by the SDK
+    /// per configuration). Defaults to "Debug" when the attribute is absent.
+    /// </summary>
+    private static string GetCurrentBuildConfiguration()
+    {
+        var configAttr = typeof(CliToolTests).Assembly
+            .GetCustomAttribute<AssemblyConfigurationAttribute>();
+        return string.IsNullOrEmpty(configAttr?.Configuration)
+            ? "Debug"
+            : configAttr!.Configuration;
     }
 
     private static string FindRepoRoot()
