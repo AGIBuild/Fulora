@@ -75,4 +75,15 @@
     <PackageVersion Include="Nuke.Common" Version="10.1.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100-preview.2.26159.112" />
   </ItemGroup>
+  <ItemGroup Label="Transitive security pins">
+    <!--
+      Override the transitive 9.0.0 of System.Security.Cryptography.Xml pulled in by
+      Nuke.Common -> Nuke.ProjectModel -> Microsoft.Build.Tasks.Core (18.0.2).
+      9.0.0-9.0.14 are vulnerable to GHSA-37gx-xxp4-5rgx (CVE-2026-33116) and
+      GHSA-w3x6-4m5h-cxqf (CVE-2026-26171); fixed in 9.0.15.
+      CentralPackageTransitivePinningEnabled propagates this version to every
+      project that consumes the package transitively.
+    -->
+    <PackageVersion Include="System.Security.Cryptography.Xml" Version="9.0.15" />
+  </ItemGroup>
 </Project>

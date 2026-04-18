@@ -24,9 +24,7 @@
     "ExecutableTarget": {
       "type": "string",
       "enum": [
-        "AdoptionReadinessGovernance",
         "AutomationLaneReport",
-        "BridgeDistributionGovernance",
         "Build",
         "BuildAll",
         "BuildMutationScope",
@@ -34,19 +32,13 @@
         "CiMatrix",
         "CiPublish",
         "Clean",
-        "ContinuousTransitionGateGovernance",
         "ContractAutomation",
         "Coverage",
-        "DependencyVulnerabilityGovernance",
-        "DistributionReadinessGovernance",
         "E2ETests",
         "FastTestBuild",
         "FastUnitTests",
         "Format",
-        "GovernanceTestBuild",
-        "GovernanceUnitTests",
         "IntegrationTests",
-        "LayeringGovernance",
         "MutationTest",
         "NpmPublish",
         "NugetPackageTest",
@@ -57,14 +49,9 @@
         "Publish",
         "PublishTemplate",
         "RefreshLockFiles",
-        "ReleaseCloseoutSnapshot",
-        "ReleaseOrchestrationGovernance",
         "Restore",
         "RuntimeAutomation",
-        "RuntimeCriticalPathExecutionGovernance",
-        "SampleTemplatePackageReferenceGovernance",
         "ShowVersion",
-        "SolutionConsistencyGovernance",
         "Start",
         "StartAiChatApp",
         "StartAndroid",
@@ -75,13 +62,10 @@
         "StartVueApp",
         "TemplateE2E",
         "Test",
-        "TypeScriptDeclarationGovernance",
         "UnitTests",
         "UpdateVersion",
         "ValidateLinuxNativeAotNugetPackagePublish",
-        "ValidatePackage",
-        "WarningGovernance",
-        "WarningGovernanceSyntheticCheck"
+        "ValidatePackage"
       ]
     },
     "Verbosity": {
@@ -222,10 +206,6 @@
         "VersionSuffix": {
           "type": "string",
           "description": "Version suffix for pack/publish targets (e.g., ci.42, rc.1). Empty = stable release"
-        },
-        "WarningGovernanceInput": {
-          "type": "string",
-          "description": "Optional warning scanner input file path. If set, scanner consumes this file instead of live build output"
         }
       }
     },
