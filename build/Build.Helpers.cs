@@ -205,16 +205,11 @@ internal partial class BuildTask
             SrcDirectory / "Agibuild.Fulora.Runtime" / "Agibuild.Fulora.Runtime.csproj",
             SrcDirectory / "Agibuild.Fulora.DependencyInjection" / "Agibuild.Fulora.DependencyInjection.csproj",
 
-            // Platform adapters (always built — stub adapters compile on all platforms)
-            SrcDirectory / "Agibuild.Fulora.Adapters.Windows" / "Agibuild.Fulora.Adapters.Windows.csproj",
-            SrcDirectory / "Agibuild.Fulora.Adapters.Gtk" / "Agibuild.Fulora.Adapters.Gtk.csproj",
+            // Unified desktop platforms assembly (Windows/WebView2, macOS/WKWebView, Linux/WebKitGTK).
+            // Native shims for macOS (dylib) and Linux (so) are built conditionally by MSBuild targets
+            // inside the project, driven by OS detection at build time.
+            SrcDirectory / "Agibuild.Fulora.Platforms" / "Agibuild.Fulora.Platforms.csproj",
         };
-
-        // macOS adapter (native shim requires macOS host)
-        if (OperatingSystem.IsMacOS())
-        {
-            projects.Add(SrcDirectory / "Agibuild.Fulora.Adapters.MacOS" / "Agibuild.Fulora.Adapters.MacOS.csproj");
-        }
 
         // Android adapter (requires workload + Android SDK)
         if (await HasDotNetWorkloadAsync("android") && HasAndroidSdkInstalled())

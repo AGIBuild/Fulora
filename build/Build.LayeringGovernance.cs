@@ -22,9 +22,7 @@ internal partial class BuildTask
     private static readonly string[] FrameworkReferenceMarkers =
     [
         "Agibuild.Fulora.Avalonia",
-        "Agibuild.Fulora.Adapters.Windows",
-        "Agibuild.Fulora.Adapters.Gtk",
-        "Agibuild.Fulora.Adapters.MacOS",
+        "Agibuild.Fulora.Platforms",
         "Agibuild.Fulora.Adapters.Android",
         "Agibuild.Fulora.Adapters.iOS"
     ];
@@ -58,9 +56,7 @@ internal partial class BuildTask
             Roots:
             [
                 "src/Agibuild.Fulora.Avalonia",
-                "src/Agibuild.Fulora.Adapters.Windows",
-                "src/Agibuild.Fulora.Adapters.Gtk",
-                "src/Agibuild.Fulora.Adapters.MacOS",
+                "src/Agibuild.Fulora.Platforms",
                 "src/Agibuild.Fulora.Adapters.Android",
                 "src/Agibuild.Fulora.Adapters.iOS"
             ],

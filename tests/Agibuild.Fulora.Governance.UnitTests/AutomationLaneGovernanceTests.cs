@@ -209,7 +209,7 @@ public sealed class AutomationLaneGovernanceTests
     public void Webview2_reference_model_is_host_agnostic()
     {
         var repoRoot = FindRepoRoot();
-        var adapterProjectPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Adapters.Windows", "Agibuild.Fulora.Adapters.Windows.csproj");
+        var adapterProjectPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Platforms", "Agibuild.Fulora.Platforms.csproj");
         var packProjectPath = Path.Combine(repoRoot, "src", "Agibuild.Fulora.Avalonia", "Agibuild.Fulora.Avalonia.csproj");
 
         AssertFileExists(adapterProjectPath, WebView2ReferenceModel);

@@ -40,7 +40,7 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.5.10-local, )"
+          "Agibuild.Fulora.Core": "[1.5.11-local, )"
         }
       },
       "agibuild.fulora.core": {

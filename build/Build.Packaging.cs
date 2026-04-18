@@ -248,8 +248,7 @@ internal partial class BuildTask
                 ["lib/net10.0/Agibuild.Fulora.Adapters.Abstractions.dll"] = "Adapter abstractions",
                 ["lib/net10.0/Agibuild.Fulora.Runtime.dll"] = "Runtime host",
                 ["lib/net10.0/Agibuild.Fulora.DependencyInjection.dll"] = "DI extensions",
-                ["lib/net10.0/Agibuild.Fulora.Adapters.Windows.dll"] = "Windows adapter",
-                ["lib/net10.0/Agibuild.Fulora.Adapters.Gtk.dll"] = "Linux GTK adapter",
+                ["lib/net10.0/Agibuild.Fulora.Platforms.dll"] = "Desktop platforms assembly (Windows/macOS/Linux)",
                 ["buildTransitive/Agibuild.Fulora.Avalonia.targets"] = "MSBuild targets",
                 ["README.md"] = "Package readme",
             };
@@ -265,8 +264,6 @@ internal partial class BuildTask
 
             var conditionalFiles = new Dictionary<string, (string Description, bool ShouldExist)>
             {
-                ["lib/net10.0/Agibuild.Fulora.Adapters.MacOS.dll"] =
-                    ("macOS adapter", OperatingSystem.IsMacOS()),
                 ["runtimes/osx/native/libAgibuildWebViewWk.dylib"] =
                     ("macOS native shim", OperatingSystem.IsMacOS()),
                 ["runtimes/android/lib/net10.0-android36.0/Agibuild.Fulora.Adapters.Android.dll"] =

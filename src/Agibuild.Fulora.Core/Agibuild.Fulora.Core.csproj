@@ -13,9 +13,7 @@
     <!-- SPI types (IWebViewAdapterHost, NativeNavigationStarting*) are internal. -->
     <InternalsVisibleTo Include="Agibuild.Fulora.Adapters.Abstractions" />
     <InternalsVisibleTo Include="Agibuild.Fulora.Runtime" />
-    <InternalsVisibleTo Include="Agibuild.Fulora.Adapters.MacOS" />
-    <InternalsVisibleTo Include="Agibuild.Fulora.Adapters.Windows" />
-    <InternalsVisibleTo Include="Agibuild.Fulora.Adapters.Gtk" />
+    <InternalsVisibleTo Include="Agibuild.Fulora.Platforms" />
     <InternalsVisibleTo Include="Agibuild.Fulora.Adapters.Android" />
     <InternalsVisibleTo Include="Agibuild.Fulora.Adapters.iOS" />
     <InternalsVisibleTo Include="Agibuild.Fulora.Testing" />

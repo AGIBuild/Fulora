@@ -25,23 +25,25 @@
     <ProjectReference Include="..\Agibuild.Fulora.Integration.Tests\Agibuild.Fulora.Integration.Tests.csproj" />
   </ItemGroup>
 
-  <!-- Windows: use project reference so NuGet deps (WebView2) are in deps.json -->
+  <!-- Unified desktop platforms assembly. The same DLL is needed on Windows/macOS/Linux smoke hosts
+       so its ModuleInitializer registers the active-OS provider at runtime. -->
+  <!-- Windows: use project reference so NuGet deps (WebView2) are in deps.json. -->
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('windows'))">
-    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.Windows\Agibuild.Fulora.Adapters.Windows.csproj" />
+    <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj" />
   </ItemGroup>
 
-  <!-- Linux: copy GTK adapter and native shim so the adapter auto-registers at runtime -->
-  <Target Name="CopyLinuxGtkAdapterForSmoke"
+  <!-- Linux: copy Platforms assembly + GTK native shim so the adapter auto-registers at runtime. -->
+  <Target Name="CopyLinuxPlatformsAdapterForSmoke"
           AfterTargets="Build"
           Condition="$([MSBuild]::IsOSPlatform('linux'))">
     <ItemGroup>
-      <_GtkAdapter Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.Gtk.dll" />
-      <_GtkShim Include="..\..\..\src\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" />
+      <_PlatformsAdapter Include="..\..\..\src\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\Agibuild.Fulora.Platforms.dll" />
+      <_GtkShim Include="..\..\..\src\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" />
     </ItemGroup>
 
-    <Exec Command="dotnet build &quot;..\..\..\src\Agibuild.Fulora.Adapters.Gtk\Agibuild.Fulora.Adapters.Gtk.csproj&quot; -c $(Configuration)" />
+    <Exec Command="dotnet build &quot;..\..\..\src\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj&quot; -c $(Configuration)" />
 
-    <Copy SourceFiles="@(_GtkAdapter)"
+    <Copy SourceFiles="@(_PlatformsAdapter)"
           DestinationFolder="$(OutDir)"
           SkipUnchangedFiles="true" />
 
@@ -51,17 +53,17 @@
           SkipUnchangedFiles="true" />
   </Target>
 
-  <Target Name="CopyMacOSWebViewAdapterForSmoke"
+  <Target Name="CopyMacOSPlatformsAdapterForSmoke"
           AfterTargets="Build"
           Condition="$([MSBuild]::IsOSPlatform('osx'))">
     <ItemGroup>
-      <_MacAdapter Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.MacOS.dll" />
-      <_MacShim Include="..\..\..\src\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" />
+      <_PlatformsAdapter Include="..\..\..\src\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\Agibuild.Fulora.Platforms.dll" />
+      <_MacShim Include="..\..\..\src\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" />
     </ItemGroup>
 
-    <Exec Command="dotnet build &quot;..\..\..\src\Agibuild.Fulora.Adapters.MacOS\Agibuild.Fulora.Adapters.MacOS.csproj&quot; -c $(Configuration)" />
+    <Exec Command="dotnet build &quot;..\..\..\src\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj&quot; -c $(Configuration)" />
 
-    <Copy SourceFiles="@(_MacAdapter)"
+    <Copy SourceFiles="@(_PlatformsAdapter)"
           DestinationFolder="$(OutDir)"
           SkipUnchangedFiles="true" />
 

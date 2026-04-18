@@ -28,12 +28,10 @@
     otherwise remove "unused" adapters during publish trimming.
   -->
   <ItemGroup Condition="'$(PublishTrimmed)' == 'true'">
-    <TrimmerRootAssembly Include="Agibuild.Fulora.Adapters.MacOS"
-                         Condition="$([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('osx'))" />
-    <TrimmerRootAssembly Include="Agibuild.Fulora.Adapters.Windows"
-                         Condition="$([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('win'))" />
-    <TrimmerRootAssembly Include="Agibuild.Fulora.Adapters.Gtk"
-                         Condition="$([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('linux'))" />
+    <!-- Unified desktop platforms assembly: hosts Windows/WebView2, macOS/WKWebView, Linux/WebKitGTK adapters.
+         Module initializer picks the right adapter for the current OS at runtime. -->
+    <TrimmerRootAssembly Include="Agibuild.Fulora.Platforms"
+                         Condition="$([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('osx')) Or $([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('win')) Or $([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('linux'))" />
     <TrimmerRootAssembly Include="Agibuild.Fulora.Adapters.Android"
                          Condition="$([System.String]::Copy('$(AgibuildFuloraTargetRuntimeIdentifier)').StartsWith('android'))" />
     <TrimmerRootAssembly Include="Agibuild.Fulora.Adapters.iOS"

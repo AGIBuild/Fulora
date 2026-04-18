@@ -172,7 +172,7 @@ internal partial class BuildTask
             new[]
             {
                 await RunProcessCaptureAllAsync("dotnet",
-                    ["build", WindowsAdapterProject, "--configuration", Configuration, "--no-restore", "--no-incremental", "--nologo", "-v", "minimal"],
+                    ["build", PlatformsProject, "--configuration", Configuration, "--no-restore", "--no-incremental", "--nologo", "-v", "minimal"],
                     workingDirectory: RootDirectory,
                     timeout: buildTimeout),
                 await RunProcessCaptureAllAsync("dotnet",

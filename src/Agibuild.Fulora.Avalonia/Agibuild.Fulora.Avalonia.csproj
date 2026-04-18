@@ -58,14 +58,9 @@
     which would drop the core assemblies from the TPA list.
   -->
   <ItemGroup>
-    <!-- Windows adapter (always built — stub on non-Windows) -->
-    <None Include="..\Agibuild.Fulora.Adapters.Windows\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.Windows.dll" Pack="true" PackagePath="lib/net10.0/" />
-
-    <!-- Linux (GTK) adapter (always built — stub on non-Linux) -->
-    <None Include="..\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.Gtk.dll" Pack="true" PackagePath="lib/net10.0/" />
-
-    <!-- macOS adapter (conditional — requires macOS build or pre-built artifacts) -->
-    <None Include="..\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.MacOS.dll" Pack="true" PackagePath="lib/net10.0/" Condition="Exists('..\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\Agibuild.Fulora.Adapters.MacOS.dll')" />
+    <!-- Unified desktop platforms assembly (Windows/WebView2, macOS/WKWebView, Linux/WebKitGTK).
+         Provider registration runs via its ModuleInitializer and picks the right adapter at runtime. -->
+    <None Include="..\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\Agibuild.Fulora.Platforms.dll" Pack="true" PackagePath="lib/net10.0/" Condition="Exists('..\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\Agibuild.Fulora.Platforms.dll')" />
 
     <!-- Android adapter (different TFM — stays in runtimes/) -->
     <None Include="..\Agibuild.Fulora.Adapters.Android\bin\$(Configuration)\net10.0-android\Agibuild.Fulora.Adapters.Android.dll" Pack="true" PackagePath="runtimes/android/lib/net10.0-android36.0/" Condition="Exists('..\Agibuild.Fulora.Adapters.Android\bin\$(Configuration)\net10.0-android\Agibuild.Fulora.Adapters.Android.dll')" />
@@ -76,10 +71,10 @@
 
   <!-- Native assets stay in runtimes/ (these are NOT managed DLLs). -->
   <ItemGroup>
-    <None Include="..\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" Pack="true" PackagePath="runtimes/osx/native/" Condition="Exists('..\Agibuild.Fulora.Adapters.MacOS\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib')" />
+    <None Include="..\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib" Pack="true" PackagePath="runtimes/osx/native/" Condition="Exists('..\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib')" />
 
     <!-- Linux native WebKitGTK shim -->
-    <None Include="..\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" Pack="true" PackagePath="runtimes/linux-x64/native/" Condition="Exists('..\Agibuild.Fulora.Adapters.Gtk\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so')" />
+    <None Include="..\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so" Pack="true" PackagePath="runtimes/linux-x64/native/" Condition="Exists('..\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so')" />
   </ItemGroup>
 
   <!-- Build adapter dependencies before packing. Uses forward slashes for cross-platform compatibility. -->
@@ -88,11 +83,8 @@
     <Exec Command="dotnet build &quot;../Agibuild.Fulora.Adapters.Abstractions/Agibuild.Fulora.Adapters.Abstractions.csproj&quot; -c $(Configuration)" />
     <Exec Command="dotnet build &quot;../Agibuild.Fulora.Runtime/Agibuild.Fulora.Runtime.csproj&quot; -c $(Configuration)" />
     <Exec Command="dotnet build &quot;../Agibuild.Fulora.DependencyInjection/Agibuild.Fulora.DependencyInjection.csproj&quot; -c $(Configuration)" />
-    <Exec Command="dotnet build &quot;../Agibuild.Fulora.Adapters.Windows/Agibuild.Fulora.Adapters.Windows.csproj&quot; -c $(Configuration)" />
-    <!-- GTK: native shim might fail to compile if dev libs are missing; IgnoreExitCode to allow pack without it -->
-    <Exec Command="dotnet build &quot;../Agibuild.Fulora.Adapters.Gtk/Agibuild.Fulora.Adapters.Gtk.csproj&quot; -c $(Configuration)" IgnoreExitCode="true" />
-    <!-- macOS: requires macOS host for native shim compilation -->
-    <Exec Command="dotnet build &quot;../Agibuild.Fulora.Adapters.MacOS/Agibuild.Fulora.Adapters.MacOS.csproj&quot; -c $(Configuration)" Condition="$([MSBuild]::IsOSPlatform('osx'))" />
+    <!-- Unified desktop platforms assembly. Builds native shims (osx dylib, linux so) conditionally by OS. -->
+    <Exec Command="dotnet build &quot;../Agibuild.Fulora.Platforms/Agibuild.Fulora.Platforms.csproj&quot; -c $(Configuration)" />
     <!-- Android: requires Android workload; IgnoreExitCode to allow pack without it -->
     <Exec Command="dotnet build &quot;../Agibuild.Fulora.Adapters.Android/Agibuild.Fulora.Adapters.Android.csproj&quot; -c $(Configuration)" IgnoreExitCode="true" />
     <!-- iOS: requires macOS host + iOS workload; IgnoreExitCode to allow pack without it -->

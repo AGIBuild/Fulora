@@ -14,10 +14,8 @@
           <Exclude>
             [Agibuild.Fulora.Testing]*,
             [Agibuild.Fulora.UnitTests]*,
-            [Agibuild.Fulora.Adapters.MacOS]*,
-            [Agibuild.Fulora.Adapters.Windows]*,
+            [Agibuild.Fulora.Platforms]*,
             [Agibuild.Fulora.Adapters.Android]*,
-            [Agibuild.Fulora.Adapters.Gtk]*,
             [Agibuild.Fulora]*
           </Exclude>
           <ExcludeByAttribute>

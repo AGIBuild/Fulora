@@ -23,7 +23,7 @@ public sealed class GetAwaiterGetResultUsageTests
                     "WebViewCore",
                     "Synchronous compatibility wrapper for native handle retrieval while async-first migration is in progress.")
             ],
-            ["src/Agibuild.Fulora.Adapters.Windows/WindowsWebViewAdapter.cs"] =
+            ["src/Agibuild.Fulora.Platforms/Windows/WindowsWebViewAdapter.cs"] =
             [
                 new(
                     "decisionTask.AsTask().GetAwaiter().GetResult()",

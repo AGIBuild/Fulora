@@ -177,8 +177,8 @@ internal sealed partial class BuildTask : NukeBuild
     private static AbsolutePath DependencyInjectionProject =>
         SrcDirectory / "Agibuild.Fulora.DependencyInjection" / "Agibuild.Fulora.DependencyInjection.csproj";
 
-    private static AbsolutePath WindowsAdapterProject =>
-        SrcDirectory / "Agibuild.Fulora.Adapters.Windows" / "Agibuild.Fulora.Adapters.Windows.csproj";
+    private static AbsolutePath PlatformsProject =>
+        SrcDirectory / "Agibuild.Fulora.Platforms" / "Agibuild.Fulora.Platforms.csproj";
 
     private static AbsolutePath TestingProject =>
         TestsDirectory / "Agibuild.Fulora.Testing" / "Agibuild.Fulora.Testing.csproj";
