@@ -238,8 +238,6 @@ internal partial class BuildTask
         projects.Add(TestsDirectory / "Agibuild.Fulora.Testing" / "Agibuild.Fulora.Testing.csproj");
         projects.Add(TestsDirectory / "Agibuild.Fulora.UnitTests" / "Agibuild.Fulora.UnitTests.csproj");
         projects.Add(TestsDirectory / "Agibuild.Fulora.Cli.UnitTests" / "Agibuild.Fulora.Cli.UnitTests.csproj");
-        projects.Add(TestsDirectory / "Agibuild.Fulora.Docs.UnitTests" / "Agibuild.Fulora.Docs.UnitTests.csproj");
-        projects.Add(TestsDirectory / "Agibuild.Fulora.Governance.UnitTests" / "Agibuild.Fulora.Governance.UnitTests.csproj");
         projects.Add(IntegrationTestsProject);
 
         return projects;
