@@ -19,6 +19,7 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
     private static readonly Uri AboutBlank = new("about:blank");
 
     private readonly IWebViewAdapter _adapter;
+    private readonly AdapterCapabilities _capabilities;
     private readonly IWebViewDispatcher _dispatcher;
     private readonly ILogger<WebViewCore> _logger;
     private readonly IWebViewEnvironmentOptions _environmentOptions;
@@ -127,14 +128,20 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
 
         _adapter.Initialize(this);
         _logger.LogDebug("Adapter initialized");
-        _capabilityDetectionRuntime = new WebViewCoreCapabilityDetectionRuntime(_adapter, _environmentOptions, _logger);
+
+        // One-shot capability negotiation: probe every optional adapter interface exactly once
+        // here, then pass the resulting value object to every runtime that needs feature gating.
+        // No other site in the codebase should perform `adapter as IXxxAdapter` tests.
+        _capabilities = AdapterCapabilities.From(_adapter);
+
+        _capabilityDetectionRuntime = new WebViewCoreCapabilityDetectionRuntime(_capabilities, _environmentOptions, _logger);
 
         _capabilityDetectionRuntime.ApplyEnvironmentOptions();
         _cookieManager = _capabilityDetectionRuntime.CreateCookieManager(this);
         _capabilityDetectionRuntime.RegisterConfiguredCustomSchemes();
         _commandManager = _capabilityDetectionRuntime.CreateCommandManager(this);
 
-        _featureRuntime = new WebViewCoreFeatureRuntime(this, _adapter, _dispatcher, _logger, _environmentOptions);
+        _featureRuntime = new WebViewCoreFeatureRuntime(this, _adapter, _capabilities, _dispatcher, _logger, _environmentOptions);
         _bridgeRuntime = new WebViewCoreBridgeRuntime(this, _dispatcher, _logger, _environmentOptions.EnableDevTools);
         _capabilityRuntime = new WebViewCoreCapabilityRuntime(_featureRuntime, _bridgeRuntime, _cookieManager, _commandManager);
         _adapterEventRuntime = new WebViewCoreAdapterEventRuntime(this, _dispatcher, _logger);
@@ -142,6 +149,7 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
         _spaHostingRuntime = new WebViewCoreSpaHostingRuntime(this, _logger);
         _eventWiringRuntime = new WebViewCoreEventWiringRuntime(
             _adapter,
+            _capabilities,
             _logger,
             new WebViewAdapterEventRouter(
                 OnNavigationCompleted: _navigationRuntime.HandleAdapterNavigationCompleted,
@@ -580,8 +588,7 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
 
     void IWebViewCoreSpaHostingHost.RegisterCustomScheme(CustomSchemeRegistration registration)
     {
-        if (_adapter is ICustomSchemeAdapter customSchemeAdapter)
-            customSchemeAdapter.RegisterCustomSchemes([registration]);
+        _capabilities.CustomScheme?.RegisterCustomSchemes([registration]);
     }
 
     void IWebViewCoreSpaHostingHost.AddWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler)

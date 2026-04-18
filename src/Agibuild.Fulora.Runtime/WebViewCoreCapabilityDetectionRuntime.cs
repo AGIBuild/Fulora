@@ -10,29 +10,30 @@ namespace Agibuild.Fulora;
 /// </summary>
 /// <remarks>
 /// Intentionally not <see cref="IDisposable"/>: the instance holds only injected references
-/// (platform adapter, options, logger) which are owned by <see cref="WebViewCore"/> and the caller —
-/// never allocates unmanaged handles, timers, subscriptions, or background tasks. Safe to drop with
-/// the owning <see cref="WebViewCore"/> at GC time.
+/// (platform adapter capabilities, options, logger) which are owned by <see cref="WebViewCore"/>
+/// and the caller — never allocates unmanaged handles, timers, subscriptions, or background
+/// tasks. Safe to drop with the owning <see cref="WebViewCore"/> at GC time.
 /// </remarks>
 internal sealed class WebViewCoreCapabilityDetectionRuntime
 {
-    private readonly IWebViewAdapter _adapter;
+    private readonly AdapterCapabilities _capabilities;
     private readonly IWebViewEnvironmentOptions _environmentOptions;
     private readonly ILogger _logger;
 
     public WebViewCoreCapabilityDetectionRuntime(
-        IWebViewAdapter adapter,
+        AdapterCapabilities capabilities,
         IWebViewEnvironmentOptions environmentOptions,
         ILogger logger)
     {
-        _adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+        _capabilities = capabilities;
         _environmentOptions = environmentOptions ?? throw new ArgumentNullException(nameof(environmentOptions));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public void ApplyEnvironmentOptions()
     {
-        if (_adapter is not IWebViewAdapterOptions adapterOptions)
+        var adapterOptions = _capabilities.Options;
+        if (adapterOptions is null)
             return;
 
         adapterOptions.ApplyEnvironmentOptions(_environmentOptions);
@@ -44,7 +45,8 @@ internal sealed class WebViewCoreCapabilityDetectionRuntime
 
     public void RegisterConfiguredCustomSchemes()
     {
-        if (_adapter is not ICustomSchemeAdapter customSchemeAdapter)
+        var customSchemeAdapter = _capabilities.CustomScheme;
+        if (customSchemeAdapter is null)
             return;
 
         var schemes = _environmentOptions.CustomSchemes;
@@ -57,7 +59,8 @@ internal sealed class WebViewCoreCapabilityDetectionRuntime
 
     public ICookieManager? CreateCookieManager(IWebViewCoreOperationHost host)
     {
-        if (_adapter is not ICookieAdapter cookieAdapter)
+        var cookieAdapter = _capabilities.Cookie;
+        if (cookieAdapter is null)
             return null;
 
         var manager = new RuntimeCookieManager(cookieAdapter, host, _logger);
@@ -67,7 +70,8 @@ internal sealed class WebViewCoreCapabilityDetectionRuntime
 
     public ICommandManager? CreateCommandManager(IWebViewCoreOperationHost host)
     {
-        if (_adapter is not ICommandAdapter commandAdapter)
+        var commandAdapter = _capabilities.Command;
+        if (commandAdapter is null)
             return null;
 
         var manager = new RuntimeCommandManager(commandAdapter, host);

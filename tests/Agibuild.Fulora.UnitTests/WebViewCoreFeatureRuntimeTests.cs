@@ -21,6 +21,7 @@ public sealed class WebViewCoreFeatureRuntimeTests
         using var runtime = new WebViewCoreFeatureRuntime(
             host,
             adapter,
+            AdapterCapabilities.From(adapter),
             _dispatcher,
             NullLogger.Instance,
             options);
@@ -32,17 +33,21 @@ public sealed class WebViewCoreFeatureRuntimeTests
     [Fact]
     public void HasDragDropSupport_tracks_adapter_capability()
     {
+        var bareAdapter = MockWebViewAdapter.Create();
         using var noDragDropRuntime = new WebViewCoreFeatureRuntime(
             new TestFeatureHost(),
-            MockWebViewAdapter.Create(),
+            bareAdapter,
+            AdapterCapabilities.From(bareAdapter),
             _dispatcher,
             NullLogger.Instance,
             new WebViewEnvironmentOptions());
         Assert.False(noDragDropRuntime.HasDragDropSupport);
 
+        var dragDropAdapter = MockWebViewAdapter.CreateWithDragDrop();
         using var dragDropRuntime = new WebViewCoreFeatureRuntime(
             new TestFeatureHost(),
-            MockWebViewAdapter.CreateWithDragDrop(),
+            dragDropAdapter,
+            AdapterCapabilities.From(dragDropAdapter),
             _dispatcher,
             NullLogger.Instance,
             new WebViewEnvironmentOptions());
@@ -58,6 +63,7 @@ public sealed class WebViewCoreFeatureRuntimeTests
         using var runtime = new WebViewCoreFeatureRuntime(
             host,
             adapter,
+            AdapterCapabilities.From(adapter),
             _dispatcher,
             NullLogger.Instance,
             new WebViewEnvironmentOptions());

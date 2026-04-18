@@ -41,6 +41,7 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         var adapter = new FullAdapterStub();
         using var _ = new WebViewCoreEventWiringRuntime(
             adapter,
+            AdapterCapabilities.From(adapter),
             Logger(),
             Router(
                 onNavigationCompleted: _ => navigation++,
@@ -86,6 +87,7 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         var adapter = new FullAdapterStub();
         var runtime = new WebViewCoreEventWiringRuntime(
             adapter,
+            AdapterCapabilities.From(adapter),
             Logger(),
             Router(
                 onNavigationCompleted: _ => navigation++,
@@ -127,6 +129,7 @@ public sealed class WebViewCoreEventWiringRuntimeTests
 
         var runtime = new WebViewCoreEventWiringRuntime(
             adapter,
+            AdapterCapabilities.From(adapter),
             Logger(),
             Router(
                 onDownloadRequested: _ => download++,
@@ -146,6 +149,7 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewCoreEventWiringRuntime(
                 adapter,
+                AdapterCapabilities.From(adapter),
                 Logger(),
                 new WebViewAdapterEventRouter(
                     OnNavigationCompleted: null!,
@@ -160,8 +164,9 @@ public sealed class WebViewCoreEventWiringRuntimeTests
     [Fact]
     public void Constructor_rejects_null_adapter()
     {
+        var adapter = new FullAdapterStub();
         Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreEventWiringRuntime(null!, Logger(), Router()));
+            new WebViewCoreEventWiringRuntime(null!, AdapterCapabilities.From(adapter), Logger(), Router()));
     }
 
     [Fact]
@@ -169,7 +174,7 @@ public sealed class WebViewCoreEventWiringRuntimeTests
     {
         var adapter = new FullAdapterStub();
         Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreEventWiringRuntime(adapter, null!, Router()));
+            new WebViewCoreEventWiringRuntime(adapter, AdapterCapabilities.From(adapter), null!, Router()));
     }
 
 #pragma warning disable CS0067 // Events that are unused on the stub's Raise path but required by the interface contract.

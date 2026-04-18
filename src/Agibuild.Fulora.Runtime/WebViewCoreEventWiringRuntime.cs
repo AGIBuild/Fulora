@@ -12,6 +12,8 @@ namespace Agibuild.Fulora;
 internal sealed class WebViewCoreEventWiringRuntime : IDisposable
 {
     private readonly IWebViewAdapter _adapter;
+    private readonly IDownloadAdapter? _downloadAdapter;
+    private readonly IPermissionAdapter? _permissionAdapter;
     private readonly ILogger _logger;
 
     private readonly EventHandler<NavigationCompletedEventArgs> _navigationCompleted;
@@ -24,10 +26,13 @@ internal sealed class WebViewCoreEventWiringRuntime : IDisposable
 
     public WebViewCoreEventWiringRuntime(
         IWebViewAdapter adapter,
+        AdapterCapabilities capabilities,
         ILogger logger,
         WebViewAdapterEventRouter router)
     {
         _adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+        _downloadAdapter = capabilities.Download;
+        _permissionAdapter = capabilities.Permission;
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ArgumentNullException.ThrowIfNull(router.OnNavigationCompleted);
         ArgumentNullException.ThrowIfNull(router.OnNewWindowRequested);
@@ -49,17 +54,17 @@ internal sealed class WebViewCoreEventWiringRuntime : IDisposable
         _adapter.WebResourceRequested += _webResourceRequested;
         _adapter.EnvironmentRequested += _environmentRequested;
 
-        if (_adapter is IDownloadAdapter downloadAdapter)
+        if (_downloadAdapter is not null)
         {
             _downloadRequested = (_, e) => router.OnDownloadRequested(e);
-            downloadAdapter.DownloadRequested += _downloadRequested;
+            _downloadAdapter.DownloadRequested += _downloadRequested;
             _logger.LogDebug("Download support: enabled");
         }
 
-        if (_adapter is IPermissionAdapter permissionAdapter)
+        if (_permissionAdapter is not null)
         {
             _permissionRequested = (_, e) => router.OnPermissionRequested(e);
-            permissionAdapter.PermissionRequested += _permissionRequested;
+            _permissionAdapter.PermissionRequested += _permissionRequested;
             _logger.LogDebug("Permission support: enabled");
         }
     }
@@ -72,10 +77,10 @@ internal sealed class WebViewCoreEventWiringRuntime : IDisposable
         _adapter.WebResourceRequested -= _webResourceRequested;
         _adapter.EnvironmentRequested -= _environmentRequested;
 
-        if (_adapter is IDownloadAdapter downloadAdapter && _downloadRequested is not null)
-            downloadAdapter.DownloadRequested -= _downloadRequested;
+        if (_downloadAdapter is not null && _downloadRequested is not null)
+            _downloadAdapter.DownloadRequested -= _downloadRequested;
 
-        if (_adapter is IPermissionAdapter permissionAdapter && _permissionRequested is not null)
-            permissionAdapter.PermissionRequested -= _permissionRequested;
+        if (_permissionAdapter is not null && _permissionRequested is not null)
+            _permissionAdapter.PermissionRequested -= _permissionRequested;
     }
 }

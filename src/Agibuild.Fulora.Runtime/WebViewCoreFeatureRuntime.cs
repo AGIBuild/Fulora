@@ -37,6 +37,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
 
     private readonly IWebViewCoreFeatureHost _host;
     private readonly IWebViewAdapter _adapter;
+    private readonly AdapterCapabilities _capabilities;
     private readonly IWebViewDispatcher _dispatcher;
     private readonly ILogger _logger;
     private readonly IScreenshotAdapter? _screenshotAdapter;
@@ -51,26 +52,28 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
     public WebViewCoreFeatureRuntime(
         IWebViewCoreFeatureHost host,
         IWebViewAdapter adapter,
+        AdapterCapabilities capabilities,
         IWebViewDispatcher dispatcher,
         ILogger logger,
         IWebViewEnvironmentOptions environmentOptions)
     {
         _host = host ?? throw new ArgumentNullException(nameof(host));
         _adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+        _capabilities = capabilities;
         _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ArgumentNullException.ThrowIfNull(environmentOptions);
 
-        _screenshotAdapter = _adapter as IScreenshotAdapter;
+        _screenshotAdapter = _capabilities.Screenshot;
         _logger.LogDebug("Screenshot support: {Supported}", _screenshotAdapter is not null);
 
-        _printAdapter = _adapter as IPrintAdapter;
+        _printAdapter = _capabilities.Print;
         _logger.LogDebug("Print support: {Supported}", _printAdapter is not null);
 
-        _findInPageAdapter = _adapter as IFindInPageAdapter;
+        _findInPageAdapter = _capabilities.FindInPage;
         _logger.LogDebug("Find-in-page support: {Supported}", _findInPageAdapter is not null);
 
-        _zoomAdapter = _adapter as IZoomAdapter;
+        _zoomAdapter = _capabilities.Zoom;
         if (_zoomAdapter is not null)
         {
             _zoomAdapter.ZoomFactorChanged += OnAdapterZoomFactorChanged;
@@ -78,8 +81,8 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
 
         _logger.LogDebug("Zoom support: {Supported}", _zoomAdapter is not null);
 
-        _preloadScriptAdapter = _adapter as IPreloadScriptAdapter;
-        _asyncPreloadScriptAdapter = _adapter as IAsyncPreloadScriptAdapter;
+        _preloadScriptAdapter = _capabilities.PreloadScript;
+        _asyncPreloadScriptAdapter = _capabilities.AsyncPreloadScript;
         if (_preloadScriptAdapter is not null)
         {
             var globalScripts = environmentOptions.PreloadScripts;
@@ -96,7 +99,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
 
         _logger.LogDebug("Preload script support: {Supported}", _preloadScriptAdapter is not null);
 
-        _contextMenuAdapter = _adapter as IContextMenuAdapter;
+        _contextMenuAdapter = _capabilities.ContextMenu;
         if (_contextMenuAdapter is not null)
         {
             _contextMenuAdapter.ContextMenuRequested += OnAdapterContextMenuRequested;
@@ -104,7 +107,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
 
         _logger.LogDebug("Context menu support: {Supported}", _contextMenuAdapter is not null);
 
-        _dragDropAdapter = _adapter as IDragDropAdapter;
+        _dragDropAdapter = _capabilities.DragDrop;
         if (_dragDropAdapter is not null)
         {
             _dragDropAdapter.DragEntered += OnAdapterDragEntered;
@@ -123,7 +126,8 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(OpenDevToolsAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_adapter is IDevToolsAdapter devTools)
+            var devTools = _capabilities.DevTools;
+            if (devTools is not null)
             {
                 devTools.OpenDevTools();
             }
@@ -141,11 +145,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(CloseDevToolsAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_adapter is IDevToolsAdapter devTools)
-            {
-                devTools.CloseDevTools();
-            }
-
+            _capabilities.DevTools?.CloseDevTools();
             return Task.CompletedTask;
         });
     }
@@ -155,7 +155,8 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(IsDevToolsOpenAsync), () =>
         {
             _host.ThrowIfDisposed();
-            return Task.FromResult(_adapter is IDevToolsAdapter devTools && devTools.IsDevToolsOpen);
+            var devTools = _capabilities.DevTools;
+            return Task.FromResult(devTools is not null && devTools.IsDevToolsOpen);
         });
     }
 
@@ -291,7 +292,8 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
             return Task.FromResult<INativeHandle?>(null);
         }
 
-        if (_adapter is not INativeWebViewHandleProvider provider)
+        var provider = _capabilities.NativeHandleProvider;
+        if (provider is null)
         {
             return Task.FromResult<INativeHandle?>(null);
         }
@@ -307,7 +309,8 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
     public void SetCustomUserAgent(string? userAgent)
     {
         _host.ThrowIfDisposed();
-        if (_adapter is not IWebViewAdapterOptions adapterOptions)
+        var adapterOptions = _capabilities.Options;
+        if (adapterOptions is null)
         {
             return;
         }

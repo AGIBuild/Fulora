@@ -13,7 +13,7 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     {
         var adapter = MockWebViewAdapter.CreateWithOptions();
         var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            adapter,
+            AdapterCapabilities.From(adapter),
             new WebViewEnvironmentOptions { CustomUserAgent = "Fulora/Test" },
             NullLogger.Instance);
 
@@ -28,7 +28,7 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     {
         var adapter = MockWebViewAdapter.CreateWithCustomSchemes();
         var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            adapter,
+            AdapterCapabilities.From(adapter),
             new WebViewEnvironmentOptions
             {
                 CustomSchemes =
@@ -49,7 +49,10 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     {
         var adapter = MockWebViewAdapter.CreateWithCookies();
         var owner = new WebViewCore(adapter, _dispatcher);
-        var runtime = new WebViewCoreCapabilityDetectionRuntime(adapter, new WebViewEnvironmentOptions(), NullLogger.Instance);
+        var runtime = new WebViewCoreCapabilityDetectionRuntime(
+            AdapterCapabilities.From(adapter),
+            new WebViewEnvironmentOptions(),
+            NullLogger.Instance);
 
         var manager = runtime.CreateCookieManager(owner);
 
@@ -61,7 +64,10 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     {
         var adapter = MockWebViewAdapter.CreateWithCommands();
         var owner = new WebViewCore(adapter, _dispatcher);
-        var runtime = new WebViewCoreCapabilityDetectionRuntime(adapter, new WebViewEnvironmentOptions(), NullLogger.Instance);
+        var runtime = new WebViewCoreCapabilityDetectionRuntime(
+            AdapterCapabilities.From(adapter),
+            new WebViewEnvironmentOptions(),
+            NullLogger.Instance);
 
         var manager = runtime.CreateCommandManager(owner);
 
