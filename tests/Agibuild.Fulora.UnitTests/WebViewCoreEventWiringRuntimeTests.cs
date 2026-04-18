@@ -1,4 +1,5 @@
 using Agibuild.Fulora.Adapters.Abstractions;
+using Agibuild.Fulora.Testing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -41,7 +42,6 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         var adapter = new FullAdapterStub();
         using var _ = new WebViewCoreEventWiringRuntime(
             adapter,
-            AdapterCapabilities.From(adapter),
             Logger(),
             Router(
                 onNavigationCompleted: _ => navigation++,
@@ -87,7 +87,6 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         var adapter = new FullAdapterStub();
         var runtime = new WebViewCoreEventWiringRuntime(
             adapter,
-            AdapterCapabilities.From(adapter),
             Logger(),
             Router(
                 onNavigationCompleted: _ => navigation++,
@@ -118,30 +117,6 @@ public sealed class WebViewCoreEventWiringRuntimeTests
     }
 
     [Fact]
-    public void Core_only_adapter_skips_optional_download_and_permission_subscriptions()
-    {
-        // When the adapter does not implement IDownloadAdapter/IPermissionAdapter, wiring must
-        // skip those subscriptions silently. Dispose must still succeed and not attempt to
-        // unhook handlers that were never attached.
-        var download = 0;
-        var permission = 0;
-        var adapter = new CoreOnlyAdapterStub();
-
-        var runtime = new WebViewCoreEventWiringRuntime(
-            adapter,
-            AdapterCapabilities.From(adapter),
-            Logger(),
-            Router(
-                onDownloadRequested: _ => download++,
-                onPermissionRequested: _ => permission++));
-
-        runtime.Dispose();
-
-        Assert.Equal(0, download);
-        Assert.Equal(0, permission);
-    }
-
-    [Fact]
     public void Constructor_rejects_null_router_actions()
     {
         var adapter = new FullAdapterStub();
@@ -149,7 +124,6 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         Assert.Throws<ArgumentNullException>(() =>
             new WebViewCoreEventWiringRuntime(
                 adapter,
-                AdapterCapabilities.From(adapter),
                 Logger(),
                 new WebViewAdapterEventRouter(
                     OnNavigationCompleted: null!,
@@ -164,9 +138,8 @@ public sealed class WebViewCoreEventWiringRuntimeTests
     [Fact]
     public void Constructor_rejects_null_adapter()
     {
-        var adapter = new FullAdapterStub();
         Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreEventWiringRuntime(null!, AdapterCapabilities.From(adapter), Logger(), Router()));
+            new WebViewCoreEventWiringRuntime(null!, Logger(), Router()));
     }
 
     [Fact]
@@ -174,75 +147,20 @@ public sealed class WebViewCoreEventWiringRuntimeTests
     {
         var adapter = new FullAdapterStub();
         Assert.Throws<ArgumentNullException>(() =>
-            new WebViewCoreEventWiringRuntime(adapter, AdapterCapabilities.From(adapter), null!, Router()));
+            new WebViewCoreEventWiringRuntime(adapter, null!, Router()));
     }
 
-#pragma warning disable CS0067 // Events that are unused on the stub's Raise path but required by the interface contract.
-    private sealed class CoreOnlyAdapterStub : IWebViewAdapter
+    /// <summary>
+    /// After the P0 contract consolidation <see cref="IDownloadAdapter"/> and
+    /// <see cref="IPermissionAdapter"/> are mandatory facets of
+    /// <see cref="IWebViewAdapter"/>. This stub re-declares both interfaces so it
+    /// can raise the corresponding events from the test body; it is the canonical
+    /// adapter used by every test in this file.
+    /// </summary>
+    private sealed class FullAdapterStub : StubWebViewAdapter, IDownloadAdapter, IPermissionAdapter
     {
-        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
-        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested;
-        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
-        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
-        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
-
-        public void Initialize(IWebViewAdapterHost host) { }
-        public void Attach(INativeHandle parentHandle) { }
-        public void Detach() { }
-
-        public Task NavigateAsync(Guid navigationId, Uri uri) => Task.CompletedTask;
-        public Task NavigateToStringAsync(Guid navigationId, string html) => Task.CompletedTask;
-        public Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl) => Task.CompletedTask;
-        public Task<string?> InvokeScriptAsync(string script) => Task.FromResult<string?>(null);
-
-        public bool CanGoBack => false;
-        public bool CanGoForward => false;
-        public bool GoBack(Guid navigationId) => false;
-        public bool GoForward(Guid navigationId) => false;
-        public bool Refresh(Guid navigationId) => false;
-        public bool Stop() => false;
-    }
-
-    private sealed class FullAdapterStub : IWebViewAdapter, IDownloadAdapter, IPermissionAdapter
-    {
-        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
-        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested;
-        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
-        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
-        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
         public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested;
         public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested;
-
-        public void Initialize(IWebViewAdapterHost host) { }
-        public void Attach(INativeHandle parentHandle) { }
-        public void Detach() { }
-
-        public Task NavigateAsync(Guid navigationId, Uri uri) => Task.CompletedTask;
-        public Task NavigateToStringAsync(Guid navigationId, string html) => Task.CompletedTask;
-        public Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl) => Task.CompletedTask;
-        public Task<string?> InvokeScriptAsync(string script) => Task.FromResult<string?>(null);
-
-        public bool CanGoBack => false;
-        public bool CanGoForward => false;
-        public bool GoBack(Guid navigationId) => false;
-        public bool GoForward(Guid navigationId) => false;
-        public bool Refresh(Guid navigationId) => false;
-        public bool Stop() => false;
-
-        public void RaiseNavigationCompleted(NavigationCompletedEventArgs args)
-            => NavigationCompleted?.Invoke(this, args);
-
-        public void RaiseNewWindowRequested(NewWindowRequestedEventArgs args)
-            => NewWindowRequested?.Invoke(this, args);
-
-        public void RaiseWebMessageReceived(WebMessageReceivedEventArgs args)
-            => WebMessageReceived?.Invoke(this, args);
-
-        public void RaiseWebResourceRequested(WebResourceRequestedEventArgs args)
-            => WebResourceRequested?.Invoke(this, args);
-
-        public void RaiseEnvironmentRequested(EnvironmentRequestedEventArgs args)
-            => EnvironmentRequested?.Invoke(this, args);
 
         public void RaiseDownloadRequested(DownloadRequestedEventArgs args)
             => DownloadRequested?.Invoke(this, args);
@@ -250,5 +168,4 @@ public sealed class WebViewCoreEventWiringRuntimeTests
         public void RaisePermissionRequested(PermissionRequestedEventArgs args)
             => PermissionRequested?.Invoke(this, args);
     }
-#pragma warning restore CS0067
 }

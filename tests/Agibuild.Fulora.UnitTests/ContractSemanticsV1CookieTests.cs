@@ -17,17 +17,6 @@ public sealed class ContractSemanticsV1CookieTests
     }
 
     [Fact]
-    public void TryGetCookieManager_returns_null_when_adapter_lacks_ICookieAdapter()
-    {
-        var dispatcher = new TestDispatcher();
-        var adapter = MockWebViewAdapter.Create();
-        var webView = new WebViewCore(adapter, dispatcher);
-
-        var cm = webView.TryGetCookieManager();
-        Assert.Null(cm);
-    }
-
-    [Fact]
     public async Task Cookie_CRUD_set_get_delete_clear()
     {
         var dispatcher = new TestDispatcher();

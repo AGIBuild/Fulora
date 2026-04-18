@@ -240,8 +240,7 @@ public sealed partial class RuntimeCoverageTests
 
     // ==================== Mock DevTools adapter ====================
 
-#pragma warning disable CS0067 // Events are required by interface but not used in test mock
-    private sealed class MockDevToolsAdapter : IWebViewAdapter, IDevToolsAdapter
+    private sealed class MockDevToolsAdapter : StubWebViewAdapter, IDevToolsAdapter
     {
         public bool DevToolsOpened { get; private set; }
         public bool DevToolsClosed { get; private set; }
@@ -249,27 +248,5 @@ public sealed partial class RuntimeCoverageTests
 
         public void OpenDevTools() { DevToolsOpened = true; IsDevToolsOpen = true; }
         public void CloseDevTools() { DevToolsClosed = true; IsDevToolsOpen = false; }
-
-        // IWebViewAdapter minimal implementation
-        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
-        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested;
-        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
-        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
-        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
-
-        public void Initialize(IWebViewAdapterHost host) { }
-        public void Attach(INativeHandle parentHandle) { }
-        public void Detach() { }
-        public Task NavigateAsync(Guid navigationId, Uri uri) => Task.CompletedTask;
-        public Task NavigateToStringAsync(Guid navigationId, string html) => Task.CompletedTask;
-        public Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl) => Task.CompletedTask;
-        public Task<string?> InvokeScriptAsync(string script) => Task.FromResult<string?>(null);
-        public bool CanGoBack => false;
-        public bool CanGoForward => false;
-        public bool GoBack(Guid navigationId) => false;
-        public bool GoForward(Guid navigationId) => false;
-        public bool Refresh(Guid navigationId) => false;
-        public bool Stop() => false;
     }
-#pragma warning restore CS0067
 }

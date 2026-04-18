@@ -177,13 +177,6 @@ public sealed class WebDialogTests
     }
 
     [Fact]
-    public void TryGetCookieManager_returns_null_for_adapter_without_cookies()
-    {
-        var (dialog, _, _) = CreateDialog();
-        Assert.Null(dialog.TryGetCookieManager());
-    }
-
-    [Fact]
     public void Show_with_owner_delegates_to_host()
     {
         var (dialog, host, _) = CreateDialog();
@@ -358,13 +351,6 @@ public sealed class WebDialogTests
         dialog.Dispose(); // second dispose should be no-op
 
         Assert.Equal(1, host.CloseCallCount);
-    }
-
-    [Fact]
-    public void TryGetCommandManager_returns_null_for_basic_adapter()
-    {
-        var (dialog, _, _) = CreateDialog();
-        Assert.Null(dialog.TryGetCommandManager());
     }
 
     [Fact]

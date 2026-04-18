@@ -348,6 +348,86 @@ internal class MockWebViewAdapter : IWebViewAdapter
 
     /// <summary>Creates a mock that supports drag-and-drop events.</summary>
     public static MockWebViewAdapterWithDragDrop CreateWithDragDrop() => new();
+
+    // -----------------------------------------------------------------------
+    // Default no-op implementations for every MANDATORY capability facet that
+    // IWebViewAdapter now inherits. Implemented explicitly so that derived
+    // mocks re-declaring a facet interface (e.g. MockWebViewAdapterWithCookies
+    // : MockWebViewAdapter, ICookieAdapter) can supply an observable public
+    // override via ordinary interface-mapping, taking precedence over these
+    // defaults without any `new`/`override` boilerplate.
+    // -----------------------------------------------------------------------
+
+    INativeHandle? INativeWebViewHandleProvider.TryGetWebViewHandle() => null;
+
+    void IWebViewAdapterOptions.ApplyEnvironmentOptions(IWebViewEnvironmentOptions options) { }
+
+    void IWebViewAdapterOptions.SetCustomUserAgent(string? userAgent) { }
+
+    Task<IReadOnlyList<WebViewCookie>> ICookieAdapter.GetCookiesAsync(Uri uri)
+        => Task.FromResult<IReadOnlyList<WebViewCookie>>([]);
+
+    Task ICookieAdapter.SetCookieAsync(WebViewCookie cookie) => Task.CompletedTask;
+
+    Task ICookieAdapter.DeleteCookieAsync(WebViewCookie cookie) => Task.CompletedTask;
+
+    Task ICookieAdapter.ClearAllCookiesAsync() => Task.CompletedTask;
+
+    void ICommandAdapter.ExecuteCommand(WebViewCommand command) { }
+
+    void ICustomSchemeAdapter.RegisterCustomSchemes(IReadOnlyList<CustomSchemeRegistration> schemes) { }
+
+    event EventHandler<DownloadRequestedEventArgs>? IDownloadAdapter.DownloadRequested
+    {
+        add { }
+        remove { }
+    }
+
+    event EventHandler<PermissionRequestedEventArgs>? IPermissionAdapter.PermissionRequested
+    {
+        add { }
+        remove { }
+    }
+
+    Task<byte[]> IScreenshotAdapter.CaptureScreenshotAsync()
+        => Task.FromResult(Array.Empty<byte>());
+
+    Task<byte[]> IPrintAdapter.PrintToPdfAsync(PdfPrintOptions? options)
+        => Task.FromResult(Array.Empty<byte>());
+
+    Task<FindInPageEventArgs> IFindInPageAdapter.FindAsync(string text, FindInPageOptions? options)
+        => Task.FromResult(new FindInPageEventArgs());
+
+    void IFindInPageAdapter.StopFind(bool clearHighlights) { }
+
+    double IZoomAdapter.ZoomFactor
+    {
+        get => 1.0;
+        set { }
+    }
+
+    event EventHandler<double>? IZoomAdapter.ZoomFactorChanged
+    {
+        add { }
+        remove { }
+    }
+
+    string IPreloadScriptAdapter.AddPreloadScript(string javaScript)
+        => Guid.NewGuid().ToString("N");
+
+    void IPreloadScriptAdapter.RemovePreloadScript(string scriptId) { }
+
+    event EventHandler<ContextMenuRequestedEventArgs>? IContextMenuAdapter.ContextMenuRequested
+    {
+        add { }
+        remove { }
+    }
+
+    void IDevToolsAdapter.OpenDevTools() { }
+
+    void IDevToolsAdapter.CloseDevTools() { }
+
+    bool IDevToolsAdapter.IsDevToolsOpen => false;
 }
 
 /// <summary>Mock adapter that also implements <see cref="IWebViewAdapterOptions"/> for environment options testing.</summary>

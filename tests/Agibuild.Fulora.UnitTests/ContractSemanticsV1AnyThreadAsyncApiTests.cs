@@ -175,7 +175,7 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
     }
 
     private sealed class AnyThreadCaptureAdapter :
-        IWebViewAdapter,
+        StubWebViewAdapter,
         IDevToolsAdapter,
         IScreenshotAdapter,
         IPrintAdapter,
@@ -193,8 +193,6 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
         private Uri? _pendingNavigationUri;
         private double _zoomFactor = 1.0;
 
-        public bool CanGoBack { get; set; }
-        public bool CanGoForward { get; set; }
         public bool AutoCompleteNavigation { get; set; } = true;
         public bool HasPendingNavigation => _pendingNavigationId.HasValue;
 
@@ -222,19 +220,14 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
         public int? DeleteCookieThreadId { get; private set; }
         public int? ClearCookiesThreadId { get; private set; }
 
-        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
-        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested { add { } remove { } }
-        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived { add { } remove { } }
-        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested { add { } remove { } }
-        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested { add { } remove { } }
         public event EventHandler<double>? ZoomFactorChanged;
 
-        public void Initialize(IWebViewAdapterHost host)
+        public override void Initialize(IWebViewAdapterHost host)
         {
             _initialized = true;
         }
 
-        public void Attach(INativeHandle parentHandle)
+        public override void Attach(INativeHandle parentHandle)
         {
             if (!_initialized)
             {
@@ -242,11 +235,11 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
             }
         }
 
-        public void Detach()
+        public override void Detach()
         {
         }
 
-        public Task NavigateAsync(Guid navigationId, Uri uri)
+        public override Task NavigateAsync(Guid navigationId, Uri uri)
         {
             NavigateThreadId = Environment.CurrentManagedThreadId;
             _pendingNavigationId = navigationId;
@@ -259,10 +252,10 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
             return Task.CompletedTask;
         }
 
-        public Task NavigateToStringAsync(Guid navigationId, string html)
+        public override Task NavigateToStringAsync(Guid navigationId, string html)
             => NavigateToStringAsync(navigationId, html, baseUrl: null);
 
-        public Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl)
+        public override Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl)
         {
             NavigateToStringThreadId = Environment.CurrentManagedThreadId;
             _pendingNavigationId = navigationId;
@@ -275,31 +268,31 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
             return Task.CompletedTask;
         }
 
-        public Task<string?> InvokeScriptAsync(string script)
+        public override Task<string?> InvokeScriptAsync(string script)
         {
             InvokeScriptThreadId = Environment.CurrentManagedThreadId;
             return Task.FromResult<string?>("ok");
         }
 
-        public bool GoBack(Guid navigationId)
+        public override bool GoBack(Guid navigationId)
         {
             GoBackThreadId = Environment.CurrentManagedThreadId;
             return true;
         }
 
-        public bool GoForward(Guid navigationId)
+        public override bool GoForward(Guid navigationId)
         {
             GoForwardThreadId = Environment.CurrentManagedThreadId;
             return true;
         }
 
-        public bool Refresh(Guid navigationId)
+        public override bool Refresh(Guid navigationId)
         {
             RefreshThreadId = Environment.CurrentManagedThreadId;
             return true;
         }
 
-        public bool Stop()
+        public override bool Stop()
         {
             StopThreadId = Environment.CurrentManagedThreadId;
             if (_pendingNavigationId.HasValue && _pendingNavigationUri is not null)
@@ -428,13 +421,11 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
                 return;
             }
 
-            NavigationCompleted?.Invoke(
-                this,
-                new NavigationCompletedEventArgs(
-                    _pendingNavigationId.Value,
-                    _pendingNavigationUri,
-                    status,
-                    error));
+            RaiseNavigationCompleted(new NavigationCompletedEventArgs(
+                _pendingNavigationId.Value,
+                _pendingNavigationUri,
+                status,
+                error));
 
             _pendingNavigationId = null;
             _pendingNavigationUri = null;

@@ -126,30 +126,12 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public void WebDialog_TryGetCommandManager_returns_null_for_basic_adapter()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-        Assert.Null(dialog.TryGetCommandManager());
-    }
-
-    [Fact]
     public void WebDialog_TryGetCommandManager_returns_value_for_command_adapter()
     {
         var host = new MockDialogHost();
         var adapter = MockWebViewAdapter.CreateWithCommands();
         using var dialog = new WebDialog(host, adapter, _dispatcher);
         Assert.NotNull(dialog.TryGetCommandManager());
-    }
-
-    [Fact]
-    public async Task WebDialog_CaptureScreenshotAsync_throws_when_unsupported()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => dialog.CaptureScreenshotAsync());
     }
 
     [Fact]
@@ -160,15 +142,6 @@ public sealed partial class CoverageGapTests
         using var dialog = new WebDialog(host, adapter, _dispatcher);
         var data = await dialog.CaptureScreenshotAsync();
         Assert.NotEmpty(data);
-    }
-
-    [Fact]
-    public async Task WebDialog_PrintToPdfAsync_throws_when_unsupported()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => dialog.PrintToPdfAsync());
     }
 
     [Fact]
@@ -206,14 +179,6 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public async Task FindInPageAsync_throws_when_unsupported()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => core.FindInPageAsync("test"));
-    }
-
-    [Fact]
     public async Task FindInPageAsync_throws_on_null_or_empty_text()
     {
         var adapter = MockWebViewAdapter.CreateWithFind();
@@ -240,14 +205,6 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public async Task StopFindInPage_throws_when_unsupported()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => core.StopFindInPageAsync());
-    }
-
-    [Fact]
     public async Task StopFindInPage_delegates_to_adapter()
     {
         var adapter = MockWebViewAdapter.CreateWithFind();
@@ -260,15 +217,6 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public async Task WebDialog_FindInPageAsync_throws_when_unsupported()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => dialog.FindInPageAsync("test"));
-    }
-
-    [Fact]
     public async Task WebDialog_FindInPageAsync_delegates_to_core()
     {
         var host = new MockDialogHost();
@@ -276,15 +224,6 @@ public sealed partial class CoverageGapTests
         using var dialog = new WebDialog(host, adapter, _dispatcher);
         var result = await dialog.FindInPageAsync("hello");
         Assert.Equal(3, result.TotalMatches);
-    }
-
-    [Fact]
-    public async Task WebDialog_StopFindInPage_throws_when_unsupported()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => dialog.StopFindInPageAsync());
     }
 
     [Fact]
@@ -370,14 +309,6 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public async Task AddPreloadScript_throws_when_unsupported()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => core.AddPreloadScriptAsync("console.log('hi')"));
-    }
-
-    [Fact]
     public async Task AddPreloadScript_returns_script_id()
     {
         var adapter = MockWebViewAdapter.CreateWithPreload();
@@ -405,14 +336,6 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public async Task RemovePreloadScript_throws_when_unsupported()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => core.RemovePreloadScriptAsync("some-id"));
-    }
-
-    [Fact]
     public async Task RemovePreloadScript_removes_script()
     {
         var adapter = MockWebViewAdapter.CreateWithPreload();
@@ -432,15 +355,6 @@ public sealed partial class CoverageGapTests
         using var dialog = new WebDialog(host, adapter, _dispatcher);
         var id = await dialog.AddPreloadScriptAsync("console.log('test')");
         Assert.NotNull(id);
-    }
-
-    [Fact]
-    public async Task WebDialog_AddPreloadScript_throws_when_unsupported()
-    {
-        var host = new MockDialogHost();
-        var adapter = MockWebViewAdapter.Create();
-        using var dialog = new WebDialog(host, adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => dialog.AddPreloadScriptAsync("x"));
     }
 
     [Fact]

@@ -35,14 +35,6 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
     private readonly AdapterCapabilities _capabilities;
     private readonly IWebViewDispatcher _dispatcher;
     private readonly ILogger _logger;
-    private readonly IScreenshotAdapter? _screenshotAdapter;
-    private readonly IPrintAdapter? _printAdapter;
-    private readonly IFindInPageAdapter? _findInPageAdapter;
-    private readonly IZoomAdapter? _zoomAdapter;
-    private readonly IPreloadScriptAdapter? _preloadScriptAdapter;
-    private readonly IAsyncPreloadScriptAdapter? _asyncPreloadScriptAdapter;
-    private readonly IContextMenuAdapter? _contextMenuAdapter;
-    private readonly IDragDropAdapter? _dragDropAdapter;
 
     public WebViewCoreFeatureRuntime(
         IWebViewCoreFeatureHost host,
@@ -59,78 +51,47 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ArgumentNullException.ThrowIfNull(environmentOptions);
 
-        _screenshotAdapter = _capabilities.Screenshot;
-        _logger.LogDebug("Screenshot support: {Supported}", _screenshotAdapter is not null);
+        // Mandatory facets (cookie / command / zoom / find / preload / screenshot / print /
+        // context-menu / dev-tools) are inherited by IWebViewAdapter itself, so no probing is
+        // required. Only drag-drop and async-preload remain opt-in.
 
-        _printAdapter = _capabilities.Print;
-        _logger.LogDebug("Print support: {Supported}", _printAdapter is not null);
+        _adapter.ZoomFactorChanged += OnAdapterZoomFactorChanged;
+        _adapter.ContextMenuRequested += OnAdapterContextMenuRequested;
 
-        _findInPageAdapter = _capabilities.FindInPage;
-        _logger.LogDebug("Find-in-page support: {Supported}", _findInPageAdapter is not null);
-
-        _zoomAdapter = _capabilities.Zoom;
-        if (_zoomAdapter is not null)
+        var globalScripts = environmentOptions.PreloadScripts;
+        foreach (var script in globalScripts)
         {
-            _zoomAdapter.ZoomFactorChanged += OnAdapterZoomFactorChanged;
+            _adapter.AddPreloadScript(script);
         }
 
-        _logger.LogDebug("Zoom support: {Supported}", _zoomAdapter is not null);
-
-        _preloadScriptAdapter = _capabilities.PreloadScript;
-        _asyncPreloadScriptAdapter = _capabilities.AsyncPreloadScript;
-        if (_preloadScriptAdapter is not null)
+        if (globalScripts.Count > 0)
         {
-            var globalScripts = environmentOptions.PreloadScripts;
-            foreach (var script in globalScripts)
-            {
-                _preloadScriptAdapter.AddPreloadScript(script);
-            }
-
-            if (globalScripts.Count > 0)
-            {
-                _logger.LogDebug("Global preload scripts applied: {Count}", globalScripts.Count);
-            }
+            _logger.LogDebug("Global preload scripts applied: {Count}", globalScripts.Count);
         }
 
-        _logger.LogDebug("Preload script support: {Supported}", _preloadScriptAdapter is not null);
+        _logger.LogDebug(
+            "Async preload support: {Supported}",
+            _capabilities.AsyncPreloadScript is not null);
 
-        _contextMenuAdapter = _capabilities.ContextMenu;
-        if (_contextMenuAdapter is not null)
+        if (_capabilities.DragDrop is { } dragDrop)
         {
-            _contextMenuAdapter.ContextMenuRequested += OnAdapterContextMenuRequested;
+            dragDrop.DragEntered += OnAdapterDragEntered;
+            dragDrop.DragOver += OnAdapterDragOver;
+            dragDrop.DragLeft += OnAdapterDragLeft;
+            dragDrop.DropCompleted += OnAdapterDropCompleted;
         }
 
-        _logger.LogDebug("Context menu support: {Supported}", _contextMenuAdapter is not null);
-
-        _dragDropAdapter = _capabilities.DragDrop;
-        if (_dragDropAdapter is not null)
-        {
-            _dragDropAdapter.DragEntered += OnAdapterDragEntered;
-            _dragDropAdapter.DragOver += OnAdapterDragOver;
-            _dragDropAdapter.DragLeft += OnAdapterDragLeft;
-            _dragDropAdapter.DropCompleted += OnAdapterDropCompleted;
-        }
-
-        _logger.LogDebug("Drag-drop support: {Supported}", _dragDropAdapter is not null);
+        _logger.LogDebug("Drag-drop support: {Supported}", _capabilities.DragDrop is not null);
     }
 
-    public bool HasDragDropSupport => _dragDropAdapter is not null;
+    public bool HasDragDropSupport => _capabilities.DragDrop is not null;
 
     public Task OpenDevToolsAsync()
     {
         return _host.EnqueueOperationAsync(nameof(OpenDevToolsAsync), () =>
         {
             _host.ThrowIfDisposed();
-            var devTools = _capabilities.DevTools;
-            if (devTools is not null)
-            {
-                devTools.OpenDevTools();
-            }
-            else
-            {
-                _logger.LogDebug("DevTools: adapter does not support runtime toggle");
-            }
-
+            _adapter.OpenDevTools();
             return Task.CompletedTask;
         });
     }
@@ -140,7 +101,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(CloseDevToolsAsync), () =>
         {
             _host.ThrowIfDisposed();
-            _capabilities.DevTools?.CloseDevTools();
+            _adapter.CloseDevTools();
             return Task.CompletedTask;
         });
     }
@@ -150,8 +111,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(IsDevToolsOpenAsync), () =>
         {
             _host.ThrowIfDisposed();
-            var devTools = _capabilities.DevTools;
-            return Task.FromResult(devTools is not null && devTools.IsDevToolsOpen);
+            return Task.FromResult(_adapter.IsDevToolsOpen);
         });
     }
 
@@ -160,12 +120,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(CaptureScreenshotAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_screenshotAdapter is null)
-            {
-                throw new NotSupportedException("The current WebView adapter does not support screenshot capture.");
-            }
-
-            return _screenshotAdapter.CaptureScreenshotAsync();
+            return _adapter.CaptureScreenshotAsync();
         });
     }
 
@@ -174,12 +129,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(PrintToPdfAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_printAdapter is null)
-            {
-                throw new NotSupportedException("The current WebView adapter does not support PDF printing.");
-            }
-
-            return _printAdapter.PrintToPdfAsync(options);
+            return _adapter.PrintToPdfAsync(options);
         });
     }
 
@@ -188,7 +138,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(GetZoomFactorAsync), () =>
         {
             _host.ThrowIfDisposed();
-            return Task.FromResult(_zoomAdapter?.ZoomFactor ?? 1.0);
+            return Task.FromResult(_adapter.ZoomFactor);
         });
     }
 
@@ -197,12 +147,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(SetZoomFactorAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_zoomAdapter is null)
-            {
-                return Task.CompletedTask;
-            }
-
-            _zoomAdapter.ZoomFactor = Math.Clamp(zoomFactor, MinZoom, MaxZoom);
+            _adapter.ZoomFactor = Math.Clamp(zoomFactor, MinZoom, MaxZoom);
             return Task.CompletedTask;
         });
     }
@@ -217,12 +162,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
                 throw new ArgumentException("Search text must not be null or empty.", nameof(text));
             }
 
-            if (_findInPageAdapter is null)
-            {
-                throw new NotSupportedException("The current WebView adapter does not support find-in-page.");
-            }
-
-            return _findInPageAdapter.FindAsync(text, options);
+            return _adapter.FindAsync(text, options);
         });
     }
 
@@ -231,12 +171,7 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(StopFindInPageAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_findInPageAdapter is null)
-            {
-                throw new NotSupportedException("The current WebView adapter does not support find-in-page.");
-            }
-
-            _findInPageAdapter.StopFind(clearHighlights);
+            _adapter.StopFind(clearHighlights);
             return Task.CompletedTask;
         });
     }
@@ -246,17 +181,12 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(AddPreloadScriptAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_asyncPreloadScriptAdapter is not null)
+            if (_capabilities.AsyncPreloadScript is { } asyncPreload)
             {
-                return _asyncPreloadScriptAdapter.AddPreloadScriptAsync(javaScript);
+                return asyncPreload.AddPreloadScriptAsync(javaScript);
             }
 
-            if (_preloadScriptAdapter is null)
-            {
-                throw new NotSupportedException("The current WebView adapter does not support preload scripts.");
-            }
-
-            return Task.FromResult(_preloadScriptAdapter.AddPreloadScript(javaScript));
+            return Task.FromResult(_adapter.AddPreloadScript(javaScript));
         });
     }
 
@@ -265,17 +195,12 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
         return _host.EnqueueOperationAsync(nameof(RemovePreloadScriptAsync), () =>
         {
             _host.ThrowIfDisposed();
-            if (_asyncPreloadScriptAdapter is not null)
+            if (_capabilities.AsyncPreloadScript is { } asyncPreload)
             {
-                return _asyncPreloadScriptAdapter.RemovePreloadScriptAsync(scriptId);
+                return asyncPreload.RemovePreloadScriptAsync(scriptId);
             }
 
-            if (_preloadScriptAdapter is null)
-            {
-                throw new NotSupportedException("The current WebView adapter does not support preload scripts.");
-            }
-
-            _preloadScriptAdapter.RemovePreloadScript(scriptId);
+            _adapter.RemovePreloadScript(scriptId);
             return Task.CompletedTask;
         });
     }
@@ -287,36 +212,25 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
             return Task.FromResult<INativeHandle?>(null);
         }
 
-        var provider = _capabilities.NativeHandleProvider;
-        if (provider is null)
-        {
-            return Task.FromResult<INativeHandle?>(null);
-        }
-
         if (_dispatcher.CheckAccess())
         {
-            return Task.FromResult(provider.TryGetWebViewHandle());
+            return Task.FromResult(_adapter.TryGetWebViewHandle());
         }
 
-        return _dispatcher.InvokeAsync(() => provider.TryGetWebViewHandle());
+        return _dispatcher.InvokeAsync(() => _adapter.TryGetWebViewHandle());
     }
 
     public void SetCustomUserAgent(string? userAgent)
     {
         _host.ThrowIfDisposed();
-        var adapterOptions = _capabilities.Options;
-        if (adapterOptions is null)
-        {
-            return;
-        }
 
         if (_dispatcher.CheckAccess())
         {
-            adapterOptions.SetCustomUserAgent(userAgent);
+            _adapter.SetCustomUserAgent(userAgent);
         }
         else
         {
-            var dispatchTask = _dispatcher.InvokeAsync(() => adapterOptions.SetCustomUserAgent(userAgent));
+            var dispatchTask = _dispatcher.InvokeAsync(() => _adapter.SetCustomUserAgent(userAgent));
             _host.ObserveBackgroundTask(dispatchTask, nameof(SetCustomUserAgent));
         }
 
@@ -325,22 +239,15 @@ internal sealed class WebViewCoreFeatureRuntime : IDisposable, IWebViewCoreFeatu
 
     public void Dispose()
     {
-        if (_zoomAdapter is not null)
-        {
-            _zoomAdapter.ZoomFactorChanged -= OnAdapterZoomFactorChanged;
-        }
+        _adapter.ZoomFactorChanged -= OnAdapterZoomFactorChanged;
+        _adapter.ContextMenuRequested -= OnAdapterContextMenuRequested;
 
-        if (_contextMenuAdapter is not null)
+        if (_capabilities.DragDrop is { } dragDrop)
         {
-            _contextMenuAdapter.ContextMenuRequested -= OnAdapterContextMenuRequested;
-        }
-
-        if (_dragDropAdapter is not null)
-        {
-            _dragDropAdapter.DragEntered -= OnAdapterDragEntered;
-            _dragDropAdapter.DragOver -= OnAdapterDragOver;
-            _dragDropAdapter.DragLeft -= OnAdapterDragLeft;
-            _dragDropAdapter.DropCompleted -= OnAdapterDropCompleted;
+            dragDrop.DragEntered -= OnAdapterDragEntered;
+            dragDrop.DragOver -= OnAdapterDragOver;
+            dragDrop.DragLeft -= OnAdapterDragLeft;
+            dragDrop.DropCompleted -= OnAdapterDropCompleted;
         }
     }
 

@@ -9,11 +9,11 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     private readonly TestDispatcher _dispatcher = new();
 
     [Fact]
-    public void ApplyEnvironmentOptions_invokes_adapter_options_when_supported()
+    public void ApplyEnvironmentOptions_invokes_adapter_options()
     {
         var adapter = MockWebViewAdapter.CreateWithOptions();
         var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            AdapterCapabilities.From(adapter),
+            adapter,
             new WebViewEnvironmentOptions { CustomUserAgent = "Fulora/Test" },
             NullLogger.Instance);
 
@@ -24,11 +24,11 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     }
 
     [Fact]
-    public void RegisterConfiguredCustomSchemes_invokes_custom_scheme_adapter_when_supported()
+    public void RegisterConfiguredCustomSchemes_invokes_custom_scheme_adapter()
     {
         var adapter = MockWebViewAdapter.CreateWithCustomSchemes();
         var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            AdapterCapabilities.From(adapter),
+            adapter,
             new WebViewEnvironmentOptions
             {
                 CustomSchemes =
@@ -45,12 +45,12 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     }
 
     [Fact]
-    public void CreateCookieManager_returns_manager_when_cookie_adapter_is_supported()
+    public void CreateCookieManager_returns_manager()
     {
         var adapter = MockWebViewAdapter.CreateWithCookies();
         var owner = new WebViewCore(adapter, _dispatcher);
         var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            AdapterCapabilities.From(adapter),
+            adapter,
             new WebViewEnvironmentOptions(),
             NullLogger.Instance);
 
@@ -60,12 +60,12 @@ public sealed class WebViewCoreCapabilityDetectionRuntimeTests
     }
 
     [Fact]
-    public void CreateCommandManager_returns_manager_when_command_adapter_is_supported()
+    public void CreateCommandManager_returns_manager()
     {
         var adapter = MockWebViewAdapter.CreateWithCommands();
         var owner = new WebViewCore(adapter, _dispatcher);
         var runtime = new WebViewCoreCapabilityDetectionRuntime(
-            AdapterCapabilities.From(adapter),
+            adapter,
             new WebViewEnvironmentOptions(),
             NullLogger.Instance);
 

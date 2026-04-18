@@ -127,12 +127,13 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
 
         _operationQueue = new WebViewCoreOperationQueue(this, _dispatcher, _logger);
 
-        // One-shot capability negotiation: probe every optional adapter interface exactly once
-        // here, then pass the resulting value object to every runtime that needs feature gating.
+        // Mandatory capabilities (cookies, commands, zoom, preload, etc.) are inherited by
+        // IWebViewAdapter itself — no negotiation needed. Only the two truly-optional facets
+        // (drag-drop, async-preload) are probed into AdapterCapabilities, exactly once.
         // No other site in the codebase should perform `adapter as IXxxAdapter` tests.
         _capabilities = AdapterCapabilities.From(_adapter);
 
-        _capabilityDetectionRuntime = new WebViewCoreCapabilityDetectionRuntime(_capabilities, _environmentOptions, _logger);
+        _capabilityDetectionRuntime = new WebViewCoreCapabilityDetectionRuntime(_adapter, _environmentOptions, _logger);
 
         _capabilityDetectionRuntime.ApplyEnvironmentOptions();
         _cookieManager = _capabilityDetectionRuntime.CreateCookieManager(this);
@@ -147,7 +148,6 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
         _spaHostingRuntime = new WebViewCoreSpaHostingRuntime(this, _logger);
         _eventWiringRuntime = new WebViewCoreEventWiringRuntime(
             _adapter,
-            _capabilities,
             _logger,
             new WebViewAdapterEventRouter(
                 OnNavigationCompleted: _navigationRuntime.HandleAdapterNavigationCompleted,
@@ -583,7 +583,7 @@ internal sealed class WebViewCore : ISpaHostingWebView, IWebViewCoreControlEvent
 
     void IWebViewCoreSpaHostingHost.RegisterCustomScheme(CustomSchemeRegistration registration)
     {
-        _capabilities.CustomScheme?.RegisterCustomSchemes([registration]);
+        _adapter.RegisterCustomSchemes([registration]);
     }
 
     void IWebViewCoreSpaHostingHost.AddWebResourceRequestedHandler(EventHandler<WebResourceRequestedEventArgs> handler)

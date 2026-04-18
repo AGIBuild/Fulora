@@ -774,15 +774,6 @@ public sealed partial class CoverageGapTests
         Assert.NotNull(mgr);
     }
 
-    [Fact]
-    public void TryGetCommandManager_returns_null_without_ICommandAdapter()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        var mgr = core.TryGetCommandManager();
-        Assert.Null(mgr);
-    }
-
     [Theory]
     [InlineData(WebViewCommand.Copy)]
     [InlineData(WebViewCommand.Cut)]
@@ -818,14 +809,6 @@ public sealed partial class CoverageGapTests
     }
 
     [Fact]
-    public async Task CaptureScreenshotAsync_throws_when_unsupported()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => core.CaptureScreenshotAsync());
-    }
-
-    [Fact]
     public async Task CaptureScreenshotAsync_returns_data_with_IScreenshotAdapter()
     {
         var adapter = MockWebViewAdapter.CreateWithScreenshot();
@@ -858,14 +841,6 @@ public sealed partial class CoverageGapTests
     {
         var adapter = MockWebViewAdapter.CreateWithPrint();
         Assert.IsAssignableFrom<IPrintAdapter>(adapter);
-    }
-
-    [Fact]
-    public async Task PrintToPdfAsync_throws_when_unsupported()
-    {
-        var adapter = MockWebViewAdapter.Create();
-        using var core = new WebViewCore(adapter, _dispatcher);
-        await Assert.ThrowsAsync<NotSupportedException>(() => core.PrintToPdfAsync());
     }
 
     [Fact]

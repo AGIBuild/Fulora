@@ -131,39 +131,17 @@ public sealed partial class CoverageGapTests
     }
 
     /// <summary>Adapter that throws on NavigateAsync to cover the exception catch in StartNavigationCoreAsync.</summary>
-#pragma warning disable CS0067 // Events never used (by design — this adapter only throws)
-    private sealed class ThrowingNavigateAdapter : IWebViewAdapter
+    private sealed class ThrowingNavigateAdapter : StubWebViewAdapter
     {
-        public event EventHandler<NavigationCompletedEventArgs>? NavigationCompleted;
-        public event EventHandler<NewWindowRequestedEventArgs>? NewWindowRequested;
-        public event EventHandler<WebMessageReceivedEventArgs>? WebMessageReceived;
-        public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
-        public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested;
-
-        public void Initialize(IWebViewAdapterHost host) { }
-        public void Attach(INativeHandle parentHandle) { }
-        public void Detach() { }
-
-        public Task NavigateAsync(Guid navigationId, Uri uri)
+        public override Task NavigateAsync(Guid navigationId, Uri uri)
             => throw new InvalidOperationException("Simulated adapter failure");
 
-        public Task NavigateToStringAsync(Guid navigationId, string html)
+        public override Task NavigateToStringAsync(Guid navigationId, string html)
             => throw new InvalidOperationException("Simulated adapter failure");
 
-        public Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl)
+        public override Task NavigateToStringAsync(Guid navigationId, string html, Uri? baseUrl)
             => throw new InvalidOperationException("Simulated adapter failure");
-
-        public Task<string?> InvokeScriptAsync(string script)
-            => Task.FromResult<string?>(null);
-
-        public bool CanGoBack => false;
-        public bool CanGoForward => false;
-        public bool GoBack(Guid navigationId) => false;
-        public bool GoForward(Guid navigationId) => false;
-        public bool Refresh(Guid navigationId) => false;
-        public bool Stop() => false;
     }
-#pragma warning restore CS0067
 
     /// <summary>Window with non-null PlatformHandle for WebAuthBroker test.</summary>
     private sealed class NonNullHandleWindow : ITopLevelWindow
