@@ -26,6 +26,12 @@ public sealed class BridgeTestTracer : IBridgeTracer
     private readonly object _callsLock = new();
     private readonly ConcurrentDictionary<string, Queue<PendingCall>> _pendingByKey = new();
     private readonly object _pendingLock = new();
+
+    // Event-driven waiters: one list of TCSs per (service|method) key. WaitForBridgeCallAsync
+    // registers a TCS instead of polling so completion is deterministic and immediate, even
+    // under heavy CI load where Task.Delay-based polling could miss the deadline.
+    private readonly Dictionary<string, List<TaskCompletionSource<BridgeCallRecord>>> _waitersByKey = new();
+    private readonly object _waitersLock = new();
     /// <inheritdoc />
     public void OnExportCallStart(string serviceName, string methodName, string? paramsJson)
     {
@@ -44,7 +50,7 @@ public sealed class BridgeTestTracer : IBridgeTracer
         var record = new BridgeCallRecord(
             serviceName, methodName, BridgeCallDirection.Export,
             paramsJson, resultType, null, elapsedMs, DateTimeOffset.UtcNow);
-        lock (_callsLock) { _calls.Add(record); }
+        AddRecordAndSignal(record);
     }
 
     /// <inheritdoc />
@@ -54,7 +60,7 @@ public sealed class BridgeTestTracer : IBridgeTracer
         var record = new BridgeCallRecord(
             serviceName, methodName, BridgeCallDirection.Export,
             paramsJson, null, exception?.Message ?? "Unknown error", elapsedMs, DateTimeOffset.UtcNow);
-        lock (_callsLock) { _calls.Add(record); }
+        AddRecordAndSignal(record);
     }
 
     /// <inheritdoc />
@@ -75,7 +81,7 @@ public sealed class BridgeTestTracer : IBridgeTracer
         var record = new BridgeCallRecord(
             serviceName, methodName, BridgeCallDirection.Import,
             paramsJson, null, null, elapsedMs, DateTimeOffset.UtcNow);
-        lock (_callsLock) { _calls.Add(record); }
+        AddRecordAndSignal(record);
     }
 
     /// <inheritdoc />
@@ -89,7 +95,15 @@ public sealed class BridgeTestTracer : IBridgeTracer
     /// </summary>
     public IReadOnlyList<BridgeCallRecord> GetBridgeCalls(string? serviceFilter = null)
     {
-        var list = _calls.ToList();
+        // Snapshot under _callsLock — readers and writers MUST agree on the same lock or
+        // List<T>.Add can reallocate the backing array mid-enumeration and ToList() will
+        // throw (intermittent failure observed on CI under load).
+        List<BridgeCallRecord> list;
+        lock (_callsLock)
+        {
+            list = _calls.ToList();
+        }
+
         if (serviceFilter is not null)
         {
             list = list.Where(c => string.Equals(c.ServiceName, serviceFilter, StringComparison.Ordinal)).ToList();
@@ -112,38 +126,67 @@ public sealed class BridgeTestTracer : IBridgeTracer
         TimeSpan? timeout = null,
         CancellationToken ct = default)
     {
-        var existing = GetBridgeCalls(service).FirstOrDefault(c => string.Equals(c.MethodName, method, StringComparison.Ordinal));
-        if (existing != null)
+        var key = Key(service, method);
+        var tcs = new TaskCompletionSource<BridgeCallRecord>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        // Register waiter BEFORE checking existing records to avoid the lost-wakeup race:
+        // if a record arrives between the check and the registration, the signaller would
+        // miss this waiter. AddRecordAndSignal walks the same lock, guaranteeing ordering.
+        lock (_waitersLock)
         {
-            return existing;
+            // Drain existing first while holding the waiters lock so a concurrent end-call
+            // signal cannot interleave between the snapshot and the registration.
+            var existing = FindMatchingRecord(service, method);
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            if (!_waitersByKey.TryGetValue(key, out var waiters))
+            {
+                waiters = new List<TaskCompletionSource<BridgeCallRecord>>();
+                _waitersByKey[key] = waiters;
+            }
+
+            waiters.Add(tcs);
         }
 
-        var deadline = DateTime.UtcNow.Add(timeout ?? TimeSpan.FromSeconds(5));
+        var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(5);
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeoutCts.CancelAfter(effectiveTimeout);
 
-        while (DateTime.UtcNow < deadline)
+        using var registration = timeoutCts.Token.Register(static state =>
         {
-            ct.ThrowIfCancellationRequested();
-
-            var match = GetBridgeCalls(service).FirstOrDefault(c => string.Equals(c.MethodName, method, StringComparison.Ordinal));
-            if (match != null)
+            var (waiterTcs, cancelToken, externalToken) = ((TaskCompletionSource<BridgeCallRecord>, CancellationToken, CancellationToken))state!;
+            if (externalToken.IsCancellationRequested)
             {
-                return match;
+                waiterTcs.TrySetCanceled(externalToken);
             }
-
-            try
+            else
             {
-                await Task.Delay(10, ct).ConfigureAwait(false);
+                waiterTcs.TrySetException(new TimeoutException("No matching bridge call arrived within the timeout."));
             }
-            catch (OperationCanceledException)
+        }, (tcs, timeoutCts.Token, ct));
+
+        try
+        {
+            return await tcs.Task.ConfigureAwait(false);
+        }
+        finally
+        {
+            // Best-effort cleanup so completed waiters don't accumulate when callers reuse the tracer.
+            lock (_waitersLock)
             {
-                if (ct.IsCancellationRequested)
+                if (_waitersByKey.TryGetValue(key, out var waiters))
                 {
-                    throw;
+                    waiters.Remove(tcs);
+                    if (waiters.Count == 0)
+                    {
+                        _waitersByKey.Remove(key);
+                    }
                 }
             }
         }
-
-        throw new TimeoutException($"No bridge call to {service}.{method} arrived within the timeout.");
     }
 
     /// <summary>
@@ -159,9 +202,60 @@ public sealed class BridgeTestTracer : IBridgeTracer
         {
             _pendingByKey.Clear();
         }
+        lock (_waitersLock)
+        {
+            _waitersByKey.Clear();
+        }
     }
 
     private static string Key(string service, string method) => $"{service}|{method}";
+
+    private void AddRecordAndSignal(BridgeCallRecord record)
+    {
+        lock (_callsLock)
+        {
+            _calls.Add(record);
+        }
+
+        // Snapshot waiters for this key under the waiters lock, then complete OUTSIDE the lock
+        // to avoid running continuations while holding it (continuations could re-enter the tracer).
+        TaskCompletionSource<BridgeCallRecord>[]? toComplete = null;
+        var key = Key(record.ServiceName, record.MethodName);
+        lock (_waitersLock)
+        {
+            if (_waitersByKey.TryGetValue(key, out var waiters) && waiters.Count > 0)
+            {
+                toComplete = waiters.ToArray();
+                waiters.Clear();
+                _waitersByKey.Remove(key);
+            }
+        }
+
+        if (toComplete != null)
+        {
+            foreach (var tcs in toComplete)
+            {
+                tcs.TrySetResult(record);
+            }
+        }
+    }
+
+    private BridgeCallRecord? FindMatchingRecord(string service, string method)
+    {
+        lock (_callsLock)
+        {
+            for (var i = 0; i < _calls.Count; i++)
+            {
+                var record = _calls[i];
+                if (string.Equals(record.ServiceName, service, StringComparison.Ordinal) &&
+                    string.Equals(record.MethodName, method, StringComparison.Ordinal))
+                {
+                    return record;
+                }
+            }
+        }
+        return null;
+    }
 
     private (string? ParamsJson, BridgeCallDirection Direction) DequeuePending(string serviceName, string methodName)
     {
