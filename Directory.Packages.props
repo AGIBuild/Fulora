@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup Label="Build tooling">
     <PackageVersion Include="Nuke.Common" Version="10.1.0" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100-preview.2.26159.112" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100-preview.3.26207.106" />
   </ItemGroup>
   <ItemGroup Label="Transitive security pins">
     <!--

@@ -4,32 +4,32 @@
     "net10.0": {
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
-        "requested": "[11.0.100-preview.2.26159.112, )",
-        "resolved": "11.0.100-preview.2.26159.112",
-        "contentHash": "tOnAJEilYQeFZfKjAd4dKiBzcWmu9FLHhaOC1IWSUVQIA+FdqU53QERbWgyE57czhrS1yGFcjaoqb0ehOFDOug==",
+        "requested": "[11.0.100-preview.3.26207.106, )",
+        "resolved": "11.0.100-preview.3.26207.106",
+        "contentHash": "LyKn4JSQMroEkguwffHtnaJcawz7+1dkFKX0ZDnavU1EBegp9WrF/3Zv0s5OHoKQox+j7rbjprNtvwvGZW1Aow==",
         "dependencies": {
-          "Microsoft.Build.Tasks.Git": "11.0.100-preview.2.26159.112",
-          "Microsoft.SourceLink.Common": "11.0.100-preview.2.26159.112",
-          "System.IO.Hashing": "11.0.0-preview.2.26159.112"
+          "Microsoft.Build.Tasks.Git": "11.0.100-preview.3.26207.106",
+          "Microsoft.SourceLink.Common": "11.0.100-preview.3.26207.106",
+          "System.IO.Hashing": "11.0.0-preview.3.26207.106"
         }
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
-        "resolved": "11.0.100-preview.2.26159.112",
-        "contentHash": "z+qGAmrjBf4MIboYAp5RYYpWp8t5a9NZh9uVZBI6/dBctnUznZ0dfio1H1W+dfAzs9AruIaGFsdOdTd0lue3Lw==",
+        "resolved": "11.0.100-preview.3.26207.106",
+        "contentHash": "NzuR1QNCHfro+w9GWVYJMdDMSEnPglS72aXtzSPtFUXP9yCoz4ggM4hzNNfVvzLGjXj4A7TnSHkT3bNA7NkaKg==",
         "dependencies": {
-          "System.IO.Hashing": "11.0.0-preview.2.26159.112"
+          "System.IO.Hashing": "11.0.0-preview.3.26207.106"
         }
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
-        "resolved": "11.0.100-preview.2.26159.112",
-        "contentHash": "F2KYT8RxU7WtNBxdGpeNiQwprCnBRbbMDGvZM0odbLaNQNtjf4wRQSRUMMwoIlMzrIWvwLdxiBIKQfDBGC/FIg=="
+        "resolved": "11.0.100-preview.3.26207.106",
+        "contentHash": "4dwDpSUb9YKZ6dSEj59qJtdP2K+R4ejFULEKNBL5OqqAGxkWAp/23kN485GfmdvJ3UaQq31T5v/rgTxVnOXycA=="
       },
       "System.IO.Hashing": {
         "type": "Transitive",
-        "resolved": "11.0.0-preview.2.26159.112",
-        "contentHash": "5xr0B5D23NoH3jcHO3SVPchTo0dwD+wqpqrysAZeOKY+XEOheKZN0bApd/EoWj+ym5NtmiNxCtYVZtDpo8FUlQ=="
+        "resolved": "11.0.0-preview.3.26207.106",
+        "contentHash": "SDNSzpfSLNZXetvp8vb3nP5PqeOx3FGrPoVSUAk+scC1ydsm0UNKCktZupwEN8PN1DNnWOTGdi4+3zGyf3kHAg=="
       }
     }
   }
