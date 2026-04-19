@@ -169,15 +169,26 @@ internal partial class BuildTask
         return false;
     }
 
+    // Supports both legacy .sln (`Project("…") = "…", "path\file.csproj", "…"`) and
+    // .NET 9+ .slnx XML (`<Project Path="path/file.csproj" …/>`). The platform-aware
+    // filter helper is solution-format-agnostic; this parser must enumerate every
+    // csproj path regardless of which format the user-facing solution file uses.
+    private static readonly Regex SlnProjectLineRegex = new(
+        @"Project\("".+""\)\s*=\s*"".+""\s*,\s*""(?<path>[^""]+\.csproj)""\s*,",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    private static readonly Regex SlnxProjectElementRegex = new(
+        @"<Project\s+[^>]*Path\s*=\s*""(?<path>[^""]+\.csproj)""",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
     private static IReadOnlyList<string> ParseProjectPathsFromSolution(string slnContent)
     {
-        var projectLineRegex = new Regex(
-            @"Project\("".+""\)\s*=\s*"".+""\s*,\s*""(?<path>[^""]+\.csproj)""\s*,",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        var regex = slnContent.TrimStart().StartsWith('<') ? SlnxProjectElementRegex : SlnProjectLineRegex;
 
-        return projectLineRegex
+        return regex
             .Matches(slnContent)
             .Select(m => m.Groups["path"].Value.Replace('\\', '/'))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
     }
 
