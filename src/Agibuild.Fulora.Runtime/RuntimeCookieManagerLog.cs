@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for RuntimeCookieManager.
 // EventId range: 2800-2899 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class RuntimeCookieManagerLog
 {
     [LoggerMessage(EventId = 2800, Level = LogLevel.Debug,

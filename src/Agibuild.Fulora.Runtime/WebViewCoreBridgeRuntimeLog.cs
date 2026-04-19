@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for WebViewCoreBridgeRuntime.
 // EventId range: 2200-2299 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class WebViewCoreBridgeRuntimeLog
 {
     [LoggerMessage(EventId = 2200, Level = LogLevel.Warning,

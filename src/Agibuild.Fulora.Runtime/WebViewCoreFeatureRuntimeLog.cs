@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for WebViewCoreFeatureRuntime.
 // EventId range: 3000-3099 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class WebViewCoreFeatureRuntimeLog
 {
     [LoggerMessage(EventId = 3000, Level = LogLevel.Debug,

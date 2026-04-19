@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for LoggingBridgeTracer.
 // EventId range: 2700-2799 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class LoggingBridgeTracerLog
 {
     [LoggerMessage(EventId = 2700, Level = LogLevel.Trace,

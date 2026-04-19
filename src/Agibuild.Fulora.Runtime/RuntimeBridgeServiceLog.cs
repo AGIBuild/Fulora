@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for RuntimeBridgeService.
 // EventId range: 3300-3399 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class RuntimeBridgeServiceLog
 {
     [LoggerMessage(EventId = 3300, Level = LogLevel.Debug,

@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for WebViewCoreNavigationRuntime.
 // EventId range: 2100-2199 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class WebViewCoreNavigationRuntimeLog
 {
     [LoggerMessage(EventId = 2100, Level = LogLevel.Debug,

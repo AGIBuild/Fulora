@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for WebViewCore (the orchestrator hot path).
 // EventId range: 2000-2099 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class WebViewCoreLog
 {
     [LoggerMessage(EventId = 2000, Level = LogLevel.Debug,

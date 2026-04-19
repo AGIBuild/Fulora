@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for WebViewRpcService.
 // EventId range: 2400-2499 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class WebViewRpcServiceLog
 {
     [LoggerMessage(EventId = 2400, Level = LogLevel.Debug,

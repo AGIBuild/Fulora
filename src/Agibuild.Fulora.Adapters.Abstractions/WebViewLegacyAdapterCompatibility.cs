@@ -1,5 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Agibuild.Fulora.Adapters.Abstractions;
 
+// Coverage-exclusion rationale: every OS-detection branch resolves to a single arm at runtime on a
+// given host. CI matrix coverage merges per-OS reports into one Cobertura file, but each individual
+// run can only ever exercise one OperatingSystem.Is*() arm — so the remaining arms permanently show
+// as uncovered branches and the class can't reach 100% on any single platform. Marking it
+// [ExcludeFromCodeCoverage] avoids gaming coverage with platform-specific stub tests.
+[ExcludeFromCodeCoverage]
 internal static class WebViewLegacyAdapterCompatibility
 {
     public static WebViewAdapterPlatform GetCurrentPlatform()

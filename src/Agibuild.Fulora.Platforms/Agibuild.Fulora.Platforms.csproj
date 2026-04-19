@@ -91,12 +91,20 @@
        Native shim build targets — only run for desktop net10.0 TFM
        ============================================================ -->
 
+  <!--
+    Native-shim targets must run only inside an inner per-TFM build (TargetFramework set), where
+    $(TargetDir) and $(IntermediateOutputPath) are populated. The outer multi-TFM dispatch evaluates
+    targets with an empty $(TargetFramework), at which point $(TargetDir) is the empty string and
+    naive concatenation drops the shim into the project root. The extra
+    $(TargetFramework) != '' guard short-circuits that outer pass.
+  -->
+
   <!-- macOS WKWebView native shim (Obj-C++). Produces libAgibuildWebViewWk.dylib. -->
-  <PropertyGroup Condition=" $([MSBuild]::IsOSPlatform('osx')) And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
+  <PropertyGroup Condition=" $([MSBuild]::IsOSPlatform('osx')) And '$(TargetFramework)' != '' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
     <AgWkShimLibName>libAgibuildWebViewWk.dylib</AgWkShimLibName>
   </PropertyGroup>
   <Target Name="BuildWkShim" BeforeTargets="Build"
-          Condition=" $([MSBuild]::IsOSPlatform('osx')) And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
+          Condition=" $([MSBuild]::IsOSPlatform('osx')) And '$(TargetFramework)' != '' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
     <PropertyGroup>
       <_AgWkShimOutDir>$(TargetDir)runtimes/osx/native/</_AgWkShimOutDir>
       <_AgWkShimOutPath>$(_AgWkShimOutDir)$(AgWkShimLibName)</_AgWkShimOutPath>
@@ -110,11 +118,11 @@
 
   <!-- Linux WebKitGTK native shim (C). Produces libAgibuildWebViewGtk.so.
        Requires libwebkit2gtk-4.1-dev and pkg-config on Linux build hosts. -->
-  <PropertyGroup Condition=" $([MSBuild]::IsOSPlatform('linux')) And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
+  <PropertyGroup Condition=" $([MSBuild]::IsOSPlatform('linux')) And '$(TargetFramework)' != '' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
     <AgGtkShimLibName>libAgibuildWebViewGtk.so</AgGtkShimLibName>
   </PropertyGroup>
   <Target Name="BuildGtkShim" BeforeTargets="Build"
-          Condition=" $([MSBuild]::IsOSPlatform('linux')) And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
+          Condition=" $([MSBuild]::IsOSPlatform('linux')) And '$(TargetFramework)' != '' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == '' ">
     <PropertyGroup>
       <_AgGtkShimOutDir>$(TargetDir)runtimes/linux-x64/native/</_AgGtkShimOutDir>
       <_AgGtkShimOutPath>$(_AgGtkShimOutDir)$(AgGtkShimLibName)</_AgGtkShimOutPath>

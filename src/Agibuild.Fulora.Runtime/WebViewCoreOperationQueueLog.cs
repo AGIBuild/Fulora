@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for WebViewCoreOperationQueue.
 // EventId range: 3100-3199 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class WebViewCoreOperationQueueLog
 {
     [LoggerMessage(EventId = 3100, Level = LogLevel.Debug,

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Agibuild.Fulora;
 
 // Source-generated logger extensions for SpaHostingService.
 // EventId range: 2600-2699 (see EventId allocation map in commit log).
+[ExcludeFromCodeCoverage]
 internal static partial class SpaHostingServiceLog
 {
     [LoggerMessage(EventId = 2600, Level = LogLevel.Debug,
