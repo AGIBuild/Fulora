@@ -223,10 +223,28 @@ internal sealed partial class BuildTask : NukeBuild
         .DependsOn(Clean)
         .Executes(async () =>
         {
+            // Mirror the Build target's android-slice gating so restore on hosts without the
+            // Android workload doesn't fail at NETSDK1147 when restoring Platforms.csproj.
+            var skipAndroidSlice = !await HasDotNetWorkloadAsync("android") || !HasAndroidSdkInstalled();
+
             foreach (var project in await GetProjectsToBuildAsync())
             {
-                DotNetRestore(s => s
-                    .SetProjectFile(project));
+                var isPlatforms = string.Equals(
+                    Path.GetFileName(project),
+                    "Agibuild.Fulora.Platforms.csproj",
+                    StringComparison.OrdinalIgnoreCase);
+
+                DotNetRestore(s =>
+                {
+                    var settings = s.SetProjectFile(project);
+
+                    if (isPlatforms && skipAndroidSlice)
+                    {
+                        settings = settings.SetProperty("EnableAndroidTfm", "false");
+                    }
+
+                    return settings;
+                });
             }
         });
 
@@ -255,7 +273,7 @@ internal sealed partial class BuildTask : NukeBuild
 
                     if (isPlatforms && skipAndroidSlice)
                     {
-                        settings = settings.SetProperty("TargetFrameworks", "net10.0");
+                        settings = settings.SetProperty("EnableAndroidTfm", "false");
                     }
 
                     return settings;

@@ -211,7 +211,7 @@ internal partial class BuildTask
             // Native shims for macOS (dylib) and Linux (so) are built conditionally by MSBuild targets
             // inside the project, driven by OS detection at build time.
             // The Android TFM slice requires the Android workload + SDK; missing workload is handled
-            // by passing -p:TargetFrameworks=net10.0 below to skip that slice.
+            // by passing -p:EnableAndroidTfm=false (see Build.cs) which drops the android slice.
             SrcDirectory / "Agibuild.Fulora.Platforms" / "Agibuild.Fulora.Platforms.csproj",
         };
 

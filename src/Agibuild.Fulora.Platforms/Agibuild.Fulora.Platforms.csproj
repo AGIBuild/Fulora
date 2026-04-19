@@ -5,8 +5,19 @@
       net10.0-android hosts the Android adapter so the same physical project
       delivers all platform implementations through SDK-native lib/{tfm}/ packing.
       Mirrors Avalonia.Controls.WebView's project organization.
+
+      Android-slice gating: the net10.0-android slice can be opted out by
+      passing -p:EnableAndroidTfm=false on the dotnet command line. This is
+      required on hosts/CI runners that do not have the .NET Android workload
+      installed (Linux/Windows CI), where building the android slice would fail
+      at NETSDK1147 ("To build this project, the following workloads must be
+      installed: android"). The Nuke `Build` target detects the workload and
+      passes the property automatically; raw `dotnet build`/`dotnet format`
+      callers (CI yaml, dotnet format on the slnx) must pass it explicitly.
     -->
-    <TargetFrameworks>net10.0;net10.0-android</TargetFrameworks>
+    <EnableAndroidTfm Condition="'$(EnableAndroidTfm)' == ''">true</EnableAndroidTfm>
+    <TargetFrameworks Condition="'$(EnableAndroidTfm)' == 'true'">net10.0;net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="'$(EnableAndroidTfm)' != 'true'">net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

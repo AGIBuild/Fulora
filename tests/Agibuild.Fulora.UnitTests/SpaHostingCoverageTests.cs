@@ -733,6 +733,7 @@ public sealed partial class RuntimeCoverageTests
             Assert.Equal(200, e.ResponseStatusCode);
             Assert.Equal("application/javascript", e.ResponseContentType);
             Assert.NotNull(e.ResponseBody);
+            e.ResponseBody!.Dispose();
         }
         finally
         {
@@ -746,6 +747,7 @@ public sealed partial class RuntimeCoverageTests
         var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDir);
         File.WriteAllText(Path.Combine(tempDir, "index.html"), "<html></html>");
+        WebResourceRequestedEventArgs? e = null;
         try
         {
             using var svc = new SpaHostingService(new SpaHostingOptions
@@ -754,7 +756,7 @@ public sealed partial class RuntimeCoverageTests
             }, NullTestLogger.Instance);
 
             // Request a deep-link route (no extension) — should serve index.html
-            var e = MakeSpaArgs("app://localhost/missing.js");
+            e = MakeSpaArgs("app://localhost/missing.js");
             var handled = svc.TryHandle(e);
 
             Assert.True(handled);
@@ -763,6 +765,7 @@ public sealed partial class RuntimeCoverageTests
         }
         finally
         {
+            e?.ResponseBody?.Dispose();
             Directory.Delete(tempDir, recursive: true);
         }
     }
@@ -798,6 +801,7 @@ public sealed partial class RuntimeCoverageTests
         Directory.CreateDirectory(tempDir);
         var hashedFile = Path.Combine(tempDir, "chunk.a1b2c3d4e5f6.js");
         File.WriteAllText(hashedFile, "/* chunk */");
+        WebResourceRequestedEventArgs? e = null;
         try
         {
             using var svc = new SpaHostingService(new SpaHostingOptions
@@ -805,7 +809,7 @@ public sealed partial class RuntimeCoverageTests
                 ActiveAssetDirectoryProvider = () => tempDir,
             }, NullTestLogger.Instance);
 
-            var e = MakeSpaArgs("app://localhost/chunk.a1b2c3d4e5f6.js");
+            e = MakeSpaArgs("app://localhost/chunk.a1b2c3d4e5f6.js");
             svc.TryHandle(e);
 
             Assert.Equal(200, e.ResponseStatusCode);
@@ -814,6 +818,7 @@ public sealed partial class RuntimeCoverageTests
         }
         finally
         {
+            e?.ResponseBody?.Dispose();
             Directory.Delete(tempDir, recursive: true);
         }
     }

@@ -19,7 +19,9 @@
       "namespaceLayout": "flattened",
       "memberLayout": "samePage",
       "properties": {
-        "TargetFramework": "net10.0"
+        "TargetFramework": "net10.0",
+        "TargetFrameworks": "net10.0",
+        "EnableAndroidTfm": "false"
       }
     }
   ],

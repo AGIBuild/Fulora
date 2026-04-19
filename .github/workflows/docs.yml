@@ -37,6 +37,10 @@ jobs:
         run: dotnet tool restore
 
       - name: Build docfx site
+        # Linux runner has no Android workload; drop the net10.0-android slice of
+        # Agibuild.Fulora.Platforms so docfx's MSBuild workspace evaluation succeeds.
+        env:
+          EnableAndroidTfm: "false"
         run: dotnet docfx docs/docfx.json
 
       - name: Upload docs artifact
