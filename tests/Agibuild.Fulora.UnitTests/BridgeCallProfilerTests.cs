@@ -177,6 +177,64 @@ public class BridgeCallProfilerTests
     }
 
     [Fact]
+    public void DiagnosticsSink_receives_event_for_every_method()
+    {
+        // Coverage gap: every On* method has a `_diagnosticsSink?.OnEvent(...)` null-conditional.
+        // Without passing a non-null sink, the "sink-not-null" branch on each method stays uncovered,
+        // accounting for ~7 of the missing branches in BridgeCallProfiler.
+        var sink = new RecordingDiagnosticsSink();
+        var profiler = new BridgeCallProfiler(inner: null, diagnosticsSink: sink);
+
+        profiler.OnExportCallStart("Svc", "M", "{}");
+        profiler.OnExportCallEnd("Svc", "M", 1, "T");
+        profiler.OnExportCallError("Svc", "M", 2, new InvalidOperationException("boom"));
+        profiler.OnImportCallStart("Svc", "M", null);
+        profiler.OnImportCallEnd("Svc", "M", 3);
+        profiler.OnServiceExposed("Svc", 4, isSourceGenerated: true);
+        profiler.OnServiceRemoved("Svc");
+
+        Assert.Contains(sink.Events, e => e.EventName == "bridge.export.start");
+        Assert.Contains(sink.Events, e => e.EventName == "bridge.export.end");
+        var errEvent = Assert.Single(sink.Events, e => e.EventName == "bridge.export.error");
+        Assert.Equal(nameof(InvalidOperationException), errEvent.ErrorType);
+        Assert.Contains(sink.Events, e => e.EventName == "bridge.import.start");
+        Assert.Contains(sink.Events, e => e.EventName == "bridge.import.end");
+        Assert.Contains(sink.Events, e => e.EventName == "bridge.service.exposed");
+        Assert.Contains(sink.Events, e => e.EventName == "bridge.service.removed");
+    }
+
+    [Fact]
+    public void NullBridgeTracer_inner_collapses_to_no_inner_with_sink()
+    {
+        // Verifies the constructor branch `inner is NullBridgeTracer ? null : inner` and that
+        // pass-through still feeds the sink. Combined with DelegatesToInnerTracer this exercises
+        // both arms of the constructor's special-case.
+        var sink = new RecordingDiagnosticsSink();
+        var profiler = new BridgeCallProfiler(inner: NullBridgeTracer.Instance, diagnosticsSink: sink);
+        profiler.OnExportCallEnd("Svc", "M", 1, null);
+        Assert.Single(sink.Events);
+    }
+
+    [Fact]
+    public void GetSlowestCalls_returns_empty_when_no_calls()
+    {
+        // Covers the "no entries" path of GetSlowestCalls (the LINQ chain still runs, but the
+        // OrderByDescending branch on AvgLatencyMs sees zero items).
+        var profiler = new BridgeCallProfiler();
+        var slowest = profiler.GetSlowestCalls(10);
+        Assert.Empty(slowest);
+    }
+
+    [Fact]
+    public void GetServiceStats_with_only_zero_calls_returns_null()
+    {
+        // Reaches the `methods.Count == 0` branch by selecting a service that exists in the dict
+        // but has every entry pruned out (no entries match the prefix).
+        var profiler = new BridgeCallProfiler();
+        Assert.Null(profiler.GetServiceStats("does-not-exist"));
+    }
+
+    [Fact]
     public void Percentiles_ComputedCorrectly()
     {
         var profiler = new BridgeCallProfiler();
@@ -191,6 +249,12 @@ public class BridgeCallProfilerTests
         Assert.True(stats.P50LatencyMs >= 50 && stats.P50LatencyMs <= 51);
         Assert.True(stats.P95LatencyMs >= 95 && stats.P95LatencyMs <= 96);
         Assert.True(stats.P99LatencyMs >= 99 && stats.P99LatencyMs <= 100);
+    }
+
+    private sealed class RecordingDiagnosticsSink : IFuloraDiagnosticsSink
+    {
+        public List<FuloraDiagnosticsEvent> Events { get; } = [];
+        public void OnEvent(FuloraDiagnosticsEvent diagnosticEvent) => Events.Add(diagnosticEvent);
     }
 
     private sealed class RecordingTracer : IBridgeTracer
