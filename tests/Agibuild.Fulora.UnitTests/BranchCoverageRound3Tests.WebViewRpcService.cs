@@ -15,27 +15,38 @@ public sealed partial class BranchCoverageRound3Tests
     #region Medium: WebViewRpcService notification handlers
 
     [Fact]
-    public void HandleNotification_cancelRequest_cancels_active_cts()
+    public async Task HandleNotification_cancelRequest_cancels_active_cts()
     {
         var rpc = new WebViewRpcService(
             s => Task.FromResult<string?>(null),
             NullLoggerFactory.Instance.CreateLogger("test"));
 
-        // Register a pending cancellation via reflection
-        var cancellationsField = typeof(WebViewRpcService).GetField(
-            "_activeCancellations", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.NotNull(cancellationsField);
-        var cancellations = cancellationsField!.GetValue(rpc) as System.Collections.Concurrent.ConcurrentDictionary<string, CancellationTokenSource>;
-        Assert.NotNull(cancellations);
+        var handlerStarted = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var handlerObservedCancellation = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        var cts = new CancellationTokenSource();
-        cancellations!["test-cancel-id"] = cts;
+        rpc.Handle("slow.op", async (JsonElement? args, CancellationToken ct) =>
+        {
+            handlerStarted.TrySetResult(true);
+            try
+            {
+                await Task.Delay(Timeout.Infinite, ct);
+            }
+            catch (OperationCanceledException)
+            {
+                handlerObservedCancellation.TrySetResult(true);
+                throw;
+            }
+            return null;
+        });
 
-        // Send $/cancelRequest notification
-        var cancelJson = """{"jsonrpc":"2.0","method":"$/cancelRequest","params":{"id":"test-cancel-id"}}""";
-        var handled = rpc.TryProcessMessage(cancelJson);
+        // Dispatch a cancellable request, then send $/cancelRequest. The handler must observe the cancellation.
+        Assert.True(rpc.TryProcessMessage("""{"jsonrpc":"2.0","id":"req-1","method":"slow.op"}"""));
+        await handlerStarted.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+
+        var handled = rpc.TryProcessMessage("""{"jsonrpc":"2.0","method":"$/cancelRequest","params":{"id":"req-1"}}""");
         Assert.True(handled);
-        Assert.True(cts.IsCancellationRequested);
+
+        await handlerObservedCancellation.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -78,52 +89,58 @@ public sealed partial class BranchCoverageRound3Tests
     }
 
     [Fact]
-    public void ResolvePendingCall_error_without_message_uses_default()
+    public async Task ResolvePendingCall_error_without_message_uses_default()
     {
+        // Drive the pending-call → error-resolution path through the public surface.
+        // Capturing the dispatched script lets us recover the auto-generated id and reply with a synthetic JS-side error.
+        string? capturedScript = null;
         var rpc = new WebViewRpcService(
-            s => Task.FromResult<string?>(null),
+            s => { capturedScript = s; return Task.FromResult<string?>(null); },
             NullLoggerFactory.Instance.CreateLogger("test"));
 
-        // Register a pending call via reflection
-        var pendingField = typeof(WebViewRpcService).GetField(
-            "_pendingCalls", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.NotNull(pendingField);
-        var pending = pendingField!.GetValue(rpc) as System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<JsonElement>>;
-        Assert.NotNull(pending);
+        var task = rpc.InvokeAsync("test.method", null, TestContext.Current.CancellationToken);
+        Assert.NotNull(capturedScript);
+        var id = ExtractRpcRequestId(capturedScript!);
 
-        var tcs = new TaskCompletionSource<JsonElement>();
-        pending!["error-test-id"] = tcs;
+        rpc.TryProcessMessage($"{{\"jsonrpc\":\"2.0\",\"id\":\"{id}\",\"error\":{{\"code\":-32600}}}}");
 
-        // Send response with error that has code but no message → line 478 covers `m.GetString() ?? "RPC error"`
-        var errorJson = """{"jsonrpc":"2.0","id":"error-test-id","error":{"code":-32600}}""";
-        rpc.TryProcessMessage(errorJson);
-
-        Assert.True(tcs.Task.IsFaulted);
-        var rpcEx = Assert.IsType<WebViewRpcException>(tcs.Task.Exception!.InnerException);
-        Assert.Equal(-32600, rpcEx.Code);
+        var ex = await Assert.ThrowsAsync<WebViewRpcException>(() => task);
+        Assert.Equal(-32600, ex.Code);
+        Assert.Equal("RPC error", ex.Message);
     }
 
     [Fact]
-    public void ResolvePendingCall_error_with_null_message_uses_default()
+    public async Task ResolvePendingCall_error_with_null_message_uses_default()
     {
+        string? capturedScript = null;
         var rpc = new WebViewRpcService(
-            s => Task.FromResult<string?>(null),
+            s => { capturedScript = s; return Task.FromResult<string?>(null); },
             NullLoggerFactory.Instance.CreateLogger("test"));
 
-        var pendingField = typeof(WebViewRpcService).GetField(
-            "_pendingCalls", BindingFlags.NonPublic | BindingFlags.Instance);
-        var pending = pendingField!.GetValue(rpc) as System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<JsonElement>>;
-
-        var tcs = new TaskCompletionSource<JsonElement>();
-        pending!["null-msg-id"] = tcs;
+        var task = rpc.InvokeAsync("test.method", null, TestContext.Current.CancellationToken);
+        Assert.NotNull(capturedScript);
+        var id = ExtractRpcRequestId(capturedScript!);
 
         // Error with explicit null message → GetString() returns null → ?? "RPC error"
-        var errorJson = """{"jsonrpc":"2.0","id":"null-msg-id","error":{"code":-32600,"message":null}}""";
-        rpc.TryProcessMessage(errorJson);
+        rpc.TryProcessMessage($"{{\"jsonrpc\":\"2.0\",\"id\":\"{id}\",\"error\":{{\"code\":-32600,\"message\":null}}}}");
 
-        Assert.True(tcs.Task.IsFaulted);
-        var rpcEx = Assert.IsType<WebViewRpcException>(tcs.Task.Exception!.InnerException);
-        Assert.Equal("RPC error", rpcEx.Message);
+        var ex = await Assert.ThrowsAsync<WebViewRpcException>(() => task);
+        Assert.Equal("RPC error", ex.Message);
+    }
+
+    private static string ExtractRpcRequestId(string dispatchScript)
+    {
+        // Script form (after JsonSerializer escapes the inner JSON envelope):
+        //   ...rpc._dispatch("{\u0022jsonrpc\u0022:\u00222.0\u0022,\u0022id\u0022:\u0022<guid>\u0022,...}")
+        // Substring between the first \u0022id\u0022:\u0022 marker and the next \u0022.
+        const string idMarker = "\\u0022id\\u0022:\\u0022";
+        const string endMarker = "\\u0022";
+        var start = dispatchScript.IndexOf(idMarker, StringComparison.Ordinal);
+        Assert.True(start >= 0, $"Failed to find id marker in dispatch script: {dispatchScript}");
+        start += idMarker.Length;
+        var end = dispatchScript.IndexOf(endMarker, start, StringComparison.Ordinal);
+        Assert.True(end > start, $"Failed to find id terminator in dispatch script: {dispatchScript}");
+        return dispatchScript.Substring(start, end - start);
     }
 
     #endregion

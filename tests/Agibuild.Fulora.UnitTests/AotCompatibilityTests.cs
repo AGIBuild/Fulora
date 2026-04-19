@@ -33,7 +33,7 @@ public class AotCompatibilityTests
     public void JsonSerializerOptions_in_Runtime_use_source_generated_contexts()
     {
         var runtimeAssembly = typeof(ServiceWorkerRegistrar).Assembly;
-        var rpcContextType = runtimeAssembly.GetType("Agibuild.Fulora.RpcJsonContext", throwOnError: false);
+        var rpcContextType = runtimeAssembly.GetType("Agibuild.Fulora.Rpc.RpcJsonContext", throwOnError: false);
         Assert.NotNull(rpcContextType);
         Assert.True(typeof(JsonSerializerContext).IsAssignableFrom(rpcContextType));
 
@@ -144,7 +144,10 @@ public class AotCompatibilityTests
         if (runtimeSourceDir is null)
             return;
 
-        var source = File.ReadAllText(Path.Combine(runtimeSourceDir, "WebViewRpcService.cs"));
+        // Result serialization (and its AOT guard) was extracted into the
+        // dedicated facet under Rpc/. The contract still belongs to the RPC
+        // service surface, so this test continues to live here.
+        var source = File.ReadAllText(Path.Combine(runtimeSourceDir, "Rpc", "RpcResultSerializer.cs"));
         Assert.Contains("RuntimeFeature.IsDynamicCodeSupported", source);
         Assert.Contains("SerializeResultToElement", source);
     }
