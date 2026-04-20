@@ -232,8 +232,10 @@ public class AutoUpdateServiceTests
 
         await svc.CheckForUpdate();
 
-        // Give the background auto-download task time to complete
-        await Task.Delay(200, TestContext.Current.CancellationToken);
+        // The service fires auto-download off the main task via Task.Run; await the mock's
+        // deterministic signal (TaskCompletionSource) instead of a wall-clock Task.Delay, which
+        // was too tight for busy Windows CI agents.
+        await provider.DownloadCalledAwaiter.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
 
         Assert.True(provider.DownloadWasCalled);
     }
@@ -293,8 +295,18 @@ public class AutoUpdateServiceTests
         private readonly bool _verifyFails;
         private readonly bool _emitProgress;
 
+        private readonly TaskCompletionSource _downloadCalled =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
         public bool DownloadWasCalled { get; private set; }
         public bool ApplyWasCalled { get; private set; }
+
+        /// <summary>
+        /// Completes when <see cref="DownloadUpdateAsync"/> has been entered. Lets tests await the
+        /// background auto-download signal deterministically instead of polling/sleeping for a
+        /// fixed wall-clock duration.
+        /// </summary>
+        public Task DownloadCalledAwaiter => _downloadCalled.Task;
 
         public MockAutoUpdateProvider(
             string currentVersion,
@@ -323,6 +335,7 @@ public class AutoUpdateServiceTests
         public Task<string> DownloadUpdateAsync(UpdateInfo update, AutoUpdateOptions options, Action<UpdateDownloadProgress>? onProgress = null, CancellationToken ct = default)
         {
             DownloadWasCalled = true;
+            _downloadCalled.TrySetResult();
             if (_downloadThrows != null) throw _downloadThrows;
 
             if (_emitProgress && onProgress != null)

@@ -170,7 +170,11 @@ public sealed class ContractSemanticsV1AnyThreadAsyncApiTests
 
     private static void PumpUntilCompleted(TestDispatcher dispatcher, Task task)
     {
-        ThreadingTestHelper.PumpUntil(dispatcher, () => task.IsCompleted, TimeSpan.FromSeconds(10));
+        // Use DispatcherTestPump's default timeout (60s). The previous 10s bound was tight enough
+        // that busy macOS-hosted runners occasionally deadlined inner Task.Run → dispatcher → adapter
+        // hops that complete in sub-second time locally. 60s still surfaces a real hang quickly
+        // (each pump cycle is a 50ms slice) without flaking under parallel CI load.
+        ThreadingTestHelper.PumpUntil(dispatcher, () => task.IsCompleted);
         dispatcher.RunAll();
     }
 
