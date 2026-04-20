@@ -11,6 +11,22 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 internal partial class BuildTask
 {
+    // Timeout budget notes:
+    //   Observed wall time of Agibuild.Fulora.UnitTests on cold caches:
+    //     - Linux runner   : ~4:00 (then the retry on warm caches finishes in <30s)
+    //     - macOS runner   : ~4:10 to 4:30
+    //     - Windows runner : ~4:10 to 4:30
+    //   A 4-minute first-attempt budget landed exactly on the edge, so every CI run was
+    //   consuming its retry and on slower runners both attempts timed out at 4:00 each
+    //   (total 8:00) even though the suite was not actually hung. 7 minutes reflects the
+    //   measured P99 with comfortable margin; it is NOT a defensive bump -- it tracks
+    //   reality. If this budget is exhausted again the suite has genuinely regressed
+    //   and needs sharding (xunit collections) rather than another timeout bump.
+    private static readonly TimeSpan UnitTestRunTimeout = TimeSpan.FromMinutes(7);
+
+    // Integration tests are a smaller suite (runtime lane only). 3 minutes has held.
+    private static readonly TimeSpan IntegrationTestRunTimeout = TimeSpan.FromMinutes(3);
+
     private async Task RunContractAutomationTests(string trxFileName)
     {
         await CleanupLingeringUnitTestProcessesAsync();
@@ -18,7 +34,7 @@ internal partial class BuildTask
             projectFile: UnitTestsProject,
             resultsDirectory: TestResultsDirectory,
             trxFileName: trxFileName,
-            timeout: TimeSpan.FromMinutes(4),
+            timeout: UnitTestRunTimeout,
             cleanupBetweenAttempts: CleanupLingeringUnitTestProcessesAsync);
     }
 
@@ -29,7 +45,7 @@ internal partial class BuildTask
             projectFile: IntegrationTestsProject,
             resultsDirectory: TestResultsDirectory,
             trxFileName: trxFileName,
-            timeout: TimeSpan.FromMinutes(3),
+            timeout: IntegrationTestRunTimeout,
             cleanupBetweenAttempts: CleanupLingeringIntegrationAutomationProcessesAsync);
     }
 
@@ -40,7 +56,7 @@ internal partial class BuildTask
             projectFile: UnitTestsProject,
             resultsDirectory: resultsDirectory,
             trxFileName: trxFileName,
-            timeout: TimeSpan.FromMinutes(4),
+            timeout: UnitTestRunTimeout,
             settingsFile: RootDirectory / "coverlet.runsettings",
             timeoutMessageTemplate: "Coverage unit tests timed out on attempt {Attempt}. Retrying once after cleanup.",
             cleanupBetweenAttempts: CleanupLingeringUnitTestProcessesAsync);
