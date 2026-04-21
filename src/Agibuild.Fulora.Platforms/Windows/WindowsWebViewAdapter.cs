@@ -8,7 +8,7 @@ using Microsoft.Web.WebView2.Core;
 namespace Agibuild.Fulora.Adapters.Windows;
 
 [SupportedOSPlatform("windows")]
-internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHandleProvider, ICookieAdapter, IWebViewAdapterOptions, IDisposable,
+internal sealed partial class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHandleProvider, ICookieAdapter, IWebViewAdapterOptions, IDisposable,
     ICustomSchemeAdapter, IDownloadAdapter, IPermissionAdapter, ICommandAdapter, IScreenshotAdapter, IPrintAdapter,
     IFindInPageAdapter, IZoomAdapter, IPreloadScriptAdapter, IAsyncPreloadScriptAdapter, IContextMenuAdapter, IDevToolsAdapter,
     IDragDropAdapter
@@ -1517,24 +1517,30 @@ internal sealed class WindowsWebViewAdapter : IWebViewAdapter, INativeWebViewHan
         public int Bottom;
     }
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+    private static partial bool GetClientRect(IntPtr hWnd, out RECT lpRect);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+    [LibraryImport("user32.dll", SetLastError = true, EntryPoint = "SetWindowLongPtrW")]
+    private static partial IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+    [LibraryImport("user32.dll", EntryPoint = "CallWindowProcW")]
+    private static partial IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
+    // RegisterDragDrop takes a ComImport interface parameter (IDropTarget via IUnknown). The
+    // LibraryImport source generator refuses to marshal [ComImport] interfaces (SYSLIB1051) because
+    // the generated stub cannot emit runtime-marshal COM interop. Migrating would require rewriting
+    // IDropTarget as a non-ComImport interface marshalled via ComInterfaceMarshaller<T>, which is
+    // beyond this P/Invoke-only migration and has no perf or AOT benefit here (OLE drag-drop runs
+    // once per Attach). DllImport is kept intentionally.
     [DllImport("ole32.dll")]
     private static extern int RegisterDragDrop(IntPtr hwnd, IDropTarget pDropTarget);
 
-    [DllImport("ole32.dll")]
-    private static extern int RevokeDragDrop(IntPtr hwnd);
+    [LibraryImport("ole32.dll")]
+    private static partial int RevokeDragDrop(IntPtr hwnd);
 
-    [DllImport("ole32.dll")]
-    private static extern int OleInitialize(IntPtr pvReserved);
+    [LibraryImport("ole32.dll")]
+    private static partial int OleInitialize(IntPtr pvReserved);
 
     [ComImport]
     [Guid("00000122-0000-0000-C000-000000000046")]

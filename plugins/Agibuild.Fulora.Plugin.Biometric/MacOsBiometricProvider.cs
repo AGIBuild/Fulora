@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -8,7 +9,7 @@ namespace Agibuild.Fulora.Plugin.Biometric;
 /// via a native ObjC shim (libAgibuildBiometric.dylib).
 /// </summary>
 [SupportedOSPlatform("macos")]
-public sealed class MacOsBiometricProvider : IBiometricPlatformProvider
+public sealed partial class MacOsBiometricProvider : IBiometricPlatformProvider
 {
     /// <inheritdoc />
     public Task<BiometricAvailability> CheckAvailabilityAsync(CancellationToken ct = default)
@@ -100,20 +101,23 @@ public sealed class MacOsBiometricProvider : IBiometricPlatformProvider
         }
     }
 
-    private static class NativeMethods
+    private static partial class NativeMethods
     {
         private const string LibName = "AgibuildBiometric";
 
-        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ag_biometric_check_availability(out IntPtr outType, out IntPtr outError);
+        [LibraryImport(LibName)]
+        [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        public static partial int ag_biometric_check_availability(out IntPtr outType, out IntPtr outError);
 
-        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern unsafe void ag_biometric_authenticate(
-            [MarshalAs(UnmanagedType.LPUTF8Str)] string reason,
+        [LibraryImport(LibName, StringMarshalling = StringMarshalling.Utf8)]
+        [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        public static unsafe partial void ag_biometric_authenticate(
+            string reason,
             IntPtr userData,
             delegate* unmanaged[Cdecl]<IntPtr, int, IntPtr, void> replyCb);
 
-        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ag_biometric_free(IntPtr ptr);
+        [LibraryImport(LibName)]
+        [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        public static partial void ag_biometric_free(IntPtr ptr);
     }
 }

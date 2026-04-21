@@ -8,7 +8,7 @@ namespace Agibuild.Fulora.NativeOverlay;
 /// The panel is borderless, non-activating, and transparent.
 /// </summary>
 [SupportedOSPlatform("macos")]
-internal sealed class MacOsNativeOverlayProvider : INativeOverlayProvider
+internal sealed partial class MacOsNativeOverlayProvider : INativeOverlayProvider
 {
     private IntPtr _panelHandle;
     private IntPtr _parentWindowHandle;
@@ -120,34 +120,35 @@ internal sealed class MacOsNativeOverlayProvider : INativeOverlayProvider
 
     private const string ObjCLib = "/usr/lib/libobjc.A.dylib";
 
-    [DllImport(ObjCLib)]
-    private static extern IntPtr objc_getClass(string name);
+    // ObjC class/selector names are ASCII-only (UTF-8 compatible) C strings — libobjc takes const char*.
+    [LibraryImport(ObjCLib, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr objc_getClass(string name);
 
-    [DllImport(ObjCLib)]
-    private static extern IntPtr sel_registerName(string name);
+    [LibraryImport(ObjCLib, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr sel_registerName(string name);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr objc_msgSend(IntPtr receiver, IntPtr selector);
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr objc_msgSend(IntPtr receiver, IntPtr selector);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern void objc_msgSend_bool(IntPtr receiver, IntPtr selector, [MarshalAs(UnmanagedType.I1)] bool arg);
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial void objc_msgSend_bool(IntPtr receiver, IntPtr selector, [MarshalAs(UnmanagedType.I1)] bool arg);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern void objc_msgSend_ptr(IntPtr receiver, IntPtr selector, IntPtr arg);
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial void objc_msgSend_ptr(IntPtr receiver, IntPtr selector, IntPtr arg);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern void objc_msgSend_long(IntPtr receiver, IntPtr selector, long arg);
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial void objc_msgSend_long(IntPtr receiver, IntPtr selector, long arg);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern void objc_msgSend_ptr_long(IntPtr receiver, IntPtr selector, IntPtr arg1, long arg2);
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial void objc_msgSend_ptr_long(IntPtr receiver, IntPtr selector, IntPtr arg1, long arg2);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr objc_msgSend_initPanel(
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr objc_msgSend_initPanel(
         IntPtr receiver, IntPtr selector,
         NSRect contentRect, ulong styleMask, ulong backingType, [MarshalAs(UnmanagedType.I1)] bool defer);
 
-    [DllImport(ObjCLib, EntryPoint = "objc_msgSend")]
-    private static extern void objc_msgSend_setFrame(
+    [LibraryImport(ObjCLib, EntryPoint = "objc_msgSend")]
+    private static partial void objc_msgSend_setFrame(
         IntPtr receiver, IntPtr selector,
         NSRect frame, [MarshalAs(UnmanagedType.I1)] bool display);
 }

@@ -6,7 +6,7 @@ namespace Agibuild.Fulora.Shell;
 /// <summary>
 /// Detects Windows high-contrast mode via SystemParametersInfo.
 /// </summary>
-internal static class WindowsHighContrastReader
+internal static partial class WindowsHighContrastReader
 {
     public static bool IsEnabled()
     {
@@ -33,9 +33,10 @@ internal static class WindowsHighContrastReader
         return false;
     }
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [SupportedOSPlatform("windows")]
-    private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref HIGHCONTRAST pvParam, uint fWinIni);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SystemParametersInfo(uint uiAction, uint uiParam, ref HIGHCONTRAST pvParam, uint fWinIni);
 
     [StructLayout(LayoutKind.Sequential)]
     [SupportedOSPlatform("windows")]

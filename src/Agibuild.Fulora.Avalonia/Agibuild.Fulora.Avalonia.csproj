@@ -20,6 +20,10 @@
     <RootNamespace>Agibuild.Fulora</RootNamespace>
     <AssemblyName>Agibuild.Fulora</AssemblyName>
 
+    <!-- LibraryImport source generator emits `unsafe` helpers (fixed pointers, function pointers)
+         for marshalling even when the user-facing partial method signature has no pointers. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
     <IsPackable>true</IsPackable>
     <PackageId>Agibuild.Fulora.Avalonia</PackageId>
     <Description>Cross-platform WebView control for Avalonia UI with native platform adapters (WKWebView on macOS/iOS, WebView2 on Windows, WebKitGTK on Linux, Android WebView). Provides embedded WebView, popup dialog, and OAuth authentication flows.</Description>

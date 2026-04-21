@@ -4,7 +4,7 @@ using System.Runtime.Versioning;
 namespace Agibuild.Fulora.NativeOverlay;
 
 [SupportedOSPlatform("windows")]
-internal sealed class WindowsNativeOverlayProvider : INativeOverlayProvider
+internal sealed partial class WindowsNativeOverlayProvider : INativeOverlayProvider
 {
     private IntPtr _overlayHwnd;
     private bool _isVisible;
@@ -90,24 +90,24 @@ internal sealed class WindowsNativeOverlayProvider : INativeOverlayProvider
 
     public void Dispose() => DestroyOverlay();
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr CreateWindowEx(int dwExStyle, string lpClassName, string lpWindowName,
+    [LibraryImport("user32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    private static partial IntPtr CreateWindowEx(int dwExStyle, string lpClassName, string lpWindowName,
         int dwStyle, int x, int y, int nWidth, int nHeight,
         IntPtr hWndParent, IntPtr hMenu, IntPtr hInstance, IntPtr lpParam);
 
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool DestroyWindow(IntPtr hWnd);
+    private static partial bool DestroyWindow(IntPtr hWnd);
 
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+    private static partial bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+    private static partial bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    private static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
 }
