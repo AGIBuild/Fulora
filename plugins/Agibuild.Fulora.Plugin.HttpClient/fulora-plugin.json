@@ -2,7 +2,7 @@
   "id": "Agibuild.Fulora.Plugin.HttpClient",
   "displayName": "HTTP Client",
   "services": ["HttpClientService"],
-  "npmPackage": "@agibuild/bridge-plugin-httpclient",
+  "npmPackage": "@agibuild/fulora-plugin-httpclient",
   "minFuloraVersion": "1.0.0",
   "platforms": ["windows", "macos", "linux", "android", "ios"],
   "requiredCapabilities": ["plugin.http.outbound"],

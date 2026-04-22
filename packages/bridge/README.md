@@ -1,17 +1,17 @@
-# @fulora/client
+# @agibuild/fulora-client
 
 Typed bridge client runtime for [Agibuild.Fulora](https://github.com/AGIBuild/Fulora) — call C# services from JavaScript with full type safety.
 
 ## Install
 
 ```bash
-npm install @fulora/client
+npm install @agibuild/fulora-client
 ```
 
 ## Quick Start
 
 ```typescript
-import { createBridgeClient } from '@fulora/client';
+import { createBridgeClient } from '@agibuild/fulora-client';
 
 const bridge = createBridgeClient();
 
@@ -27,7 +27,7 @@ const result = await bridge.invoke<string>('GreeterService.SayHello', { name: 'W
 Define TypeScript interfaces that mirror your C# `[JsExport]` services, then use `getService()` for type-safe calls:
 
 ```typescript
-import { createBridgeClient, type BridgeServiceMethod } from '@fulora/client';
+import { createBridgeClient, type BridgeServiceMethod } from '@agibuild/fulora-client';
 
 // Define interface matching your C# service
 interface ISystemInfoService {
@@ -66,7 +66,7 @@ import {
   withTimeout,
   withRetry,
   withErrorNormalization,
-} from '@fulora/client';
+} from '@agibuild/fulora-client';
 
 const bridge = createBridgeClient();
 
@@ -86,7 +86,7 @@ bridge.use(withErrorNormalization());
 ### Custom Middleware
 
 ```typescript
-import type { BridgeMiddleware } from '@fulora/client';
+import type { BridgeMiddleware } from '@agibuild/fulora-client';
 
 const analytics: BridgeMiddleware = async (context, next) => {
   const start = Date.now();
@@ -106,7 +106,7 @@ bridge.use(analytics);
 ## Error Handling
 
 ```typescript
-import { BridgeError, BridgeTimeoutError } from '@fulora/client';
+import { BridgeError, BridgeTimeoutError } from '@agibuild/fulora-client';
 
 try {
   await bridge.invoke('SomeService.DoWork');

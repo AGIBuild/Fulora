@@ -172,7 +172,7 @@
         },
         "NpmToken": {
           "type": "string",
-          "description": "npm auth token for @agibuild/bridge publication",
+          "description": "npm auth token for @agibuild/fulora-client publication",
           "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "NuGetApiKey": {

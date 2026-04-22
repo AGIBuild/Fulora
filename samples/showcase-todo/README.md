@@ -6,7 +6,7 @@ A minimal hybrid desktop app demonstrating the Agibuild.Fulora bridge: an Avalon
 
 - **ShowcaseTodo.Desktop** — Avalonia desktop app with WebView and SPA hosting
 - **ShowcaseTodo.Bridge** — Bridge interfaces (`ITodoService`) and implementation (`TodoService`)
-- **ShowcaseTodo.Web** — React (Vite) frontend using `@fulora/client` to call C# services
+- **ShowcaseTodo.Web** — React (Vite) frontend using `@agibuild/fulora-client` to call C# services
 
 ## Run
 

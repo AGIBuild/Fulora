@@ -14,7 +14,7 @@ public sealed class PluginCapabilityCliTests
               "id": "Agibuild.Fulora.Plugin.Database",
               "displayName": "Database",
               "services": ["DatabaseService"],
-              "npmPackage": "@fulora/plugin-database",
+              "npmPackage": "@agibuild/fulora-plugin-database",
               "minFuloraVersion": "1.0.0",
               "platforms": ["windows", "macos"],
               "requiredCapabilities": ["plugin.database.read", "plugin.database.write"],

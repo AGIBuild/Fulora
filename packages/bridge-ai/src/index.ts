@@ -1,4 +1,4 @@
-import type { BridgeClient, BridgeServiceContract } from "@fulora/client";
+import type { BridgeClient, BridgeServiceContract } from "@agibuild/fulora-client";
 
 // ── Types matching C# DTOs ──
 

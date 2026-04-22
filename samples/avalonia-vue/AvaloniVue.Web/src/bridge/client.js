@@ -1,4 +1,4 @@
-import { BridgeReadyTimeoutError, createBridgeClient, withErrorNormalization, withLogging, } from '@fulora/client';
+import { BridgeReadyTimeoutError, createBridgeClient, withErrorNormalization, withLogging, } from '@agibuild/fulora-client';
 import { appShellService, chatService, fileService, settingsService, systemInfoService, } from './generated/bridge.client';
 import { installBridgeMock } from './generated/bridge.mock';
 const bridgeClient = createBridgeClient();

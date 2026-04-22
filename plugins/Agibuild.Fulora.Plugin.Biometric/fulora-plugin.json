@@ -2,7 +2,7 @@
   "id": "Agibuild.Fulora.Plugin.Biometric",
   "displayName": "Biometric",
   "services": ["BiometricService"],
-  "npmPackage": "@agibuild/bridge-plugin-biometric",
+  "npmPackage": "@agibuild/fulora-plugin-biometric",
   "minFuloraVersion": "1.0.0",
   "platforms": ["windows", "macos", "linux", "android", "ios"],
   "requiredCapabilities": ["plugin.biometric.prompt"],

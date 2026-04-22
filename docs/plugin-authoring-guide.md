@@ -18,7 +18,7 @@ webView.Bridge.UsePlugin<LocalStoragePlugin>();
 
 ```typescript
 // TypeScript — fully typed service proxy
-import { getLocalStorageService } from '@fulora/plugin-local-storage';
+import { getLocalStorageService } from '@agibuild/fulora-plugin-local-storage';
 const storage = getLocalStorageService(bridgeClient);
 await storage.set({ key: 'theme', value: 'dark' });
 ```
@@ -156,7 +156,7 @@ packages/bridge-plugin-my-feature/
 Copy the interface from the generated `.d.ts` and add the helper:
 
 ```typescript
-import type { BridgeClient, BridgeServiceContract } from '@fulora/client';
+import type { BridgeClient, BridgeServiceContract } from '@agibuild/fulora-client';
 
 export interface MyService {
   getValue(params: { key: string }): Promise<string>;
@@ -174,9 +174,9 @@ export function getMyService(
 
 ```json
 {
-  "name": "@fulora/plugin-my-feature",
+  "name": "@agibuild/fulora-plugin-my-feature",
   "peerDependencies": {
-    "@fulora/client": "^1.0.0"
+    "@agibuild/fulora-client": "^1.0.0"
   }
 }
 ```
@@ -196,8 +196,8 @@ webView.Bridge.UsePlugin<LocalStoragePlugin>(serviceProvider);
 ### TypeScript (Frontend)
 
 ```typescript
-import { bridgeClient } from '@fulora/client';
-import { getLocalStorageService } from '@fulora/plugin-local-storage';
+import { bridgeClient } from '@agibuild/fulora-client';
+import { getLocalStorageService } from '@agibuild/fulora-plugin-local-storage';
 
 const storage = getLocalStorageService(bridgeClient);
 const keys = await storage.getKeys();
@@ -208,7 +208,7 @@ const keys = await storage.getKeys();
 | Convention | Value |
 |---|---|
 | NuGet package name | `Agibuild.Fulora.Plugin.{Name}` |
-| npm package name | `@fulora/plugin-{name}` |
+| npm package name | `@agibuild/fulora-plugin-{name}` |
 | Plugin class name | `{Name}Plugin : IBridgePlugin` |
 | Service name (RPC) | Derived from interface name minus `I` prefix |
 
@@ -218,13 +218,13 @@ Fulora ships with the following official plugins, each available as a NuGet + np
 
 | Plugin | NuGet Package | npm Package | Description |
 |---|---|---|---|
-| **LocalStorage** | `Agibuild.Fulora.Plugin.LocalStorage` | `@fulora/plugin-local-storage` | Key-value local persistence |
-| **Database** | `Agibuild.Fulora.Plugin.Database` | `@fulora/plugin-database` | SQLite embedded database (query, execute, transactions) |
-| **HTTP Client** | `Agibuild.Fulora.Plugin.HttpClient` | `@fulora/plugin-http-client` | Host-routed HTTP with base URL, headers, interceptors |
-| **File System** | `Agibuild.Fulora.Plugin.FileSystem` | `@fulora/plugin-file-system` | Sandboxed file read/write/list/delete operations |
-| **Notifications** | `Agibuild.Fulora.Plugin.Notifications` | `@fulora/plugin-notifications` | Cross-platform system notifications (toast/banner) |
-| **Auth Token** | `Agibuild.Fulora.Plugin.AuthToken` | `@fulora/plugin-auth-token` | Platform-secure token storage (Keychain/CredMgr/Keystore) |
-| **Biometric** | `Agibuild.Fulora.Plugin.Biometric` | `@fulora/plugin-biometric` | Biometric authentication (Touch ID, Face ID, Windows Hello) |
+| **LocalStorage** | `Agibuild.Fulora.Plugin.LocalStorage` | `@agibuild/fulora-plugin-local-storage` | Key-value local persistence |
+| **Database** | `Agibuild.Fulora.Plugin.Database` | `@agibuild/fulora-plugin-database` | SQLite embedded database (query, execute, transactions) |
+| **HTTP Client** | `Agibuild.Fulora.Plugin.HttpClient` | `@agibuild/fulora-plugin-http-client` | Host-routed HTTP with base URL, headers, interceptors |
+| **File System** | `Agibuild.Fulora.Plugin.FileSystem` | `@agibuild/fulora-plugin-file-system` | Sandboxed file read/write/list/delete operations |
+| **Notifications** | `Agibuild.Fulora.Plugin.Notifications` | `@agibuild/fulora-plugin-notifications` | Cross-platform system notifications (toast/banner) |
+| **Auth Token** | `Agibuild.Fulora.Plugin.AuthToken` | `@agibuild/fulora-plugin-auth-token` | Platform-secure token storage (Keychain/CredMgr/Keystore) |
+| **Biometric** | `Agibuild.Fulora.Plugin.Biometric` | `@agibuild/fulora-plugin-biometric` | Biometric authentication (Touch ID, Face ID, Windows Hello) |
 
 Use the CLI to discover and install plugins:
 
@@ -261,7 +261,7 @@ webView.Bridge.UsePlugin<BiometricPlugin>();
 ```
 
 ```typescript
-import type { IBiometricService } from '@fulora/plugin-biometric';
+import type { IBiometricService } from '@agibuild/fulora-plugin-biometric';
 
 const availability = await BiometricService.checkAvailabilityAsync();
 if (availability.isAvailable) {

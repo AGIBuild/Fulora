@@ -2,7 +2,7 @@
   "id": "Agibuild.Fulora.Plugin.AuthToken",
   "displayName": "Auth Token",
   "services": ["AuthTokenService"],
-  "npmPackage": "@agibuild/bridge-plugin-authtoken",
+  "npmPackage": "@agibuild/fulora-plugin-authtoken",
   "minFuloraVersion": "1.0.0",
   "platforms": ["windows", "macos", "linux", "android", "ios"],
   "requiredCapabilities": ["plugin.auth.token.read", "plugin.auth.token.write"],

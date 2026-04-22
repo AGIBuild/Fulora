@@ -44,7 +44,7 @@ internal sealed partial class BuildTask : NukeBuild
     [Secret]
     private readonly string? NuGetApiKey = Environment.GetEnvironmentVariable("NUGET_API_KEY");
 
-    [Parameter("npm auth token for @agibuild/bridge publication.")]
+    [Parameter("npm auth token for @agibuild/fulora-client publication.")]
     [Secret]
     private readonly string? NpmToken = Environment.GetEnvironmentVariable("NPM_TOKEN");
 

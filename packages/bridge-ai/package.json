@@ -1,5 +1,5 @@
 {
-  "name": "@fulora/ai",
+  "name": "@agibuild/fulora-ai",
   "version": "0.1.0",
   "description": "Fulora AI helpers for typed app-service calls from JavaScript.",
   "type": "module",
@@ -20,10 +20,10 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "@fulora/client": ">=1.0.0"
+    "@agibuild/fulora-client": ">=1.0.0"
   },
   "devDependencies": {
-    "@fulora/client": "file:../bridge",
+    "@agibuild/fulora-client": "file:../bridge",
     "typescript": "^5.9.3"
   },
   "repository": {

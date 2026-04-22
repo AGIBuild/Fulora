@@ -15,7 +15,7 @@
     "format": "biome format --write ."
   },
   "dependencies": {
-    "@fulora/client": "file:../../../packages/bridge",
+    "@agibuild/fulora-client": "file:../../../packages/bridge",
     "lucide-react": "^0.563.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",

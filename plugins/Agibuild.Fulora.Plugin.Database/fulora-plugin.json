@@ -2,7 +2,7 @@
   "id": "Agibuild.Fulora.Plugin.Database",
   "displayName": "Database",
   "services": ["DatabaseService"],
-  "npmPackage": "@agibuild/bridge-plugin-database",
+  "npmPackage": "@agibuild/fulora-plugin-database",
   "minFuloraVersion": "1.0.0",
   "platforms": ["windows", "macos", "linux", "android", "ios"],
   "requiredCapabilities": ["plugin.database.read", "plugin.database.write"],

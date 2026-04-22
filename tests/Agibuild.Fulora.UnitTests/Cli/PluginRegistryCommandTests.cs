@@ -136,8 +136,8 @@ public class PluginRegistryCommandTests
     [Fact]
     public void AddPluginCommand_DeriveNpmPackageName_returns_correct_format()
     {
-        Assert.Equal("@fulora/plugin-database", AddPluginCommand.DeriveNpmPackageName("Agibuild.Fulora.Plugin.Database"));
-        Assert.Equal("@fulora/plugin-http-client", AddPluginCommand.DeriveNpmPackageName("Agibuild.Fulora.Plugin.HttpClient"));
+        Assert.Equal("@agibuild/fulora-plugin-database", AddPluginCommand.DeriveNpmPackageName("Agibuild.Fulora.Plugin.Database"));
+        Assert.Equal("@agibuild/fulora-plugin-http-client", AddPluginCommand.DeriveNpmPackageName("Agibuild.Fulora.Plugin.HttpClient"));
     }
 
     [Fact]

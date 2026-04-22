@@ -2,7 +2,7 @@
   "id": "Agibuild.Fulora.Plugin.LocalStorage",
   "displayName": "Local Storage",
   "services": ["LocalStorageService"],
-  "npmPackage": "@agibuild/bridge-plugin-localstorage",
+  "npmPackage": "@agibuild/fulora-plugin-localstorage",
   "minFuloraVersion": "1.0.0",
   "platforms": ["windows", "macos", "linux", "android", "ios"],
   "requiredCapabilities": ["plugin.localstorage.read", "plugin.localstorage.write"],

@@ -7,7 +7,7 @@ namespace Agibuild.Fulora.Cli.Commands;
 internal static class AddPluginCommand
 {
     private const string PluginPrefix = "Agibuild.Fulora.Plugin.";
-    private const string NpmPackagePrefix = "@fulora/plugin-";
+    private const string NpmPackagePrefix = "@agibuild/fulora-plugin-";
 
     public static Command Create()
     {

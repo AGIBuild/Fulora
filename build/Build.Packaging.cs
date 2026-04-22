@@ -466,7 +466,7 @@ internal partial class BuildTask
     // ──────────────────────────── npm Publish ────────────────────────────
 
     internal Target NpmPublish => _ => _
-        .Description("Publishes @agibuild/bridge to the npm registry with token-based authentication.")
+        .Description("Publishes @agibuild/fulora-client to the npm registry with token-based authentication.")
         .Requires(() => NpmToken)
         .Executes(async () =>
         {
@@ -476,7 +476,7 @@ internal partial class BuildTask
             await RunNpmCaptureAllAsync(["run", "build"], bridgeDir, TimeSpan.FromMinutes(1));
             await RunNpmCaptureAllAsync(["publish", "--access", "public", $"--//registry.npmjs.org/:_authToken={NpmToken}"], bridgeDir, TimeSpan.FromMinutes(1));
 
-            Serilog.Log.Information("@agibuild/bridge published to npm registry.");
+            Serilog.Log.Information("@agibuild/fulora-client published to npm registry.");
         });
 
     // ──────────────────────────── NuGet Package Smoke Test ────────────────────────────

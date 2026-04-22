@@ -10,7 +10,7 @@ public class PluginManifestTests
           "id": "Agibuild.Fulora.Plugin.Database",
           "displayName": "Database (SQLite)",
           "services": ["DatabaseService"],
-          "npmPackage": "@fulora/plugin-database",
+          "npmPackage": "@agibuild/fulora-plugin-database",
           "minFuloraVersion": "1.0.0",
           "platforms": ["windows", "macos", "linux"]
         }
@@ -34,7 +34,7 @@ public class PluginManifestTests
         Assert.Equal("Agibuild.Fulora.Plugin.Database", m.Id);
         Assert.Equal("Database (SQLite)", m.DisplayName);
         Assert.Single(m.Services, "DatabaseService");
-        Assert.Equal("@fulora/plugin-database", m.NpmPackage);
+        Assert.Equal("@agibuild/fulora-plugin-database", m.NpmPackage);
         Assert.Equal("1.0.0", m.MinFuloraVersion);
         Assert.NotNull(m.Platforms);
         Assert.Equal(3, m.Platforms.Length);

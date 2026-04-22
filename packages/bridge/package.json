@@ -1,5 +1,5 @@
 {
-  "name": "@fulora/client",
+  "name": "@agibuild/fulora-client",
   "version": "1.1.0",
   "description": "Fulora client runtime for typed app-service calls from JavaScript.",
   "type": "module",

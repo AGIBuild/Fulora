@@ -15,7 +15,7 @@
     "format": "biome format --write ."
   },
   "dependencies": {
-    "@fulora/client": "npm:@agibuild/bridge@^1.1.1",
+    "@agibuild/fulora-client": "^1.6.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
