@@ -190,7 +190,7 @@
       "agibuild.fulora.adapters.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.6.4-local, )"
+          "Agibuild.Fulora.Core": "[1.6.5-local, )"
         }
       },
       "agibuild.fulora.avalonia": {
@@ -208,11 +208,11 @@
       "agibuild.fulora.integration.tests": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.4-local, )",
-          "Agibuild.Fulora.Avalonia": "[1.6.4-local, )",
-          "Agibuild.Fulora.Core": "[1.6.4-local, )",
-          "Agibuild.Fulora.Runtime": "[1.6.4-local, )",
-          "Agibuild.Fulora.Testing": "[1.6.4-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.5-local, )",
+          "Agibuild.Fulora.Avalonia": "[1.6.5-local, )",
+          "Agibuild.Fulora.Core": "[1.6.5-local, )",
+          "Agibuild.Fulora.Runtime": "[1.6.5-local, )",
+          "Agibuild.Fulora.Testing": "[1.6.5-local, )",
           "Avalonia": "[12.0.1, )",
           "Avalonia.Fonts.Inter": "[12.0.1, )",
           "Avalonia.Themes.Fluent": "[12.0.1, )",
@@ -224,25 +224,25 @@
       "agibuild.fulora.platforms": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.4-local, )",
-          "Agibuild.Fulora.Core": "[1.6.4-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.5-local, )",
+          "Agibuild.Fulora.Core": "[1.6.5-local, )",
           "Microsoft.Web.WebView2": "[1.0.3856.49, )"
         }
       },
       "agibuild.fulora.runtime": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.4-local, )",
-          "Agibuild.Fulora.Core": "[1.6.4-local, )",
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.5-local, )",
+          "Agibuild.Fulora.Core": "[1.6.5-local, )",
           "Microsoft.Extensions.Logging.Abstractions": "[11.0.0-preview.3.26207.106, )"
         }
       },
       "agibuild.fulora.testing": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.4-local, )",
-          "Agibuild.Fulora.Core": "[1.6.4-local, )",
-          "Agibuild.Fulora.Runtime": "[1.6.4-local, )"
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.5-local, )",
+          "Agibuild.Fulora.Core": "[1.6.5-local, )",
+          "Agibuild.Fulora.Runtime": "[1.6.5-local, )"
         }
       },
       "Avalonia": {

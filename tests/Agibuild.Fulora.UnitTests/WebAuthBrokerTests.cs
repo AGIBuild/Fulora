@@ -38,7 +38,9 @@ public sealed class WebAuthBrokerTests
             };
         };
 
-        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options), TimeSpan.FromSeconds(20));
+        // Use DispatcherTestPump default timeout (60s) — outer pump timeout is a safety net,
+        // not a test expectation. Explicit shorter budgets have flaked on loaded CI runners.
+        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options));
 
         Assert.Equal(WebAuthStatus.Success, result.Status);
         Assert.NotNull(result.CallbackUri);
@@ -60,7 +62,7 @@ public sealed class WebAuthBrokerTests
         // Keep adapter behavior safe if navigation falls through unexpectedly.
         factory.OnDialogCreated = (_, adapter) => adapter.AutoCompleteNavigation = true;
 
-        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options), TimeSpan.FromSeconds(10));
+        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options));
 
         Assert.Equal(WebAuthStatus.Success, result.Status);
         Assert.NotNull(result.CallbackUri);
@@ -89,7 +91,7 @@ public sealed class WebAuthBrokerTests
             };
         };
 
-        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options), TimeSpan.FromSeconds(10));
+        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options));
 
         Assert.Equal(WebAuthStatus.UserCancel, result.Status);
     }
@@ -113,7 +115,9 @@ public sealed class WebAuthBrokerTests
             adapter.AutoCompleteNavigation = true;
         };
 
-        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options), TimeSpan.FromSeconds(10));
+        // Use default outer pump timeout (60s). The broker's own 100ms CTS is what this test
+        // exercises; the outer pump is a safety net, not a tested budget.
+        var result = DispatcherTestPump.Run(_dispatcher, () => broker.AuthenticateAsync(owner, options));
 
         Assert.Equal(WebAuthStatus.Timeout, result.Status);
         Assert.NotNull(result.Error);

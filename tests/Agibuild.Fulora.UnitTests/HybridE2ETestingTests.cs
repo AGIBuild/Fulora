@@ -66,9 +66,12 @@ public sealed class HybridE2ETestingTests
     public async Task BridgeTestTracer_WaitForBridgeCallAsync_completes_when_matching_call_arrives()
     {
         var tracer = new BridgeTestTracer();
-        var callTask = tracer.WaitForBridgeCallAsync("Svc", "M", TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
-
-        await Task.Delay(50, TestContext.Current.CancellationToken);
+        // WaitForBridgeCallAsync is synchronous up to its first await — the waiter is already
+        // registered when the Task handle is returned. No Task.Delay(50) needed to serialize,
+        // and removing it eliminates a wall-clock race that flaked on busy CI runners.
+        // A 30s safety timeout replaces the previous 2s budget to absorb scheduling jitter
+        // without masking real hangs.
+        var callTask = tracer.WaitForBridgeCallAsync("Svc", "M", TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken);
         tracer.OnImportCallStart("Svc", "M", null);
         tracer.OnImportCallEnd("Svc", "M", 10);
 

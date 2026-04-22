@@ -185,7 +185,7 @@
       "agibuild.fulora.ai": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.6.4-local, )",
+          "Agibuild.Fulora.Core": "[1.6.5-local, )",
           "Microsoft.Extensions.AI": "[10.5.0, )",
           "Microsoft.Extensions.AI.Abstractions": "[10.5.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0-preview.3.26207.106, )",
