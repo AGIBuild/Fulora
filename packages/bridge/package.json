@@ -46,7 +46,7 @@
     "interop"
   ],
   "devDependencies": {
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "license": "MIT"
 }
