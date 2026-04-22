@@ -29,13 +29,13 @@
       },
       "Avalonia": {
         "type": "Direct",
-        "requested": "[12.0.0-rc1, )",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "FrZ3rQNIj8+BIDc1g7BPNsNSrSSPHX5dN1ferqNPfzSlaQNayLTCrtlC0WPwamVg7p3DVBKMyx87/0GC+BEmmg==",
+        "requested": "[12.0.1, )",
+        "resolved": "12.0.1",
+        "contentHash": "4OK0u9EdD3ukqA3qTwwTQ7MnRMj+gzBgm/KmpbYRdRTd94OzcioTRnHrc5PJo94SfMEYKq2rfpO3nq9Jddet+w==",
         "dependencies": {
           "Avalonia.BuildServices": "11.3.2",
-          "Avalonia.Remote.Protocol": "12.0.0-rc1",
-          "MicroCom.Runtime": "0.11.0"
+          "Avalonia.Remote.Protocol": "12.0.1",
+          "MicroCom.Runtime": "0.11.4"
         }
       },
       "Avalonia.Desktop": {
@@ -54,20 +54,20 @@
       },
       "Avalonia.Fonts.Inter": {
         "type": "Direct",
-        "requested": "[12.0.0-rc1, )",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "EYtgnYv70sae+UHUlbmpQm034ufORtVJjnKyF8zAblqnRt7bprv0SYF/sK1UzOdb20iI/kcnq7n2Kk19HB2DOA==",
+        "requested": "[12.0.1, )",
+        "resolved": "12.0.1",
+        "contentHash": "Pm7Xb9fMpjM4i1cpUGtpDtxkMC/oVfijaT93cPl30LPUKPYPbpwm1jkrYwtWLtEr/xTgbUmxyZZvJd0cV9oF8g==",
         "dependencies": {
-          "Avalonia": "12.0.0-rc1"
+          "Avalonia": "12.0.1"
         }
       },
       "Avalonia.Themes.Fluent": {
         "type": "Direct",
-        "requested": "[12.0.0-rc1, )",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "UFgSXcPzgSq+9BfBdWEH9R2QgFyOxqsEmFO7nblf5nfvK1kVUbWk7rJ+6N1THbS3MaUcbFcditM5OhJc0d1JeQ==",
+        "requested": "[12.0.1, )",
+        "resolved": "12.0.1",
+        "contentHash": "/vfTVnz0mZR91cDQn5dHKzngLV0OfCZ0i/uT01uxKu6jqyaPbRwpO68d07N0d6ll6hnvdfySfP4lDY7JWtqr4A==",
         "dependencies": {
-          "Avalonia": "12.0.0-rc1"
+          "Avalonia": "12.0.1"
         }
       },
       "Microsoft.SourceLink.GitHub": {
@@ -118,8 +118,8 @@
       },
       "Avalonia.Remote.Protocol": {
         "type": "Transitive",
-        "resolved": "12.0.0-rc1",
-        "contentHash": "/hXGRnxsaemSRe/A8hOWwa7DxoOBiTGUIt/ENpE9VEoQKaXqvkJtWW6Vx5Cchiynx0ODKgRhVjIDxL62sLQk2Q=="
+        "resolved": "12.0.1",
+        "contentHash": "8rqhNyde2I/JiW2TjQ8AkUoRclynr0e8yFXKB8VhehA07ejthx4Bnmt3k1DTSlpwTXbM0FRgYAtB1bTlUc6rgg=="
       },
       "Avalonia.Skia": {
         "type": "Transitive",
@@ -186,8 +186,8 @@
       },
       "MicroCom.Runtime": {
         "type": "Transitive",
-        "resolved": "0.11.0",
-        "contentHash": "MEnrZ3UIiH40hjzMDsxrTyi8dtqB5ziv3iBeeU4bXsL/7NLSal9F1lZKpK+tfBRnUoDSdtcW3KufE4yhATOMCA=="
+        "resolved": "0.11.4",
+        "contentHash": "yZ8+Lgwo+KtRI29TB2mIOEMzV+csMJ+pKZg4YHReAP3vRewWLKKeYfrBDo5FS69rWnEbCfU3sbM+ZEQr+GDLtg=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
