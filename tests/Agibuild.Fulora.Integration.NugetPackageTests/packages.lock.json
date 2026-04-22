@@ -5,27 +5,27 @@
       "Agibuild.Fulora.Avalonia": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "1.5.11",
-        "contentHash": "IKl7vSunXfWWCOj6iKUI0wBitzXy4Rkh22D3cANs4e2HH4Bmd6CE0nRSPSUajou87kh1gE7Hy+OSjqs68PN8mw==",
+        "resolved": "1.6.2",
+        "contentHash": "9LS+O87RNwteqhHNyZ9iJ221EzERgg91asz+XrbPHAvFY5oIIDpC8ECwWmouebd3DuzRHfjFb8FhLdeqsv1W2w==",
         "dependencies": {
-          "Avalonia": "12.0.0-preview2",
+          "Avalonia": "12.0.0-rc1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "11.0.0-preview.2.26159.112",
           "Microsoft.Extensions.Logging.Abstractions": "11.0.0-preview.2.26159.112",
-          "Microsoft.Web.WebView2": "1.0.3848-prerelease",
+          "Microsoft.Web.WebView2": "1.0.3856.49",
           "SharpHook": "7.1.1"
         }
       },
       "Agibuild.Fulora.Bridge.Generator": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "1.5.11",
-        "contentHash": "xRwi1/xo7zhHJWCNsmh2wOv3LY09Ou2Ss7MFPpUzRTtVoIIxEUaXfFEnPImwLNDU/Il2o0bQPSgeiK14o15Qyg=="
+        "resolved": "1.6.2",
+        "contentHash": "3NYD+3iF4cwa/SOzJvlD1CDkZWN0Uc6eiv48Tee7nvsfM6vm+/zMyVhMzO/wpWK0KEheWZTRp8a/iRxZ17jsLQ=="
       },
       "Agibuild.Fulora.Core": {
         "type": "Direct",
         "requested": "[*-*, )",
-        "resolved": "1.5.11",
-        "contentHash": "9vQvd3Dhcw4WvAIABapTF+zr55iAcspuHNgWt3IRkmo6yTnobIlr4buzcRu1XbBQ49i/7l66kiQMFnPKJNVNjw=="
+        "resolved": "1.6.2",
+        "contentHash": "HswDWBmkQgmGpoj2VGQhyEVhn6pyGPX4xzXwpe5BKhks7PjV5SHih1awDeiZBTRPgNDbOOjU7pnBt8uSUflBoA=="
       },
       "Avalonia": {
         "type": "Direct",

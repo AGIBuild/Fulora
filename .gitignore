@@ -400,3 +400,7 @@ coverage-report/
 # DocFX generated outputs (do not commit generated artifacts)
 docs/_site/
 docs/api/
+
+# iOS native shim transient build outputs (only .mm source and .a archives are tracked)
+src/Agibuild.Fulora.Adapters.iOS/Native/*.o
+src/Agibuild.Fulora.Adapters.iOS/Native/*.xcframework/
