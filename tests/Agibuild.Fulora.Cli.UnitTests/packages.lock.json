@@ -204,7 +204,7 @@
       "agibuild.fulora.cli": {
         "type": "Project",
         "dependencies": {
-          "Agibuild.Fulora.Core": "[1.6.6-local, )",
+          "Agibuild.Fulora.Core": "[1.6.7-local, )",
           "System.CommandLine": "[3.0.0-preview.3.26207.106, )"
         }
       },

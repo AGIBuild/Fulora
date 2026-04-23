@@ -38,9 +38,9 @@ The following remain on concrete types only (by design):
 
 | Code | Type | 1.0 Decision | Rationale |
 |------|------|-------------|-----------|
-| AGWV001 | `ICookieManager` | **Keep experimental** | Cookie management has platform gaps (Android adapter returns null). Graduating implies full cross-platform support commitment. |
+| AGWV001 | `ICookieManager` | **Keep experimental (pending graduation)** | All five platform adapters (Windows/macOS/iOS/Android/Gtk) now implement `ICookieAdapter` end-to-end; see `tests/Agibuild.Fulora.UnitTests/AdapterCookieContract.cs` for the shared cross-platform behavior contract. Graduation is scheduled for v2.0 (see `docs/superpowers/plans/2026-04-23-fulora-v2-public-api-breakage.md` Task 4) once the same contract runs in every platform-specific integration lane. The earlier audit entry citing "Android adapter returns null" is superseded by the 1.6.x implementation. |
 | AGWV004 | `WebResourceRequestedEventArgs` | **Graduated** | Attribute removed. Stable and widely used across all adapters. |
-| AGWV005 | `EnvironmentRequestedEventArgs` | **Keep experimental** | Placeholder with no concrete implementation. Will be designed in a future release. |
+| AGWV005 | `EnvironmentRequestedEventArgs` | **Keep experimental (pending decision)** | Placeholder with no concrete implementation. v2.0 plan proposes either implement-and-graduate or remove; see `docs/superpowers/plans/2026-04-23-fulora-v2-public-api-breakage.md` Task 5. |
 
 ### Phase 8 Additions Audit (New ✅)
 
@@ -70,10 +70,10 @@ All 172 public types (72 Core + 100 Runtime) follow .NET naming conventions:
 | # | Action | Original Priority | Resolution |
 |---|--------|----------|-----------|
 | 1 | Promote Zoom/Find/Preload/ContextMenu to IWebView | High | ✅ Completed — all promoted to IWebView |
-| 2 | Expose EnableSpaHosting on WebView control | Medium | ⏸ Deferred to post-1.0 — adequate workaround via WebViewEnvironmentOptions |
+| 2 | Expose EnableSpaHosting on WebView control | Medium | ✅ Completed in 1.6.x — `Avalonia.WebView` implements `ISpaHostingWebView`; the marker-interface downcast itself is scheduled for v2.0 retirement |
 | 3 | Graduate AGWV004 from Experimental | Low | ✅ Completed — attribute removed |
 | 4 | Document event lifecycle on WebView control | Low | ✅ Documented — pre-attach subscription is no-op by design for Avalonia lifecycle |
-| 5 | Version as 1.0.0-preview.1 → 1.0.0 | — | 🔜 Pending — M9.6 Stable Release Gate |
+| 5 | Version as 1.0.0-preview.1 → 1.0.0 | — | ✅ Released; current release line 1.6.x |
 
 ---
 
@@ -141,3 +141,23 @@ See `docs/API_SURFACE_INVENTORY.release.txt`.
 ### Migration
 
 No action required. Existing code compiles unchanged. New code can now declare dependencies on a single capability (e.g. `ctor(IWebViewDevTools dt)`) instead of `IWebView`, enabling narrower unit-test doubles and cleaner Dependency Injection registrations.
+
+---
+
+## 1.6 Cookie Adapter Contract Evidence (Additive)
+
+**Date**: 2026-04-23
+**Status**: Additive test-only artifact. No public API changes.
+
+### New shared-contract fixture
+
+- `tests/Agibuild.Fulora.UnitTests/AdapterCookieContract.cs` — a factory-delegate-driven helper set that defines the behavior every `ICookieAdapter` implementation must satisfy (positive Set/Get/Delete/ClearAll semantics, overwrite rules, idempotency). Null-argument guards are intentionally out of contract scope because the runtime funnels all calls through `RuntimeCookieManager`, which already performs `ArgumentNullException.ThrowIfNull`.
+- `tests/Agibuild.Fulora.UnitTests/MockCookieAdapterContractTests.cs` — runs the full contract against the in-memory `MockWebViewAdapterWithCookies`. Seven facts; all pass in 1.6.6.
+
+### Purpose
+
+Establish the reusable cross-platform test harness that the v2.0 plan requires as a precondition for graduating `AGWV001 ICookieManager`. Platform-specific integration lanes (Windows WebView2, macOS/iOS WKWebView, Linux WebKitGtk, Android WebView) are expected to mirror this test class with a real adapter factory; once every lane is green, the `[Experimental("AGWV001")]` attribute is removed in the v2.0 commit tracked by `docs/superpowers/plans/2026-04-23-fulora-v2-public-api-breakage.md` Task 4.
+
+### Scope decision: contract vs. adapter extensibility
+
+`ICookieAdapter` remains `internal` in 1.6.x. Making it public is a separate v2.0 decision because it advertises adapter authorship as a supported extension point, which requires versioning commitments we are not ready to make in 1.x. The contract fixture works around the visibility constraint with a factory-delegate pattern (public test class, static helpers taking `AdapterFactory`) rather than an abstract base class.
