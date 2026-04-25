@@ -418,24 +418,40 @@ git commit -m "chore(apple): vendor Avalonia Libobjc + BlockLiteral + CGRect int
 
 ---
 
-### Task 3: Vendor `NSObject.cs` + `NSManagedObjectBase.cs` (managed object base classes)
+> **AMENDMENT #3 (2026-04-25, applied during T3 dry-run):** `NSObject.cs` line 75 calls `NSString.GetString(...)` directly (in `GetDescription`). The original T3/T4 split (NSObject in T3, NSString authored fresh in T4) would fail T3 build smoke with `CS0246: NSString`. The original T4 stub also incorrectly stated "Avalonia inlines string conv into NSObject" — `NSString.cs` actually exists upstream as a separate 67-line file with the same `Avalonia.Controls.Macios.Interop` namespace. NSString.cs depends only on NSObject (parent) + Libobjc (already in T2), so no further transitive dependencies. Re-grouping:
+>
+> - **T3 (managed object base + string identity)** = `NSObject.cs` + `NSManagedObjectBase.cs` + `NSString.cs` — vendored together at the `Macios/Interop/` root (mirrors upstream's flat layout; NSString is *not* moved into `Foundation/` because NSObject directly references it, which would create an awkward upward namespace `using` from the runtime layer to the Foundation framework layer).
+> - **T4 (Foundation framework types)** loses the "author NSString.cs" step; the `Foundation/` subdirectory contents are unchanged otherwise.
+>
+> ATTRIBUTION.md gains one new row for `Interop/NSString.cs`, inserted **immediately AFTER `NSManagedObjectBase.cs`** so the runtime-layer rows (Libobjc → NSObject → NSManagedObjectBase → NSString → BlockLiteral → CGRect) cluster together at the top of the table; Foundation/* row remains last.
+
+### Task 3: Vendor `NSObject.cs` + `NSManagedObjectBase.cs` + `NSString.cs` (managed object base classes)
 
 **Files:**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/NSObject.cs`
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/NSManagedObjectBase.cs`
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/NSString.cs`
 
-- [ ] **Step 1: Copy two files from the T2-pinned upstream clone**
+- [ ] **Step 1: Copy three files from the T2-pinned upstream clone**
 
 ```bash
 cp /tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop/NSObject.cs \
    src/Agibuild.Fulora.Platforms/Macios/Interop/NSObject.cs
 cp /tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop/NSManagedObjectBase.cs \
    src/Agibuild.Fulora.Platforms/Macios/Interop/NSManagedObjectBase.cs
+cp /tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop/NSString.cs \
+   src/Agibuild.Fulora.Platforms/Macios/Interop/NSString.cs
 ```
 
-- [ ] **Step 2: Apply same SPDX header + namespace rename pattern as Task 2 Step 3.**
+- [ ] **Step 2: Apply same SPDX header + namespace rename pattern as Task 2 Step 3** to all three files. (Per the Phase 1 Vendoring Policy at the top of this phase, also add explicit `private`/etc. modifiers if and only if the build smoke surfaces IDE0040 errors at specific lines.)
 
-- [ ] **Step 3: Update ATTRIBUTION.md** — replace `TBD` for `Interop/NSObject.cs` and `Interop/NSManagedObjectBase.cs` with the same SHA (`cat /tmp/avalonia-vendor-sha.txt`).
+- [ ] **Step 3: Update ATTRIBUTION.md**
+  1. Replace `TBD` in the `Interop/NSObject.cs` row with `cat /tmp/avalonia-vendor-sha.txt`.
+  2. Replace `TBD` in the `Interop/NSManagedObjectBase.cs` row with the same SHA.
+  3. **Insert a new row immediately AFTER the `Interop/NSManagedObjectBase.cs` row** with content:
+     ```
+     | `Interop/NSString.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSString.cs` | <SHA> |
+     ```
 
 - [ ] **Step 4: Build smoke**
 
@@ -447,16 +463,18 @@ Expected: 0 errors / 0 warnings.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/Agibuild.Fulora.Platforms/Macios/Interop/{NSObject,NSManagedObjectBase}.cs \
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/{NSObject,NSManagedObjectBase,NSString}.cs \
         src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md
-git commit -m "chore(apple): vendor Avalonia NSObject + NSManagedObjectBase managed wrappers"
+git commit -m "chore(apple): vendor Avalonia NSObject + NSManagedObjectBase + NSString managed wrappers"
 ```
 
 ---
 
-### Task 4: Vendor Foundation types (NSError, NSURL, NSURLRequest, NSMutableURLRequest, NSDictionary, NSArray, NSDate, NSNumber, NSUUID) + new NSData / NSString
+### Task 4: Vendor Foundation types (NSError, NSURL, NSURLRequest, NSMutableURLRequest, NSDictionary, NSArray, NSDate, NSNumber, NSUUID) + new NSData
 
-> **On bite-sized task granularity:** This task vendors 11 files in one commit, which is larger than the 2-5 minute step rule suggests. The justification: each file is a near-mechanical paste + namespace rename automated by the Step 2 script. There is no per-file design decision and no per-file rollback value (you would never want to ship `NSURL.cs` without `NSError.cs`). If the implementer prefers finer commits for bisect granularity, split into **T4a: 9 vendored Foundation types** and **T4b: NSData + NSString (newly authored)** — both options are acceptable.
+> **AMENDMENT #4 (2026-04-25, applied via T3 amendment #3):** `NSString.cs` is no longer authored fresh in T4 — it is vendored from upstream as part of T3 (because `NSObject.cs` directly references it). T4 now vendors 9 Foundation types + authors only 1 new file (`NSData.cs`).
+
+> **On bite-sized task granularity:** This task vendors 9 files + authors 1 in one commit, which is larger than the 2-5 minute step rule suggests. The justification: each vendored file is a near-mechanical paste + namespace rename automated by the Step 2 script. There is no per-file design decision and no per-file rollback value (you would never want to ship `NSURL.cs` without `NSError.cs`). If the implementer prefers finer commits for bisect granularity, split into **T4a: 9 vendored Foundation types** and **T4b: NSData (newly authored)** — both options are acceptable.
 
 **Files:**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSError.cs` (vendor)
@@ -469,7 +487,6 @@ git commit -m "chore(apple): vendor Avalonia NSObject + NSManagedObjectBase mana
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSNumber.cs` (vendor)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSUUID.cs` (vendor)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSData.cs` (NEW — Avalonia does not have this)
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSString.cs` (NEW — Avalonia inlines string conv into NSObject, we extract for clarity)
 
 - [ ] **Step 1: Bulk copy vendor files**
 
@@ -547,65 +564,22 @@ internal sealed class NSData : NSObject
 }
 ```
 
-- [ ] **Step 4: Author NEW `NSString.cs`** (extracted for explicitness — Avalonia inlines):
-
-```csharp
-// SPDX-License-Identifier: MIT
-// Copyright (c) 2026 Agibuild
-
-using System.Runtime.InteropServices;
-using Agibuild.Fulora.Platforms.Macios.Interop;
-
-namespace Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
-
-internal sealed class NSString : NSObject
-{
-    private static readonly IntPtr s_class = Libobjc.objc_getClass("NSString");
-    private static readonly IntPtr s_alloc = Libobjc.sel_getUid("alloc");
-    private static readonly IntPtr s_initWithUtf8 = Libobjc.sel_getUid("initWithUTF8String:");
-    private static readonly IntPtr s_utf8String = Libobjc.sel_getUid("UTF8String");
-
-    private NSString(IntPtr handle) : base(handle) { }
-
-    public static NSString From(string s)
-    {
-        ArgumentNullException.ThrowIfNull(s);
-        var allocated = Libobjc.intptr_objc_msgSend(s_class, s_alloc);
-        var utf8 = System.Text.Encoding.UTF8.GetBytes(s);
-        unsafe
-        {
-            fixed (byte* p = utf8)
-            {
-                var handle = Libobjc.intptr_objc_msgSend_intptr(allocated, s_initWithUtf8, (IntPtr)p);
-                return new NSString(handle);
-            }
-        }
-    }
-
-    public override string ToString()
-    {
-        var ptr = Libobjc.intptr_objc_msgSend(Handle, s_utf8String);
-        return ptr == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(ptr) ?? string.Empty;
-    }
-}
-```
-
-- [ ] **Step 5: Build smoke**
+- [ ] **Step 4: Build smoke**
 
 ```bash
 dotnet build src/Agibuild.Fulora.Platforms/Agibuild.Fulora.Platforms.csproj -c Release --nologo
 ```
-Expected: 0 errors / 0 warnings. If `Libobjc` is missing one of the `intptr_objc_msgSend_*` overloads invoked in NSData/NSString, add the overload to `Libobjc.cs` in this commit (Avalonia ships a wide overload table; usually all needed are present).
+Expected: 0 errors / 0 warnings. If `Libobjc` is missing one of the `intptr_objc_msgSend_*` overloads invoked in NSData, add the overload to `Libobjc.cs` in this commit (Avalonia ships a wide overload table; usually all needed are present).
 
-- [ ] **Step 6: Update ATTRIBUTION.md** with the 9 vendored Foundation types.
+- [ ] **Step 5: Update ATTRIBUTION.md** with the 9 vendored Foundation types (replace the single `Interop/Foundation/*` row with explicit per-file rows, each carrying the same vendor SHA from `cat /tmp/avalonia-vendor-sha.txt`).
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
 git add src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/ \
         src/Agibuild.Fulora.Platforms/Macios/Interop/Libobjc.cs \
         src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md
-git commit -m "chore(apple): vendor Avalonia Foundation types + add NSData/NSString"
+git commit -m "chore(apple): vendor Avalonia Foundation types + add NSData"
 ```
 
 ---
