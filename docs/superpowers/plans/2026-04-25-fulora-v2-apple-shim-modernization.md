@@ -321,12 +321,15 @@ git commit -m "chore(apple): scaffold Macios/ namespace with Avalonia MIT attrib
 >
 > Both tasks remain independent build-clean checkpoints. ATTRIBUTION.md row order is unchanged (Libobjc, NSObject, NSManagedObjectBase, BlockLiteral) for upstream-path stability — T2 fills 2 SHA rows (Libobjc + BlockLiteral, the latter despite being row 4), T3 fills the other 2 (NSObject, NSManagedObjectBase).
 
-### Task 2: Vendor `Libobjc.cs` + `BlockLiteral.cs` (low-level interop bedrock)
+### Task 2: Vendor `Libobjc.cs` + `BlockLiteral.cs` + `CGRect.cs` (low-level interop bedrock)
+
+> **AMENDMENT #2 (2026-04-25, applied during T2 dry-run):** `Libobjc.cs` declares msgSend overloads with `CGRect` / `CGSize` parameter and return types (lines 81, 109, 115, 117 in upstream `4e16564`). Upstream defines both record structs in a single 179-byte `Macios/Interop/CGRect.cs`. Without vendoring `CGRect.cs`, T2 build smoke fails with `CS0246: CGRect / CGSize`. CGRect.cs is self-contained (no transitive deps, no `using` directives) so adding it to T2 is a clean expansion. ATTRIBUTION.md gains one new row for `Interop/CGRect.cs`.
 
 **Files:**
 - Copy from: `https://github.com/AvaloniaUI/Avalonia.Controls.WebView` `main` branch (record commit SHA)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Libobjc.cs`
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/BlockLiteral.cs`
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/CGRect.cs` (contains `CGRect` + `CGSize` record structs — single upstream file)
 
 - [ ] **Step 1: Clone Avalonia.Controls.WebView at pinned SHA**
 
@@ -339,18 +342,20 @@ git rev-parse HEAD > /tmp/avalonia-vendor-sha.txt
 cat /tmp/avalonia-vendor-sha.txt
 ```
 
-- [ ] **Step 2: Copy two files into `Macios/Interop/`**
+- [ ] **Step 2: Copy three files into `Macios/Interop/`**
 
 ```bash
 cp /tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop/Libobjc.cs \
    src/Agibuild.Fulora.Platforms/Macios/Interop/Libobjc.cs
 cp /tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop/BlockLiteral.cs \
    src/Agibuild.Fulora.Platforms/Macios/Interop/BlockLiteral.cs
+cp /tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop/CGRect.cs \
+   src/Agibuild.Fulora.Platforms/Macios/Interop/CGRect.cs
 ```
 
 - [ ] **Step 3: Rename namespace + add SPDX header in each file**
 
-For each of the two files, replace:
+For each of the three files, replace:
 
 ```csharp
 namespace Avalonia.Controls.Macios.Interop;
@@ -371,7 +376,16 @@ Update any internal `using` of `Avalonia.Controls.Macios.*` to `Agibuild.Fulora.
 
 - [ ] **Step 4: Update ATTRIBUTION.md with vendor SHA**
 
-Replace `TBD` (and `TBD (filled in Task 2)`) cells in `Macios/ATTRIBUTION.md` for `Interop/Libobjc.cs` and `Interop/BlockLiteral.cs` with the commit SHA from `/tmp/avalonia-vendor-sha.txt`. Use the bare SHA (no parenthetical). Leave `NSObject.cs`, `NSManagedObjectBase.cs`, and Foundation/WebKit rows as `TBD` for later tasks.
+In `Macios/ATTRIBUTION.md`:
+
+1. Replace `TBD (filled in Task 2)` (Libobjc row) with the bare SHA from `/tmp/avalonia-vendor-sha.txt`.
+2. Replace `TBD` in the BlockLiteral row (4th row) with the same SHA.
+3. **Insert a new row** for `CGRect.cs` immediately AFTER the BlockLiteral row, with content:
+   ```
+   | `Interop/CGRect.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/CGRect.cs` | <SHA> |
+   ```
+   (where `<SHA>` is the same vendor SHA). The CGRect row is the only row with non-TBD content for a "vendored as part of T2" file beyond the original 7-row table.
+4. Leave `NSObject.cs`, `NSManagedObjectBase.cs`, and Foundation/WebKit rows as `TBD` for later tasks.
 
 - [ ] **Step 5: Build smoke**
 
@@ -383,9 +397,9 @@ Expected: `Build succeeded. 0 Warning(s) 0 Error(s)`. (Files compile but are not
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/Agibuild.Fulora.Platforms/Macios/Interop/{Libobjc,BlockLiteral}.cs \
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/{Libobjc,BlockLiteral,CGRect}.cs \
         src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md
-git commit -m "chore(apple): vendor Avalonia Libobjc + BlockLiteral interop bedrock"
+git commit -m "chore(apple): vendor Avalonia Libobjc + BlockLiteral + CGRect interop bedrock"
 ```
 
 ---
