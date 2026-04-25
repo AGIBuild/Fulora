@@ -13,7 +13,18 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/NSString.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSString.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/BlockLiteral.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/BlockLiteral.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/CGRect.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/CGRect.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
-| `Interop/Foundation/*` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/{NS*}.cs` | TBD |
+| `Interop/Foundation/Foundation.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/Foundation.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSValue.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSValue.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSError.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSError.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSUrl.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSUrl.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSURLRequest.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSURLRequest.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSMutableURLRequest.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSMutableURLRequest.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSData.cs` | n/a | n/a (newly authored — see Foundation/NSData.cs SPDX header) |
+| `Interop/Foundation/NSDictionary.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSDictionary.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSArray.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSArray.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSDate.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSDate.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSNumber.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSNumber.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSUUID.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSUUID.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/WebKit/WKWebView.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WKWebView.cs` | TBD |
 | `Interop/WebKit/WKNavigationDelegate.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WKNavigationDelegate.cs` | TBD |
 
