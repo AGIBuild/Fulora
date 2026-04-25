@@ -316,6 +316,62 @@ public class WebViewSslException : WebViewNavigationException
         : base(FuloraErrorCodes.NavigationSsl, message, navigationId, requestUri, innerException)
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance from a structured
+    /// <see cref="Agibuild.Fulora.Security.ServerCertificateErrorContext"/>.
+    /// </summary>
+    /// <remarks>
+    /// Used by every platform WebView adapter when routing a server
+    /// certificate validation failure through
+    /// <see cref="Agibuild.Fulora.Security.INavigationSecurityHooks"/>.
+    /// </remarks>
+    internal WebViewSslException(
+        Agibuild.Fulora.Security.ServerCertificateErrorContext context,
+        Guid navigationId,
+        Exception? innerException = null)
+        : base(
+            FuloraErrorCodes.NavigationSsl,
+            BuildMessage(context),
+            navigationId,
+            (context ?? throw new ArgumentNullException(nameof(context))).RequestUri,
+            innerException)
+    {
+        Host = context.Host;
+        ErrorSummary = context.ErrorSummary;
+        PlatformRawCode = context.PlatformRawCode;
+        CertificateSubject = context.CertificateSubject;
+        CertificateIssuer = context.CertificateIssuer;
+        ValidFrom = context.ValidFrom;
+        ValidTo = context.ValidTo;
+    }
+
+    /// <summary>Host of the request that failed certificate validation, when populated by the adapter.</summary>
+    public string? Host { get; }
+
+    /// <summary>Short, non-localized summary of the underlying failure (e.g. <c>CertificateExpired</c>).</summary>
+    public string? ErrorSummary { get; }
+
+    /// <summary>Native platform's raw error code; not comparable across platforms.</summary>
+    public int PlatformRawCode { get; }
+
+    /// <summary>Leaf certificate subject DN summary, when exposed by the native layer.</summary>
+    public string? CertificateSubject { get; }
+
+    /// <summary>Leaf certificate issuer DN summary, when exposed by the native layer.</summary>
+    public string? CertificateIssuer { get; }
+
+    /// <summary>Leaf certificate <c>NotBefore</c>, when exposed by the native layer.</summary>
+    public DateTimeOffset? ValidFrom { get; }
+
+    /// <summary>Leaf certificate <c>NotAfter</c>, when exposed by the native layer.</summary>
+    public DateTimeOffset? ValidTo { get; }
+
+    private static string BuildMessage(Agibuild.Fulora.Security.ServerCertificateErrorContext? context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        return $"SSL certificate error for {context.Host}: {context.ErrorSummary} (raw={context.PlatformRawCode})";
+    }
 }
 
 public class WebViewTimeoutException : WebViewNavigationException
