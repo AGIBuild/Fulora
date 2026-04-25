@@ -661,7 +661,6 @@ git commit -m "chore(apple): vendor Avalonia Foundation framework + NS* types + 
     <ImplicitUsings>enable</ImplicitUsings>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj" />
@@ -782,22 +781,24 @@ namespace Agibuild.Fulora.Platforms.UnitTests.Macios.Interop;
 [Trait("Platform", "macOS")]
 public class NSObjectLifecycleTests
 {
+    // NOTE: NSString.Create(string?) constructs the wrapper with owns:false (the
+    // returned NSString is autoreleased by the runtime), so NSObject.Dispose
+    // intentionally does NOT send `release` for this path. This test therefore
+    // smokes "construction yields a live handle and dispose is exception-safe".
+    // owns:true / release-on-dispose semantics belong to types that retain
+    // ownership (e.g. NSData.FromBytes) and are exercised by their own tests.
     [Fact]
-    public void Dispose_releases_handle()
+    public void Construct_and_dispose_roundtrip_succeeds()
     {
         if (!OperatingSystem.IsMacOS()) return;
-        IntPtr handleSeen;
-        using (var s = NSString.Create("x")!)
-        {
-            handleSeen = s.Handle;
-            Assert.NotEqual(IntPtr.Zero, handleSeen);
-        }
-        // After Dispose, the managed wrapper must have released its retain.
-        // Direct verification of native refcount is non-trivial in xUnit;
-        // we settle for "no exception thrown" as smoke.
+        using var s = NSString.Create("x")!;
+        Assert.NotEqual(IntPtr.Zero, s.Handle);
     }
 }
 ```
+
+> **T5 follow-up correction (post-implementation, code-quality reviewer finding):**
+> The original snippet above named the test `Dispose_releases_handle` and asserted "the managed wrapper must have released its retain". That was misleading: `NSString.Create` constructs `owns: false`, so `NSObject.Dispose` early-returns without sending `release` (see `NSObject.cs` `ReleaseUnmanagedResources`). The renamed `Construct_and_dispose_roundtrip_succeeds` reflects what is actually verified (live handle + dispose-without-throw). Genuine release-on-dispose verification will be added when an `owns: true` factory (e.g. NSData.FromBytes) is exercised by Phase 2 wrapper tests. The unused local `handleSeen` was also dropped, and `<AllowUnsafeBlocks>true</AllowUnsafeBlocks>` was removed from the test csproj because no `unsafe`/`fixed` block is used by these tests.
 
 > **Note on `BlockLiteralInvokeTests`:** Block invocation is the highest-risk interop primitive (ABI varies by arch). It is tested end-to-end in Task 9 (`WKHTTPCookieStoreTests` — async API uses blocks heavily) and in the Phase 0 spike (see "Phase 0 — Spikes" before Phase 1). Do not author a synthetic block test here; either use a real WebKit async API or skip.
 

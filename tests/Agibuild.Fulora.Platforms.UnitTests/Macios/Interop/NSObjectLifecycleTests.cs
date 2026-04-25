@@ -6,18 +6,17 @@ namespace Agibuild.Fulora.Platforms.UnitTests.Macios.Interop;
 [Trait("Platform", "macOS")]
 public class NSObjectLifecycleTests
 {
+    // NOTE: NSString.Create(string?) constructs the wrapper with owns:false (the
+    // returned NSString is autoreleased by the runtime), so NSObject.Dispose
+    // intentionally does NOT send `release` for this path. This test therefore
+    // smokes "construction yields a live handle and dispose is exception-safe".
+    // owns:true / release-on-dispose semantics belong to types that retain
+    // ownership (e.g. NSData.FromBytes) and are exercised by their own tests.
     [Fact]
-    public void Dispose_releases_handle()
+    public void Construct_and_dispose_roundtrip_succeeds()
     {
         if (!OperatingSystem.IsMacOS()) return;
-        IntPtr handleSeen;
-        using (var s = NSString.Create("x")!)
-        {
-            handleSeen = s.Handle;
-            Assert.NotEqual(IntPtr.Zero, handleSeen);
-        }
-        // After Dispose, the managed wrapper must have released its retain.
-        // Direct verification of native refcount is non-trivial in xUnit;
-        // we settle for "no exception thrown" as smoke.
+        using var s = NSString.Create("x")!;
+        Assert.NotEqual(IntPtr.Zero, s.Handle);
     }
 }
