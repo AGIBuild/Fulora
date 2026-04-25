@@ -96,23 +96,26 @@ src/Agibuild.Fulora.Platforms/
 ├─ Macios/                                    ← NEW (this plan)
 │  ├─ Interop/
 │  │  ├─ Libobjc.cs                          T2  vendor + namespace
-│  │  ├─ NSObject.cs                          T2  vendor + namespace
-│  │  ├─ NSManagedObjectBase.cs               T2  vendor + namespace
-│  │  ├─ BlockLiteral.cs                      T3  vendor + namespace
+│  │  ├─ BlockLiteral.cs                     T2  vendor + namespace
+│  │  ├─ CGRect.cs                           T2  vendor + namespace
+│  │  ├─ NSObject.cs                         T3  vendor + namespace
+│  │  ├─ NSManagedObjectBase.cs              T3  vendor + namespace
+│  │  ├─ NSString.cs                         T3  vendor + namespace
 │  │  ├─ Foundation/
-│  │  │  ├─ NSError.cs                        T4  vendor
-│  │  │  ├─ NSURL.cs                          T4  vendor
-│  │  │  ├─ NSURLRequest.cs                   T4  vendor
-│  │  │  ├─ NSMutableURLRequest.cs            T4  vendor
-│  │  │  ├─ NSString.cs                       T4  vendor
-│  │  │  ├─ NSData.cs                         T4  new (Avalonia missing)
-│  │  │  ├─ NSDictionary.cs                   T4  vendor
-│  │  │  ├─ NSArray.cs                        T4  vendor
-│  │  │  ├─ NSDate.cs                         T4  vendor
-│  │  │  ├─ NSNumber.cs                       T4  vendor
-│  │  │  ├─ NSUUID.cs                         T4  vendor
-│  │  │  ├─ NSHTTPCookie.cs                   T9  vendor
-│  │  │  └─ NSHTTPCookieStore.cs              T9  new
+│  │  │  ├─ Foundation.cs                    T4  vendor (static framework P/Invoke)
+│  │  │  ├─ NSValue.cs                       T4  vendor (NSNumber abstract base)
+│  │  │  ├─ NSError.cs                       T4  vendor (incl. co-defined NSErrorException)
+│  │  │  ├─ NSUrl.cs                         T4  vendor (lowercase 'rl' matches upstream)
+│  │  │  ├─ NSURLRequest.cs                  T4  vendor
+│  │  │  ├─ NSMutableURLRequest.cs           T4  vendor
+│  │  │  ├─ NSData.cs                        T4  new (Avalonia missing)
+│  │  │  ├─ NSDictionary.cs                  T4  vendor
+│  │  │  ├─ NSArray.cs                       T4  vendor
+│  │  │  ├─ NSDate.cs                        T4  vendor
+│  │  │  ├─ NSNumber.cs                      T4  vendor
+│  │  │  ├─ NSUUID.cs                        T4  vendor
+│  │  │  ├─ NSHTTPCookie.cs                  T9  vendor
+│  │  │  └─ NSHTTPCookieStore.cs             T9  new
 │  │  ├─ WebKit/
 │  │  │  ├─ WKWebKit.cs                       T6  protocol resolution helpers (vendor)
 │  │  │  ├─ WKWebView.cs                      T6  vendor + extend
@@ -470,15 +473,35 @@ git commit -m "chore(apple): vendor Avalonia NSObject + NSManagedObjectBase + NS
 
 ---
 
-### Task 4: Vendor Foundation types (NSError, NSURL, NSURLRequest, NSMutableURLRequest, NSDictionary, NSArray, NSDate, NSNumber, NSUUID) + new NSData
+> **AMENDMENT #5 (2026-04-25, applied during T4 dry-run pre-scan):** Two transitive dependencies and one filename mistake surfaced in the upstream Foundation type files; the `.Foundation` sub-namespace and a `Foundation` static P/Invoke class collide if naively split. Resolution:
+>
+> 1. **`Foundation.cs` (14-line static partial class wrapping `/System/Library/Frameworks/Foundation.framework/Foundation` for `objc_getClass` / `objc_getProtocol`) MUST be vendored** because `NSUrl.cs` line 7 calls `Foundation.objc_getClass("NSURL")`. It is co-located inside `Macios/Interop/Foundation/Foundation.cs` with the **same** `...Macios.Interop.Foundation` sub-namespace as the NS* type files. Within that sub-namespace the unqualified token `Foundation` resolves unambiguously to the static class (no parent-namespace `Foundation` symbol exists, and the current namespace does not appear as a type-context shadow). NSUrl needs no body modification.
+> 2. **`NSValue.cs` (5-line abstract base class)** MUST be vendored because `NSNumber : NSValue`. It joins T4 in `Macios/Interop/Foundation/NSValue.cs`.
+> 3. **Filename and class name correction:** Upstream uses `NSUrl.cs` / `class NSUrl` (lowercase 'rl'), NOT `NSURL.cs` / `class NSURL`. The plan body and copy script are fixed to match. Wrapper-layer (Phase 2) and integration-test-layer (Phase 5) references that previously said `NSURL` are also corrected — see the "NSURL → NSUrl global rename" sub-section under "Cross-Phase Renames" below.
+> 4. **No identifier renames** to vendored code (vendoring policy preserved). The collision risk is resolved by namespace co-location, not by renaming `Foundation` to something else.
+> 5. **`NSErrorException`** (used inside `NSError.cs::ToException`) is co-defined within the same `NSError.cs` file (lines 33-37 upstream). No additional file needed.
+> 6. **`CoreFoundation.cs`** is NOT needed: `NSDictionary.cs` declares its own inline `[DllImport]` for `CFDictionaryGet*` and never references our `CoreFoundation` static wrapper. Skip vendoring.
+>
+> **Cross-Phase Renames** (consequence of fix #3):
+>
+> | Plan section | Old | New |
+> |---|---|---|
+> | Phase 1 file tree (line ~104) | `NSURL.cs` | `NSUrl.cs` |
+> | Phase 2 LoadHTMLString signature | `LoadHTMLString(string html, NSURL? baseUrl)` | `LoadHTMLString(string html, NSUrl? baseUrl)` |
+> | Phase 5 integration test (line ~1350) | `NSURLRequest.From(server.Uri)` | `NSURLRequest.FromUri(server.Uri)` (also note the vendored API is `FromUri`, not `From`) |
+> | Internal-use protocol/class names that are spelled `NSURLRequest`, `NSURLResponse`, `NSURLSession*` upstream | unchanged | unchanged (those are correct upstream spellings — only `NSUrl` itself uses the lowercase form) |
 
-> **AMENDMENT #4 (2026-04-25, applied via T3 amendment #3):** `NSString.cs` is no longer authored fresh in T4 — it is vendored from upstream as part of T3 (because `NSObject.cs` directly references it). T4 now vendors 9 Foundation types + authors only 1 new file (`NSData.cs`).
+### Task 4: Vendor Foundation types (NSError, NSUrl, NSURLRequest, NSMutableURLRequest, NSDictionary, NSArray, NSDate, NSNumber, NSUUID) + Foundation framework P/Invoke + NSValue + new NSData
 
-> **On bite-sized task granularity:** This task vendors 9 files + authors 1 in one commit, which is larger than the 2-5 minute step rule suggests. The justification: each vendored file is a near-mechanical paste + namespace rename automated by the Step 2 script. There is no per-file design decision and no per-file rollback value (you would never want to ship `NSURL.cs` without `NSError.cs`). If the implementer prefers finer commits for bisect granularity, split into **T4a: 9 vendored Foundation types** and **T4b: NSData (newly authored)** — both options are acceptable.
+> **AMENDMENT #4 (2026-04-25, applied via T3 amendment #3):** `NSString.cs` is no longer authored fresh in T4 — it is vendored from upstream as part of T3 (because `NSObject.cs` directly references it).
+
+> **On bite-sized task granularity:** This task vendors 11 files + authors 1 in one commit, which is larger than the 2-5 minute step rule suggests. The justification: each vendored file is a near-mechanical paste + namespace rename automated by the Step 2 script. There is no per-file design decision and no per-file rollback value (you would never want to ship `NSUrl.cs` without `NSError.cs`). If the implementer prefers finer commits for bisect granularity, split into **T4a: 11 vendored Foundation files** and **T4b: NSData (newly authored)** — both options are acceptable.
 
 **Files:**
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSError.cs` (vendor)
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSURL.cs` (vendor)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/Foundation.cs` (vendor — static partial class for Foundation framework P/Invokes)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSValue.cs` (vendor — 5-line abstract base for NSNumber)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSError.cs` (vendor — also defines co-located `NSErrorException`)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSUrl.cs` (vendor — note lowercase 'rl' matching upstream)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSURLRequest.cs` (vendor)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSMutableURLRequest.cs` (vendor)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSDictionary.cs` (vendor)
@@ -493,7 +516,7 @@ git commit -m "chore(apple): vendor Avalonia NSObject + NSManagedObjectBase + NS
 ```bash
 SRC=/tmp/avalonia-webview/src/Avalonia.Controls.WebView.Core/Macios/Interop
 DST=src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation
-for f in NSError.cs NSURL.cs NSURLRequest.cs NSMutableURLRequest.cs \
+for f in Foundation.cs NSValue.cs NSError.cs NSUrl.cs NSURLRequest.cs NSMutableURLRequest.cs \
          NSDictionary.cs NSArray.cs NSDate.cs NSNumber.cs NSUUID.cs; do
   cp "$SRC/$f" "$DST/$f"
 done
@@ -502,7 +525,7 @@ done
 - [ ] **Step 2: Apply SPDX header + namespace rename to each file** (use a script to avoid drift):
 
 ```bash
-for f in src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NS*.cs; do
+for f in src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/*.cs; do
   python3 - "$f" <<'PY'
 import sys
 p = sys.argv[1]
@@ -519,6 +542,8 @@ open(p, "w").write(header + src)
 PY
 done
 ```
+
+> **Note (using add for namespace split):** The vendored Foundation/* files now live in sub-namespace `...Macios.Interop.Foundation`, but reference `NSObject` / `NSString` / `Libobjc` from the parent `...Macios.Interop` namespace. Add `using Agibuild.Fulora.Platforms.Macios.Interop;` to each Foundation/* file as a one-line vendoring modification (in addition to SPDX + namespace rename). This is necessary and sufficient — without it, `NSObject` / `Libobjc` references won't resolve. Add to the script above as needed, OR add manually after Step 2 if the build smoke surfaces CS0246. This is a tracked vendor modification permitted under amendment #5 (a structural consequence of the namespace split that does not change behavior).
 
 - [ ] **Step 3: Author NEW `NSData.cs`**
 
@@ -538,7 +563,7 @@ internal sealed class NSData : NSObject
     private static readonly IntPtr s_bytes = Libobjc.sel_getUid("bytes");
     private static readonly IntPtr s_length = Libobjc.sel_getUid("length");
 
-    private NSData(IntPtr handle) : base(handle) { }
+    private NSData(IntPtr handle) : base(handle, true) { }
 
     public static NSData FromBytes(ReadOnlySpan<byte> data)
     {
@@ -569,9 +594,9 @@ internal sealed class NSData : NSObject
 ```bash
 dotnet build src/Agibuild.Fulora.Platforms/Agibuild.Fulora.Platforms.csproj -c Release --nologo
 ```
-Expected: 0 errors / 0 warnings. If `Libobjc` is missing one of the `intptr_objc_msgSend_*` overloads invoked in NSData, add the overload to `Libobjc.cs` in this commit (Avalonia ships a wide overload table; usually all needed are present).
+Expected: 0 errors / 0 warnings. If `Libobjc` is missing one of the `intptr_objc_msgSend_*` overloads invoked in NSData (e.g., `intptr_objc_msgSend_intptr_nuint`, `nuint_objc_msgSend`), add the overload to `Libobjc.cs` in this commit (Avalonia ships a wide overload table; if missing, replicate the upstream pattern verbatim with the per-arity `[LibraryImport]` declaration). Per the Phase 1 Vendoring Policy, also add explicit access modifiers if IDE0040 surfaces on specific lines — discovery procedure unchanged.
 
-- [ ] **Step 5: Update ATTRIBUTION.md** with the 9 vendored Foundation types (replace the single `Interop/Foundation/*` row with explicit per-file rows, each carrying the same vendor SHA from `cat /tmp/avalonia-vendor-sha.txt`).
+- [ ] **Step 5: Update ATTRIBUTION.md** — replace the single `Interop/Foundation/*` row with **12 explicit per-file rows** (one per vendored file: Foundation.cs, NSValue.cs, NSError.cs, NSUrl.cs, NSURLRequest.cs, NSMutableURLRequest.cs, NSDictionary.cs, NSArray.cs, NSDate.cs, NSNumber.cs, NSUUID.cs, NSData.cs). The first 11 carry the vendor SHA from `cat /tmp/avalonia-vendor-sha.txt`; NSData.cs carries the literal text `n/a (newly authored — see Foundation/NSData.cs SPDX header)`.
 
 - [ ] **Step 6: Commit**
 
@@ -579,7 +604,7 @@ Expected: 0 errors / 0 warnings. If `Libobjc` is missing one of the `intptr_objc
 git add src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/ \
         src/Agibuild.Fulora.Platforms/Macios/Interop/Libobjc.cs \
         src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md
-git commit -m "chore(apple): vendor Avalonia Foundation types + add NSData"
+git commit -m "chore(apple): vendor Avalonia Foundation framework + NS* types + add NSData"
 ```
 
 ---
@@ -656,8 +681,10 @@ public class LibobjcSmokeTests
 
 - [ ] **Step 4: Write `NSStringRoundtripTests.cs`** (proves NSString init + UTF8String):
 
+> **API note (per amendment #5):** `NSString` is vendored from Avalonia in T3 with the upstream API `NSString.Create(string?)` (factory) and `NSString.GetString(IntPtr handle)` (static reader); the `NSString` instance also has `GetString()` returning `string?`. There is no `From(string)` or instance `ToString` returning the original UTF-8. The test below uses the vendored API.
+
 ```csharp
-using Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
+using Agibuild.Fulora.Platforms.Macios.Interop;
 using Xunit;
 
 namespace Agibuild.Fulora.Platforms.UnitTests.Macios.Interop;
@@ -672,8 +699,8 @@ public class NSStringRoundtripTests
     public void Roundtrip_preserves_value(string input)
     {
         if (!OperatingSystem.IsMacOS()) return;
-        using var s = NSString.From(input);
-        Assert.Equal(input, s.ToString());
+        using var s = NSString.Create(input)!;
+        Assert.Equal(input, s.GetString());
     }
 }
 ```
@@ -741,7 +768,7 @@ git commit -m "test(apple): macOS-host sanity tests for Macios.Interop foundatio
 
 - [ ] **Step 2: Extend `WKWebView.cs`** with the methods Fulora's adapters use that Avalonia does not (consult `src/Agibuild.Fulora.Platforms/MacOS/Native/WkWebViewShim.mm` for the full list — search for `objc_msgSend` style calls or any `webView <selector>`):
 
-  - `LoadHTMLString(string html, NSURL? baseUrl)`
+  - `LoadHTMLString(string html, NSUrl? baseUrl)`
   - `EvaluateJavaScriptAsync(string script)` returning `Task<NSObject?>`
   - `Reload()`, `Stop()`, `GoBack()`, `GoForward()`
   - `CanGoBack`, `CanGoForward`, `EstimatedProgress`, `Url` properties
@@ -1347,7 +1374,7 @@ public async Task SelfSigned_trust_raises_event_with_full_certificate_metadata()
     webView.NavigationDelegate = nav;
     var tcs = new TaskCompletionSource<ServerTrustChallengeEventArgs>();
     nav.DidReceiveServerTrustChallenge += (_, e) => tcs.TrySetResult(e);
-    webView.LoadRequest(NSURLRequest.From(server.Uri));
+    webView.LoadRequest(NSURLRequest.FromUri(server.Uri));
     var args = await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10));
     Assert.Equal(server.Uri.Host, args.Host);
     Assert.NotNull(args.CertificateSubject);
