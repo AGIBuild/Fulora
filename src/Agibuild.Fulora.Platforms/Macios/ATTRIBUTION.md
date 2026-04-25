@@ -25,7 +25,11 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/Foundation/NSDate.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSDate.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/Foundation/NSNumber.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSNumber.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/Foundation/NSUUID.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSUUID.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
-| `Interop/WebKit/WKWebView.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WKWebView.cs` | TBD |
+| `Interop/WebKit/WKWebKit.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WebKit.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e (modified — AMENDMENT #8 WebKit `dlopen` cctor + `objc_getClass` / `objc_getProtocol` forwarders) |
+| `Interop/WebKit/WKWebView.cs` | n/a | n/a (newly authored — Fulora-original; stock `WKWebView` via `initWithFrame:configuration:` — upstream Avalonia subclasses `AppleView`, not vendored verbatim) |
+| `Interop/WebKit/WKWebViewConfiguration.cs` | n/a | n/a (newly authored — Fulora-original; `WebsiteDataStore` / `UserContentController` as `IntPtr` per T6) |
+| `Interop/WebKit/WKPreferences.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/WebKit/WKWebpagePreferences.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKNavigationDelegate.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WKNavigationDelegate.cs` | TBD |
 
 ## License
