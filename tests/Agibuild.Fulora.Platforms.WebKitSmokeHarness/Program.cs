@@ -33,6 +33,9 @@ internal static class WebKitSmokeHarness
                 case "t6-webview-init":
                     RunWebViewInit();
                     break;
+                case "t8-user-content-controller":
+                    RunUserContentController();
+                    break;
                 default:
                     Console.Error.WriteLine($"Unknown WebKit smoke case: {caseId}");
                     return 65;
@@ -57,6 +60,25 @@ internal static class WebKitSmokeHarness
         {
             throw new InvalidOperationException("WKWebView handle is zero.");
         }
+    }
+
+    private static void RunUserContentController()
+    {
+        using var controller = new WKUserContentController();
+        if (controller.Handle == IntPtr.Zero)
+        {
+            throw new InvalidOperationException("WKUserContentController handle is zero.");
+        }
+
+        using var source = NSString.Create("// smoke")!;
+        using var script = new WKUserScript(source, WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true);
+        if (script.Handle == IntPtr.Zero)
+        {
+            throw new InvalidOperationException("WKUserScript handle is zero.");
+        }
+
+        controller.AddUserScript(script);
+        controller.RemoveAllUserScripts();
     }
 
     private static string? ParseCaseId(string[] args)

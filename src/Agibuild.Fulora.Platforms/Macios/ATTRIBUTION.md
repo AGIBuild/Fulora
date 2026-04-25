@@ -30,6 +30,8 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/WebKit/WKWebViewConfiguration.cs` | n/a | n/a (newly authored — Fulora-original; `WebsiteDataStore` / `UserContentController` as `IntPtr` per T6) |
 | `Interop/WebKit/WKPreferences.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKWebpagePreferences.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/WebKit/WKUserContentController.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/WebKit/WKUserScript.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKNavigationDelegate.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WKNavigationDelegate.cs` | TBD |
 
 ## License
