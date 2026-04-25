@@ -864,23 +864,91 @@ git commit -m "test(apple): macOS-host sanity tests for Macios.Interop foundatio
 
 ## Phase 2 — WebKit Managed Wrappers
 
-### Task 6: WKWebView wrapper + smoke test
+> ### AMENDMENT #7 — Phase 2 dry-run findings (2026-04-25)
+>
+> A pre-implementation dry-run of T6–T10 surfaced **5 BLOCKERs** and **4 IMPORTANTs** that would prevent T6 from shipping a green commit as written. Per-decision summary (user-approved 2026-04-25):
+>
+> 1. **T6 + T7 merged** (BLOCKER B1): T6's smoke test references `WKWebViewConfiguration.Create()`; `initWithFrame:configuration:` requires the configuration object to instantiate `WKWebView`. T7's three wrappers therefore must land WITH T6, not after. The Task 6 section below vendors **all five** types in one commit: `WKWebKit.cs` + `WKWebView.cs` + `WKWebViewConfiguration.cs` + `WKPreferences.cs` + `WKWebpagePreferences.cs` plus a single smoke test that exercises the construction chain. **Task 7 is marked SUPERSEDED** (kept for example-code reference with B2/B3 fixes applied). T8 / T9 / T10 numbering unchanged — no cascading renumber.
+>
+> 2. **YAGNI on `.mm`-uncovered methods** (BLOCKER B4 + IMPORTANT I1): `src/Agibuild.Fulora.Platforms/MacOS/Native/WkWebViewShim.mm` does NOT exercise `EstimatedProgress`, `IsHidden` / `setHidden:`, or `setMagnification:centeredAtPoint:`. Phase 2's stated goal is to replace the existing `.mm` shim surface — extending beyond it is scope creep. **These three members are removed from T6 Step 2.** They will be added in Phase 4 only when an adapter actually consumes them (with proper Apple-API research + main-thread test infrastructure). This also defers the `CGPoint` vendoring need (would only be required for SetMagnification).
+>
+> 3. **T7 example code fixed** (BLOCKERs B2 / B3): the old T7 `WKPreferences` example used `Libobjc.void_objc_msgSend_bool` (does not exist in current `Libobjc.cs` — it has `void_objc_msgSend(IntPtr, IntPtr, int)` and other typed overloads, not a boolean one) and `base(NewInstance())` (does not match `NSObject`'s `(IntPtr, bool)` ctor). Corrected pattern: `Libobjc.void_objc_msgSend(handle, sel, value ? 1 : 0)` and `base(NewInstance(), owns: true)`. The new T6 example below uses the corrected pattern; the SUPERSEDED T7 section also has the fix inlined for any future reference.
+>
+> 4. **NSURLResponse vendored inside T10** (BLOCKER B5): `WKURLSchemeTask.DidReceiveResponse(NSURLResponse)` requires an `NSURLResponse` managed wrapper that was NOT in Phase 1's vendored set. T10 now begins with a **new Step 0** to vendor `Macios/Interop/Foundation/NSURLResponse.cs` from the same Avalonia upstream SHA used in Task 4 (`4e16564...`). Phase 1 exit gate is NOT reopened — the new file lands inside T10's commit, with an `ATTRIBUTION.md` row added accordingly.
+>
+> 5. **`WKHTTPCookieStore` file rename + relocation** (IMPORTANT I3): T9's planned `Foundation/NSHTTPCookieStore.cs` is wrong on two counts: (a) Apple's WebKit class is `WKHTTPCookieStore` (the `NSHTTPCookieStorage` is a different, unrelated class on Foundation); (b) it belongs in `Macios/Interop/WebKit/`, not `Foundation/`. Renamed and moved accordingly. `NSHTTPCookie.cs` (the cookie value type from Foundation) stays in `Foundation/`.
+>
+> 6. **BlockLiteral trampoline pattern documented** (IMPORTANT I4): T9's "implemented via BlockLiteral callbacks bridged to TaskCompletionSource<T>" oversimplifies — the vendored `BlockLiteral` only exposes `GetBlockForFunctionPointer(IntPtr callback, IntPtr state)` / `GetStackBlockForFunctionPointer(...)`. Implementers must supply `[UnmanagedCallersOnly]` trampoline functions + a `GCHandle` to keep the `TaskCompletionSource<T>` alive across the native boundary. **New Step 1.5 added to T9** referencing the canonical pattern (existing `MacOSWebViewAdapter.PInvoke.cs` cookie trampolines).
+>
+> **Deferred (NOT amended now):** Main-thread dispatch (IMPORTANT I2 — WebKit UI types must be instantiated on main thread): xUnit smoke tests may flake; if they do, add the main-thread dispatch helper in a follow-up commit. Documented as a known watch-item rather than a pre-emptive change to keep the diff focused.
 
-**Files:**
+### Task 6 (AMENDMENT #7 — merged with old T7): WKWebView + Configuration + Preferences vendoring + smoke test
+
+**Files (5 vendored types + 1 test, per AMENDMENT #7 merge):**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebKit.cs` (vendor: protocol resolution helper)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebView.cs` (vendor + extend)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebViewConfiguration.cs` (vendor or new)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKPreferences.cs` (vendor or new)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebpagePreferences.cs` (vendor or new)
 - Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKWebViewSmokeTests.cs`
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md` (add 5 new rows; mark TBD SHAs filled or `n/a (newly authored)`)
 
-- [ ] **Step 1: Vendor `WKWebKit.cs` and `WKWebView.cs`** following the Task 2 SPDX/namespace pattern.
+- [ ] **Step 1: Vendor `WKWebKit.cs` and `WKWebView.cs`** following the Task 2 SPDX/namespace pattern. Pin the Avalonia upstream SHA and update `ATTRIBUTION.md` rows (currently TBD).
 
-- [ ] **Step 2: Extend `WKWebView.cs`** with the methods Fulora's adapters use that Avalonia does not (consult `src/Agibuild.Fulora.Platforms/MacOS/Native/WkWebViewShim.mm` for the full list — search for `objc_msgSend` style calls or any `webView <selector>`):
+- [ ] **Step 2: Extend `WKWebView.cs`** with the **shim-proven** methods Fulora's adapters use. Confirm each selector exists in `src/Agibuild.Fulora.Platforms/MacOS/Native/WkWebViewShim.mm` (and the iOS shim) before wrapping:
 
-  - `LoadHTMLString(string html, NSUrl? baseUrl)`
-  - `EvaluateJavaScriptAsync(string script)` returning `Task<NSObject?>`
-  - `Reload()`, `Stop()`, `GoBack()`, `GoForward()`
-  - `CanGoBack`, `CanGoForward`, `EstimatedProgress`, `Url` properties
-  - `IsHidden`, `Hidden` setter
-  - `SetMagnification(double, CGPoint)` (macOS only — gate by `OperatingSystem.IsMacOS()`)
+  - `LoadHTMLString(string html, NSUrl? baseUrl)` — `loadHTMLString:baseURL:`
+  - `EvaluateJavaScriptAsync(string script)` returning `Task<NSObject?>` — `evaluateJavaScript:completionHandler:` (uses BlockLiteral, see Task 9 Step 1.5 pattern)
+  - `Reload()` — `reload`
+  - `Stop()` — `stopLoading`
+  - `GoBack()` / `GoForward()` — `goBack` / `goForward`
+  - `CanGoBack` / `CanGoForward` properties — `canGoBack` / `canGoForward`
+  - `Url` property — `URL`
+
+  > **AMENDMENT #7 YAGNI:** the original list also included `EstimatedProgress`, `IsHidden`/`Hidden` setter, and `SetMagnification(double, CGPoint)`. Audit found no evidence of these in `WkWebViewShim.mm`. Removed to keep Phase 2 surface bounded by what current adapters actually consume. Add in Phase 4 (with proper Apple-API research + main-thread test infra + `CGPoint` vendoring) when the first adapter consumer appears.
+
+- [ ] **Step 2b (AMENDMENT #7 — folded from old T7): Vendor `WKWebViewConfiguration.cs`, `WKPreferences.cs`, `WKWebpagePreferences.cs`** as thin `NSObject` subclasses exposing the property surface used by Fulora adapters. Audit step before authoring:
+
+```bash
+rg -n "configuration\.|preferences\.|webpagePreferences\." \
+   src/Agibuild.Fulora.Platforms/MacOS/Native/WkWebViewShim.mm \
+   src/Agibuild.Fulora.Adapters.iOS/Native/WkWebViewShim.iOS.mm
+```
+
+Note the union of properties touched. At minimum: `JavaScriptEnabled`, `AllowsInlineMediaPlayback`, `MediaTypesRequiringUserActionForPlayback`, `WebsiteDataStore`, `UserContentController` (the last two return types are vendored in T8 / T9 — for now expose as `IntPtr` getters/setters and tighten in T8/T9).
+
+Pattern (with **AMENDMENT #7 BLOCKER B2/B3 fixes** applied — note `void_objc_msgSend(..., int)` instead of the non-existent `void_objc_msgSend_bool`, and `base(NewInstance(), owns: true)` instead of the wrong-arity `base(NewInstance())`):
+
+```csharp
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Agibuild
+
+namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+
+internal sealed class WKPreferences : NSObject
+{
+    private static readonly IntPtr s_class = Libobjc.objc_getClass("WKPreferences");
+    private static readonly IntPtr s_alloc = Libobjc.sel_getUid("alloc");
+    private static readonly IntPtr s_init = Libobjc.sel_getUid("init");
+    private static readonly IntPtr s_setJavaScriptEnabled = Libobjc.sel_getUid("setJavaScriptEnabled:");
+
+    public WKPreferences() : base(NewInstance(), owns: true) { }
+
+    private static IntPtr NewInstance()
+    {
+        var allocated = Libobjc.intptr_objc_msgSend(s_class, s_alloc);
+        return Libobjc.intptr_objc_msgSend(allocated, s_init);
+    }
+
+    public bool JavaScriptEnabled
+    {
+        set => Libobjc.void_objc_msgSend(Handle, s_setJavaScriptEnabled, value ? 1 : 0);
+    }
+    // ... rest of properties from Step 2b audit
+}
+```
+
+Mirror this pattern for `WKWebViewConfiguration` and `WKWebpagePreferences`. `WKWebViewConfiguration` exposes a static factory `Create()` returning `new WKWebViewConfiguration()` for the smoke test below.
 
 - [ ] **Step 3: Write `WKWebViewSmokeTests.cs`**:
 
@@ -911,17 +979,20 @@ dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.
 ```
 Expected: pass on macOS host.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Commit (AMENDMENT #7 — expanded scope to merged T6+T7)**
 
 ```bash
-git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/{WKWebKit,WKWebView}.cs \
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/ \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
         tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKWebViewSmokeTests.cs
-git commit -m "feat(apple): managed WKWebView wrapper + smoke"
+git commit -m "feat(apple): managed WKWebView + Configuration/Preferences/WebpagePreferences (T6+T7 merged)"
 ```
 
 ---
 
-### Task 7: WKWebViewConfiguration / WKPreferences / WKWebpagePreferences
+### Task 7 (SUPERSEDED by AMENDMENT #7): WKWebViewConfiguration / WKPreferences / WKWebpagePreferences
+
+> **SUPERSEDED — content folded into the merged Task 6 above.** Reason: T6's smoke test cannot construct a `WKWebView` without a `WKWebViewConfiguration`, so the three wrapper types must land in the same commit. The original Step 1 (audit script) is preserved verbatim in new T6 Step 2b. The original Step 2 example below is kept for historical reference, with **B2 + B3 fixes inlined** (do NOT use the original buggy snippet from prior plan revisions):
 
 **Files:**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebViewConfiguration.cs`
@@ -939,7 +1010,7 @@ rg -n "configuration\.|preferences\.|webpagePreferences\." \
 ```
 Note the union of properties touched.
 
-- [ ] **Step 2: Author each wrapper.** Pattern (showing `WKPreferences`):
+- [ ] **Step 2: Author each wrapper.** Pattern (showing `WKPreferences`, with AMENDMENT #7 BLOCKER B2 + B3 fixes — do NOT use prior plan revisions of this snippet):
 
 ```csharp
 // SPDX-License-Identifier: MIT
@@ -956,7 +1027,8 @@ internal sealed class WKPreferences : NSObject
     private static readonly IntPtr s_init = Libobjc.sel_getUid("init");
     private static readonly IntPtr s_setJavaScriptEnabled = Libobjc.sel_getUid("setJavaScriptEnabled:");
 
-    public WKPreferences() : base(NewInstance()) { }
+    // AMENDMENT #7 B3: NSObject ctor is (IntPtr, bool); pass owns:true for alloc/init.
+    public WKPreferences() : base(NewInstance(), owns: true) { }
 
     private static IntPtr NewInstance()
     {
@@ -966,7 +1038,8 @@ internal sealed class WKPreferences : NSObject
 
     public bool JavaScriptEnabled
     {
-        set => Libobjc.void_objc_msgSend_bool(Handle, s_setJavaScriptEnabled, value);
+        // AMENDMENT #7 B2: Libobjc has void_objc_msgSend(handle, sel, int) — no _bool overload.
+        set => Libobjc.void_objc_msgSend(Handle, s_setJavaScriptEnabled, value ? 1 : 0);
     }
     // ... rest of properties from Step 1 audit
 }
@@ -1008,9 +1081,9 @@ Commit with message: `feat(apple): managed WKUserContentController + WKUserScrip
 
 ### Task 9: WKWebsiteDataStore + WKHTTPCookieStore + NSHTTPCookie
 
-**Files:**
+**Files (AMENDMENT #7 I3 — `WKHTTPCookieStore.cs` renamed + relocated to `WebKit/`; the cookie value type `NSHTTPCookie.cs` stays in `Foundation/`):**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebsiteDataStore.cs`
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSHTTPCookieStore.cs`
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKHTTPCookieStore.cs` (NEW name — Apple's WebKit class is `WKHTTPCookieStore`, NOT `NSHTTPCookieStore`; the latter does not exist in Apple SDKs)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSHTTPCookie.cs` (vendor from Avalonia + extend)
 
 Surface required by current `ICookieAdapter`:
@@ -1021,11 +1094,30 @@ Surface required by current `ICookieAdapter`:
 - `WKHTTPCookieStore.DeleteCookieAsync(NSHTTPCookie)`
 - `NSHTTPCookie.From(WebViewCookie)` and `NSHTTPCookie.ToWebViewCookie()` conversion
 
-The async surfaces are implemented via `BlockLiteral` callbacks bridged to `TaskCompletionSource<T>`.
+The async surfaces are implemented via `BlockLiteral` callbacks bridged to `TaskCompletionSource<T>`. **See new Step 1.5 below for the canonical trampoline pattern — there is NO turnkey "wrap TCS" API on `BlockLiteral`.**
 
-- [ ] **Step 1: Vendor `NSHTTPCookie.cs`** + add convert-from/to-`WebViewCookie` (Fulora type from `Agibuild.Fulora.Core/WebViewRecords.cs`).
+- [ ] **Step 1: Vendor `NSHTTPCookie.cs`** + add convert-from/to-`WebViewCookie` (Fulora type from `Agibuild.Fulora.Core/WebViewRecords.cs`, positional record: `Name, Value, Domain, Path, Expires, IsSecure, IsHttpOnly`).
 
-- [ ] **Step 2: Author `NSHTTPCookieStore.cs` + `WKWebsiteDataStore.cs`** with the surface above.
+- [ ] **Step 1.5 (AMENDMENT #7 I4): BlockLiteral + TaskCompletionSource trampoline pattern.** The vendored `BlockLiteral` only exposes `GetBlockForFunctionPointer(IntPtr callback, IntPtr state)` / `GetStackBlockForFunctionPointer(...)`. To bridge an Apple async API (e.g. `getAllCookies:`) to a managed `Task<T>`:
+
+  1. Define an `[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]` static trampoline whose first parameter is `IntPtr block` (the block descriptor itself, mandated by ObjC block ABI) and whose remaining parameters match the callback signature (e.g. `IntPtr cookies` for an `NSArray<NSHTTPCookie>*`).
+  2. The trampoline recovers the `TaskCompletionSource<T>` via a pinned `GCHandle` stored in the block's `state` field. Free the GCHandle inside the trampoline AFTER calling `tcs.SetResult(...)`.
+  3. The caller path (e.g. `WKHTTPCookieStore.GetAllCookiesAsync()`):
+     ```csharp
+     var tcs = new TaskCompletionSource<IReadOnlyList<NSHTTPCookie>>();
+     var handle = GCHandle.Alloc(tcs);
+     unsafe
+     {
+         delegate* unmanaged[Cdecl]<IntPtr, IntPtr, void> trampolinePtr = &OnCookiesReceived;
+         using var block = BlockLiteral.GetStackBlockForFunctionPointer(
+             (IntPtr)trampolinePtr, GCHandle.ToIntPtr(handle));
+         Libobjc.void_objc_msgSend(Handle, s_getAllCookies, block.BlockPointer);
+     }
+     return tcs.Task;
+     ```
+  4. **Canonical reference in repo:** the existing `src/Agibuild.Fulora.Platforms/MacOS/Adapters/MacOSWebViewAdapter.PInvoke.cs` cookie trampolines (the `.mm` shim's bridge to the .NET async path). Re-use that exact pattern for ABI safety. The Phase 0b spike already proved feasibility on Apple Silicon.
+
+- [ ] **Step 2: Author `WKHTTPCookieStore.cs` + `WKWebsiteDataStore.cs`** with the surface above (using the Step 1.5 trampoline pattern for the async methods).
 
 - [ ] **Step 3: Author tests** in `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKHTTPCookieStoreTests.cs`:
 
@@ -1053,30 +1145,48 @@ Expected: pass.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebsiteDataStore.cs \
-        src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSHTTPCookie*.cs \
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/{WKWebsiteDataStore,WKHTTPCookieStore}.cs \
+        src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSHTTPCookie.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
         tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKHTTPCookieStoreTests.cs
-git commit -m "feat(apple): managed WKWebsiteDataStore + NSHTTPCookieStore round-trip"
+git commit -m "feat(apple): managed WKWebsiteDataStore + WKHTTPCookieStore round-trip"
 ```
 
 ---
 
 ### Task 10: WKURLSchemeHandler / WKURLSchemeTask managed surface
 
-**Files:**
+**Files (AMENDMENT #7 B5 — Step 0 vendors NSURLResponse alongside the WebKit task surface):**
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSURLResponse.cs` (NEW — vendor from Avalonia upstream SHA `4e16564...` matching T4 batch)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKURLSchemeHandler.cs` (proxies to user delegate)
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKURLSchemeTask.cs` (response/finish surface)
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md` (add NSURLResponse row)
 
 Surface required:
 - `WKURLSchemeTask.DidReceiveResponse(NSURLResponse)`
 - `WKURLSchemeTask.DidReceiveData(NSData)`
 - `WKURLSchemeTask.DidFinish()`
 - `WKURLSchemeTask.DidFailWithError(NSError)`
-- `WKURLSchemeTask.Request` (property)
+- `WKURLSchemeTask.Request` (property, returns `NSURLRequest` — already vendored in T4)
 
 The runtime-registered `WKURLSchemeHandler` delegate class is built in **Task 14**; this task is the managed wrapper for the *task* type.
 
-Commit: `feat(apple): managed WKURLSchemeTask surface`.
+- [ ] **Step 0 (AMENDMENT #7 B5): Vendor `NSURLResponse.cs`** from Avalonia upstream at SHA `4e16564...` (same batch as T4 Foundation types). Apply the standard vendoring policy (SPDX header + namespace adjust + IDE0040 fixes only). Add an ATTRIBUTION row alongside the other Foundation rows. Phase 1 exit gate is NOT reopened — this file is part of T10's commit, not a Phase 1 amendment.
+
+- [ ] **Step 1: Author `WKURLSchemeTask.cs`** as a thin `NSObject` subclass exposing the surface above. `Request` returns the existing managed `NSURLRequest`.
+
+- [ ] **Step 2: Author `WKURLSchemeHandler.cs`** as the managed-side surface that Phase 3 (Task 14) will wire into a runtime-registered ObjC class. For Phase 2 it is just the receiver shape.
+
+- [ ] **Step 3: Build clean** on macOS host. No new test required at T10 (the wrapper has no async surface to smoke; it will be exercised end-to-end by Task 14's delegate registration test).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/Foundation/NSURLResponse.cs \
+        src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/{WKURLSchemeHandler,WKURLSchemeTask}.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md
+git commit -m "feat(apple): managed WKURLSchemeTask surface + NSURLResponse vendor"
+```
 
 ---
 
