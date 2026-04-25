@@ -895,6 +895,12 @@ git commit -m "test(apple): macOS-host sanity tests for Macios.Interop foundatio
 
 - [ ] **Step 1: Vendor `WKWebKit.cs` and `WKWebView.cs`** following the Task 2 SPDX/namespace pattern. Pin the Avalonia upstream SHA and update `ATTRIBUTION.md` rows (currently TBD).
 
+  > **AMENDMENT #8 cross-cut (Phase 3 B1):** `WKWebKit.cs` MUST guarantee `WebKit.framework` is loaded into the process before any caller looks up a WebKit Objective-C protocol or class. After Phase 5 cutover the `.mm` shim is gone, so nothing else loads the framework. Concretely:
+  >
+  > - Add a static cctor that calls `Libobjc.dlopen("/System/Library/Frameworks/WebKit.framework/WebKit", 0x1 /* RTLD_LAZY */)`.
+  > - Expose `internal static IntPtr objc_getProtocol(string name) => Libobjc.objc_getProtocol(name);` so Phase 3 delegate registrations call `WKWebKit.objc_getProtocol("WKNavigationDelegate")` — touching the type forces cctor execution and therefore framework load before the protocol lookup.
+  > - On non-macOS / non-iOS targets the cctor short-circuits via `OperatingSystem.IsMacOS() || OperatingSystem.IsIOS()` so cross-platform builds don't try to dlopen Apple frameworks.
+
 - [ ] **Step 2: Extend `WKWebView.cs`** with the **shim-proven** methods Fulora's adapters use. Confirm each selector exists in `src/Agibuild.Fulora.Platforms/MacOS/Native/WkWebViewShim.mm` (and the iOS shim) before wrapping:
 
   - `LoadHTMLString(string html, NSUrl? baseUrl)` — `loadHTMLString:baseURL:`
@@ -1175,6 +1181,8 @@ The runtime-registered `WKURLSchemeHandler` delegate class is built in **Task 14
 
 - [ ] **Step 1: Author `WKURLSchemeTask.cs`** as a thin `NSObject` subclass exposing the surface above. `Request` returns the existing managed `NSURLRequest`.
 
+  > **AMENDMENT #8 cross-cut (Phase 3 B5):** in addition to the surface above, expose `internal WKURLSchemeTask(IntPtr handle, bool owns) : base(handle, owns) { }`. Phase 3 Task 14's trampoline receives the native `id<WKURLSchemeTask>` pointer from the WebKit runtime and must wrap it as `new WKURLSchemeTask(handle, owns: false)` (WebKit owns the lifetime; the managed wrapper does NOT release on dispose). `NSObject`'s `(IntPtr, bool)` ctor is `protected`, so this re-export is required for cross-namespace use.
+
 - [ ] **Step 2: Author `WKURLSchemeHandler.cs`** as the managed-side surface that Phase 3 (Task 14) will wire into a runtime-registered ObjC class. For Phase 2 it is just the receiver shape.
 
 - [ ] **Step 3: Build clean** on macOS host. No new test required at T10 (the wrapper has no async surface to smoke; it will be exercised end-to-end by Task 14's delegate registration test).
@@ -1192,6 +1200,167 @@ git commit -m "feat(apple): managed WKURLSchemeTask surface + NSURLResponse vend
 
 ## Phase 3 — Delegates (runtime-registered ObjC classes)
 
+> ### AMENDMENT #8 — Phase 3 dry-run findings (2026-04-25)
+>
+> A pre-implementation dry-run of T11–T15 + Phase 3 Exit Gate surfaced **6 BLOCKERs** and **5 IMPORTANTs**. Per-decision summary (user-approved 2026-04-25):
+>
+> 1. **WebKit framework `dlopen` enforcement** (BLOCKER B1): T11's example calls `WebKit.objc_getProtocol("WKNavigationDelegate")` to resolve the `WKNavigationDelegate` Objective-C protocol. Phase 5 cutover removes the `.mm` shim that today implicitly loads `WebKit.framework`; without it, `objc_getProtocol(...)` returns `IntPtr.Zero` because the runtime never sees the protocol metadata. **T6 Step 1 amended (Phase 2 cross-cutting)** to require `WKWebKit`'s static cctor to invoke `Libobjc.dlopen("/System/Library/Frameworks/WebKit.framework/WebKit", RTLD_LAZY)` and expose `internal static IntPtr objc_getProtocol(string name)` whose access triggers the cctor. T11–T15 examples updated to call `WKWebKit.objc_getProtocol(...)` (touching the type forces framework load before protocol lookup).
+>
+> 2. **`Libobjc.class_respondsToSelector` does not exist** (BLOCKER B2): T11 Step 2 test code uses a P/Invoke not present in `Libobjc.cs`. Replaced with the existing `NSObject.RespondsToSelector(handle, sel)` helper (sends `respondsToSelector:` to the instance — semantically equivalent for instance-method assertions). No new P/Invoke vendored.
+>
+> 3. **Instance constructor missing from T11 example** (BLOCKER B3): the static cctor pattern in T11 Step 1 registers the runtime class, but `new WKNavigationDelegate()` requires an explicit instance ctor calling `base(s_class)` (the `NSObject(IntPtr classHandle)` alloc/init form). Added explicitly; same pattern documented for T12–T15.
+>
+> 4. **`WKScriptMessage` surface unspecified** (BLOCKER B4): T13 names the wrapper file but provides no property list, vendor source, or example. Spec tightened — `WKScriptMessage` is a newly-authored thin `NSObject` wrapper exposing `Name : string` (sends `name`), `Body : NSObject` (sends `body`), `FrameInfo : NSObject` (sends `frameInfo`), `World : NSObject` (sends `world`); ATTRIBUTION row marked `n/a (newly authored — Fulora-original)`.
+>
+> 5. **`WKURLSchemeTask` lacks `(IntPtr, bool)` ctor exposition** (BLOCKER B5, Phase 2 cross-cutting): T14's trampoline must construct `new WKURLSchemeTask(handle, owns: false)` around the native `id<WKURLSchemeTask>` arriving in the delegate callback. `NSObject`'s `(IntPtr, bool)` ctor is `protected`. **T10 amended** to require `internal WKURLSchemeTask(IntPtr handle, bool owns) : base(handle, owns) { }` in its surface so Phase 3 can wrap native pointers without subclass gymnastics.
+>
+> 6. **Phase 3 Exit Gate physical position contradicts its scope text** (BLOCKER B6): the gate is positioned BEFORE T15 in the document but its text says "After T11–T15 all delegate runtime classes are registered". **Physically moved** to after T15 (before `## Phase 4`).
+>
+> 7. **`MainThreadFixture` shared infrastructure** (IMPORTANT I2 — chosen over selector-presence-only path): T12 (JS panels) / T13 (postMessage) / T14 (custom scheme) require WKWebView + JS evaluation + delegate dispatch on the macOS main thread with an active NSApp run loop. Without this infrastructure, xUnit on the threadpool causes those tests to hang. **A new Phase 3 Prerequisite section is added BEFORE T11** that builds `MainThreadFixture.cs` (NSApp event loop on a dedicated thread + `RunOnMainThreadAsync<T>(...)` helper + xUnit collection definition) plus a `MainThreadFixtureTests.cs` self-test. T12/T13/T14 reuse the fixture for their end-to-end dispatch tests; T11 (selector-presence-only) and T15 (selector-presence-only, OS-gated) do NOT need the fixture.
+>
+> 8. **Step structure parity** (IMPORTANT I1): T12 / T13 / T14 / T15 lacked explicit Step 1/2/3/4 headers (only narrative). All four are rewritten below with the same four-step rigor as T11 (Step 1: vendor/author + register; Step 2: test; Step 3: run on macOS; Step 4: commit incl. ATTRIBUTION.md).
+>
+> 9. **Trampoline declaration example added to T11** (IMPORTANT I3): T11 Step 1's static cctor body uses `s_didFinish` / `s_decidePolicy` etc. without showing how to declare them. A representative `[UnmanagedCallersOnly]` + `delegate* unmanaged[Cdecl]<...>` declaration for `didFinishNavigation:` is now inlined; remaining 4 are mirrored by the implementer.
+>
+> 10. **T15 selector-presence test specification** (IMPORTANT I4): the original T15 had no test plan. Added Step 2 mirroring T11's selector-presence pattern, with OS-version gate (`OperatingSystem.IsMacOSVersionAtLeast(11, 3)`).
+>
+> 11. **ATTRIBUTION.md `git add` consistency** (IMPORTANT I5): every Phase 3 task's commit step now includes `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md` (vendored rows get SHA, newly-authored rows get `n/a (newly authored — Fulora-original)`).
+>
+> **Watch-items (no fix, just track):**
+> - **W1** runtime class registration is process-global one-shot — `static readonly IntPtr s_class = ...` per-AppDomain lazy init protects against parallel xUnit fixtures; do NOT add tests that call `AllocateClassPair` with the same name.
+> - **W2** AOT exit gate as written verifies IL-warning cleanliness but doesn't exercise delegate registration in AOT mode unless the iOS adapter actively references the new types. Implementer of the Exit Gate must add a startup probe in the iOS adapter (`_ = new WKNavigationDelegate(); _ = new WKUIDelegate(); _ = new WKScriptMessageHandler();`) before publishing — gate Step 1 instructions amended accordingly.
+
+### Phase 3 Prerequisite (AMENDMENT #8): MainThreadFixture infrastructure
+
+**Files:**
+- Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/MainThreadFixture.cs`
+- Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/MainThreadFixtureTests.cs`
+
+**Why:** T12 (JS confirm panel), T13 (`webkit.messageHandlers.<name>.postMessage`), and T14 (custom scheme `agibuild://test/`) all need a WKWebView constructed on the macOS main thread with an active NSApp run loop. xUnit defaults to threadpool execution; without a main-thread pump, `evaluateJavaScript` callbacks and delegate dispatches never fire and the tests hang.
+
+- [ ] **Step 1: Author `MainThreadFixture.cs`**
+
+```csharp
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Agibuild
+
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+using Agibuild.Fulora.Platforms.Macios.Interop;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios;
+
+public sealed class MainThreadFixture : IAsyncLifetime
+{
+    private Thread? _mainThread;
+    private readonly TaskCompletionSource _ready = new();
+    private CancellationTokenSource? _cts;
+    private readonly BlockingCollection<Func<Task>> _queue = new();
+
+    public ValueTask InitializeAsync()
+    {
+        if (!OperatingSystem.IsMacOS())
+            return ValueTask.CompletedTask;
+
+        _cts = new CancellationTokenSource();
+        _mainThread = new Thread(MainPump) { IsBackground = false, Name = "Macios-MainThread" };
+        _mainThread.Start();
+        return new ValueTask(_ready.Task);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _cts?.Cancel();
+        _queue.CompleteAdding();
+        if (_mainThread is not null && _mainThread.IsAlive)
+            await Task.Run(() => _mainThread.Join(TimeSpan.FromSeconds(5)));
+    }
+
+    private void MainPump()
+    {
+        // Bring up NSApplication on this thread so WebKit + AppKit have a main-thread run loop.
+        // The first thread to call +[NSApplication sharedApplication] is treated as main per Apple docs.
+        var nsAppClass = Libobjc.objc_getClass("NSApplication");
+        var sharedSel = Libobjc.sel_getUid("sharedApplication");
+        _ = Libobjc.intptr_objc_msgSend(nsAppClass, sharedSel);
+
+        _ready.SetResult();
+
+        try
+        {
+            foreach (var work in _queue.GetConsumingEnumerable(_cts!.Token))
+            {
+                try { work().GetAwaiter().GetResult(); }
+                catch { /* per-test failures propagate via the per-call TaskCompletionSource */ }
+            }
+        }
+        catch (OperationCanceledException) { /* shutdown */ }
+    }
+
+    public Task<T> RunOnMainThreadAsync<T>(Func<Task<T>> action)
+    {
+        var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _queue.Add(async () =>
+        {
+            try { tcs.SetResult(await action().ConfigureAwait(false)); }
+            catch (Exception ex) { tcs.SetException(ex); }
+        });
+        return tcs.Task;
+    }
+
+    public Task RunOnMainThreadAsync(Func<Task> action) =>
+        RunOnMainThreadAsync(async () => { await action(); return 0; });
+}
+
+[CollectionDefinition("MainThread")]
+public sealed class MainThreadCollection : ICollectionFixture<MainThreadFixture> { }
+```
+
+- [ ] **Step 2: Author `MainThreadFixtureTests.cs`** (self-test proves the round-trip):
+
+```csharp
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios;
+
+[Trait("Platform", "macOS")]
+[Collection("MainThread")]
+public class MainThreadFixtureTests(MainThreadFixture fixture)
+{
+    [Fact]
+    public async Task RunOnMainThreadAsync_runs_on_dedicated_named_thread()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        var threadName = await fixture.RunOnMainThreadAsync(() =>
+            Task.FromResult(Thread.CurrentThread.Name ?? string.Empty));
+        Assert.Equal("Macios-MainThread", threadName);
+    }
+}
+```
+
+- [ ] **Step 3: Run on macOS**
+
+```bash
+dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.UnitTests.csproj -c Release --filter "FullyQualifiedName~MainThreadFixture"
+```
+Expected: passes on macOS host (skipped on other OSes).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add tests/Agibuild.Fulora.Platforms.UnitTests/Macios/MainThreadFixture.cs \
+        tests/Agibuild.Fulora.Platforms.UnitTests/Macios/MainThreadFixtureTests.cs
+git commit -m "test(apple): MainThreadFixture for WebKit end-to-end tests (Phase 3 prerequisite)"
+```
+
+---
+
 ### Task 11: WKNavigationDelegate runtime class (5 existing methods)
 
 **Files:**
@@ -1208,61 +1377,126 @@ Five methods to register (mirrors the existing `.mm` surface):
 
 `WKNavigationDelegate` exposes events `DidFinishNavigation`, `DidFailProvisionalNavigation`, `DecidePolicyForNavigationAction`, `DecidePolicyForNavigationResponse`. Event args carry the strongly-typed `NSURLRequest` / `NSError` / etc.
 
-- [ ] **Step 1: Vendor + extend `WKNavigationDelegate.cs`**
+- [ ] **Step 1: Vendor + extend `WKNavigationDelegate.cs`** (with **AMENDMENT #8 BLOCKER B1+B3 + IMPORTANT I3** fixes inlined)
 
-Start from the Avalonia 2-method version, add the 3 missing methods (provisional fail, did-fail, decide-policy-for-response). The runtime class registration block looks like:
+Start from the Avalonia 2-method version, add the 3 missing methods (provisional fail, did-fail, decide-policy-for-response). Pattern:
 
 ```csharp
-static WKNavigationDelegate()
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 AvaloniaUI OÜ
+// Copyright (c) 2026 Agibuild
+// Vendored from Avalonia.Controls.WebView; see Macios/ATTRIBUTION.md.
+
+using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+
+internal sealed unsafe class WKNavigationDelegate : NSManagedObjectBase
 {
-    var cls = AllocateClassPair("ManagedWKNavigationDelegate");
-    var protocol = WebKit.objc_getProtocol("WKNavigationDelegate");
-    Libobjc.class_addProtocol(cls, protocol);
+    // AMENDMENT #8 I3: trampoline declarations as static readonly function pointers so the
+    // CLR keeps them rooted for the lifetime of the AppDomain — required for AOT correctness
+    // (no GC of the unmanaged thunk while ObjC retains references to the registered selectors).
+    private static readonly void* s_didFinish        = (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, void>)&DidFinishNavigationCallback;
+    private static readonly void* s_decidePolicy     = (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&DecidePolicyForNavigationActionCallback;
+    private static readonly void* s_didFailProvisional = (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&DidFailProvisionalCallback;
+    private static readonly void* s_didFail          = (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&DidFailCallback;
+    private static readonly void* s_decideResponse   = (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&DecidePolicyForNavigationResponseCallback;
 
-    Libobjc.class_addMethod(cls,
-        Libobjc.sel_getUid("webView:didFinishNavigation:"),
-        s_didFinish, "v@:@@");
-    Libobjc.class_addMethod(cls,
-        Libobjc.sel_getUid("webView:decidePolicyForNavigationAction:decisionHandler:"),
-        s_decidePolicy, "v@:@@@");
-    Libobjc.class_addMethod(cls,
-        Libobjc.sel_getUid("webView:didFailProvisionalNavigation:withError:"),
-        s_didFailProvisional, "v@:@@@");
-    Libobjc.class_addMethod(cls,
-        Libobjc.sel_getUid("webView:didFailNavigation:withError:"),
-        s_didFail, "v@:@@@");
-    Libobjc.class_addMethod(cls,
-        Libobjc.sel_getUid("webView:decidePolicyForNavigationResponse:decisionHandler:"),
-        s_decideResponse, "v@:@@@");
+    private static readonly IntPtr s_class;
 
-    RegisterManagedMembers(cls);
-    Libobjc.objc_registerClassPair(cls);
-    s_class = cls;
+    static WKNavigationDelegate()
+    {
+        var cls = AllocateClassPair("ManagedWKNavigationDelegate");
+
+        // AMENDMENT #8 B1: route through WKWebKit so its static cctor dlopens WebKit.framework
+        // BEFORE we resolve the protocol — `Libobjc.objc_getProtocol(...)` would return Zero
+        // post-cutover when nothing else loads the framework.
+        var protocol = WKWebKit.objc_getProtocol("WKNavigationDelegate");
+        Libobjc.class_addProtocol(cls, protocol);
+
+        Libobjc.class_addMethod(cls,
+            Libobjc.sel_getUid("webView:didFinishNavigation:"),
+            s_didFinish, "v@:@@");
+        Libobjc.class_addMethod(cls,
+            Libobjc.sel_getUid("webView:decidePolicyForNavigationAction:decisionHandler:"),
+            s_decidePolicy, "v@:@@@");
+        Libobjc.class_addMethod(cls,
+            Libobjc.sel_getUid("webView:didFailProvisionalNavigation:withError:"),
+            s_didFailProvisional, "v@:@@@");
+        Libobjc.class_addMethod(cls,
+            Libobjc.sel_getUid("webView:didFailNavigation:withError:"),
+            s_didFail, "v@:@@@");
+        Libobjc.class_addMethod(cls,
+            Libobjc.sel_getUid("webView:decidePolicyForNavigationResponse:decisionHandler:"),
+            s_decideResponse, "v@:@@@");
+
+        RegisterManagedMembers(cls);
+        Libobjc.objc_registerClassPair(cls);
+        s_class = cls;
+    }
+
+    // AMENDMENT #8 B3: explicit instance ctor — `new WKNavigationDelegate()` requires this;
+    // base(s_class) hits NSObject(IntPtr classHandle) which alloc/inits an instance of the
+    // registered runtime class.
+    public WKNavigationDelegate() : base(s_class) { }
+
+    public event EventHandler? DidFinishNavigation;
+    public event EventHandler<NSError>? DidFailProvisionalNavigation;
+    public event EventHandler<NSError>? DidFailNavigation;
+    public event EventHandler<DecidePolicyForNavigationActionEventArgs>? DecidePolicyForNavigationAction;
+    public event EventHandler<DecidePolicyForNavigationResponseEventArgs>? DecidePolicyForNavigationResponse;
+
+    // AMENDMENT #8 I3: representative trampoline. Mirror this shape for the other 4 selectors.
+    // First 2 params (self, sel) are mandated by the ObjC method ABI; remaining params match
+    // the Objective-C selector signature. ReadManagedSelf<TSelf>(self) recovers the managed
+    // wrapper via the _managedSelf ivar planted by NSManagedObjectBase.
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static void DidFinishNavigationCallback(IntPtr self, IntPtr sel, IntPtr webView, IntPtr nav)
+    {
+        var managed = ReadManagedSelf<WKNavigationDelegate>(self);
+        managed?.DidFinishNavigation?.Invoke(managed, EventArgs.Empty);
+    }
+
+    // ... other 4 [UnmanagedCallersOnly] callbacks: signature matches the selector,
+    // ReadManagedSelf recovers the wrapper, raises the matching event with strongly-typed args.
 }
 ```
 
-Each `[UnmanagedCallersOnly]` static method reads managed self via `ReadManagedSelf<WKNavigationDelegate>(self)` and dispatches the matching event.
-
-- [ ] **Step 2: Write `WKNavigationDelegateTests.cs`**
+- [ ] **Step 2: Write `WKNavigationDelegateTests.cs`** (with **AMENDMENT #8 BLOCKER B2** fix inlined)
 
 This test cannot mock WKWebView's navigation engine in a unit test cleanly — instead, it asserts that the runtime class is registered correctly and the registered selectors are findable:
 
 ```csharp
-[Fact]
-public void Registered_class_responds_to_all_selectors()
+using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios.WebKit;
+
+[Trait("Platform", "macOS")]
+public class WKNavigationDelegateTests
 {
-    if (!OperatingSystem.IsMacOS()) return;
-    using var del = new WKNavigationDelegate();
-    var cls = Libobjc.object_getClass(del.Handle);
-    foreach (var sel in new[] {
-        "webView:didFinishNavigation:",
-        "webView:decidePolicyForNavigationAction:decisionHandler:",
-        "webView:didFailProvisionalNavigation:withError:",
-        "webView:didFailNavigation:withError:",
-        "webView:decidePolicyForNavigationResponse:decisionHandler:" })
+    [Fact]
+    public void Registered_class_responds_to_all_selectors()
     {
-        Assert.True(Libobjc.class_respondsToSelector(cls, Libobjc.sel_getUid(sel)),
-            $"missing selector: {sel}");
+        if (!OperatingSystem.IsMacOS()) return;
+
+        using var del = new WKNavigationDelegate();
+        foreach (var sel in new[] {
+            "webView:didFinishNavigation:",
+            "webView:decidePolicyForNavigationAction:decisionHandler:",
+            "webView:didFailProvisionalNavigation:withError:",
+            "webView:didFailNavigation:withError:",
+            "webView:decidePolicyForNavigationResponse:decisionHandler:" })
+        {
+            // AMENDMENT #8 B2: NSObject.RespondsToSelector sends `respondsToSelector:` to the
+            // instance — semantically equivalent to libobjc's class_respondsToSelector for
+            // instance methods, and uses an existing helper instead of vendoring a new P/Invoke.
+            Assert.True(NSObject.RespondsToSelector(del.Handle, Libobjc.sel_getUid(sel)),
+                $"missing selector: {sel}");
+        }
     }
 }
 ```
@@ -1274,21 +1508,23 @@ dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.
 ```
 Expected: pass.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Commit** (with **AMENDMENT #8 IMPORTANT I5** ATTRIBUTION row added)
 
 ```bash
 git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/{WkDelegateBase,WKNavigationDelegate}.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
         tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKNavigationDelegateTests.cs
 git commit -m "feat(apple): managed WKNavigationDelegate (5-method surface)"
 ```
 
 ---
 
-### Task 12: WKUIDelegate runtime class
+### Task 12 (AMENDMENT #8 — full Step structure): WKUIDelegate runtime class
 
 **Files:**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKUIDelegate.cs`
 - Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKUIDelegateTests.cs`
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md`
 
 Methods to register (audit `.mm` for the exact set; minimum):
 1. `webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler:` (macOS 12+, iOS 15+)
@@ -1296,49 +1532,404 @@ Methods to register (audit `.mm` for the exact set; minimum):
 3. `webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:`
 4. `webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:`
 
-Same registration pattern as Task 11. **Tests must include both selector-presence and runtime dispatch** (matching the bar in Task 13/14): construct a WKWebView with the UIDelegate attached, evaluate JS that triggers a `confirm()` panel, assert the managed event fires with the correct message string. Selector-presence-only is **not sufficient** for this task.
+- [ ] **Step 1: Author `WKUIDelegate.cs`** following the T11 pattern (static cctor registers the runtime class via `AllocateClassPair("ManagedWKUIDelegate")` + `WKWebKit.objc_getProtocol("WKUIDelegate")` + `class_addMethod` per selector; `[UnmanagedCallersOnly]` trampolines + `ReadManagedSelf<WKUIDelegate>`; explicit instance ctor `public WKUIDelegate() : base(s_class) { }`). The 3 JS-panel selectors take a `void (^completionHandler)(...)` ObjC block — the trampoline must wrap it as a `BlockLiteral` invocation when the managed event handler decides; see Task 9 Step 1.5 for the trampoline → block reply pattern (in reverse direction here: managed code receives a block from ObjC and must invoke it once with the user's choice).
 
-Commit: `feat(apple): managed WKUIDelegate (media permission + JS panels) with end-to-end dispatch tests`.
+- [ ] **Step 2: Write `WKUIDelegateTests.cs`** — mix of selector-presence (mirrors T11) AND end-to-end dispatch via the **AMENDMENT #8** `MainThreadFixture`:
+
+```csharp
+using System.Threading.Tasks;
+using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios.WebKit;
+
+[Trait("Platform", "macOS")]
+[Collection("MainThread")]
+public class WKUIDelegateTests(MainThreadFixture fixture)
+{
+    [Fact]
+    public void Registered_class_responds_to_all_selectors()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        using var del = new WKUIDelegate();
+        foreach (var sel in new[] {
+            "webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler:",
+            "webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
+            "webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
+            "webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" })
+        {
+            Assert.True(NSObject.RespondsToSelector(del.Handle, Libobjc.sel_getUid(sel)),
+                $"missing selector: {sel}");
+        }
+    }
+
+    [Fact]
+    public async Task Confirm_panel_dispatches_to_managed_event()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        var (gotMessage, evaluated) = await fixture.RunOnMainThreadAsync(async () =>
+        {
+            using var config = WKWebViewConfiguration.Create();
+            using var webView = new WKWebView(config);
+            using var ui = new WKUIDelegate();
+
+            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            ui.JavaScriptConfirmPanel += (_, args) =>
+            {
+                tcs.TrySetResult(args.Message);
+                args.Decide(true);
+            };
+            webView.UIDelegate = ui;
+
+            var evalDone = webView.EvaluateJavaScriptAsync("confirm('hello-from-test');");
+            var message = await tcs.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            await evalDone;
+            return (message, true);
+        });
+
+        Assert.True(evaluated);
+        Assert.Equal("hello-from-test", gotMessage);
+    }
+}
+```
+
+- [ ] **Step 3: Run on macOS**
+
+```bash
+dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.UnitTests.csproj -c Release --filter "FullyQualifiedName~WKUIDelegate"
+```
+Expected: both selector-presence + e2e confirm-panel dispatch pass.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKUIDelegate.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
+        tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKUIDelegateTests.cs
+git commit -m "feat(apple): managed WKUIDelegate (media permission + JS panels) with end-to-end dispatch tests"
+```
 
 ---
 
-### Task 13: WKScriptMessageHandler runtime class
+### Task 13 (AMENDMENT #8 — full Step structure + WKScriptMessage spec): WKScriptMessageHandler runtime class
 
 **Files:**
 - Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKScriptMessageHandler.cs`
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKScriptMessage.cs` (managed wrapper for the message struct)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKScriptMessage.cs` (newly authored — Fulora-original, NOT vendored from Avalonia)
+- Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKScriptMessageHandlerTests.cs`
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md`
 
-One method: `userContentController:didReceiveScriptMessage:`. Extracts `message.name`, `message.body` (NSString / NSDictionary / NSArray / NSNumber), `message.frameInfo`, `message.world`. Dispatches a managed event with strongly-typed args.
+One delegate method: `userContentController:didReceiveScriptMessage:`. Extracts `message.name`, `message.body`, `message.frameInfo`, `message.world` and dispatches a managed event with strongly-typed args.
 
-Tests in `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKScriptMessageHandlerTests.cs` build a content controller, attach the handler, then evaluate JS that calls `webkit.messageHandlers.<name>.postMessage(...)`, await the event.
+- [ ] **Step 1a (AMENDMENT #8 B4): Author `WKScriptMessage.cs`** — newly authored thin `NSObject` wrapper. Property surface (each property sends the matching ObjC selector via `Libobjc.intptr_objc_msgSend`):
 
-Commit: `feat(apple): managed WKScriptMessageHandler with end-to-end JS test`.
+```csharp
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Agibuild
+
+namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+
+internal sealed class WKScriptMessage : NSObject
+{
+    private static readonly IntPtr s_nameSel       = Libobjc.sel_getUid("name");
+    private static readonly IntPtr s_bodySel       = Libobjc.sel_getUid("body");
+    private static readonly IntPtr s_frameInfoSel  = Libobjc.sel_getUid("frameInfo");
+    private static readonly IntPtr s_worldSel      = Libobjc.sel_getUid("world");
+
+    // Phase 3 Task 13: WebKit owns the lifetime of WKScriptMessage instances delivered to the
+    // delegate; managed wrapper does NOT release on dispose.
+    internal WKScriptMessage(IntPtr handle, bool owns) : base(handle, owns) { }
+
+    public string? Name => NSString.GetString(Libobjc.intptr_objc_msgSend(Handle, s_nameSel));
+    public IntPtr Body => Libobjc.intptr_objc_msgSend(Handle, s_bodySel);
+    public IntPtr FrameInfo => Libobjc.intptr_objc_msgSend(Handle, s_frameInfoSel);
+    public IntPtr World => Libobjc.intptr_objc_msgSend(Handle, s_worldSel);
+
+    // ATTRIBUTION row: `n/a (newly authored — Fulora-original)`.
+    // Note: Body/FrameInfo/World are returned as IntPtr (raw Objective-C handles). Adapter
+    // code that needs strongly-typed access (NSString / NSDictionary / NSArray / NSNumber)
+    // must wrap explicitly via NSString.GetString(...) or NSDictionary/etc. constructors.
+    // Phase 5 cutover may tighten these to managed types if a single canonical body shape
+    // emerges from the adapters.
+}
+```
+
+- [ ] **Step 1b: Author `WKScriptMessageHandler.cs`** following T11 pattern:
+  - `static WKScriptMessageHandler()` registers `ManagedWKScriptMessageHandler` runtime class via `AllocateClassPair` + `WKWebKit.objc_getProtocol("WKScriptMessageHandler")` + `class_addMethod` for the single selector.
+  - `[UnmanagedCallersOnly]` trampoline `OnDidReceiveScriptMessage(IntPtr self, IntPtr sel, IntPtr controller, IntPtr message)` recovers managed wrapper via `ReadManagedSelf<WKScriptMessageHandler>` and raises `DidReceiveScriptMessage` event with `new WKScriptMessage(message, owns: false)` wrapped args.
+  - `public WKScriptMessageHandler() : base(s_class) { }` instance ctor.
+
+- [ ] **Step 2: Write `WKScriptMessageHandlerTests.cs`** — selector-presence (mirrors T11) + e2e via `MainThreadFixture`:
+
+```csharp
+using System.Threading.Tasks;
+using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios.WebKit;
+
+[Trait("Platform", "macOS")]
+[Collection("MainThread")]
+public class WKScriptMessageHandlerTests(MainThreadFixture fixture)
+{
+    [Fact]
+    public void Registered_class_responds_to_selector()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        using var handler = new WKScriptMessageHandler();
+        Assert.True(NSObject.RespondsToSelector(handler.Handle,
+            Libobjc.sel_getUid("userContentController:didReceiveScriptMessage:")));
+    }
+
+    [Fact]
+    public async Task PostMessage_dispatches_to_managed_event()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        var receivedName = await fixture.RunOnMainThreadAsync(async () =>
+        {
+            using var config = WKWebViewConfiguration.Create();
+            using var ucc = new WKUserContentController();
+            using var handler = new WKScriptMessageHandler();
+
+            var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            handler.DidReceiveScriptMessage += (_, args) =>
+            {
+                tcs.TrySetResult(args.Message.Name ?? string.Empty);
+            };
+
+            ucc.AddScriptMessageHandler(handler.Handle, NSString.Create("agibuild_test")!);
+            config.UserContentController = ucc;
+
+            using var webView = new WKWebView(config);
+            await webView.EvaluateJavaScriptAsync(
+                "window.webkit.messageHandlers.agibuild_test.postMessage({hello: 'from-js'});");
+
+            return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        });
+
+        Assert.Equal("agibuild_test", receivedName);
+    }
+}
+```
+
+- [ ] **Step 3: Run on macOS**
+
+```bash
+dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.UnitTests.csproj -c Release --filter "FullyQualifiedName~WKScriptMessageHandler"
+```
+Expected: both pass on macOS host.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/{WKScriptMessageHandler,WKScriptMessage}.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
+        tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKScriptMessageHandlerTests.cs
+git commit -m "feat(apple): managed WKScriptMessageHandler + WKScriptMessage with end-to-end JS test"
+```
 
 ---
 
-### Task 14: WKURLSchemeHandler runtime class
+### Task 14 (AMENDMENT #8 — full Step structure + MainThreadFixture e2e): WKURLSchemeHandler runtime class
 
 **Files:**
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKURLSchemeHandlerImpl.cs` (impl name to avoid collision with the wrapper from T10)
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKURLSchemeHandlerImpl.cs` (impl name to avoid collision with the `WKURLSchemeTask` wrapper authored in T10)
+- Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKURLSchemeHandlerTests.cs`
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md`
 
 Methods:
 1. `webView:startURLSchemeTask:`
 2. `webView:stopURLSchemeTask:`
 
-Dispatches `StartTask` / `StopTask` events with `WKURLSchemeTask` managed wrapper. Production code on the adapter side replies via `task.DidReceiveResponse(...)` etc.
+Dispatches `StartTask` / `StopTask` events with `WKURLSchemeTask` managed wrapper (constructed via the `internal WKURLSchemeTask(IntPtr handle, bool owns)` ctor introduced into T10 by AMENDMENT #8 B5). Production code on the adapter side replies via `task.DidReceiveResponse(...)` etc.
 
-Test: register a custom scheme `agibuild://test/`, navigate WKWebView to it, observe `StartTask` raised, reply with HTML, observe page loaded.
+- [ ] **Step 1: Author `WKURLSchemeHandlerImpl.cs`** following the T11 / T13 pattern:
+  - `static WKURLSchemeHandlerImpl()` registers `ManagedWKURLSchemeHandler` runtime class via `AllocateClassPair` + `WKWebKit.objc_getProtocol("WKURLSchemeHandler")` + `class_addMethod` for both selectors.
+  - `[UnmanagedCallersOnly]` trampolines `OnStartTask` / `OnStopTask` recover managed wrapper via `ReadManagedSelf<WKURLSchemeHandlerImpl>` and raise `StartTask` / `StopTask` events with `new WKURLSchemeTask(taskHandle, owns: false)` wrapped args (WebKit owns the lifetime).
+  - `public WKURLSchemeHandlerImpl() : base(s_class) { }` instance ctor.
 
-Commit: `feat(apple): managed WKURLSchemeHandler with custom-scheme test`.
+- [ ] **Step 2: Write `WKURLSchemeHandlerTests.cs`** — selector-presence + e2e via `MainThreadFixture`:
+
+```csharp
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios.WebKit;
+
+[Trait("Platform", "macOS")]
+[Collection("MainThread")]
+public class WKURLSchemeHandlerTests(MainThreadFixture fixture)
+{
+    [Fact]
+    public void Registered_class_responds_to_both_selectors()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        using var handler = new WKURLSchemeHandlerImpl();
+        Assert.True(NSObject.RespondsToSelector(handler.Handle,
+            Libobjc.sel_getUid("webView:startURLSchemeTask:")));
+        Assert.True(NSObject.RespondsToSelector(handler.Handle,
+            Libobjc.sel_getUid("webView:stopURLSchemeTask:")));
+    }
+
+    [Fact]
+    public async Task Custom_scheme_navigation_invokes_StartTask_and_loads_html()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        var pageTitle = await fixture.RunOnMainThreadAsync(async () =>
+        {
+            using var config = WKWebViewConfiguration.Create();
+            using var handler = new WKURLSchemeHandlerImpl();
+            handler.StartTask += (_, args) =>
+            {
+                using var html = NSData.FromBytes(Encoding.UTF8.GetBytes("<html><title>agibuild</title></html>"));
+                using var response = NSURLResponse.Create(args.Task.Request.Url, "text/html", html.Length, "utf-8");
+                args.Task.DidReceiveResponse(response);
+                args.Task.DidReceiveData(html);
+                args.Task.DidFinish();
+            };
+            config.SetUrlSchemeHandler(handler.Handle, "agibuild");
+
+            using var webView = new WKWebView(config);
+            using var url = NSUrl.Create("agibuild://test/");
+            using var req = NSMutableURLRequest.Create(url);
+            await webView.LoadAsync(req);
+            return await webView.EvaluateJavaScriptAsync<string>("document.title");
+        });
+
+        Assert.Equal("agibuild", pageTitle);
+    }
+}
+```
+
+- [ ] **Step 3: Run on macOS**
+
+```bash
+dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.UnitTests.csproj -c Release --filter "FullyQualifiedName~WKURLSchemeHandler"
+```
+Expected: both pass on macOS host.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKURLSchemeHandlerImpl.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
+        tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKURLSchemeHandlerTests.cs
+git commit -m "feat(apple): managed WKURLSchemeHandler with custom-scheme end-to-end test"
+```
 
 ---
 
-### Phase 3 Exit Gate — AOT publish smoke (early validation, NOT a substitute for Task 30)
+### Task 15 (AMENDMENT #8 — full Step structure + I4 selector-presence test): WKDownloadDelegate runtime class
+
+**Files:**
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKDownloadDelegate.cs`
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKDownload.cs` (newly authored — Fulora-original, NOT vendored from Avalonia; thin `NSObject` wrapper)
+- Create: `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKDownloadDelegateTests.cs`
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md`
+
+Methods (macOS 11.3+, iOS 14.5+):
+1. `download:decideDestinationUsingResponse:suggestedFilename:completionHandler:`
+2. `download:didFailWithError:resumeData:`
+3. `downloadDidFinish:`
+
+Gate the entire delegate construction at runtime by checking `OperatingSystem.IsMacOSVersionAtLeast(11, 3)` etc.; on lower OS versions the property is null and downloads are unsupported (matches `.mm` behavior).
+
+- [ ] **Step 1a: Author `WKDownload.cs`** — newly authored thin `NSObject` wrapper:
+
+```csharp
+internal sealed class WKDownload : NSObject
+{
+    private static readonly IntPtr s_originalRequestSel = Libobjc.sel_getUid("originalRequest");
+    private static readonly IntPtr s_progressSel        = Libobjc.sel_getUid("progress");
+
+    internal WKDownload(IntPtr handle, bool owns) : base(handle, owns) { }
+
+    public IntPtr OriginalRequest => Libobjc.intptr_objc_msgSend(Handle, s_originalRequestSel);
+    public IntPtr Progress        => Libobjc.intptr_objc_msgSend(Handle, s_progressSel);
+
+    // ATTRIBUTION row: `n/a (newly authored — Fulora-original)`.
+}
+```
+
+- [ ] **Step 1b: Author `WKDownloadDelegate.cs`** following the T11 / T13 / T14 pattern, gated by `OperatingSystem.IsMacOSVersionAtLeast(11, 3)`:
+  - `static WKDownloadDelegate()` — gate the entire registration by `if (!OperatingSystem.IsMacOSVersionAtLeast(11, 3)) return;`. Otherwise registers `ManagedWKDownloadDelegate` runtime class via `AllocateClassPair` + `WKWebKit.objc_getProtocol("WKDownloadDelegate")` + `class_addMethod` for the three selectors.
+  - `[UnmanagedCallersOnly]` trampolines `OnDecideDestination` / `OnDidFail` / `OnDidFinish` recover managed wrapper via `ReadManagedSelf<WKDownloadDelegate>` and raise corresponding events. The destination block (`void (^completionHandler)(NSURL *destination)`) follows the BlockLiteral trampoline pattern from `MacOSWebViewAdapter.PInvoke.cs` (canonical reference, AMENDMENT #7 documented in Phase 2 banner).
+  - Public ctor: `public WKDownloadDelegate() : base(s_class) { if (!OperatingSystem.IsMacOSVersionAtLeast(11, 3)) throw new PlatformNotSupportedException("WKDownloadDelegate requires macOS 11.3+"); }`.
+
+- [ ] **Step 2: Write `WKDownloadDelegateTests.cs`** — selector-presence only (no e2e; `WKDownload` instances cannot be constructed without an actual download in flight, which exceeds T15 scope; full e2e is deferred to the Phase 5 / Task 30 cutover):
+
+```csharp
+using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
+using Xunit;
+
+namespace Agibuild.Fulora.Platforms.UnitTests.Macios.WebKit;
+
+[Trait("Platform", "macOS")]
+public class WKDownloadDelegateTests
+{
+    [Fact]
+    public void Registered_class_responds_to_all_three_selectors_when_supported()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+        if (!OperatingSystem.IsMacOSVersionAtLeast(11, 3)) return;
+
+        using var del = new WKDownloadDelegate();
+        Assert.True(NSObject.RespondsToSelector(del.Handle,
+            Libobjc.sel_getUid("download:decideDestinationUsingResponse:suggestedFilename:completionHandler:")));
+        Assert.True(NSObject.RespondsToSelector(del.Handle,
+            Libobjc.sel_getUid("download:didFailWithError:resumeData:")));
+        Assert.True(NSObject.RespondsToSelector(del.Handle,
+            Libobjc.sel_getUid("downloadDidFinish:")));
+    }
+
+    [Fact]
+    public void Construction_throws_PlatformNotSupportedException_below_macOS_11_3()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+        if (OperatingSystem.IsMacOSVersionAtLeast(11, 3)) return;
+
+        Assert.Throws<PlatformNotSupportedException>(() => new WKDownloadDelegate());
+    }
+}
+```
+
+- [ ] **Step 3: Run on macOS**
+
+```bash
+dotnet test tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.UnitTests.csproj -c Release --filter "FullyQualifiedName~WKDownloadDelegate"
+```
+Expected: pass on macOS 11.3+ host (CI runner is macOS 14, so the support-gated test runs; the negative test trivially short-circuits).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/{WKDownloadDelegate,WKDownload}.cs \
+        src/Agibuild.Fulora.Platforms/Macios/ATTRIBUTION.md \
+        tests/Agibuild.Fulora.Platforms.UnitTests/Macios/WebKit/WKDownloadDelegateTests.cs
+git commit -m "feat(apple): managed WKDownloadDelegate + WKDownload (gated by OS version) with selector-presence tests"
+```
+
+---
+
+### Phase 3 Exit Gate (AMENDMENT #8 B6 — physically relocated from before-T15 to after-T15) — AOT publish smoke (early validation, NOT a substitute for Task 30)
 
 **Files:**
 - No new source files. CI smoke only.
 
-After T11–T15 all delegate runtime classes are registered. **Before** continuing to Phase 4, run an AOT publish smoke against a tiny iOS test app that constructs `WKNavigationDelegate` + `WKUIDelegate` + `WKScriptMessageHandler`:
+After T11–T15 all delegate runtime classes are registered. **Before** continuing to Phase 4, run an AOT publish smoke against a tiny iOS test app that constructs `WKNavigationDelegate` + `WKUIDelegate` + `WKScriptMessageHandler` + `WKURLSchemeHandlerImpl` + `WKDownloadDelegate` (when supported).
 
 - [ ] **Step 1: Run AOT publish**
 
@@ -1366,23 +1957,6 @@ If AOT introduces unfixable warnings or simulator dispatch fails, **stop**. The 
 git add src/Agibuild.Fulora.Platforms/Macios/
 git commit -m "build(apple): AOT-clean delegate registration (Phase 3 exit gate)"
 ```
-
----
-
-### Task 15: WKDownloadDelegate runtime class
-
-**Files:**
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKDownloadDelegate.cs`
-- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKDownload.cs`
-
-Methods (macOS 11.3+, iOS 14.5+):
-1. `download:decideDestinationUsingResponse:suggestedFilename:completionHandler:`
-2. `download:didFailWithError:resumeData:`
-3. `downloadDidFinish:`
-
-Gate the entire delegate construction at runtime by checking `OperatingSystem.IsMacOSVersionAtLeast(11, 3)` etc.; on lower OS versions the property is null and downloads are unsupported (matches `.mm` behavior).
-
-Commit: `feat(apple): managed WKDownloadDelegate (gated by OS version)`.
 
 ---
 
