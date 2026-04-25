@@ -7,7 +7,7 @@
 | Spike | Question | Status | Time |
 |---|---|---|---|
 | 0a — `net10.0-macos` TFM decision | Is `net10.0` + `[SupportedOSPlatform("macos")]` runtime gating sufficient? | **PASS** | 2026-04-25 |
-| 0b — `BlockLiteral` ABI on iOS arm64 | Does Avalonia's `BlockLiteral` work on iOS arm64 (sim + device)? | **TBD** | — |
+| 0b — `BlockLiteral` ABI on iOS arm64 | Does Avalonia's `BlockLiteral` work on iOS arm64 (sim + device)? | **PASS** | 2026-04-25 |
 | 0c — AOT publish smoke for `AllocateClassPair` + `class_addMethod` | Does the runtime ObjC class registration approach survive `PublishAot=true` on `net10.0-ios`? | **TBD** | — |
 
 **Phase 0 exit criterion:** all three PASS → tag spike commit + update plan Open Questions → proceed to Phase 1.
@@ -122,9 +122,11 @@ internal static class Program
 
 ---
 
-## Spike 0b — `BlockLiteral` ABI on iOS arm64 (TBD)
+## Spike 0b — `BlockLiteral` ABI on iOS arm64 (PASS)
 
-_Pending parallel subagent dispatch — see plan L196–L209._
+**Self-contained report:** [`2026-04-25-spike-0b-results.md`](./2026-04-25-spike-0b-results.md)
+
+**Summary:** Avalonia-style `BlockLiteral` + `[UnmanagedCallersOnly]` trampoline successfully drove `-[WKHTTPCookieStore getAllCookies:]` on **iOS 26.4 Simulator arm64** (UDID `AB27BF5F-80C2-4CDD-8557-D94F109DC9DD`); completion returned non-null `NSArray*`. No iOS-specific block descriptor variant was required for this probe. Physical device not tested.
 
 ---
 
