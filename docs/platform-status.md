@@ -4,12 +4,12 @@
 
 | Field | Value |
 |---|---|
-| Snapshot date | 2026-04-23 |
+| Snapshot date | 2026-04-25 |
 | Release line | `1.6.x` (published `1.6.6`) |
 | Channel status | Stable |
 | Kernel stability | Stable — no breaking changes since `1.0.0`; all `Tier A` capabilities in `framework-capabilities.json` remain `status: stable` |
 | Extension readiness | Mixed — `spa.hosting` stable (`Tier B`); `shell.activation` and `bridge.streaming` provisional (`Tier B`); `notification.post` provisional (`Tier C`) |
-| Security gate status | Passing — boundary validation + default-deny asserted for every capability in `framework-capabilities.json`; OWASP review bundled into Build and Test on Linux/macOS/Windows |
+| Security gate status | Passing — boundary validation + default-deny asserted for every capability in `framework-capabilities.json`; OWASP review bundled into Build and Test on Linux/macOS/Windows; SSL/server-certificate failures route through `INavigationSecurityHooks` with `WebViewSslException` payload — see `docs/API_SURFACE_REVIEW.md` § 1.6 Navigation SSL Policy Explicit. |
 | Observability gate status | Passing — every capability exports traces + structured errors; metrics on all `Tier A` + `Tier B` capabilities |
 | Release gate status | Passing — `release-gate` job in `.github/workflows/ci.yml` approves only after all three `Build and Test` legs and `Merge Coverage Reports` are green; `release` environment requires explicit human approval before `Publish npm` / `Publish NuGet` / `Create Tag and GitHub Release` fan-out |
 

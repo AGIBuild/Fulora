@@ -161,3 +161,53 @@ Establish the reusable cross-platform test harness that the v2.0 plan requires a
 ### Scope decision: contract vs. adapter extensibility
 
 `ICookieAdapter` remains `internal` in 1.6.x. Making it public is a separate v2.0 decision because it advertises adapter authorship as a supported extension point, which requires versioning commitments we are not ready to make in 1.x. The contract fixture works around the visibility constraint with a factory-delegate pattern (public test class, static helpers taking `AdapterFactory`) rather than an abstract base class.
+
+---
+
+## 1.6 Navigation SSL Policy Explicit (Additive)
+
+**Date**: 2026-04-25
+**Status**: Additive, internal-only types. **No public API delta** — verifiable via `docs/API_SURFACE_INVENTORY.release.txt` (unchanged).
+
+### New internal contracts
+
+- `Agibuild.Fulora.Core.Security.INavigationSecurityHooks`
+- `Agibuild.Fulora.Core.Security.NavigationSecurityDecision` (enum; `Reject` only in v1)
+- `Agibuild.Fulora.Core.Security.ServerCertificateErrorContext` (record)
+- `Agibuild.Fulora.Core.Security.DefaultNavigationSecurityHooks` (singleton)
+- Extended constructor on `WebViewSslException(ServerCertificateErrorContext, Guid)` — additive only.
+
+### Purpose
+
+Every platform WebView adapter routes server-certificate failures through one strategy interface; the only v1 decision is `Reject`. v2.0 (see `docs/superpowers/plans/2026-04-25-fulora-v2-apple-shim-modernization.md` Phase 4 plus the v2 public-API plan) promotes the interface to public and adds per-domain pinning.
+
+### Scope decision
+
+All new security-hook types remain `internal` in 1.6.x; hosts observe behavior through existing `NavigationCompleted(Failure, WebViewSslException)` only. Promotion and pinning policy are explicitly deferred to v2.0.
+
+### Per-platform certificate metadata capability
+
+| Platform | Host | Summary | Subject | Issuer | Validity |
+|----------|------|---------|---------|--------|----------|
+| Windows (WebView2) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| GTK (WebKitGTK on GLib ≥ 2.70) | ✅ | ✅ | ✅¹ | ✅¹ | ✅¹ |
+| Android (Avalonia-aligned) | ✅ | ✅ | n/a² | n/a² | n/a² |
+| Apple (1.6.x) | ✅ | ✅ | n/a³ | n/a³ | n/a³ |
+| Mock | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+¹ On GTK, subject, issuer, and validity require GLib ≥ 2.70; otherwise the adapter passes `null` / omitted validity (WebKitGTK TLS callback still supplies host and summary).
+
+² Android uses the `OnReceivedError` / `WebResourceError` path (aligned with Avalonia.Controls.WebView); that surface does not expose the leaf certificate, so structured cert fields are intentionally omitted.
+
+³ Apple 1.6.x keeps `map_nsurl_error_to_category` for SSL failures; structured cert metadata for WKWebView is scheduled with v2 Phase 4 and the C# shim replacement.
+
+Windows parses host from `RequestUri` and normalizes certificate validity to UTC `DateTimeOffset` per the WebView2 interop note in the navigation SSL plan amendment.
+
+### Evidence pointers
+
+- `tests/Agibuild.Fulora.UnitTests/AdapterSslRejectionContract.cs`
+- `tests/Agibuild.Fulora.UnitTests/MockSslRejectionContractTests.cs`
+- `tests/Agibuild.Fulora.UnitTests/Windows/WindowsWebViewAdapterSslTests.cs`
+- `tests/Agibuild.Fulora.UnitTests/Gtk/GtkWebViewAdapterSslTests.cs`
+- `tests/Agibuild.Fulora.UnitTests/Security/DefaultNavigationSecurityHooksTests.cs`
+- `tests/Agibuild.Fulora.UnitTests/Security/WebViewSslExceptionContextTests.cs`

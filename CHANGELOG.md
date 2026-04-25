@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.7] — 2026-04-25
+
+### Security & Navigation
+
+#### Added
+- **Explicit SSL Rejection Policy** — Server-certificate failures on every platform WebView adapter (Windows WebView2, GTK WebKitGTK, Android, Mock) now route through an internal `INavigationSecurityHooks` strategy and emit `WebViewSslException` with structured `Host`, `ErrorSummary`, and (where the platform exposes them) `CertificateSubject` / `CertificateIssuer` / `ValidFrom` / `ValidTo`. Behavior is unchanged — rejection remains the only outcome — but the decision path is now auditable, testable, and single-sourced. Apple (iOS / macOS) keeps the existing `map_nsurl_error_to_category` rejection path; structured cert metadata for WKWebView lands in v2.0 alongside the C# delegate replacement of the Objective-C shim.
+- **Cross-platform SSL contract** — `tests/Agibuild.Fulora.UnitTests/AdapterSslRejectionContract.cs` defines four facts every adapter must satisfy (Failure status, `WebViewSslException` payload, no subsequent Success, optional certificate-metadata propagation). The `MockWebViewAdapter` exercises the full contract; platform integration lanes adopt it incrementally.
+
+#### Internal
+- New internal types in `Agibuild.Fulora.Core.Security`: `INavigationSecurityHooks`, `NavigationSecurityDecision`, `ServerCertificateErrorContext`, `DefaultNavigationSecurityHooks`. No public API delta.
+
+---
+
 ## [1.1.0] — 2026-03-07
 
 ### Stabilization & Quality Hardening
