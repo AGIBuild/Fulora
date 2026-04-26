@@ -26,6 +26,10 @@ internal sealed class WKWebViewConfiguration : NSObject
         Init();
     }
 
+    internal WKWebViewConfiguration(IntPtr handle, bool owns) : base(handle, owns)
+    {
+    }
+
     public static WKWebViewConfiguration Create() => new WKWebViewConfiguration();
 
     public WKPreferences Preferences =>

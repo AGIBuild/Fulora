@@ -2295,6 +2295,12 @@ Commit: `test(security): apple slice asserts full server cert metadata under SSL
 - Modify: `src/Agibuild.Fulora.Platforms/MacOS/MacOSWebViewAdapter.cs` (rewrite body — keep public surface)
 - Modify: `src/Agibuild.Fulora.Platforms/MacOS/MacOSWebViewAdapter.PInvoke.cs` (delete file in this commit)
 
+> **AMENDMENT #12 (2026-04-26 T19 feasibility finding):** The direct cutover text below is under-specified. The current macOS adapter's mandatory contract includes NSView hosting, environment options, cookies, custom schemes, downloads, permission prompts, command execution, screenshots, PDF printing, find-in-page, zoom, preload scripts, context-menu no-op semantics, devtools no-op semantics, and drag/drop optional events. Phase 1-4 only created the WebKit delegate/security bedrock; it did **not** create AppKit host-view primitives or managed equivalents for screenshot/PDF/find/zoom/devtools/preload parity. Therefore T19 is split:
+>
+> - **T19a:** Add managed parity primitives under `Macios/Interop/AppKit` and missing `WKWebView`/`WKWebViewConfiguration` methods used by the adapter. Build-only tests are acceptable for selector wrappers; WebKit behavior tests stay in the smoke harness.
+> - **T19b:** Rewrite `MacOSWebViewAdapter` to managed `Macios/` types and delete native P/Invoke only after T19a covers every mandatory surface. No method may silently degrade from the current native shim behavior unless the existing adapter already had that no-op semantics (e.g. DevTools open/close, context menu).
+> - **T18 Apple concrete contract runner:** add the real Apple metadata runner as part of T19b after the managed adapter exists (per AMENDMENT #11).
+
 > **AMENDED 2026-04-25 (Spike 0a PASS):** Step 1 below is REMOVED. macOS managed code stays on the existing `net10.0` TFM with `[SupportedOSPlatform("macos")]` runtime gating, mirroring the current `MacOSWebViewAdapter` pattern. No `EnableMacOSTfm` flag, no `net10.0-macos` TFM, no Platforms csproj edit needed in this task. Renumber the surviving steps accordingly when implementing.
 
 - [~] ~~**Step 1: Add `net10.0-macos` TFM**~~ — **REMOVED per Spike 0a (2026-04-25)**. `net10.0` + runtime gate is sufficient; Apple slice does not need a dedicated macOS TFM. See [`2026-04-25-spike-results.md`](../plans/2026-04-25-spike-results.md) § Spike 0a for evidence (6/6 probes including `dlopen libobjc`, `objc_getClass(WKWebView)`, `dlopen Security.framework` succeeded under `net10.0`).

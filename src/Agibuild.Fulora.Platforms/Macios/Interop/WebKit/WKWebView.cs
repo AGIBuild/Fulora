@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.AppKit;
 using Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
 
 namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
@@ -26,6 +27,12 @@ internal sealed class WKWebView : NSObject
     private static readonly IntPtr s_reload = Libobjc.sel_getUid("reload");
     private static readonly IntPtr s_stopLoading = Libobjc.sel_getUid("stopLoading");
     private static readonly IntPtr s_evaluateJavaScript = Libobjc.sel_getUid("evaluateJavaScript:completionHandler:");
+    private static readonly IntPtr s_configuration = Libobjc.sel_getUid("configuration");
+    private static readonly IntPtr s_setCustomUserAgent = Libobjc.sel_getUid("setCustomUserAgent:");
+    private static readonly IntPtr s_pageZoom = Libobjc.sel_getUid("pageZoom");
+    private static readonly IntPtr s_setPageZoom = Libobjc.sel_getUid("setPageZoom:");
+    private static readonly IntPtr s_setInspectable = Libobjc.sel_getUid("setInspectable:");
+    private static readonly IntPtr s_setUnderPageBackgroundColor = Libobjc.sel_getUid("setUnderPageBackgroundColor:");
     private static readonly IntPtr s_setNavigationDelegate = Libobjc.sel_getUid("setNavigationDelegate:");
     private static readonly IntPtr s_setUIDelegate = Libobjc.sel_getUid("setUIDelegate:");
     private static readonly IntPtr s_isKindOfClass = Libobjc.sel_getUid("isKindOfClass:");
@@ -54,6 +61,46 @@ internal sealed class WKWebView : NSObject
     public bool CanGoBack => Libobjc.int_objc_msgSend(Handle, s_canGoBack) == 1;
 
     public bool CanGoForward => Libobjc.int_objc_msgSend(Handle, s_canGoForward) == 1;
+
+    public WKWebViewConfiguration Configuration =>
+        new(Libobjc.intptr_objc_msgSend(Handle, s_configuration), owns: false);
+
+    public string? CustomUserAgent
+    {
+        set
+        {
+            using var valueString = NSString.Create(value);
+            Libobjc.void_objc_msgSend(Handle, s_setCustomUserAgent, valueString?.Handle ?? IntPtr.Zero);
+        }
+    }
+
+    public double PageZoom
+    {
+        get => Libobjc.double_objc_msgSend(Handle, s_pageZoom);
+        set => Libobjc.void_objc_msgSend(Handle, s_setPageZoom, value);
+    }
+
+    public void SetInspectable(bool enabled)
+    {
+        if (OperatingSystem.IsMacOSVersionAtLeast(13, 3))
+        {
+            Libobjc.void_objc_msgSend(Handle, s_setInspectable, enabled ? 1 : 0);
+        }
+    }
+
+    public void SetDrawsBackground(bool enabled)
+    {
+        using var key = NSString.Create("drawsBackground")!;
+        SetValueForKey((enabled ? NSNumber.Yes : NSNumber.No).Handle, key);
+    }
+
+    public void SetUnderPageBackgroundColor(NSColor color)
+    {
+        if (OperatingSystem.IsMacOSVersionAtLeast(12))
+        {
+            Libobjc.void_objc_msgSend(Handle, s_setUnderPageBackgroundColor, color.Handle);
+        }
+    }
 
     public WKNavigationDelegate? NavigationDelegate
     {
