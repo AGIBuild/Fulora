@@ -2406,6 +2406,31 @@ Expected: all Apple tests pass (cookies, downloads, custom scheme, media permiss
 
 ---
 
+### Task 21b (AMENDMENT #13 — drag/drop parity before final cleanup): Managed Apple drag/drop bridge
+
+> **AMENDMENT #13 (2026-04-26 post-cutover review):** The managed macOS/iOS adapter cutover removed the native shim's optional `IDragDropAdapter` capability. This is a behavior regression, because `AdapterCapabilities.DragDrop` is negotiated from the concrete adapter interface. Do not restore this by marking support without native events. Implement a proper managed bridge:
+>
+> - **macOS:** instantiate a managed `WKWebView` Objective-C subclass that implements `NSDraggingDestination`, registers pasteboard types, extracts `NSPasteboard` payload into `DragDropPayload`, and forwards enter/over/leave/drop events to `MacOSWebViewAdapter`.
+> - **iOS:** attach a managed `UIDropInteraction` with `UIDropInteractionDelegate`. Keep `sessionDidUpdate` lightweight; extract full payload asynchronously in `performDrop:` and raise `DropCompleted` after the item-provider callbacks complete.
+> - **Shared contract:** both Apple adapters implement `IDragDropAdapter`; both keep native delegate/subclass objects alive for the whole attach lifetime; both ignore callbacks after detach.
+> - **Testing:** selector-presence tests for the Objective-C classes, pure payload-conversion tests, capability negotiation tests for Apple adapters, and `LocalPreflight`.
+
+**Files:**
+- Modify: `src/Agibuild.Fulora.Platforms/Macios/Interop/WebKit/WKWebView.cs`
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/AppKit/NSPasteboard.cs`
+- Create: `src/Agibuild.Fulora.Platforms/Macios/Interop/UIKit/UIDropInteraction*.cs`
+- Modify: `src/Agibuild.Fulora.Platforms/MacOS/MacOSWebViewAdapter.cs`
+- Modify: `src/Agibuild.Fulora.Adapters.iOS/iOSWebViewAdapter.cs`
+- Add focused tests under `tests/Agibuild.Fulora.Platforms.UnitTests/Macios/`
+
+- [ ] **Step 1: Add failing tests** for Apple `IDragDropAdapter` capability, macOS drag selector registration, and payload conversion.
+- [ ] **Step 2: Implement macOS managed drag/drop bridge** using a `WKWebView` subclass + `NSDraggingDestination`.
+- [ ] **Step 3: Implement iOS managed drop bridge** using `UIDropInteractionDelegate`, with async payload extraction only in `performDrop:`.
+- [ ] **Step 4: Run targeted tests + `./build.sh LocalPreflight`.**
+- [ ] **Step 5: Commit** `feat(apple): restore managed drag-drop bridge`.
+
+---
+
 ## Phase 6 — Cleanup
 
 ### Task 22: Delete macOS `Native/` shim
