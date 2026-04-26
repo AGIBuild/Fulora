@@ -22,6 +22,9 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/UIKit/UIKit.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/UIKit/UIView.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/UIKit/UIImage.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/UIKit/UIDropInteraction.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/UIKit/UIDropProposal.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/UIKit/WKDropInteractionDelegate.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/Foundation/Foundation.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/Foundation.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/Foundation/NSValue.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSValue.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/Foundation/NSError.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSError.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |

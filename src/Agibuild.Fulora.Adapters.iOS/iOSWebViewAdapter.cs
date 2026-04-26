@@ -13,7 +13,7 @@ using Agibuild.Fulora.Security;
 namespace Agibuild.Fulora.Adapters.iOS;
 
 [SupportedOSPlatform("ios")]
-internal sealed class iOSWebViewAdapter : IWebViewAdapter
+internal sealed class iOSWebViewAdapter : IWebViewAdapter, IDragDropAdapter
 {
     private readonly INavigationSecurityHooks _securityHooks;
     private readonly object _navLock = new();
@@ -34,6 +34,8 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
     private WKScriptMessageHandler? _scriptMessageHandler;
     private WKURLSchemeHandlerImpl? _schemeHandler;
     private WKDownloadDelegate? _downloadDelegate;
+    private WKDropInteractionDelegate? _dropDelegate;
+    private UIDropInteraction? _dropInteraction;
     private UIView? _parentView;
     private UIView? _webViewAsView;
 
@@ -71,6 +73,10 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
     public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested;
     public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested;
     public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
+    public event EventHandler<DragEventArgs>? DragEntered;
+    public event EventHandler<DragEventArgs>? DragOver;
+    public event EventHandler<EventArgs>? DragLeft;
+    public event EventHandler<DropEventArgs>? DropCompleted;
 
     [Experimental("AGWV005")]
     public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested
@@ -197,6 +203,13 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
         _webViewAsView = UIView.FromHandle(_webView.Handle);
         _webViewAsView.Frame = _parentView.Bounds;
         _webViewAsView.AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+        _dropDelegate = new WKDropInteractionDelegate();
+        _dropDelegate.DragEntered += OnDragEntered;
+        _dropDelegate.DragUpdated += OnDragUpdated;
+        _dropDelegate.DragExited += OnDragExited;
+        _dropDelegate.DropPerformed += OnDropPerformed;
+        _dropInteraction = new UIDropInteraction(_dropDelegate);
+        _webViewAsView.AddInteraction(_dropInteraction);
         _parentView.AddSubview(_webView);
         _attached = true;
     }
@@ -214,6 +227,11 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
 
         try
         {
+            if (_dropInteraction is not null)
+            {
+                _webViewAsView?.RemoveInteraction(_dropInteraction);
+            }
+
             _webViewAsView?.RemoveFromSuperview();
             if (_userContentController is not null)
             {
@@ -224,6 +242,8 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
         finally
         {
             _downloadDelegate?.Dispose();
+            _dropInteraction?.Dispose();
+            _dropDelegate?.Dispose();
             _schemeHandler?.Dispose();
             _scriptMessageHandler?.Dispose();
             _uiDelegate?.Dispose();
@@ -695,6 +715,38 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
     {
         _ = _pendingDownloadPaths.TryDequeue(out var path);
         e.Decide(TryCreateFileUrl(path));
+    }
+
+    private void OnDragEntered(object? sender, DragEventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DragEntered?.Invoke(this, e));
+        }
+    }
+
+    private void OnDragUpdated(object? sender, DragEventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DragOver?.Invoke(this, e));
+        }
+    }
+
+    private void OnDragExited(object? sender, EventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DragLeft?.Invoke(this, e));
+        }
+    }
+
+    private void OnDropPerformed(object? sender, DropEventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DropCompleted?.Invoke(this, e));
+        }
     }
 
     private void OnDidFinishNavigation(object? sender, EventArgs e)

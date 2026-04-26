@@ -25,6 +25,8 @@ internal sealed class UIView(IntPtr handle, bool owns) : NSObject(handle, owns)
     private static readonly IntPtr s_setAutoresizingMask = Libobjc.sel_getUid("setAutoresizingMask:");
     private static readonly IntPtr s_addSubview = Libobjc.sel_getUid("addSubview:");
     private static readonly IntPtr s_removeFromSuperview = Libobjc.sel_getUid("removeFromSuperview");
+    private static readonly IntPtr s_addInteraction = Libobjc.sel_getUid("addInteraction:");
+    private static readonly IntPtr s_removeInteraction = Libobjc.sel_getUid("removeInteraction:");
 
     public CGRect Bounds => Libobjc.CGRect_objc_msgSend(Handle, s_bounds);
 
@@ -43,4 +45,8 @@ internal sealed class UIView(IntPtr handle, bool owns) : NSObject(handle, owns)
     public void AddSubview(NSObject child) => Libobjc.void_objc_msgSend(Handle, s_addSubview, child.Handle);
 
     public void RemoveFromSuperview() => Libobjc.void_objc_msgSend(Handle, s_removeFromSuperview);
+
+    public void AddInteraction(NSObject interaction) => Libobjc.void_objc_msgSend(Handle, s_addInteraction, interaction.Handle);
+
+    public void RemoveInteraction(NSObject interaction) => Libobjc.void_objc_msgSend(Handle, s_removeInteraction, interaction.Handle);
 }
