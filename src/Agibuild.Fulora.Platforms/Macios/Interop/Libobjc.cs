@@ -82,6 +82,9 @@ internal static unsafe partial class Libobjc
     public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, IntPtr param1);
     [DllImport(libobjc, EntryPoint = "objc_msgSend")]
     public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, int param1);
+    /// <summary><c>NSArray</c> <c>objectAtIndex:</c> and other APIs take <c>NSUInteger</c>; use this overload on 64-bit Apple ABIs.</summary>
+    [DllImport(libobjc, EntryPoint = "objc_msgSend")]
+    public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, nuint param1);
     [DllImport(libobjc, EntryPoint = "objc_msgSend")]
     public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, double param1);
     [DllImport(libobjc, EntryPoint = "objc_msgSend")]

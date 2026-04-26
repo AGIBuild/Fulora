@@ -1,15 +1,27 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Agibuild
 
+using System.Runtime.InteropServices;
 using System.Text.Json;
+using Agibuild.Fulora;
 using Agibuild.Fulora.Platforms.Macios.Interop;
+using Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
 using Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
 
 return WebKitSmokeHarness.Run(args);
 
 internal static class WebKitSmokeHarness
 {
+    private const string CoreFoundationLibrary = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+    private const uint kCFStringEncodingUTF8 = 0x0800_0100;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static IntPtr s_cfRunLoopDefaultModeString;
+
+    [DllImport(CoreFoundationLibrary)]
+    private static extern int CFRunLoopRunInMode(IntPtr mode, double seconds, [MarshalAs(UnmanagedType.I1)] bool returnAfterSourceHandled);
+
+    [DllImport(CoreFoundationLibrary)]
+    private static extern IntPtr CFStringCreateWithCString(IntPtr allocator, [MarshalAs(UnmanagedType.LPUTF8Str)] string cStr, uint encoding);
 
     public static int Run(string[] args)
     {
@@ -35,6 +47,9 @@ internal static class WebKitSmokeHarness
                     break;
                 case "t8-user-content-controller":
                     RunUserContentController();
+                    break;
+                case "t9-cookie-store-roundtrip":
+                    RunCookieStoreRoundtrip();
                     break;
                 default:
                     Console.Error.WriteLine($"Unknown WebKit smoke case: {caseId}");
@@ -79,6 +94,60 @@ internal static class WebKitSmokeHarness
 
         controller.AddUserScript(script);
         controller.RemoveAllUserScripts();
+    }
+
+    private static void RunCookieStoreRoundtrip()
+    {
+        var op = RunCookieStoreRoundtripAsync();
+        while (!op.IsCompleted)
+        {
+            PumpMainRunLoop(TimeSpan.FromMilliseconds(100));
+        }
+
+        op.GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// WKHTTPCookieStore completion handlers are scheduled on the main run loop; pump Core Foundation
+    /// from this headless process (avoid <c>NSRunLoop</c> <c>runUntilDate:</c> here — it faulted under .NET).
+    /// </summary>
+    private static void PumpMainRunLoop(TimeSpan slice)
+    {
+        if (s_cfRunLoopDefaultModeString == IntPtr.Zero)
+        {
+            s_cfRunLoopDefaultModeString = CFStringCreateWithCString(IntPtr.Zero, "kCFRunLoopDefaultMode", kCFStringEncodingUTF8);
+            if (s_cfRunLoopDefaultModeString == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("CFStringCreateWithCString failed for kCFRunLoopDefaultMode.");
+            }
+        }
+
+        _ = CFRunLoopRunInMode(s_cfRunLoopDefaultModeString, Math.Max(0.01, slice.TotalSeconds), true);
+    }
+
+    private static async Task RunCookieStoreRoundtripAsync()
+    {
+        using var store = WKWebsiteDataStore.NonPersistentDataStore();
+        var cookies = store.HttpCookieStore;
+        var c = NSHTTPCookie.From(new WebViewCookie("name", "value", "example.invalid", "/", null, false, false));
+        await cookies.SetCookieAsync(c).ConfigureAwait(false);
+        var all = await cookies.GetAllCookiesAsync().ConfigureAwait(false);
+        var found = false;
+        foreach (var native in all)
+        {
+            if (native.Name == "name" && native.Value == "value")
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            throw new InvalidOperationException("Round-trip cookie was not observed in WKHTTPCookieStore.");
+        }
+
+        await cookies.DeleteCookieAsync(c).ConfigureAwait(false);
     }
 
     private static string? ParseCaseId(string[] args)
