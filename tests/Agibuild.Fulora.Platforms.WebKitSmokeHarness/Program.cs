@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Agibuild
 
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json;
 using Agibuild.Fulora;
 using Agibuild.Fulora.Platforms.Macios.Interop;
@@ -56,6 +57,9 @@ internal static class WebKitSmokeHarness
                     break;
                 case "t13-script-message":
                     RunScriptMessage();
+                    break;
+                case "t14-url-scheme":
+                    RunUrlScheme();
                     break;
                 default:
                     Console.Error.WriteLine($"Unknown WebKit smoke case: {caseId}");
@@ -238,6 +242,42 @@ internal static class WebKitSmokeHarness
         {
             throw new InvalidOperationException($"Unexpected script message handler name: {messageName}");
         }
+    }
+
+    private static void RunUrlScheme()
+    {
+        var op = RunUrlSchemeAsync();
+        while (!op.IsCompleted)
+        {
+            PumpMainRunLoop(TimeSpan.FromMilliseconds(100));
+        }
+
+        op.GetAwaiter().GetResult();
+    }
+
+    private static async Task RunUrlSchemeAsync()
+    {
+        using var config = WKWebViewConfiguration.Create();
+        using var handler = new WKURLSchemeHandlerImpl();
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        handler.StartTask += (_, args) =>
+        {
+            var bytes = Encoding.UTF8.GetBytes("<html><title>agibuild</title></html>");
+            using var data = NSData.FromBytes(bytes);
+            using var response = NSURLResponse.Create(args.Task.Request.Url, "text/html", bytes.Length, "utf-8");
+            args.Task.DidReceiveResponse(response);
+            args.Task.DidReceiveData(data);
+            args.Task.DidFinish();
+            started.TrySetResult();
+        };
+
+        config.SetUrlSchemeHandler(handler.Handle, "agibuild");
+        using var webView = new WKWebView(config);
+        using var request = NSURLRequest.FromUri(new Uri("agibuild://test/"));
+        webView.Load(request);
+
+        await started.Task.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
     }
 
     private static string? ParseCaseId(string[] args)

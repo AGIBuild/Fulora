@@ -17,6 +17,7 @@ internal sealed class WKWebView : NSObject
     private static readonly IntPtr s_alloc = Libobjc.sel_getUid("alloc");
     private static readonly IntPtr s_initWithFrameConfiguration = Libobjc.sel_getUid("initWithFrame:configuration:");
     private static readonly IntPtr s_loadHTMLString = Libobjc.sel_getUid("loadHTMLString:baseURL:");
+    private static readonly IntPtr s_loadRequest = Libobjc.sel_getUid("loadRequest:");
     private static readonly IntPtr s_url = Libobjc.sel_getUid("URL");
     private static readonly IntPtr s_canGoBack = Libobjc.sel_getUid("canGoBack");
     private static readonly IntPtr s_goBack = Libobjc.sel_getUid("goBack");
@@ -71,6 +72,12 @@ internal sealed class WKWebView : NSObject
         ArgumentNullException.ThrowIfNull(html);
         using var htmlNs = NSString.Create(html)!;
         Libobjc.void_objc_msgSend(Handle, s_loadHTMLString, htmlNs.Handle, baseUrl?.Handle ?? IntPtr.Zero);
+    }
+
+    public void Load(NSURLRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        _ = Libobjc.intptr_objc_msgSend(Handle, s_loadRequest, request.Handle);
     }
 
     public async Task<NSObject?> EvaluateJavaScriptAsync(string script)

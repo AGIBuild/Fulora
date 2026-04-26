@@ -15,6 +15,7 @@ internal sealed class WKWebViewConfiguration : NSObject
     private static readonly IntPtr s_setWebsiteDataStore = Libobjc.sel_getUid("setWebsiteDataStore:");
     private static readonly IntPtr s_userContentController = Libobjc.sel_getUid("userContentController");
     private static readonly IntPtr s_setUserContentController = Libobjc.sel_getUid("setUserContentController:");
+    private static readonly IntPtr s_setUrlSchemeHandler = Libobjc.sel_getUid("setURLSchemeHandler:forURLScheme:");
     private static readonly IntPtr s_allowsInlineMediaPlayback = Libobjc.sel_getUid("allowsInlineMediaPlayback");
     private static readonly IntPtr s_setAllowsInlineMediaPlayback = Libobjc.sel_getUid("setAllowsInlineMediaPlayback:");
     private static readonly IntPtr s_mediaTypesRequiringUserActionForPlayback = Libobjc.sel_getUid("mediaTypesRequiringUserActionForPlayback");
@@ -43,6 +44,13 @@ internal sealed class WKWebViewConfiguration : NSObject
     {
         get => Libobjc.intptr_objc_msgSend(Handle, s_userContentController);
         set => Libobjc.void_objc_msgSend(Handle, s_setUserContentController, value);
+    }
+
+    public void SetUrlSchemeHandler(IntPtr handler, string scheme)
+    {
+        ArgumentNullException.ThrowIfNull(scheme);
+        using var schemeString = NSString.Create(scheme)!;
+        Libobjc.void_objc_msgSend(Handle, s_setUrlSchemeHandler, handler, schemeString.Handle);
     }
 
     public bool AllowsInlineMediaPlayback

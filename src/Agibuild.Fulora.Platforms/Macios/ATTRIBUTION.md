@@ -43,6 +43,7 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/WebKit/WKUIDelegate.cs` | n/a | n/a (newly authored — Fulora-original; media permission + JavaScript panel runtime class per Task 12) |
 | `Interop/WebKit/WKScriptMessage.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKScriptMessageHandler.cs` | n/a | n/a (newly authored — Fulora-original; script message runtime class per Task 13) |
+| `Interop/WebKit/WKURLSchemeHandlerImpl.cs` | n/a | n/a (newly authored — Fulora-original; custom URL scheme runtime class per Task 14) |
 
 ## License
 
