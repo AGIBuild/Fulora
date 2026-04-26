@@ -28,6 +28,10 @@ internal sealed unsafe class WKNavigationDelegate : WkDelegateBase
         (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&DecidePolicyForNavigationResponseCallback;
     private static readonly void* s_didReceiveChallenge =
         (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&DidReceiveAuthenticationChallengeCallback;
+    private static readonly void* s_navigationActionDidBecomeDownload =
+        (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&NavigationActionDidBecomeDownloadCallback;
+    private static readonly void* s_navigationResponseDidBecomeDownload =
+        (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, void>)&NavigationResponseDidBecomeDownloadCallback;
 
     private static readonly IntPtr s_protectionSpace = Libobjc.sel_getUid("protectionSpace");
     private static readonly IntPtr s_serverTrust = Libobjc.sel_getUid("serverTrust");
@@ -46,6 +50,8 @@ internal sealed unsafe class WKNavigationDelegate : WkDelegateBase
         AddMethod(cls, "webView:didFailNavigation:withError:", s_didFail, "v@:@@@");
         AddMethod(cls, "webView:decidePolicyForNavigationResponse:decisionHandler:", s_decidePolicyForNavigationResponse, "v@:@@@");
         AddMethod(cls, "webView:didReceiveAuthenticationChallenge:completionHandler:", s_didReceiveChallenge, "v@:@@@");
+        AddMethod(cls, "webView:navigationAction:didBecomeDownload:", s_navigationActionDidBecomeDownload, "v@:@@@");
+        AddMethod(cls, "webView:navigationResponse:didBecomeDownload:", s_navigationResponseDidBecomeDownload, "v@:@@@");
 
         if (!RegisterManagedMembers(cls))
         {
@@ -71,6 +77,8 @@ internal sealed unsafe class WKNavigationDelegate : WkDelegateBase
     public event EventHandler<DecidePolicyForNavigationResponseEventArgs>? DecidePolicyForNavigationResponse;
 
     public event EventHandler<ServerTrustChallengeEventArgs>? DidReceiveServerTrustChallenge;
+
+    public event EventHandler<WKDownloadEventArgs>? DidBecomeDownload;
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static void DidFinishNavigationCallback(IntPtr self, IntPtr sel, IntPtr webView, IntPtr navigation)
@@ -173,6 +181,30 @@ internal sealed unsafe class WKNavigationDelegate : WkDelegateBase
         {
             InvokeAuthenticationChallengeCompletion(completionHandler, NSURLSessionAuthChallengeDisposition.CancelAuthenticationChallenge);
         }
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void NavigationActionDidBecomeDownloadCallback(
+        IntPtr self,
+        IntPtr sel,
+        IntPtr webView,
+        IntPtr navigationAction,
+        IntPtr download)
+    {
+        var managed = ReadManagedSelf<WKNavigationDelegate>(self);
+        managed?.DidBecomeDownload?.Invoke(managed, new WKDownloadEventArgs(new WKDownload(download, owns: false)));
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void NavigationResponseDidBecomeDownloadCallback(
+        IntPtr self,
+        IntPtr sel,
+        IntPtr webView,
+        IntPtr navigationResponse,
+        IntPtr download)
+    {
+        var managed = ReadManagedSelf<WKNavigationDelegate>(self);
+        managed?.DidBecomeDownload?.Invoke(managed, new WKDownloadEventArgs(new WKDownload(download, owns: false)));
     }
 
     private static ServerTrustChallengeEventArgs? BuildServerTrustEventArgs(IntPtr challenge)

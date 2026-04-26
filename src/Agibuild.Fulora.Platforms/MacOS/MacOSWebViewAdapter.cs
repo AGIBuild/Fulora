@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
 using Agibuild.Fulora;
 using Agibuild.Fulora.Adapters.Abstractions;
+using Agibuild.Fulora.Platforms.Macios;
 using Agibuild.Fulora.Platforms.Macios.Interop;
 using Agibuild.Fulora.Platforms.Macios.Interop.AppKit;
 using Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
@@ -17,6 +18,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
     private readonly INavigationSecurityHooks _securityHooks;
     private readonly object _navLock = new();
     private readonly Dictionary<string, string> _preloadScripts = new();
+    private readonly ConcurrentQueue<string?> _pendingDownloadPaths = new();
 
     private IWebViewAdapterHost? _host;
     private bool _initialized;
@@ -185,6 +187,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
         _navigationDelegate.DidFailNavigation += OnDidFailNavigation;
         _navigationDelegate.DidFailProvisionalNavigation += OnDidFailNavigation;
         _navigationDelegate.DidReceiveServerTrustChallenge += OnDidReceiveServerTrustChallenge;
+        _navigationDelegate.DidBecomeDownload += OnDidBecomeDownload;
         _webView.NavigationDelegate = _navigationDelegate;
 
         _uiDelegate = new WKUIDelegate();
@@ -194,7 +197,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
         if (OperatingSystem.IsMacOSVersionAtLeast(11, 3))
         {
             _downloadDelegate = new WKDownloadDelegate();
-            _downloadDelegate.DecideDestination += (_, e) => e.Decide(null);
+            _downloadDelegate.DecideDestination += OnDecideDownloadDestination;
         }
 
         _webViewAsView = NSView.FromHandle(_webView.Handle);
@@ -485,6 +488,7 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
     public Task<byte[]> PrintToPdfAsync(PdfPrintOptions? options)
     {
         ThrowIfNotAttached();
+        ApplePdfPrintOptions.ThrowIfUnsupported(options);
         return _webView!.CreatePdfAsync();
     }
 
@@ -667,15 +671,36 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
         var uri = response.Url is { } url ? TryGetUri(url) : null;
         if (uri is not null && IsLikelyDownload(mimeType))
         {
-            SafeRaise(() => DownloadRequested?.Invoke(
-                this,
-                new DownloadRequestedEventArgs(
-                    uri,
-                    response.SuggestedFilename,
-                    mimeType,
-                    response.ExpectedContentLength > 0 ? response.ExpectedContentLength : null)));
+            var args = new DownloadRequestedEventArgs(
+                uri,
+                response.SuggestedFilename,
+                mimeType,
+                response.ExpectedContentLength > 0 ? response.ExpectedContentLength : null);
+            SafeRaise(() => DownloadRequested?.Invoke(this, args));
+
+            if (args.Cancel)
+            {
+                e.Policy = WKNavigationResponsePolicy.Cancel;
+                return;
+            }
+
+            _pendingDownloadPaths.Enqueue(args.DownloadPath);
             e.Policy = WKNavigationResponsePolicy.BecomeDownload;
         }
+    }
+
+    private void OnDidBecomeDownload(object? sender, WKDownloadEventArgs e)
+    {
+        if (_downloadDelegate is not null)
+        {
+            e.Download.SetDelegate(_downloadDelegate);
+        }
+    }
+
+    private void OnDecideDownloadDestination(object? sender, WKDownloadDestinationEventArgs e)
+    {
+        _ = _pendingDownloadPaths.TryDequeue(out var path);
+        e.Decide(TryCreateFileUrl(path));
     }
 
     private void OnDidFinishNavigation(object? sender, EventArgs e)
@@ -929,6 +954,18 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
 
     private static Uri? TryGetUri(NSUrl? url)
         => url?.AbsoluteString is { } text && Uri.TryCreate(text, UriKind.Absolute, out var uri) ? uri : null;
+
+    private static NSUrl? TryCreateFileUrl(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return null;
+        }
+
+        var fileUri = new Uri(Path.GetFullPath(path));
+        using var nsString = NSString.Create(fileUri.AbsoluteUri);
+        return new NSUrl(nsString);
+    }
 
     private static string JsStringLiteral(string value)
         => "'" + value

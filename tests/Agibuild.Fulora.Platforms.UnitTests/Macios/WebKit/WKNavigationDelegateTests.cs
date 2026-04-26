@@ -22,7 +22,9 @@ public class WKNavigationDelegateTests
             "webView:decidePolicyForNavigationAction:decisionHandler:",
             "webView:didFailProvisionalNavigation:withError:",
             "webView:didFailNavigation:withError:",
-            "webView:decidePolicyForNavigationResponse:decisionHandler:"
+            "webView:decidePolicyForNavigationResponse:decisionHandler:",
+            "webView:navigationAction:didBecomeDownload:",
+            "webView:navigationResponse:didBecomeDownload:"
         })
         {
             Assert.True(
