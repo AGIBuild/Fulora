@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Agibuild
 
+using System.Net;
+using System.Net.Security;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using Agibuild.Fulora;
@@ -60,6 +65,9 @@ internal static class WebKitSmokeHarness
                     break;
                 case "t14-url-scheme":
                     RunUrlScheme();
+                    break;
+                case "t17-server-trust":
+                    RunServerTrustChallenge();
                     break;
                 default:
                     Console.Error.WriteLine($"Unknown WebKit smoke case: {caseId}");
@@ -280,6 +288,47 @@ internal static class WebKitSmokeHarness
         await started.Task.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
     }
 
+    private static void RunServerTrustChallenge()
+    {
+        var op = RunServerTrustChallengeAsync();
+        while (!op.IsCompleted)
+        {
+            PumpMainRunLoop(TimeSpan.FromMilliseconds(100));
+        }
+
+        op.GetAwaiter().GetResult();
+    }
+
+    private static async Task RunServerTrustChallengeAsync()
+    {
+        using var server = SelfSignedTlsServer.Start();
+        using var config = WKWebViewConfiguration.Create();
+        using var webView = new WKWebView(config);
+        using var nav = new WKNavigationDelegate();
+
+        var challengeTask = new TaskCompletionSource<ServerTrustChallengeEventArgs>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        nav.DidReceiveServerTrustChallenge += (_, args) => challengeTask.TrySetResult(args);
+        webView.NavigationDelegate = nav;
+
+        using var request = NSURLRequest.FromUri(server.Uri);
+        webView.Load(request);
+
+        var challenge = await challengeTask.Task.WaitAsync(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+        if (challenge.Host != server.Uri.Host)
+        {
+            throw new InvalidOperationException($"Unexpected trust challenge host: {challenge.Host}");
+        }
+
+        if (challenge.CertificateSubject is null ||
+            challenge.CertificateIssuer is null ||
+            challenge.ValidFrom is null ||
+            challenge.ValidTo is null)
+        {
+            throw new InvalidOperationException("Server trust challenge did not include full certificate metadata.");
+        }
+    }
+
     private static string? ParseCaseId(string[] args)
     {
         for (var i = 0; i < args.Length - 1; i++)
@@ -302,4 +351,103 @@ internal static class WebKitSmokeHarness
     }
 
     private sealed record SmokeResult(string Case, bool Ok, string? Detail = null);
+
+    private sealed class SelfSignedTlsServer : IDisposable
+    {
+        private readonly CancellationTokenSource _cts = new();
+        private readonly TcpListener _listener;
+        private readonly X509Certificate2 _certificate;
+        private readonly Task _acceptLoop;
+
+        private SelfSignedTlsServer(TcpListener listener, X509Certificate2 certificate)
+        {
+            _listener = listener;
+            _certificate = certificate;
+            var endpoint = (IPEndPoint)_listener.LocalEndpoint;
+            Uri = new Uri($"https://localhost:{endpoint.Port}/");
+            _acceptLoop = Task.Run(AcceptLoopAsync);
+        }
+
+        public Uri Uri { get; }
+
+        public static SelfSignedTlsServer Start()
+        {
+            var certificate = CreateCertificate();
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            return new SelfSignedTlsServer(listener, certificate);
+        }
+
+        public void Dispose()
+        {
+            _cts.Cancel();
+            _listener.Stop();
+            try
+            {
+                _acceptLoop.Wait(TimeSpan.FromSeconds(2));
+            }
+            catch
+            {
+                // The harness process is already ending; listener shutdown races are not test failures.
+            }
+
+            _certificate.Dispose();
+            _cts.Dispose();
+        }
+
+        private async Task AcceptLoopAsync()
+        {
+            while (!_cts.IsCancellationRequested)
+            {
+                TcpClient client;
+                try
+                {
+                    client = await _listener.AcceptTcpClientAsync(_cts.Token).ConfigureAwait(false);
+                }
+                catch
+                {
+                    return;
+                }
+
+                _ = Task.Run(() => HandleClientAsync(client), _cts.Token);
+            }
+        }
+
+        private async Task HandleClientAsync(TcpClient client)
+        {
+            using var clientRegistration = client;
+            try
+            {
+                await using var stream = new SslStream(client.GetStream(), leaveInnerStreamOpen: false);
+                await stream.AuthenticateAsServerAsync(_certificate, clientCertificateRequired: false, enabledSslProtocols: default, checkCertificateRevocation: false)
+                    .ConfigureAwait(false);
+
+                var response = Encoding.ASCII.GetBytes(
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok");
+                await stream.WriteAsync(response, _cts.Token).ConfigureAwait(false);
+            }
+            catch
+            {
+                // WebKit cancels the TLS flow after the trust challenge; that is expected.
+            }
+        }
+
+        private static X509Certificate2 CreateCertificate()
+        {
+            using var key = RSA.Create(2048);
+            var request = new CertificateRequest(
+                "CN=localhost",
+                key,
+                HashAlgorithmName.SHA256,
+                RSASignaturePadding.Pkcs1);
+            request.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
+            request.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
+            var sanBuilder = new SubjectAlternativeNameBuilder();
+            sanBuilder.AddDnsName("localhost");
+            request.CertificateExtensions.Add(sanBuilder.Build());
+            return request.CreateSelfSigned(
+                DateTimeOffset.UtcNow.AddDays(-1),
+                DateTimeOffset.UtcNow.AddDays(30));
+        }
+    }
 }

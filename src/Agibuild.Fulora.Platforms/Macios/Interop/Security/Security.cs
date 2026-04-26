@@ -30,6 +30,15 @@ internal static partial class Security
     internal static partial void CFRelease(IntPtr cf);
 
     [LibraryImport(CoreFoundation)]
+    internal static partial IntPtr CFRetain(IntPtr cf);
+
+    [LibraryImport(CoreFoundation)]
+    internal static partial long CFErrorGetCode(IntPtr err);
+
+    [LibraryImport(CoreFoundation)]
+    internal static partial IntPtr CFErrorCopyDescription(IntPtr err);
+
+    [LibraryImport(CoreFoundation)]
     internal static partial nint CFArrayGetCount(IntPtr array);
 
     [LibraryImport(CoreFoundation)]

@@ -39,7 +39,7 @@ internal sealed class SecTrust : IDisposable
                 var cert = Security.CFArrayGetValueAtIndex(chain, i);
                 if (cert != IntPtr.Zero)
                 {
-                    result.Add(new SecCertificate(cert, owns: false));
+                    result.Add(new SecCertificate(Security.CFRetain(cert), owns: true));
                 }
             }
 
