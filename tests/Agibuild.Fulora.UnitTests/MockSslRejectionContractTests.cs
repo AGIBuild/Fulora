@@ -40,6 +40,18 @@ public sealed class MockSslRejectionContractTests
             MockTriggerFactory);
 
     [Fact]
+    public Task PlatformProvidesCertificateMetadata_when_supported_requires_metadata()
+        => AdapterSslRejectionContract.PlatformProvidesCertificateMetadata_when_supported(
+            MockTriggerFactory,
+            platformSupportsMetadata: true);
+
+    [Fact]
+    public Task PlatformProvidesCertificateMetadata_when_not_supported_allows_null_metadata()
+        => AdapterSslRejectionContract.PlatformProvidesCertificateMetadata_when_supported(
+            MockTriggerFactory,
+            platformSupportsMetadata: false);
+
+    [Fact]
     public void Hook_is_invoked_with_expected_context()
     {
         var hook = new RecordingNavigationSecurityHooks();

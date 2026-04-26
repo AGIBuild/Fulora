@@ -2254,6 +2254,8 @@ git commit -m "feat(apple): WKNavigationDelegate didReceiveAuthenticationChallen
 
 The predecessor plan's contract asserts `Host` / `ErrorSummary` / `PlatformRawCode` always populated. This task adds an *opt-in* assertion set "PlatformProvidesCertificateMetadata" that platforms can satisfy. Apple opts in starting from this plan.
 
+> **AMENDMENT #11 (2026-04-26 T18 sequencing finding):** The concrete Apple adapter cannot truthfully run this contract before T19/T20 because the macOS/iOS adapters are still on the native shim at this point. T18 therefore adds the reusable opt-in contract and reference mock coverage only. The concrete Apple runner moves to the adapter cutover tasks immediately after each Apple adapter is rewritten to managed `Macios/` types. Do not add a fake Apple-slice unit test that uses `MockWebViewAdapter`; that would satisfy the filename but not the architecture.
+
 - [ ] **Step 1: Extend contract**
 
 ```csharp
