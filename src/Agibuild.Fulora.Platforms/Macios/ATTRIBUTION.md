@@ -19,6 +19,7 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/Foundation/NSUrl.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSUrl.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/Foundation/NSURLRequest.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSURLRequest.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
 | `Interop/Foundation/NSMutableURLRequest.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSMutableURLRequest.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
+| `Interop/Foundation/NSURLResponse.cs` | n/a | n/a (newly authored — Fulora-original; upstream path in plan returned 404 at pinned SHA) |
 | `Interop/Foundation/NSData.cs` | n/a | n/a (newly authored — see Foundation/NSData.cs SPDX header) |
 | `Interop/Foundation/NSDictionary.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSDictionary.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e (modified — see file header) |
 | `Interop/Foundation/NSArray.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSArray.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e |
@@ -35,6 +36,8 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/WebKit/WKWebsiteDataStore.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKHTTPCookieStore.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/Foundation/NSHTTPCookie.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/NSHTTPCookie.cs` | 4e16564d5c0d1c6b4ccc0ab35f69be75fe673a2e (modified — WebViewCookie conversions + property getters; Fulora Task 9) |
+| `Interop/WebKit/WKURLSchemeHandler.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/WebKit/WKURLSchemeTask.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKNavigationDelegate.cs` | `src/Avalonia.Controls.WebView.Core/Macios/Interop/WebKit/WKNavigationDelegate.cs` | TBD |
 
 ## License

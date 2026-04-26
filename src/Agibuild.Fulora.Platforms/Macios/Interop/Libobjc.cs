@@ -98,6 +98,8 @@ internal static unsafe partial class Libobjc
     [DllImport(libobjc, EntryPoint = "objc_msgSend")]
     public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, IntPtr param1, IntPtr param2, UIntPtr param3);
     [DllImport(libobjc, EntryPoint = "objc_msgSend")]
+    public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, IntPtr param1, IntPtr param2, long param3, IntPtr param4);
+    [DllImport(libobjc, EntryPoint = "objc_msgSend")]
     public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, IntPtr param1, IntPtr param2, IntPtr param3, int param4);
     [DllImport(libobjc, EntryPoint = "objc_msgSend")]
     public static extern IntPtr intptr_objc_msgSend(IntPtr basePtr, IntPtr selector, IntPtr param1, IntPtr param2, int param3);
