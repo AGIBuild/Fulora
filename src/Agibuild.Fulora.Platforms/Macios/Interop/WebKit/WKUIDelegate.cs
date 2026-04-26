@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Agibuild
 
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Agibuild.Fulora.Platforms.Macios.Interop;
 
 namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
 
+/// <remarks>
+/// Callers must keep a strong managed reference for as long as the native <c>WKWebView</c>
+/// references this delegate; the Objective-C instance stores only a weak managed handle.
+/// </remarks>
 internal sealed unsafe class WKUIDelegate : WkDelegateBase
 {
     private static readonly void* s_requestMediaCapturePermission =
@@ -67,9 +72,13 @@ internal sealed unsafe class WKUIDelegate : WkDelegateBase
         {
             managed?.MediaCapturePermissionRequested?.Invoke(managed, args);
         }
-        catch
+        catch (Exception ex)
         {
-            args.Decision = WKPermissionDecision.Deny;
+            Debug.Fail(ex.ToString());
+            if (!args.HasExplicitDecision)
+            {
+                args.Decision = WKPermissionDecision.Deny;
+            }
         }
 
         args.Complete();
@@ -90,8 +99,9 @@ internal sealed unsafe class WKUIDelegate : WkDelegateBase
         {
             managed?.JavaScriptAlertPanel?.Invoke(managed, args);
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.Fail(ex.ToString());
             // Alerts have no decision payload; still complete the native block below.
         }
         finally
@@ -115,9 +125,13 @@ internal sealed unsafe class WKUIDelegate : WkDelegateBase
         {
             managed?.JavaScriptConfirmPanel?.Invoke(managed, args);
         }
-        catch
+        catch (Exception ex)
         {
-            args.Decide(false);
+            Debug.Fail(ex.ToString());
+            if (!args.HasExplicitResult)
+            {
+                args.Decide(false);
+            }
         }
 
         args.Complete();
@@ -143,9 +157,13 @@ internal sealed unsafe class WKUIDelegate : WkDelegateBase
         {
             managed?.JavaScriptTextInputPanel?.Invoke(managed, args);
         }
-        catch
+        catch (Exception ex)
         {
-            args.Decide(null);
+            Debug.Fail(ex.ToString());
+            if (!args.HasExplicitResult)
+            {
+                args.Decide(null);
+            }
         }
 
         args.Complete();
@@ -161,13 +179,25 @@ internal enum WKPermissionDecision : long
 
 internal sealed class MediaCapturePermissionEventArgs(IntPtr origin, IntPtr frame, long mediaCaptureType, IntPtr decisionHandler) : EventArgs
 {
+    private WKPermissionDecision _decision = WKPermissionDecision.Prompt;
+
     public IntPtr Origin { get; } = origin;
 
     public IntPtr Frame { get; } = frame;
 
     public long MediaCaptureType { get; } = mediaCaptureType;
 
-    public WKPermissionDecision Decision { get; set; } = WKPermissionDecision.Prompt;
+    public WKPermissionDecision Decision
+    {
+        get => _decision;
+        set
+        {
+            _decision = value;
+            HasExplicitDecision = true;
+        }
+    }
+
+    internal bool HasExplicitDecision { get; private set; }
 
     internal void Complete() => InvokeDecisionHandler(decisionHandler, (long)Decision);
 
@@ -202,7 +232,13 @@ internal sealed class JavaScriptConfirmPanelEventArgs(string message, IntPtr fra
 
     public IntPtr Frame { get; } = frame;
 
-    public void Decide(bool result) => _result = result;
+    internal bool HasExplicitResult { get; private set; }
+
+    public void Decide(bool result)
+    {
+        _result = result;
+        HasExplicitResult = true;
+    }
 
     internal void Complete()
     {
@@ -224,7 +260,13 @@ internal sealed class JavaScriptTextInputPanelEventArgs(string prompt, string? d
 
     public IntPtr Frame { get; } = frame;
 
-    public void Decide(string? result) => _result = result;
+    internal bool HasExplicitResult { get; private set; }
+
+    public void Decide(string? result)
+    {
+        _result = result;
+        HasExplicitResult = true;
+    }
 
     internal void Complete()
     {
