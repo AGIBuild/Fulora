@@ -3,6 +3,7 @@
 
 using Agibuild.Fulora.Platforms.Macios.Interop;
 using Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
+using System.Threading;
 
 namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
 
@@ -48,23 +49,56 @@ internal enum WKNavigationResponsePolicy : long
 internal sealed class DecidePolicyForNavigationActionEventArgs : EventArgs
 {
     private static readonly IntPtr s_request = Libobjc.sel_getUid("request");
+    private static readonly IntPtr s_navigationType = Libobjc.sel_getUid("navigationType");
+    private static readonly IntPtr s_targetFrame = Libobjc.sel_getUid("targetFrame");
+    private static readonly IntPtr s_isMainFrame = Libobjc.sel_getUid("isMainFrame");
 
     internal DecidePolicyForNavigationActionEventArgs(IntPtr navigationAction, IntPtr decisionHandler)
     {
         NavigationAction = navigationAction;
         DecisionHandler = decisionHandler;
         Request = NSURLRequest.FromHandle(Libobjc.intptr_objc_msgSend(navigationAction, s_request));
+        NavigationType = Libobjc.long_objc_msgSend(navigationAction, s_navigationType);
+        TargetFrame = Libobjc.intptr_objc_msgSend(navigationAction, s_targetFrame);
+        IsNewWindow = TargetFrame == IntPtr.Zero;
+        IsMainFrame = IsNewWindow || Libobjc.int_objc_msgSend(TargetFrame, s_isMainFrame) == 1;
     }
 
     public IntPtr NavigationAction { get; }
 
     public NSURLRequest Request { get; }
 
+    public long NavigationType { get; }
+
+    public IntPtr TargetFrame { get; }
+
+    public bool IsMainFrame { get; }
+
+    public bool IsNewWindow { get; }
+
     public WKNavigationActionPolicy Policy { get; set; } = WKNavigationActionPolicy.Allow;
 
     private IntPtr DecisionHandler { get; }
 
-    internal void Complete() => InvokeDecisionHandler(DecisionHandler, (long)Policy);
+    private int _completed;
+
+    internal bool IsDeferred { get; private set; }
+
+    public void DeferCompletion() => IsDeferred = true;
+
+    internal void Complete()
+    {
+        if (Interlocked.Exchange(ref _completed, 1) == 0)
+        {
+            InvokeDecisionHandler(DecisionHandler, (long)Policy);
+        }
+    }
+
+    public void Complete(WKNavigationActionPolicy policy)
+    {
+        Policy = policy;
+        Complete();
+    }
 
     private static unsafe void InvokeDecisionHandler(IntPtr block, long policy)
     {
@@ -92,7 +126,15 @@ internal sealed class DecidePolicyForNavigationResponseEventArgs : EventArgs
 
     private IntPtr DecisionHandler { get; }
 
-    internal void Complete() => InvokeDecisionHandler(DecisionHandler, (long)Policy);
+    private int _completed;
+
+    internal void Complete()
+    {
+        if (Interlocked.Exchange(ref _completed, 1) == 0)
+        {
+            InvokeDecisionHandler(DecisionHandler, (long)Policy);
+        }
+    }
 
     private static unsafe void InvokeDecisionHandler(IntPtr block, long policy)
     {

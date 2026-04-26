@@ -95,10 +95,16 @@ internal sealed unsafe class WKNavigationDelegate : WkDelegateBase
         }
         catch
         {
-            args.Policy = WKNavigationActionPolicy.Cancel;
+            if (!args.IsDeferred)
+            {
+                args.Policy = WKNavigationActionPolicy.Cancel;
+            }
         }
 
-        args.Complete();
+        if (!args.IsDeferred)
+        {
+            args.Complete();
+        }
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
