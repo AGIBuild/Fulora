@@ -715,7 +715,7 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
         }
 
         var body = ObjCValueToString(e.Message.Body);
-        var origin = string.Empty;
+        var origin = WKFrameInfo.TryGetOriginString(e.Message.FrameInfo) ?? string.Empty;
         var channelId = _host?.ChannelId ?? Guid.Empty;
         SafeRaise(() => WebMessageReceived?.Invoke(this, new WebMessageReceivedEventArgs(body, origin, channelId, protocolVersion: 1)));
     }
@@ -729,7 +729,8 @@ internal sealed class iOSWebViewAdapter : IWebViewAdapter
             2 => WebViewPermissionKind.Camera,
             _ => WebViewPermissionKind.Unknown
         };
-        var args = new PermissionRequestedEventArgs(kind);
+        _ = Uri.TryCreate(WKSecurityOrigin.TryGetOriginString(e.Origin), UriKind.Absolute, out var origin);
+        var args = new PermissionRequestedEventArgs(kind, origin);
         SafeRaise(() => PermissionRequested?.Invoke(this, args));
         e.Decision = args.State switch
         {

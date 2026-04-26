@@ -28,7 +28,7 @@
   <!-- Unified desktop platforms assembly. The same DLL is needed on Windows/macOS/Linux smoke hosts
        so its ModuleInitializer registers the active-OS provider at runtime.
        ProjectReference on the multi-TFM Platforms project auto-selects the net10.0 desktop slice
-       and triggers the native shim build via BuildWkShim/BuildGtkShim targets. -->
+       and triggers the Linux native shim build via BuildGtkShim when needed. -->
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj" />
   </ItemGroup>
@@ -37,15 +37,10 @@
        The build was already triggered by the ProjectReference above, so no extra Exec is required. -->
   <Target Name="CopyDesktopNativeShimsForSmoke"
           AfterTargets="Build"
-          Condition="!$([MSBuild]::IsOSPlatform('windows'))">
+          Condition="$([MSBuild]::IsOSPlatform('linux'))">
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('linux'))">
       <_NativeShim Include="..\..\..\src\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\linux-x64\native\libAgibuildWebViewGtk.so">
         <RidSubdir>linux-x64</RidSubdir>
-      </_NativeShim>
-    </ItemGroup>
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('osx'))">
-      <_NativeShim Include="..\..\..\src\Agibuild.Fulora.Platforms\bin\$(Configuration)\net10.0\runtimes\osx\native\libAgibuildWebViewWk.dylib">
-        <RidSubdir>osx</RidSubdir>
       </_NativeShim>
     </ItemGroup>
 

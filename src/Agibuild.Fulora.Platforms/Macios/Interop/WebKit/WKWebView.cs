@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Agibuild
-// Newly authored — Fulora-original (selector subset from WkWebViewShim.mm; evaluateJavaScript block pattern from Avalonia WKWebView).
+// Newly authored — Fulora-original (selector subset from legacy Apple shim; evaluateJavaScript block pattern from Avalonia WKWebView).
 
 using System;
 using System.Runtime.CompilerServices;

@@ -267,8 +267,6 @@ internal partial class BuildTask
 
             var conditionalFiles = new Dictionary<string, (string Description, bool ShouldExist)>
             {
-                ["runtimes/osx/native/libAgibuildWebViewWk.dylib"] =
-                    ("macOS native shim", OperatingSystem.IsMacOS()),
                 ["lib/net10.0-android36.0/Agibuild.Fulora.dll"] =
                     ("Android main assembly", androidTfmEnabled),
                 ["lib/net10.0-android36.0/Agibuild.Fulora.Core.dll"] =

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Agibuild
-// Newly authored — Fulora-original (selector surface aligned with WkWebViewShim.mm).
+// Newly authored — Fulora-original (selector surface aligned with legacy Apple shim behavior).
 
 using System;
 using Agibuild.Fulora.Platforms.Macios.Interop;

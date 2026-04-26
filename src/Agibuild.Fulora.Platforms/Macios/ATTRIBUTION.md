@@ -38,6 +38,8 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/WebKit/WKWebView.cs` | n/a | n/a (newly authored — Fulora-original; stock `WKWebView` via `initWithFrame:configuration:` — upstream Avalonia subclasses `AppleView`, not vendored verbatim) |
 | `Interop/WebKit/WKWebViewConfiguration.cs` | n/a | n/a (newly authored — Fulora-original; `WebsiteDataStore` / `UserContentController` as `IntPtr` per T6) |
 | `Interop/WebKit/WKSnapshotConfiguration.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/WebKit/WKFrameInfo.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/WebKit/WKSecurityOrigin.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKPreferences.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKWebpagePreferences.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/WebKit/WKUserContentController.cs` | n/a | n/a (newly authored — Fulora-original) |

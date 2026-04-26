@@ -17,11 +17,4 @@
     <ProjectReference Include="..\..\..\src\Agibuild.Fulora.Adapters.iOS\Agibuild.Fulora.Adapters.iOS.csproj" />
   </ItemGroup>
 
-  <!-- NativeReference does not flow through ProjectReference; reference the xcframework directly -->
-  <ItemGroup Condition="Exists('..\..\..\src\Agibuild.Fulora.Adapters.iOS\Native\AgibuildWebViewWk.iOS.xcframework')">
-    <NativeReference Include="..\..\..\src\Agibuild.Fulora.Adapters.iOS\Native\AgibuildWebViewWk.iOS.xcframework">
-      <Kind>Framework</Kind>
-      <Frameworks>WebKit UIKit Foundation</Frameworks>
-    </NativeReference>
-  </ItemGroup>
 </Project>
