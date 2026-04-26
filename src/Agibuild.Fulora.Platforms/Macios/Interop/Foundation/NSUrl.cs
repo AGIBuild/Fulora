@@ -12,6 +12,8 @@ internal class NSUrl : NSObject
     private static readonly IntPtr s_class = Foundation.objc_getClass("NSURL");
     private static readonly IntPtr s_createWithUrl = Libobjc.sel_getUid("URLWithString:");
     private static readonly IntPtr s_absoluteString = Libobjc.sel_getUid("absoluteString");
+    private static readonly IntPtr s_isFileUrl = Libobjc.sel_getUid("isFileURL");
+    private static readonly IntPtr s_path = Libobjc.sel_getUid("path");
 
     public NSUrl(IntPtr handle, bool owns) : base(handle, owns)
     {
@@ -29,4 +31,10 @@ internal class NSUrl : NSObject
             return NSString.GetString(nsString);
         }
     }
+
+    public static IntPtr ClassHandle => s_class;
+
+    public bool IsFileUrl => Libobjc.int_objc_msgSend(Handle, s_isFileUrl) == 1;
+
+    public string? Path => NSString.GetString(Libobjc.intptr_objc_msgSend(Handle, s_path));
 }

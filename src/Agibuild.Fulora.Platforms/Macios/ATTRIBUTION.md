@@ -18,6 +18,7 @@ with their upstream paths so future upstream patches can be re-applied.
 | `Interop/AppKit/NSColor.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/AppKit/NSImage.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/AppKit/NSBitmapImageRep.cs` | n/a | n/a (newly authored — Fulora-original) |
+| `Interop/AppKit/NSPasteboard.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/UIKit/UIKit.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/UIKit/UIView.cs` | n/a | n/a (newly authored — Fulora-original) |
 | `Interop/UIKit/UIImage.cs` | n/a | n/a (newly authored — Fulora-original) |

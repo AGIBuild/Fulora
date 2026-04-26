@@ -3,9 +3,11 @@
 // Newly authored — Fulora-original (selector subset from legacy Apple shim; evaluateJavaScript block pattern from Avalonia WKWebView).
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Agibuild.Fulora;
 using Agibuild.Fulora.Platforms.Macios.Interop;
 using Agibuild.Fulora.Platforms.Macios.Interop.AppKit;
 using Agibuild.Fulora.Platforms.Macios.Interop.Foundation;
@@ -13,11 +15,15 @@ using Agibuild.Fulora.Platforms.Macios.Interop.UIKit;
 
 namespace Agibuild.Fulora.Platforms.Macios.Interop.WebKit;
 
-internal sealed class WKWebView : NSObject
+internal sealed class WKWebView : NSManagedObjectBase
 {
     private static readonly IntPtr s_class = WKWebKit.objc_getClass("WKWebView");
     private static readonly IntPtr s_alloc = Libobjc.sel_getUid("alloc");
     private static readonly IntPtr s_initWithFrameConfiguration = Libobjc.sel_getUid("initWithFrame:configuration:");
+    private static readonly IntPtr s_registerForDraggedTypes = Libobjc.sel_getUid("registerForDraggedTypes:");
+    private static readonly IntPtr s_draggingPasteboard = Libobjc.sel_getUid("draggingPasteboard");
+    private static readonly IntPtr s_draggingLocation = Libobjc.sel_getUid("draggingLocation");
+    private static readonly IntPtr s_convertPointFromView = Libobjc.sel_getUid("convertPoint:fromView:");
     private static readonly IntPtr s_loadHTMLString = Libobjc.sel_getUid("loadHTMLString:baseURL:");
     private static readonly IntPtr s_loadRequest = Libobjc.sel_getUid("loadRequest:");
     private static readonly IntPtr s_url = Libobjc.sel_getUid("URL");
@@ -44,17 +50,38 @@ internal sealed class WKWebView : NSObject
     private static readonly unsafe IntPtr s_evaluateScriptCallback = new((delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, void>)&EvaluateJavaScriptTrampoline);
     private static readonly unsafe IntPtr s_snapshotCallback = new((delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, void>)&SnapshotTrampoline);
     private static readonly unsafe IntPtr s_pdfCallback = new((delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, void>)&PdfTrampoline);
+    private static readonly unsafe void* s_draggingEnteredCallback =
+        (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, nuint>)&DraggingEnteredCallback;
+    private static readonly unsafe void* s_draggingUpdatedCallback =
+        (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, nuint>)&DraggingUpdatedCallback;
+    private static readonly unsafe void* s_draggingExitedCallback =
+        (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, void>)&DraggingExitedCallback;
+    private static readonly unsafe void* s_performDragOperationCallback =
+        (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, byte>)&PerformDragOperationCallback;
+    private static readonly IntPtr s_managedClass = CreateManagedClass();
 
     public WKWebView(WKWebViewConfiguration configuration) : base(NewInstance(configuration), owns: true)
     {
+        if (OperatingSystem.IsMacOS())
+        {
+            RegisterForDraggedTypes();
+        }
     }
 
     private static IntPtr NewInstance(WKWebViewConfiguration configuration)
     {
-        var allocated = Libobjc.intptr_objc_msgSend(s_class, s_alloc);
+        var allocated = Libobjc.intptr_objc_msgSend(s_managedClass, s_alloc);
         var frame = new CGRect(0, 0, 0, 0);
         return Libobjc.intptr_objc_msgSend(allocated, s_initWithFrameConfiguration, frame, configuration.Handle);
     }
+
+    public event EventHandler<DragEventArgs>? DragEntered;
+
+    public event EventHandler<DragEventArgs>? DragUpdated;
+
+    public event EventHandler? DragExited;
+
+    public event EventHandler<DropEventArgs>? DropPerformed;
 
     public NSUrl? Url
     {
@@ -118,6 +145,22 @@ internal sealed class WKWebView : NSObject
     public WKUIDelegate? UIDelegate
     {
         set => Libobjc.void_objc_msgSend(Handle, s_setUIDelegate, value?.Handle ?? IntPtr.Zero);
+    }
+
+    private void RegisterForDraggedTypes()
+    {
+        using var fileUrl = NSString.Create("public.file-url");
+        using var text = NSString.Create("public.utf8-plain-text");
+        using var legacyText = NSString.Create("NSStringPboardType");
+        using var html = NSString.Create("public.html");
+        using var url = NSString.Create("public.url");
+        using var types = NSArray.FromHandles(
+            fileUrl.Handle,
+            text.Handle,
+            legacyText.Handle,
+            html.Handle,
+            url.Handle);
+        Libobjc.void_objc_msgSend(Handle, s_registerForDraggedTypes, types.Handle);
     }
 
     public void GoBack() => _ = Libobjc.intptr_objc_msgSend(Handle, s_goBack);
@@ -213,6 +256,190 @@ internal sealed class WKWebView : NSObject
     private sealed record JSEvalState(TaskCompletionSource<NSObject?> Tcs);
 
     private sealed record BytesCompletionState(TaskCompletionSource<byte[]> Tcs);
+
+    private static unsafe IntPtr CreateManagedClass()
+    {
+        var cls = Libobjc.objc_allocateClassPair(s_class, "ManagedFuloraWKWebView", 0);
+        if (cls == IntPtr.Zero)
+        {
+            return WKWebKit.objc_getClass("ManagedFuloraWKWebView");
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            var protocol = Libobjc.objc_getProtocol("NSDraggingDestination");
+            if (protocol != IntPtr.Zero)
+            {
+                _ = Libobjc.class_addProtocol(cls, protocol);
+            }
+
+            AddMethod(cls, "draggingEntered:", s_draggingEnteredCallback, "Q@:@");
+            AddMethod(cls, "draggingUpdated:", s_draggingUpdatedCallback, "Q@:@");
+            AddMethod(cls, "draggingExited:", s_draggingExitedCallback, "v@:@");
+            AddMethod(cls, "performDragOperation:", s_performDragOperationCallback, "B@:@");
+        }
+
+        if (!RegisterManagedMembers(cls))
+        {
+            throw new InvalidOperationException("Failed to register managed-self storage for WKWebView.");
+        }
+
+        Libobjc.objc_registerClassPair(cls);
+        return cls;
+    }
+
+    private static unsafe void AddMethod(IntPtr cls, string selector, void* implementation, string typeEncoding)
+    {
+        if (Libobjc.class_addMethod(cls, Libobjc.sel_getUid(selector), implementation, typeEncoding) != 1)
+        {
+            throw new InvalidOperationException($"Failed to add Objective-C selector: {selector}");
+        }
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static nuint DraggingEnteredCallback(IntPtr self, IntPtr sel, IntPtr draggingInfo)
+    {
+        var managed = ReadManagedSelf<WKWebView>(self);
+        if (managed is null)
+        {
+            return ToNSDragOperation(DragDropEffects.Copy);
+        }
+
+        var (x, y) = GetDragPoint(self, draggingInfo);
+        var args = new DragEventArgs
+        {
+            Payload = CreateDragPayload(draggingInfo),
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = x,
+            Y = y
+        };
+        managed.DragEntered?.Invoke(managed, args);
+        return ToNSDragOperation(args.Effect);
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static nuint DraggingUpdatedCallback(IntPtr self, IntPtr sel, IntPtr draggingInfo)
+    {
+        var managed = ReadManagedSelf<WKWebView>(self);
+        if (managed is null)
+        {
+            return ToNSDragOperation(DragDropEffects.Copy);
+        }
+
+        var (x, y) = GetDragPoint(self, draggingInfo);
+        var args = new DragEventArgs
+        {
+            Payload = new DragDropPayload(),
+            AllowedEffects = DragDropEffects.Copy,
+            Effect = DragDropEffects.Copy,
+            X = x,
+            Y = y
+        };
+        managed.DragUpdated?.Invoke(managed, args);
+        return ToNSDragOperation(args.Effect);
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void DraggingExitedCallback(IntPtr self, IntPtr sel, IntPtr draggingInfo)
+    {
+        var managed = ReadManagedSelf<WKWebView>(self);
+        managed?.DragExited?.Invoke(managed, EventArgs.Empty);
+    }
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static byte PerformDragOperationCallback(IntPtr self, IntPtr sel, IntPtr draggingInfo)
+    {
+        var managed = ReadManagedSelf<WKWebView>(self);
+        if (managed is null)
+        {
+            return 0;
+        }
+
+        var (x, y) = GetDragPoint(self, draggingInfo);
+        managed.DropPerformed?.Invoke(
+            managed,
+            new DropEventArgs
+            {
+                Payload = CreateDragPayload(draggingInfo),
+                Effect = DragDropEffects.Copy,
+                X = x,
+                Y = y
+            });
+        return 1;
+    }
+
+    private static (double X, double Y) GetDragPoint(IntPtr webView, IntPtr draggingInfo)
+    {
+        var windowPoint = Libobjc.CGPoint_objc_msgSend(draggingInfo, s_draggingLocation);
+        var viewPoint = Libobjc.CGPoint_objc_msgSend(webView, s_convertPointFromView, windowPoint, IntPtr.Zero);
+        return (viewPoint.X, viewPoint.Y);
+    }
+
+    private static DragDropPayload CreateDragPayload(IntPtr draggingInfo)
+    {
+        var pasteboardHandle = Libobjc.intptr_objc_msgSend(draggingInfo, s_draggingPasteboard);
+        if (pasteboardHandle == IntPtr.Zero)
+        {
+            return new DragDropPayload();
+        }
+
+        var pasteboard = new NSPasteboard(pasteboardHandle, owns: false);
+        var files = new List<FileDropInfo>();
+        string? uri = pasteboard.PasteboardUri;
+        foreach (var url in pasteboard.ReadUrls())
+        {
+            if (url.IsFileUrl)
+            {
+                files.Add(CreateFileDropInfo(url));
+            }
+            else
+            {
+                uri ??= url.AbsoluteString;
+            }
+        }
+
+        return new DragDropPayload
+        {
+            Files = files.Count == 0 ? null : files,
+            Text = pasteboard.Text,
+            Html = pasteboard.Html,
+            Uri = uri
+        };
+    }
+
+    private static FileDropInfo CreateFileDropInfo(NSUrl url)
+    {
+        var path = url.Path ?? string.Empty;
+        long? size = null;
+        if (File.Exists(path))
+        {
+            size = new FileInfo(path).Length;
+        }
+
+        return new FileDropInfo(path, MimeType: null, Size: size);
+    }
+
+    private static nuint ToNSDragOperation(DragDropEffects effect)
+    {
+        nuint operation = 0;
+        if ((effect & DragDropEffects.Copy) != 0)
+        {
+            operation |= 1;
+        }
+
+        if ((effect & DragDropEffects.Link) != 0)
+        {
+            operation |= 2;
+        }
+
+        if ((effect & DragDropEffects.Move) != 0)
+        {
+            operation |= 16;
+        }
+
+        return operation;
+    }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static void EvaluateJavaScriptTrampoline(IntPtr block, IntPtr value, IntPtr nsError)

@@ -13,7 +13,7 @@ using Agibuild.Fulora.Security;
 namespace Agibuild.Fulora.Adapters.MacOS;
 
 [SupportedOSPlatform("macos")]
-internal sealed class MacOSWebViewAdapter : IWebViewAdapter
+internal sealed class MacOSWebViewAdapter : IWebViewAdapter, IDragDropAdapter
 {
     private readonly INavigationSecurityHooks _securityHooks;
     private readonly object _navLock = new();
@@ -71,6 +71,10 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
     public event EventHandler<DownloadRequestedEventArgs>? DownloadRequested;
     public event EventHandler<PermissionRequestedEventArgs>? PermissionRequested;
     public event EventHandler<WebResourceRequestedEventArgs>? WebResourceRequested;
+    public event EventHandler<DragEventArgs>? DragEntered;
+    public event EventHandler<DragEventArgs>? DragOver;
+    public event EventHandler<EventArgs>? DragLeft;
+    public event EventHandler<DropEventArgs>? DropCompleted;
 
     [Experimental("AGWV005")]
     public event EventHandler<EnvironmentRequestedEventArgs>? EnvironmentRequested
@@ -174,6 +178,10 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
         _webView.CustomUserAgent = _customUserAgent;
         _webView.PageZoom = _zoomFactor;
         _webView.SetInspectable(_enableDevTools);
+        _webView.DragEntered += OnDragEntered;
+        _webView.DragUpdated += OnDragUpdated;
+        _webView.DragExited += OnDragExited;
+        _webView.DropPerformed += OnDropPerformed;
         if (_transparentBackground)
         {
             _webView.SetDrawsBackground(false);
@@ -694,6 +702,38 @@ internal sealed class MacOSWebViewAdapter : IWebViewAdapter
         if (_downloadDelegate is not null)
         {
             e.Download.SetDelegate(_downloadDelegate);
+        }
+    }
+
+    private void OnDragEntered(object? sender, DragEventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DragEntered?.Invoke(this, e));
+        }
+    }
+
+    private void OnDragUpdated(object? sender, DragEventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DragOver?.Invoke(this, e));
+        }
+    }
+
+    private void OnDragExited(object? sender, EventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DragLeft?.Invoke(this, e));
+        }
+    }
+
+    private void OnDropPerformed(object? sender, DropEventArgs e)
+    {
+        if (!_detached)
+        {
+            SafeRaise(() => DropCompleted?.Invoke(this, e));
         }
     }
 

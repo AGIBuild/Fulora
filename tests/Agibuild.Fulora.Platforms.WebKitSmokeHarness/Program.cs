@@ -51,6 +51,9 @@ internal static class WebKitSmokeHarness
                 case "t6-webview-init":
                     RunWebViewInit();
                     break;
+                case "t21b-webview-drag-selectors":
+                    RunWebViewDragSelectors();
+                    break;
                 case "t8-user-content-controller":
                     RunUserContentController();
                     break;
@@ -92,6 +95,25 @@ internal static class WebKitSmokeHarness
         if (webView.Handle == IntPtr.Zero)
         {
             throw new InvalidOperationException("WKWebView handle is zero.");
+        }
+    }
+
+    private static void RunWebViewDragSelectors()
+    {
+        using var config = WKWebViewConfiguration.Create();
+        using var webView = new WKWebView(config);
+        foreach (var selector in new[]
+        {
+            "draggingEntered:",
+            "draggingUpdated:",
+            "draggingExited:",
+            "performDragOperation:"
+        })
+        {
+            if (!NSObject.RespondsToSelector(webView.Handle, Libobjc.sel_getUid(selector)))
+            {
+                throw new InvalidOperationException($"WKWebView missing drag/drop selector: {selector}");
+            }
         }
     }
 

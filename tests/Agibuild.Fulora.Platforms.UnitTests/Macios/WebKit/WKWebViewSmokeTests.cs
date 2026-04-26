@@ -13,4 +13,12 @@ public class WKWebViewSmokeTests
 
         _ = await WebKitSmokeHarnessRunner.RunAsync("t6-webview-init");
     }
+
+    [Fact]
+    public async Task Managed_webview_responds_to_drag_drop_selectors()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        _ = await WebKitSmokeHarnessRunner.RunAsync("t21b-webview-drag-selectors");
+    }
 }
