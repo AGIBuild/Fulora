@@ -23,6 +23,7 @@ public class WKNavigationDelegateTests
             "webView:didFailProvisionalNavigation:withError:",
             "webView:didFailNavigation:withError:",
             "webView:decidePolicyForNavigationResponse:decisionHandler:",
+            "webView:didReceiveAuthenticationChallenge:completionHandler:",
             "webView:navigationAction:didBecomeDownload:",
             "webView:navigationResponse:didBecomeDownload:"
         })
