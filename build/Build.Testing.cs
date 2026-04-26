@@ -81,6 +81,15 @@ internal partial class BuildTask
             RunUnitTestProject(CliUnitTestsProject, "cli-unit-tests.trx");
         });
 
+    internal Target MaciosUnitTests => _ => _
+        .Description("Runs macOS-host Macios.Interop sanity tests (Apple platforms only).")
+        .DependsOn(Build)
+        .OnlyWhenDynamic(() => OperatingSystem.IsMacOS())
+        .Executes(() =>
+        {
+            RunFastTestProject(PlatformsUnitTestsProject, "macios-unit-tests.trx");
+        });
+
     internal Target Coverage => _ => _
         .Description("Runs unit tests with code coverage and enforces minimum threshold.")
         .DependsOn(Build)
@@ -114,7 +123,7 @@ internal partial class BuildTask
                 $"\"-reports:{coverageFile}\" " +
                 $"\"-targetdir:{CoverageReportDirectory}\" " +
                 $"\"-reporttypes:Html;Cobertura;TextSummary\" " +
-                $"\"-assemblyfilters:+Agibuild.Fulora.*;-Agibuild.Fulora.Testing;-Agibuild.Fulora.UnitTests\"",
+                $"\"-assemblyfilters:+Agibuild.Fulora.*;-Agibuild.Fulora.Testing;-Agibuild.Fulora.UnitTests;-Agibuild.Fulora.Platforms.UnitTests\"",
                 workingDirectory: RootDirectory);
 
             var mergedCoberturaFile = CoverageReportDirectory / "Cobertura.xml";

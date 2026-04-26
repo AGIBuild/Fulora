@@ -44,6 +44,8 @@
       <Deploy Solution="*|Any CPU" />
     </Project>
     <Project Path="tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests/Agibuild.Fulora.Integration.Tests.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Platforms.WebKitSmokeHarness/Agibuild.Fulora.Platforms.WebKitSmokeHarness.csproj" />
+    <Project Path="tests/Agibuild.Fulora.Platforms.UnitTests/Agibuild.Fulora.Platforms.UnitTests.csproj" />
     <Project Path="tests/Agibuild.Fulora.Telemetry.OpenTelemetry.Tests/Agibuild.Fulora.Telemetry.OpenTelemetry.Tests.csproj" />
     <Project Path="tests/Agibuild.Fulora.Telemetry.Sentry.Tests/Agibuild.Fulora.Telemetry.Sentry.Tests.csproj" />
     <Project Path="tests/Agibuild.Fulora.Testing/Agibuild.Fulora.Testing.csproj" />

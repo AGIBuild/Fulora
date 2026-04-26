@@ -3,7 +3,7 @@
     <TargetFramework>net10.0-ios</TargetFramework>
     <!-- SupportedOSPlatformVersion is centralised in Directory.Build.props (iOS baseline = 15.0). -->
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- CA2255: ModuleInitializer is the correct pattern for adapter auto-registration.
          CA1416: Platform-specific API usage is guarded by OperatingSystem.IsIOS(). -->
@@ -16,91 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Native/WkWebViewShim.iOS.mm" />
-  </ItemGroup>
-
-  <!--
-    Build the native iOS shim as a static library.
-    On macOS with Xcode + iOS SDK, compile WkWebViewShim.iOS.mm into libAgibuildWebViewWk.iOS.a.
-    The static library is then included as a NativeReference so the managed adapter can
-    use DllImport("__Internal") to call into it.
-
-    RequireIosShim (MSBuild property, default false):
-      false → every xcrun/ar/xcodebuild step runs with IgnoreExitCode="true" so developer
-              machines without Xcode can still compile the managed half of the adapter (the
-              NativeReference guard below just silently omits the xcframework). This mirrors
-              the historical behaviour and keeps local dev fast.
-      true  → all steps fail hard AND _AssertIosShimProduced errors out if the xcframework
-              is missing. Nuke's Build target sets this when it has already confirmed
-              macOS + iOS workload + Apple iOS SDK, so a silent shim failure can no longer
-              slip past CI into the published nupkg.
-  -->
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('osx'))">
-    <AgWkShimLibName>libAgibuildWebViewWk.iOS.a</AgWkShimLibName>
-    <RequireIosShim Condition="'$(RequireIosShim)' == ''">false</RequireIosShim>
-    <IosShimIgnoreExitCode Condition="'$(RequireIosShim)' == 'true'">false</IosShimIgnoreExitCode>
-    <IosShimIgnoreExitCode Condition="'$(RequireIosShim)' != 'true'">true</IosShimIgnoreExitCode>
-  </PropertyGroup>
-
-  <Target Name="BuildWkShimIOS" BeforeTargets="Build"
-          Condition="$([MSBuild]::IsOSPlatform('osx'))">
-    <PropertyGroup>
-      <_AgWkShimSrcDir>$(MSBuildProjectDirectory)/Native/</_AgWkShimSrcDir>
-      <_AgWkShimXcfDir>$(_AgWkShimSrcDir)AgibuildWebViewWk.iOS.xcframework</_AgWkShimXcfDir>
-      <!-- Device arm64 -->
-      <_AgWkShimDeviceObjPath>$(_AgWkShimSrcDir)WkWebViewShim.iOS.device.o</_AgWkShimDeviceObjPath>
-      <_AgWkShimDeviceLibPath>$(_AgWkShimSrcDir)libAgibuildWebViewWk.iOS.device.a</_AgWkShimDeviceLibPath>
-      <!-- Simulator arm64 -->
-      <_AgWkShimSimObjPath>$(_AgWkShimSrcDir)WkWebViewShim.iOS.sim.o</_AgWkShimSimObjPath>
-      <_AgWkShimSimLibPath>$(_AgWkShimSrcDir)libAgibuildWebViewWk.iOS.sim.a</_AgWkShimSimLibPath>
-    </PropertyGroup>
-
-    <!-- Compile for iphoneos (device arm64) -->
-    <Exec Command="xcrun -sdk iphoneos clang++ -fobjc-arc -std=c++17 -c &quot;$(_AgWkShimSrcDir)WkWebViewShim.iOS.mm&quot; -o &quot;$(_AgWkShimDeviceObjPath)&quot; -arch arm64"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          IgnoreExitCode="$(IosShimIgnoreExitCode)" />
-    <Exec Command="ar rcs &quot;$(_AgWkShimDeviceLibPath)&quot; &quot;$(_AgWkShimDeviceObjPath)&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          Condition="Exists('$(_AgWkShimDeviceObjPath)')"
-          IgnoreExitCode="$(IosShimIgnoreExitCode)" />
-
-    <!-- Compile for iphonesimulator (simulator arm64) -->
-    <Exec Command="xcrun -sdk iphonesimulator clang++ -fobjc-arc -std=c++17 -c &quot;$(_AgWkShimSrcDir)WkWebViewShim.iOS.mm&quot; -o &quot;$(_AgWkShimSimObjPath)&quot; -arch arm64"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          IgnoreExitCode="$(IosShimIgnoreExitCode)" />
-    <Exec Command="ar rcs &quot;$(_AgWkShimSimLibPath)&quot; &quot;$(_AgWkShimSimObjPath)&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          Condition="Exists('$(_AgWkShimSimObjPath)')"
-          IgnoreExitCode="$(IosShimIgnoreExitCode)" />
-
-    <!-- Create XCFramework from both slices -->
-    <Exec Command="rm -rf &quot;$(_AgWkShimXcfDir)&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          Condition="Exists('$(_AgWkShimDeviceLibPath)') And Exists('$(_AgWkShimSimLibPath)')" />
-    <Exec Command="xcodebuild -create-xcframework -library &quot;$(_AgWkShimDeviceLibPath)&quot; -library &quot;$(_AgWkShimSimLibPath)&quot; -output &quot;$(_AgWkShimXcfDir)&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          Condition="Exists('$(_AgWkShimDeviceLibPath)') And Exists('$(_AgWkShimSimLibPath)')"
-          IgnoreExitCode="$(IosShimIgnoreExitCode)" />
-  </Target>
-
-  <!-- CI gate: when RequireIosShim=true, fail the build loudly instead of silently shipping
-       a managed-only adapter (which would crash at runtime on dyld with "Library not loaded:
-       __Internal"). Nuke's Build target sets RequireIosShim=true on hosts that already passed
-       workload + SDK probes (see build/Build.cs). -->
-  <Target Name="_AssertIosShimProduced"
-          AfterTargets="BuildWkShimIOS"
-          Condition=" $([MSBuild]::IsOSPlatform('osx')) And '$(RequireIosShim)' == 'true' ">
-    <Error Text="iOS native shim required (RequireIosShim=true) but xcframework was not produced at '$(MSBuildProjectDirectory)/Native/AgibuildWebViewWk.iOS.xcframework'. Install Xcode with Command Line Tools and iOS SDK on this host, or unset RequireIosShim."
-           Condition=" !Exists('$(MSBuildProjectDirectory)/Native/AgibuildWebViewWk.iOS.xcframework/Info.plist') " />
-  </Target>
-
-  <ItemGroup Condition="Exists('Native/AgibuildWebViewWk.iOS.xcframework')">
-    <NativeReference Include="Native/AgibuildWebViewWk.iOS.xcframework">
-      <Kind>Framework</Kind>
-      <Frameworks>WebKit UIKit Foundation</Frameworks>
-    </NativeReference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Compile Include="..\Agibuild.Fulora.Platforms\Macios\**\*.cs"
+             LinkBase="Macios" />
   </ItemGroup>
 </Project>

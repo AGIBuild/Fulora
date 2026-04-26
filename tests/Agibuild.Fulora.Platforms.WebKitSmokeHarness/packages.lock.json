@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "Microsoft.SourceLink.GitHub": {
+        "type": "Direct",
+        "requested": "[11.0.100-preview.3.26207.106, )",
+        "resolved": "11.0.100-preview.3.26207.106",
+        "contentHash": "LyKn4JSQMroEkguwffHtnaJcawz7+1dkFKX0ZDnavU1EBegp9WrF/3Zv0s5OHoKQox+j7rbjprNtvwvGZW1Aow==",
+        "dependencies": {
+          "Microsoft.Build.Tasks.Git": "11.0.100-preview.3.26207.106",
+          "Microsoft.SourceLink.Common": "11.0.100-preview.3.26207.106",
+          "System.IO.Hashing": "11.0.0-preview.3.26207.106"
+        }
+      },
+      "Microsoft.Build.Tasks.Git": {
+        "type": "Transitive",
+        "resolved": "11.0.100-preview.3.26207.106",
+        "contentHash": "NzuR1QNCHfro+w9GWVYJMdDMSEnPglS72aXtzSPtFUXP9yCoz4ggM4hzNNfVvzLGjXj4A7TnSHkT3bNA7NkaKg==",
+        "dependencies": {
+          "System.IO.Hashing": "11.0.0-preview.3.26207.106"
+        }
+      },
+      "Microsoft.SourceLink.Common": {
+        "type": "Transitive",
+        "resolved": "11.0.100-preview.3.26207.106",
+        "contentHash": "4dwDpSUb9YKZ6dSEj59qJtdP2K+R4ejFULEKNBL5OqqAGxkWAp/23kN485GfmdvJ3UaQq31T5v/rgTxVnOXycA=="
+      },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "11.0.0-preview.3.26207.106",
+        "contentHash": "SDNSzpfSLNZXetvp8vb3nP5PqeOx3FGrPoVSUAk+scC1ydsm0UNKCktZupwEN8PN1DNnWOTGdi4+3zGyf3kHAg=="
+      },
+      "agibuild.fulora.adapters.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Core": "[1.6.7-local, )"
+        }
+      },
+      "agibuild.fulora.core": {
+        "type": "Project"
+      },
+      "agibuild.fulora.platforms": {
+        "type": "Project",
+        "dependencies": {
+          "Agibuild.Fulora.Adapters.Abstractions": "[1.6.7-local, )",
+          "Agibuild.Fulora.Core": "[1.6.7-local, )",
+          "Microsoft.Web.WebView2": "[1.0.3856.49, )"
+        }
+      },
+      "Microsoft.Web.WebView2": {
+        "type": "CentralTransitive",
+        "requested": "[1.0.3856.49, )",
+        "resolved": "1.0.3856.49",
+        "contentHash": "OOBKvFgK0pUKcndvTK6/jUsbrPRwce62Wt/0hkJWDsK2AcsJ2ylOS/mLa4xAcNUTOs96YIjpPN4AHMADXJcrgQ=="
+      }
+    }
+  }
+}

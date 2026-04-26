@@ -37,10 +37,10 @@
       PrivateAssets=all on the ProjectReferences keeps those projects out of nuspec <dependency/>,
       and BuildOutputInPackage places their DLLs into lib/{tfm}/ with SDK-native semantics.
 
-      Platforms native shims (libAgibuildWebViewWk.dylib / libAgibuildWebViewGtk.so) flow here
+      Platform native shims that still exist (currently Linux WebKitGTK) flow here
       via the standard SDK copy-local pipeline: Platforms advertises them as
       <None CopyToOutputDirectory="PreserveNewest" Link="runtimes/{rid}/native/..."> inside its
-      AdvertiseWkShim / AdvertiseGtkShim targets, so the build drops them into
+      native-shim targets, so the build drops them into
       $(OutputPath)/runtimes/{rid}/native/. IncludePlatformNativeShimsInPack then packs them via
       TfmSpecificPackageFile without any hardcoded ../Agibuild.Fulora.Platforms/bin/... source path.
     -->
@@ -66,9 +66,9 @@
     <ProjectReference Include="..\Agibuild.Fulora.Adapters.Abstractions\Agibuild.Fulora.Adapters.Abstractions.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Agibuild.Fulora.Runtime\Agibuild.Fulora.Runtime.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Agibuild.Fulora.DependencyInjection\Agibuild.Fulora.DependencyInjection.csproj" PrivateAssets="all" />
-    <!-- Multi-TFM Platforms project — nearest-TFM-match automatically selects:
-           main net10.0 build         → Platforms/net10.0 (desktop adapters + native shims)
-           main net10.0-android build → Platforms/net10.0-android (Android adapter). -->
+    <!-- Multi-TFM Platforms project - nearest-TFM-match automatically selects:
+           main net10.0 build         -> Platforms/net10.0 (desktop adapters + Linux native shim when available)
+           main net10.0-android build -> Platforms/net10.0-android (Android adapter). -->
     <ProjectReference Include="..\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj" PrivateAssets="all" />
   </ItemGroup>
 
@@ -131,7 +131,7 @@
   <!--
     IncludePlatformNativeShimsInPack — runs once per inner TFM via TargetsForTfmSpecificContentInPackage.
     On the net10.0 (desktop) slice only, scans this project's own $(OutputPath)runtimes/ directory for
-    files that flowed in from Agibuild.Fulora.Platforms' Advertise{Wk,Gtk}Shim targets (which expose
+    files that flowed in from Agibuild.Fulora.Platforms' native-shim targets (which expose
     the shims as <None CopyToOutputDirectory="PreserveNewest"> for the ProjectReference copy-local
     pipeline). Each discovered file is mapped 1:1 into the nupkg at runtimes/{rid}/native/ using the
     relative subpath below $(OutputPath)runtimes/ — so we never hardcode the sibling project's bin/ path.

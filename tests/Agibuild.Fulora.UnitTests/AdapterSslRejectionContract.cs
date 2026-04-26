@@ -127,4 +127,43 @@ internal static class AdapterSslRejectionContract
         Assert.Equal("meta-summary", ex.ErrorSummary);
         Assert.Equal(99, ex.PlatformRawCode);
     }
+
+    public static async Task PlatformProvidesCertificateMetadata_when_supported(
+        SslRejectionTriggerFactory factory,
+        bool platformSupportsMetadata)
+    {
+        var adapter = factory(out var trigger);
+        var tcs = new TaskCompletionSource<NavigationCompletedEventArgs>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        adapter.NavigationCompleted += (_, e) => tcs.TrySetResult(e);
+
+        var uri = new Uri("https://ssl-platform-metadata.example/");
+        var subject = platformSupportsMetadata ? "CN=apple-leaf.test" : null;
+        var issuer = platformSupportsMetadata ? "CN=apple-issuer.test" : null;
+        DateTimeOffset? validFrom = platformSupportsMetadata
+            ? new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero)
+            : null;
+        DateTimeOffset? validTo = platformSupportsMetadata
+            ? new DateTimeOffset(2031, 1, 1, 0, 0, 0, TimeSpan.Zero)
+            : null;
+
+        trigger(uri, subject, issuer, validFrom, validTo, "platform-summary", 101);
+
+        var args = await tcs.Task;
+        var ex = Assert.IsType<WebViewSslException>(args.Error);
+        if (platformSupportsMetadata)
+        {
+            Assert.NotNull(ex.CertificateSubject);
+            Assert.NotNull(ex.CertificateIssuer);
+            Assert.NotNull(ex.ValidFrom);
+            Assert.NotNull(ex.ValidTo);
+        }
+        else
+        {
+            Assert.Null(ex.CertificateSubject);
+            Assert.Null(ex.CertificateIssuer);
+            Assert.Null(ex.ValidFrom);
+            Assert.Null(ex.ValidTo);
+        }
+    }
 }

@@ -1,0 +1,44 @@
+<!--
+  Agibuild.Fulora.Platforms.UnitTests
+  ===================================
+  macOS-host-only sanity tests for Macios/Interop primitives. Runs only on the macOS
+  CI job via the NUKE `MaciosUnitTests` target chained into `Ci` (which build-macos
+  invokes). Linux/Windows CI invokes `CiMatrix`, which does NOT depend on this target,
+  so the test project is not built or run on those hosts.
+
+  DO NOT add this project to the cross-platform unit-test list. Tests use early-return
+  guards on non-macOS hosts and would silently pass — illusory coverage. The NUKE-target
+  gate is the supported way to opt in.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Agibuild.Fulora.Platforms\Agibuild.Fulora.Platforms.csproj" />
+    <ProjectReference Include="..\Agibuild.Fulora.Platforms.WebKitSmokeHarness\Agibuild.Fulora.Platforms.WebKitSmokeHarness.csproj"
+                      ReferenceOutputAssembly="false"
+                      PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="Macios/Security/Resources/test-cert.cer" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

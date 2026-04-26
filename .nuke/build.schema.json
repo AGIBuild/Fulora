@@ -40,6 +40,7 @@
         "Format",
         "IntegrationTests",
         "LocalPreflight",
+        "MaciosUnitTests",
         "MutationTest",
         "NpmPublish",
         "NugetPackageTest",

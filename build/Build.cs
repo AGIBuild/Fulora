@@ -115,6 +115,9 @@ internal sealed partial class BuildTask : NukeBuild
     private static AbsolutePath CliUnitTestsProject =>
         TestsDirectory / "Agibuild.Fulora.Cli.UnitTests" / "Agibuild.Fulora.Cli.UnitTests.csproj";
 
+    private static AbsolutePath PlatformsUnitTestsProject =>
+        TestsDirectory / "Agibuild.Fulora.Platforms.UnitTests" / "Agibuild.Fulora.Platforms.UnitTests.csproj";
+
     private static AbsolutePath IntegrationTestsProject =>
         TestsDirectory / "Agibuild.Fulora.Integration.Tests.Automation"
         / "Agibuild.Fulora.Integration.Tests.Automation.csproj";
@@ -268,16 +271,6 @@ internal sealed partial class BuildTask : NukeBuild
                     projectFileName,
                     "Agibuild.Fulora.Platforms.csproj",
                     StringComparison.OrdinalIgnoreCase);
-                // Adapters.iOS is present in GetProjectsToBuildAsync()'s list only after it has already
-                // probed macOS + iOS workload + Apple iOS SDK. So when we do build it, require the
-                // native xcframework to actually be produced — the csproj's _AssertIosShimProduced
-                // target fails loudly when this flag is set but the xcframework is missing, which
-                // prevents a silent managed-only nupkg from shipping to NuGet.
-                var isIosAdapter = string.Equals(
-                    projectFileName,
-                    "Agibuild.Fulora.Adapters.iOS.csproj",
-                    StringComparison.OrdinalIgnoreCase);
-
                 DotNetBuild(s =>
                 {
                     var settings = s
@@ -288,11 +281,6 @@ internal sealed partial class BuildTask : NukeBuild
                     if (isPlatforms && skipAndroidSlice)
                     {
                         settings = settings.SetProperty("EnableAndroidTfm", "false");
-                    }
-
-                    if (isIosAdapter)
-                    {
-                        settings = settings.SetProperty("RequireIosShim", "true");
                     }
 
                     return settings;
@@ -314,7 +302,7 @@ internal sealed partial class BuildTask : NukeBuild
 
     internal Target Ci => _ => _
         .Description("Full CI pipeline: compile → coverage → lane automation → validate package → pack.")
-        .DependsOn(Coverage, AutomationLaneReport, ValidatePackage, NugetPackageTest, PackTemplate);
+        .DependsOn(Coverage, MaciosUnitTests, AutomationLaneReport, ValidatePackage, NugetPackageTest, PackTemplate);
 
     internal Target CiMatrix => _ => _
         .Description("Cross-platform CI validation without package smoke/template packing.")
