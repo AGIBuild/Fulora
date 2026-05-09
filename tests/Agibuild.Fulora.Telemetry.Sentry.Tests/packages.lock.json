@@ -34,9 +34,9 @@
       },
       "Sentry": {
         "type": "Direct",
-        "requested": "[6.2.0, )",
-        "resolved": "6.2.0",
-        "contentHash": "kZkHnj9NvQTjf5e8VmVQUT2HdVSmph9MhSm6U+vGoB4vq2uR1a+ZRHpAksNJNl7EjaGbYp55cOWqx5Nh0jQc8w=="
+        "requested": "[6.5.0, )",
+        "resolved": "6.5.0",
+        "contentHash": "EuC4Da4WcC8eE8d+AHoDGLK0wfyrQ/OYeNghDnR9dc3q/jDUadqXsJtEsq8U9Dt+VG6lCg0K8AoksheCVe3q8w=="
       },
       "xunit.runner.visualstudio": {
         "type": "Direct",
@@ -307,7 +307,7 @@
         "dependencies": {
           "Agibuild.Fulora.Core": "[1.6.7-local, )",
           "Agibuild.Fulora.DependencyInjection": "[1.6.7-local, )",
-          "Sentry": "[6.2.0, )"
+          "Sentry": "[6.5.0, )"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
