@@ -14,13 +14,13 @@
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
-        "requested": "[11.0.100-preview.3.26207.106, )",
-        "resolved": "11.0.100-preview.3.26207.106",
-        "contentHash": "LyKn4JSQMroEkguwffHtnaJcawz7+1dkFKX0ZDnavU1EBegp9WrF/3Zv0s5OHoKQox+j7rbjprNtvwvGZW1Aow==",
+        "requested": "[11.0.100-preview.4.26230.115, )",
+        "resolved": "11.0.100-preview.4.26230.115",
+        "contentHash": "5luJMUVknyf2SxqagD7hkXxNAe+D+DchBQRur9cXkSKuGg/Gc45LDuTURNEFIg2kdIQJiWkw1iMts0BLRegMUQ==",
         "dependencies": {
-          "Microsoft.Build.Tasks.Git": "11.0.100-preview.3.26207.106",
-          "Microsoft.SourceLink.Common": "11.0.100-preview.3.26207.106",
-          "System.IO.Hashing": "11.0.0-preview.3.26207.106"
+          "Microsoft.Build.Tasks.Git": "11.0.100-preview.4.26230.115",
+          "Microsoft.SourceLink.Common": "11.0.100-preview.4.26230.115",
+          "System.IO.Hashing": "11.0.0-preview.4.26230.115"
         }
       },
       "xunit.runner.visualstudio": {
@@ -50,10 +50,10 @@
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
-        "resolved": "11.0.100-preview.3.26207.106",
-        "contentHash": "NzuR1QNCHfro+w9GWVYJMdDMSEnPglS72aXtzSPtFUXP9yCoz4ggM4hzNNfVvzLGjXj4A7TnSHkT3bNA7NkaKg==",
+        "resolved": "11.0.100-preview.4.26230.115",
+        "contentHash": "6LBsPCchmx+/qNpp14oh2aAjeffeYXpWh1ea1cRtnptqMiatIKoaXKCPXNIJs4qL20g7DXQiUzKcHA92X+YT9Q==",
         "dependencies": {
-          "System.IO.Hashing": "11.0.0-preview.3.26207.106"
+          "System.IO.Hashing": "11.0.0-preview.4.26230.115"
         }
       },
       "Microsoft.CodeCoverage": {
@@ -63,8 +63,8 @@
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
-        "resolved": "11.0.100-preview.3.26207.106",
-        "contentHash": "4dwDpSUb9YKZ6dSEj59qJtdP2K+R4ejFULEKNBL5OqqAGxkWAp/23kN485GfmdvJ3UaQq31T5v/rgTxVnOXycA=="
+        "resolved": "11.0.100-preview.4.26230.115",
+        "contentHash": "TVzKbGdmyf0i7l8cNAjVRTTmnz0uPfTNxuzD+ZIf4MmXrf/BLFS47HVnYWQgeetp5EIcplUBMuGTxhz/3uWAdA=="
       },
       "Microsoft.Testing.Extensions.Telemetry": {
         "type": "Transitive",
@@ -122,8 +122,8 @@
       },
       "System.IO.Hashing": {
         "type": "Transitive",
-        "resolved": "11.0.0-preview.3.26207.106",
-        "contentHash": "SDNSzpfSLNZXetvp8vb3nP5PqeOx3FGrPoVSUAk+scC1ydsm0UNKCktZupwEN8PN1DNnWOTGdi4+3zGyf3kHAg=="
+        "resolved": "11.0.0-preview.4.26230.115",
+        "contentHash": "MMUYjoJ5Ibm08iViyeOQ6TPeti/aJ/LC0HIkZQsrvt/4H6KPmrNaiP5WDBax8I+iLpeBzZU3/u1sdMNO73RDuA=="
       },
       "xunit.analyzers": {
         "type": "Transitive",
