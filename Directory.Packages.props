@@ -63,7 +63,7 @@
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.10.4.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.10.0.2" />
-    <PackageVersion Include="System.CommandLine" Version="3.0.0-preview.3.26207.106" />
+    <PackageVersion Include="System.CommandLine" Version="3.0.0-preview.4.26230.115" />
   </ItemGroup>
   <ItemGroup Label="AI providers">
     <PackageVersion Include="OllamaSharp" Version="5.4.25" />

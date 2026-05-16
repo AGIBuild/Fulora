@@ -15,9 +15,9 @@
       },
       "System.CommandLine": {
         "type": "Direct",
-        "requested": "[3.0.0-preview.3.26207.106, )",
-        "resolved": "3.0.0-preview.3.26207.106",
-        "contentHash": "aBNsgxiczbvpi/5ThKaht8Kmk0e6i/9wjcrpDaLtDnkyT3ubxb7xYUegpH28BrFgsMqxc9Ngoq9ukJaxbMp2DA=="
+        "requested": "[3.0.0-preview.4.26230.115, )",
+        "resolved": "3.0.0-preview.4.26230.115",
+        "contentHash": "cjNNWcLPuM8s1r0xrpJJLX4dDCKBXLmpbKqNuNJES6Lcuya6CjqlGb4xkq6FhvCVUqZMwEEFSstiAaYDGzlhQQ=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
