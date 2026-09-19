@@ -1,0 +1,19 @@
+.github/workflows/ci.yml
+  s_7f61d418f6234a::t_a665147cf1ea2e 767-770,775-776,778,800
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "459cc3603c268218b24d47ac221de5730c6c7115",
+  "prompts": {},
+  "sessions": {
+    "s_7f61d418f6234a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f53263a3-c02b-43c7-92f6-04b5e08a72ec",
+        "model": "auto-smart"
+      },
+      "human_author": "Hongwei Xi <hongwei.xi@myob.com>"
+    }
+  }
+}
