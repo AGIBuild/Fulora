@@ -27,6 +27,8 @@ on:
 permissions:
   contents: read
   checks: write
+  # Required for npm Trusted Publisher OIDC (job-level alone is not always granted)
+  id-token: write
 
 concurrency:
   group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('ci-{0}', github.ref) }}
@@ -775,7 +777,7 @@ jobs:
         with:
           # Node 24 ships npm >= 11.5.1 required for OIDC trusted publishing
           node-version: "24"
-          registry-url: "https://registry.npmjs.org"
+          # Do not set registry-url — it writes :_authToken= which skips OIDC
           package-manager-cache: false
 
       - name: Download release bundle
@@ -787,12 +789,16 @@ jobs:
       - name: Publish bridge package to npm
         run: |
           set -euo pipefail
-          # setup-node still writes :_authToken=${NODE_AUTH_TOKEN} which prevents OIDC
-          npmrc="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
-          if [[ -f "$npmrc" ]]; then
-            sed -i '/_authToken/d' "$npmrc"
+
+          if [[ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" || -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
+            echo "::error::OIDC env missing — id-token: write was not granted to this job."
+            exit 1
           fi
-          unset NODE_AUTH_TOKEN || true
+          echo "OIDC request URL present (id-token permission OK)."
+
+          # Ensure no stale auth config can short-circuit OIDC
+          unset NODE_AUTH_TOKEN NPM_TOKEN || true
+          rm -f "${NPM_CONFIG_USERCONFIG:-}" "$HOME/.npmrc" || true
 
           mapfile -t tgz_files < <(ls artifacts/release-bundle/npm/*.tgz)
           if [[ "${#tgz_files[@]}" -eq 0 ]]; then
@@ -805,7 +811,8 @@ jobs:
           else
             NPM_TAG="next"
           fi
-          npm publish "${tgz_files[0]}" --access public --tag "$NPM_TAG"
+          # verbose so oidc exchange success/failure appears in the log
+          npm publish "${tgz_files[0]}" --access public --tag "$NPM_TAG" --loglevel verbose
 
   create-github-release:
     name: Create Tag and GitHub Release
