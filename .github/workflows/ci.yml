@@ -27,8 +27,6 @@ on:
 permissions:
   contents: read
   checks: write
-  # Required for npm Trusted Publisher OIDC (job-level alone is not always granted)
-  id-token: write
 
 concurrency:
   group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('ci-{0}', github.ref) }}
@@ -766,18 +764,17 @@ jobs:
     timeout-minutes: 10
     needs: [version, release-gate]
     if: needs.version.outputs.is_release == 'true'
-    # Trusted Publisher (OIDC) — configured on npm for AGIBuild/Fulora + ci.yml
+    # Trusted Publisher (OIDC) on npm: AGIBuild/Fulora + ci.yml
     permissions:
       id-token: write
       contents: read
     steps:
       - name: Setup Node.js
-        # v7 stops exporting dummy NODE_AUTH_TOKEN that blocked OIDC
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Node 24 ships npm >= 11.5.1 required for OIDC trusted publishing
           node-version: "24"
-          # Do not set registry-url — it writes :_authToken= which skips OIDC
+          # Omit registry-url: it writes an empty _authToken line that blocks OIDC
           package-manager-cache: false
 
       - name: Download release bundle
@@ -789,17 +786,6 @@ jobs:
       - name: Publish bridge package to npm
         run: |
           set -euo pipefail
-
-          if [[ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" || -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
-            echo "::error::OIDC env missing — id-token: write was not granted to this job."
-            exit 1
-          fi
-          echo "OIDC request URL present (id-token permission OK)."
-
-          # Ensure no stale auth config can short-circuit OIDC
-          unset NODE_AUTH_TOKEN NPM_TOKEN || true
-          rm -f "${NPM_CONFIG_USERCONFIG:-}" "$HOME/.npmrc" || true
-
           mapfile -t tgz_files < <(ls artifacts/release-bundle/npm/*.tgz)
           if [[ "${#tgz_files[@]}" -eq 0 ]]; then
             echo "No npm tarball found in release bundle."
@@ -811,8 +797,7 @@ jobs:
           else
             NPM_TAG="next"
           fi
-          # verbose so oidc exchange success/failure appears in the log
-          npm publish "${tgz_files[0]}" --access public --tag "$NPM_TAG" --loglevel verbose
+          npm publish "${tgz_files[0]}" --access public --tag "$NPM_TAG"
 
   create-github-release:
     name: Create Tag and GitHub Release
