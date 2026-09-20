@@ -1,0 +1,14 @@
+Directory.Build.props
+  h_66334dfd7c8cc8 51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ed7ed86a5f52c53b866a0d82ee72232715615705",
+  "prompts": {},
+  "humans": {
+    "h_66334dfd7c8cc8": {
+      "author": "Hongwei Xi <hongwei.xi@myob.com>"
+    }
+  }
+}
